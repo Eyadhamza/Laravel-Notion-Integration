@@ -5,29 +5,23 @@ namespace Pi\Notion;
 
 
 use Illuminate\Support\Facades\Http;
+use Pi\Notion\Traits\RetrieveResource;
 
 class NotionPage extends NotionDatabase
 {
-    private string $PAGE_URL;
+    use RetrieveResource;
+
+    private string $URL;
     private string $id;
+
     public function __construct($id = '')
     {
         parent::__construct();
 
         $this->id = $id ;
-        $this->PAGE_URL = $this->BASE_URL."/pages/";
+        $this->URL = $this->BASE_URL."/pages/";
 
     }
-    public function get($id = null)
-    {
-        $id = $id ?? $this->id;
 
-        $response = Http::withToken(config('notion-wrapper.info.token'))
-            ->get("$this->PAGE_URL"."$id");
-
-        $this->throwExceptions($response);
-
-        return $response->json();
-    }
 
 }

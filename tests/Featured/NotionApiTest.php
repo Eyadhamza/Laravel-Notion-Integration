@@ -32,6 +32,7 @@ class NotionApiTest extends TestCase
         $id = '632b5fb7e06c4404ae12asdasd065c48280e4asdc';
 
         $this->expectException(NotionDatabaseException::class);
+
         $response =  (new NotionDatabase($id))->get();
 
 

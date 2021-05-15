@@ -6,44 +6,31 @@ namespace Pi\Notion;
 
 use Illuminate\Support\Facades\Http;
 use Pi\Notion\Exceptions\NotionDatabaseException;
+use Pi\Notion\Traits\RetrieveResource;
 
 class NotionDatabase extends Workspace
 {
+    use RetrieveResource;
+
     private string $id;
-    private string $DATABASE_URL;
+    private string $URL;
     public function __construct($id = '')
     {
         parent::__construct();
 
         $this->id = $id ;
-        $this->DATABASE_URL = $this->BASE_URL."/databases/";
+        $this->URL = $this->BASE_URL."/databases/";
 
     }
 
-    public function get($id = null)
-    {
 
-        $id = $id ?? $this->id;
-
-        $response = Http::withToken(config('notion-wrapper.info.token'))
-            ->get("$this->DATABASE_URL"."$id");
-
-        $this->throwExceptions($response);
-
-        return $response->json();
-
-    }
-    # usage :
-    # $filter['property'] = 'status'
-    # $filter['select'] = 'Reading'
-    # NotionDatabase('asdasd')->getContents($filter,)
     public function getContents(array $filter , $id = null,array|string $sorts = [],$filterType = '')
     {
         $id = $id ?? $this->id;
 
         $response = Http::withToken(config('notion-wrapper.info.token'))
 
-            ->post("$this->DATABASE_URL"."$id"."/query",
+            ->post("$this->URL"."$id"."/query",
                 empty($filterType) ? $this->filter($filter) : $this->multipleFilters($filter,$filterType));
 
 
