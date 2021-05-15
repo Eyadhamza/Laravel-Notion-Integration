@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Http;
 
 trait RetrieveResource
 {
+
+    private string $URL;
+    private string $id;
+
     public function get($id = null)
     {
         $id = $id ?? $this->id;

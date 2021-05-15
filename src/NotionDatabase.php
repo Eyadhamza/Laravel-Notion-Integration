@@ -12,8 +12,6 @@ class NotionDatabase extends Workspace
 {
     use RetrieveResource;
 
-    private string $id;
-    private string $URL;
     public function __construct($id = '')
     {
         parent::__construct();

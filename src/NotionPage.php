@@ -11,9 +11,6 @@ class NotionPage extends NotionDatabase
 {
     use RetrieveResource;
 
-    private string $URL;
-    private string $id;
-
     public function __construct($id = '')
     {
         parent::__construct();
