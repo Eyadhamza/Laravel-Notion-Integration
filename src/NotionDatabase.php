@@ -41,8 +41,6 @@ class NotionDatabase extends Workspace
     {
         $id = $id ?? $this->id;
 
-
-
         $response = Http::withToken(config('notion-wrapper.info.token'))
 
             ->post("$this->DATABASE_URL"."$id"."/query",
@@ -81,7 +79,7 @@ class NotionDatabase extends Workspace
     {
 
         $filters = collect($filters);
-
+        // the power of collections!
         return [
             'filter' =>[
             $filterType =>
