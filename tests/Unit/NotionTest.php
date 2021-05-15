@@ -14,7 +14,7 @@ class NotionTest extends TestCase
     {
         $workspace = new Workspace;
 
-        $this->assertInstanceOf(Workspace::class,$workspace);
+        $this->assertInstanceOf(Workspace::class, $workspace);
     }
 
     /** @test */
@@ -22,13 +22,12 @@ class NotionTest extends TestCase
     {
         $database = new Database('632b5fb7e06c4404ae12065c48280e4c');
 
-        $this->assertInstanceOf(Database::class,$database);
+        $this->assertInstanceOf(Database::class, $database);
     }
 
     /** @test */
     public function true_is_true()
     {
-
         $this->assertTrue(true);
     }
 }
