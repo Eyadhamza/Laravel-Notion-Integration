@@ -11,6 +11,6 @@ class NotionFacade extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return 'notionlaravelwrapper';
+        return 'notion-wrapper';
     }
 }

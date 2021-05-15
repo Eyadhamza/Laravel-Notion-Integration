@@ -29,7 +29,7 @@ class TestCase extends Orchestra
         config()->set('database.default', 'testing');
 
         /*
-        include_once __DIR__.'/../database/migrations/create_notionlaravelwrapper_table.php.stub';
+        include_once __DIR__.'/../database/migrations/create_notion-wrapper_table.php.stub';
         (new \CreatePackageTable())->up();
         */
     }

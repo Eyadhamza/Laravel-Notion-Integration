@@ -16,10 +16,10 @@ class NotionServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('notionlaravelwrapper')
+            ->name('notion-wrapper')
             ->hasConfigFile()
             ->hasViews()
-            ->hasMigration('create_notionlaravelwrapper_table')
+            ->hasMigration('create_notion-wrapper_table')
             ->hasCommand(NotionCommand::class);
     }
 }

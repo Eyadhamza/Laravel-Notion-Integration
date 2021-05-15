@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 
 class NotionCommand extends Command
 {
-    public $signature = 'notionlaravelwrapper';
+    public $signature = 'notion-wrapper';
 
     public $description = 'My command';
 

@@ -1,12 +1,12 @@
 {
-    "name": "pi/notionlaravelwrapper",
+    "name": "pi/notion-wrapper",
     "description": "This is my package Notion",
     "keywords": [
         "Pi",
         "laravel",
-        "notionlaravelwrapper"
+        "notion-wrapper"
     ],
-    "homepage": "https://github.com/pi/notionlaravelwrapper",
+    "homepage": "https://github.com/pi/notion-wrapper",
     "license": "MIT",
     "authors": [
         {
