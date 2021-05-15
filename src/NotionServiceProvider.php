@@ -2,9 +2,9 @@
 
 namespace Pi\Notion;
 
+use Pi\Notion\Commands\NotionCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Pi\Notion\Commands\NotionCommand;
 
 class NotionServiceProvider extends PackageServiceProvider
 {
