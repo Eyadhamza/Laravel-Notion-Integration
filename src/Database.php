@@ -21,11 +21,9 @@ class Database extends Workspace
 
     public function get()
     {
-
+        $id='632b5fb7e06c4404ae12065c48280e4c';
         $response = Http::withToken(config('notion-wrapper.info.token'))
-            ->get('https://api.notion.com/v1/databases/',[
-                'id'=>$this->id
-            ])->json();
+            ->get($this->BASE_URL."/databases/{$id}")->json();
 
         dd($response);
 
