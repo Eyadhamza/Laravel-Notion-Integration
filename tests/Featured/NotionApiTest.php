@@ -5,6 +5,7 @@ namespace Pi\Notion\Tests\Featured;
 use Pi\Notion\NotionDatabase;
 
 use Pi\Notion\Exceptions\NotionDatabaseException;
+use Pi\Notion\NotionPage;
 use Pi\Notion\Tests\TestCase;
 use Pi\Notion\Workspace;
 
@@ -73,4 +74,15 @@ class NotionApiTest extends TestCase
         $this->assertStringContainsString('list',$response['object']);
 
     }
+    /** @test */
+    public function it_should_return_page_info()
+    {
+        $response =  (new NotionPage('834b5c8cc1204816905cd54dc2f3341d'))->get();
+
+
+        $this->assertStringContainsString('page',$response['object']);
+
+
+    }
+
 }
