@@ -1,8 +1,10 @@
 <?php
 
+
 namespace Pi\Notion;
 
-class Notion
+
+class Database extends Notion
 {
 
 }
