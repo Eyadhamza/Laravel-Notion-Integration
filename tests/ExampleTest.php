@@ -2,7 +2,6 @@
 
 namespace Pi\Notion\Tests;
 
-use Pi\Notion\Notion;
 use Pi\Notion\Workspace;
 
 class ExampleTest extends TestCase

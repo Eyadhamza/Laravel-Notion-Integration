@@ -2,8 +2,6 @@
 
 namespace Pi\Notion;
 
-use Illuminate\Support\Facades\Config;
-
 class Workspace
 {
     private $token;
@@ -18,6 +16,4 @@ class Workspace
     {
         return new self();
     }
-
-
 }
