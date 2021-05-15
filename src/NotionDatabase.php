@@ -37,25 +37,19 @@ class NotionDatabase extends Workspace
     # $filter['property'] = 'status'
     # $filter['select'] = 'Reading'
     # NotionDatabase('asdasd')->getContents($filter,)
-    public function getContents(array $filter = null, $id = null,array|string $sorts = [],$filterType = '')
+    public function getContents(array $filter , $id = null,array|string $sorts = [],$filterType = '')
     {
         $id = $id ?? $this->id;
 
-//        $property = $filter['property'];
-//
-//        $select = $filter['select'];
+        $property = $filter['property'];
+
+        $select = $filter['select'];
+
 
         $response = Http::withToken(config('notion-wrapper.info.token'))
-            ->post("$this->DATABASE_URL"."$id"."/query",[
-                'filter'=>[
-                    'property'=>'Status',
-                    'select'=>[
-                        'equals'=>'Reading'
-                    ]
-                ]
-            ]);
 
-
+            ->post("$this->DATABASE_URL"."$id"."/query",
+                empty($filterType) ? $this->filter($filter) : $this->multipleFilters());
 
 
         dd($response->json());
@@ -72,5 +66,21 @@ class NotionDatabase extends Workspace
         if ($response->status() == 401){
             throw NotionDatabaseException::notAuthorized();
         }
+    }
+
+    public function filter($filter): array
+    {
+       return [
+           'filter'=>[
+               'property'=>$filter['property'],
+                'select'=>[
+                    'equals'=>$filter['select']
+                ]
+            ],
+       ];
+    }
+    public function multipleFilters()
+    {
+        dd(11);
     }
 }

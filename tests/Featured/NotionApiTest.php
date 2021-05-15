@@ -46,20 +46,15 @@ class NotionApiTest extends TestCase
 
     }
     /** @test */
-    public function it_should_return_database_contents()
+    public function it_should_return_database_contents_with_single_query()
     {
-         $filter['property'] = 'status';
+         $filter['property'] = 'Status';
          $filter['select'] = 'Reading';
 
-        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents();
+        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents($filter);
 
 
-        $this->assertStringContainsString('database',$response['object']);
+        $this->assertStringContainsString('list',$response['object']);
 
-//        $response =  (new NotionDatabase)->get('632b5fb7e06c4404ae12065c48280e4c')->getContents();
-//
-//        $this->assertStringContainsString('database',$response['object']);
-//
-//        $this->assertStringNotContainsString('error',$response['object']);
     }
 }
