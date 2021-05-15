@@ -24,4 +24,9 @@ trait RetrieveResource
         return $response->json();
     }
 
+    public static function ofId($id)
+    {
+        return new self($id);
+    }
+    # NotionPage::of('632b5fb7e06c4404ae12065c48280e4c')
 }
