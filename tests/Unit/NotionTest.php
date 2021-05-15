@@ -2,7 +2,7 @@
 
 namespace Pi\Notion\Tests\Unit;
 
-use Pi\Notion\Database;
+use Pi\Notion\NotionDatabase;
 
 use Pi\Notion\Tests\TestCase;
 use Pi\Notion\Workspace;
@@ -20,9 +20,9 @@ class NotionTest extends TestCase
     /** @test */
     public function it_returns_new_database_instance()
     {
-        $database = new Database('632b5fb7e06c4404ae12065c48280e4c');
+        $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
 
-        $this->assertInstanceOf(Database::class, $database);
+        $this->assertInstanceOf(NotionDatabase::class, $database);
     }
 
     /** @test */

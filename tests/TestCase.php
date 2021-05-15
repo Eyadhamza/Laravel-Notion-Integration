@@ -13,7 +13,7 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Pi\\Notion\\Database\\Factories\\'.class_basename($modelName).'Factory'
+            fn (string $modelName) => 'Pi\\Notion\\NotionDatabase\\Factories\\'.class_basename($modelName).'Factory'
         );
     }
 

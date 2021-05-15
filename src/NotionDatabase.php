@@ -7,7 +7,7 @@ namespace Pi\Notion;
 use Illuminate\Support\Facades\Http;
 use Pi\Notion\Exceptions\NotionDatabaseException;
 
-class Database extends Workspace
+class NotionDatabase extends Workspace
 {
     private string $id;
 
