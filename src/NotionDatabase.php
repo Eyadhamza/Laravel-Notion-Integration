@@ -33,9 +33,36 @@ class NotionDatabase extends Workspace
         return $response->json();
 
     }
-    public function getContents()
+    # usage :
+    # $filter['property'] = 'status'
+    # $filter['select'] = 'Reading'
+    # NotionDatabase('asdasd')->getContents($filter,)
+    public function getContents(array $filter = null, $id = null,array|string $sorts = [],$filterType = '')
     {
-        https://api.notion.com/v1/databases/:id/query
+        $id = $id ?? $this->id;
+
+//        $property = $filter['property'];
+//
+//        $select = $filter['select'];
+
+        $response = Http::withToken(config('notion-wrapper.info.token'))
+            ->post("$this->DATABASE_URL"."$id"."/query",[
+                'filter'=>[
+                    'property'=>'Status',
+                    'select'=>[
+                        'equals'=>'Reading'
+                    ]
+                ]
+            ]);
+
+
+
+
+        dd($response->json());
+        $this->throwExceptions($response);
+
+        return $response->json();
+
     }
     public function throwExceptions($response)
     {
