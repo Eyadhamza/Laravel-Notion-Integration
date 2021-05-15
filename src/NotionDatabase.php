@@ -41,15 +41,12 @@ class NotionDatabase extends Workspace
     {
         $id = $id ?? $this->id;
 
-        $property = $filter['property'];
 
-        $select = $filter['select'];
-
-
+        dd($this->multipleFilters($filter,$filterType));
         $response = Http::withToken(config('notion-wrapper.info.token'))
 
             ->post("$this->DATABASE_URL"."$id"."/query",
-                empty($filterType) ? $this->filter($filter) : $this->multipleFilters());
+                empty($filterType) ? $this->filter($filter) : $this->multipleFilters($filter,$filterType));
 
 
         dd($response->json());
@@ -70,6 +67,7 @@ class NotionDatabase extends Workspace
 
     public function filter($filter): array
     {
+
        return [
            'filter'=>[
                'property'=>$filter['property'],
@@ -79,8 +77,24 @@ class NotionDatabase extends Workspace
             ],
        ];
     }
-    public function multipleFilters()
+    public function multipleFilters($filters,$filterType): array
     {
-        dd(11);
+
+        $filters = collect($filters);
+
+        return [
+            'filter' =>[
+            $filterType => [
+                $filters->map(function ($filter){
+                    return ['property'=>$filter['property'],
+                        'select'=>[
+                            'equals'=>$filter['select']
+
+                        ]
+                    ];
+                })
+                ]
+            ]
+        ];
     }
 }
