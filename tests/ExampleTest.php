@@ -1,6 +1,6 @@
 <?php
 
-namespace VendorName\Skeleton\Tests;
+namespace Pi\Notion\Tests;
 
 class ExampleTest extends TestCase
 {
