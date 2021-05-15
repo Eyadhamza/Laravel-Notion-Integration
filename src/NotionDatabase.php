@@ -42,14 +42,14 @@ class NotionDatabase extends Workspace
         $id = $id ?? $this->id;
 
 
-        dd($this->multipleFilters($filter,$filterType));
+
         $response = Http::withToken(config('notion-wrapper.info.token'))
 
             ->post("$this->DATABASE_URL"."$id"."/query",
                 empty($filterType) ? $this->filter($filter) : $this->multipleFilters($filter,$filterType));
 
 
-        dd($response->json());
+
         $this->throwExceptions($response);
 
         return $response->json();
@@ -84,7 +84,7 @@ class NotionDatabase extends Workspace
 
         return [
             'filter' =>[
-            $filterType => [
+            $filterType =>
                 $filters->map(function ($filter){
                     return ['property'=>$filter['property'],
                         'select'=>[
@@ -94,7 +94,7 @@ class NotionDatabase extends Workspace
                     ];
                 })
                 ]
-            ]
+
         ];
     }
 }
