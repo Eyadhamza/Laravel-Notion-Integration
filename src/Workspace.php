@@ -8,6 +8,9 @@ class Workspace
 
     public function __construct()
     {
+
+        dd(Env('app_env'));
+        dd(\config('notion-wrapper.info.token'));
         $token = \config('notion-wrapper.info.token');
         $this->token = $token;
     }
