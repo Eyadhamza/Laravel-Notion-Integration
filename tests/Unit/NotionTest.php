@@ -1,12 +1,13 @@
 <?php
 
-namespace Pi\Notion\Tests;
+namespace Pi\Notion\Tests\Unit;
 
 use Pi\Notion\Database;
-use Pi\Notion\Notion;
+
+use Pi\Notion\Tests\TestCase;
 use Pi\Notion\Workspace;
 
-class ExampleTest extends TestCase
+class NotionTest extends TestCase
 {
     /** @test */
     public function it_returns_new_workspace_instance()
