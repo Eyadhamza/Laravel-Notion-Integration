@@ -4,5 +4,4 @@ namespace Pi\Notion;
 
 class Notion
 {
-
 }
