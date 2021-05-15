@@ -3,7 +3,6 @@
 
 namespace Pi\Notion;
 
-
 class Database extends Workspace
 {
     private string $id;
@@ -13,7 +12,5 @@ class Database extends Workspace
         parent::__construct();
 
         $this->id = $id;
-
-
     }
 }
