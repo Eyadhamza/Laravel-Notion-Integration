@@ -27,10 +27,20 @@ class NotionDatabase extends Workspace
         }
         $response = Http::withToken(config('notion-wrapper.info.token'))
             ->get($this->BASE_URL."/databases/{$this->id}");
+
+        $this->throwExceptions($response);
+
+        return $response->json();
+
+    }
+
+    public function throwExceptions($response)
+    {
         if ($response->status() == 400){
             throw NotionDatabaseException::notFound($this->id);
         }
-        return $response->json();
-
+        if ($response->status() == 401){
+            throw NotionDatabaseException::notAuthorized();
+        }
     }
 }

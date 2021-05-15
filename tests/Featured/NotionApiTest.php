@@ -25,9 +25,19 @@ class NotionApiTest extends TestCase
     }
 
     /** @test */
-    public function it_should_throw_error_database_not_found()
+    public function it_should_throw_exception_database_not_found()
     {
         $id = '632b5fb7e06c4404ae12asdasd065c48280e4asdc';
+
+        $this->expectException(NotionDatabaseException::class);
+        $response =  (new NotionDatabase($id))->get();
+
+
+    }
+    /** @test */
+    public function it_should_throw_exception_database_not_authorized()
+    {
+        $id = '632b5fb7e06c4404ae12065c48280e4asdc';
 
         $this->expectException(NotionDatabaseException::class);
         $response =  (new NotionDatabase($id))->get();
