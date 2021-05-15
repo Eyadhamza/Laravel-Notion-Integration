@@ -6,10 +6,12 @@ namespace Pi\Notion;
 
 use Illuminate\Support\Facades\Http;
 use Pi\Notion\Exceptions\NotionDatabaseException;
+use Pi\Notion\Traits\HandleExceptions;
 use Pi\Notion\Traits\RetrieveResource;
 
 class NotionDatabase extends Workspace
 {
+    use HandleExceptions;
     use RetrieveResource;
 
     public function __construct($id = '')
@@ -38,15 +40,7 @@ class NotionDatabase extends Workspace
         return $response->json();
 
     }
-    public function throwExceptions($response)
-    {
-        if ($response->status() == 400){
-            throw NotionDatabaseException::notFound($this->id);
-        }
-        if ($response->status() == 401){
-            throw NotionDatabaseException::notAuthorized();
-        }
-    }
+
 
     public function filter($filter): array
     {
