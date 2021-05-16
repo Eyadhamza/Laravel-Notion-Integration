@@ -53,11 +53,11 @@ class NotionPage
 
                         return
                             [$property['name'] , $property['name'] == 'Name' ? array(
-                                'title'=>[
+                                'title'=>array([
                                     $property['type'] => ['content' => $property['content']] ?? null,
 
                                 ]
-                            ) :
+                            )) :
                                 array($property['type'] =>array(
                                    'name'=>$property['select_name'],
                                     'color'=>$property['color']
