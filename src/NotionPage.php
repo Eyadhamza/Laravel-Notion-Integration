@@ -24,6 +24,11 @@ class NotionPage
     public function create($notionDatabaseId,array|string $properties, $content = null)
     {
 
+//        dd( [
+//            'parent'=> array('database_id' => $notionDatabaseId)
+//
+//            ,'properties' => $this->createProperties($properties)['properties'],
+//            'children' =>$this->createContent($content)['children']]);
         $response = Http::withToken(config('notion-wrapper.info.token'))->withHeaders(['Notion-Version'=>'2021-05-13'])
             ->post($this->URL,
                 [
@@ -78,24 +83,24 @@ class NotionPage
         if (!$children){
             return array('children'=>[]);
         }
+        $children = collect($children);
+
 
         return [
-            'children' => array([
-                'object'=>'block',
-                'type'=>$children['tag_type'],
-                $children['tag_type']=>array('text'=>array([
-                    'type'=>$children['content_type'],
-                    $children['content_type'] =>[
-                        'content'=> $children['content']
+            'children' => $children->map(function($child){
+               return ['object'=>'block',
+                    'type'=>$child['tag_type'],
+                    $child['tag_type']=>array('text'=>array([
+                    'type'=>$child['content_type'],
+                    $child['content_type'] =>[
+                        'content'=> $child['content']
                     ]
-
-                ]))
-
-
-            ])
+                ])
+                    )];
 
 
 
+            })
         ];
     }
 //"children": [

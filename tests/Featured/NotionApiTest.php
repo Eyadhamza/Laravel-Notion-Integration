@@ -130,9 +130,13 @@ class NotionApiTest extends TestCase
         $properties[2]['select_name'] = 'The Atlantic';
         $properties[2]['color'] = 'red';
 
-        $content['tag_type'] = 'heading_2';
-        $content['content_type'] = 'text';
-        $content['content'] = 'this is my content';
+        $content[0]['tag_type'] = 'heading_2';
+        $content[0]['content_type'] = 'text';
+        $content[0]['content'] = 'this is my content';
+
+        $content[1]['tag_type'] = 'paragraph';
+        $content[1]['content_type'] = 'text';
+        $content[1]['content'] = 'this is my content paragraph';
         $response =  (new NotionPage('819f5b54348f463580ef118b6a54bd0d'))->create('632b5fb7e06c4404ae12065c48280e4c',$properties,$content);
 
 
