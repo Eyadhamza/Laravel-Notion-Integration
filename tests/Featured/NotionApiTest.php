@@ -89,20 +89,24 @@ class NotionApiTest extends TestCase
     /** @test */
     public function it_should_add_properties_to_created_page()
     {
-        $properties[0]['name'] = 'Name';
-        $properties[0]['type'] = 'text';
-        $properties[0]['content'] = 'New Media Article';
+        $properties = array([
+            'name' => 'Name',
+            'type' => 'text',
+            'content' => 'New Media Article',
+        ],
+            [
+                'name' => 'Status',
+                'type' => 'select',
+                'select_name' => 'Ready to Start',
+                'color' => 'yellow'
+            ],
+            [
+                'name' => 'Publisher',
+                'type' => 'select',
 
-        $properties[1]['name'] = 'Status';
-        $properties[1]['type'] = 'select';
-        $properties[1]['select_name'] = 'Ready to Start';
-        $properties[1]['color'] = 'yellow';
-
-        $properties[2]['name'] = 'Publisher';
-        $properties[2]['type'] = 'select';
-
-        $properties[2]['select_name'] = 'The Atlantic';
-        $properties[2]['color'] = 'red';
+                'select_name' => 'The Atlantic',
+                'color' => 'red',
+            ]);
 
 
         $response =  (new NotionPage('819f5b54348f463580ef118b6a54bd0d'))->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
@@ -115,28 +119,41 @@ class NotionApiTest extends TestCase
     /** @test */
     public function it_should_add_properties_and_content_to_created_page()
     {
-        $properties[0]['name'] = 'Name';
-        $properties[0]['type'] = 'text';
-        $properties[0]['content'] = 'New Media Article';
 
-        $properties[1]['name'] = 'Status';
-        $properties[1]['type'] = 'select';
-        $properties[1]['select_name'] = 'Ready to Start';
-        $properties[1]['color'] = 'yellow';
 
-        $properties[2]['name'] = 'Publisher';
-        $properties[2]['type'] = 'select';
 
-        $properties[2]['select_name'] = 'The Atlantic';
-        $properties[2]['color'] = 'red';
 
-        $content[0]['tag_type'] = 'heading_2';
-        $content[0]['content_type'] = 'text';
-        $content[0]['content'] = 'this is my content';
 
-        $content[1]['tag_type'] = 'paragraph';
-        $content[1]['content_type'] = 'text';
-        $content[1]['content'] = 'this is my content paragraph';
+        $properties = array([
+            'name' => 'Name',
+            'type' => 'text',
+            'content' => 'New Media Article',
+        ],
+        [
+            'name' => 'Status',
+            'type' => 'select',
+            'select_name' => 'Ready to Start',
+            'color' => 'yellow'
+        ],
+        [
+        'name' => 'Publisher',
+        'type' => 'select',
+
+        'select_name' => 'The Atlantic',
+        'color' => 'red',
+        ]);
+        $content=array(
+            [
+            'tag_type' => 'heading_2',
+            'content_type' => 'text',
+            'content' => 'this is my content'
+            ],
+            [
+            'tag_type' => 'paragraph',
+            'content_type' => 'text',
+            'content' => 'this is my content paragraph'
+            ]);
+
         $response =  (new NotionPage('819f5b54348f463580ef118b6a54bd0d'))->create('632b5fb7e06c4404ae12065c48280e4c',$properties,$content);
 
 
