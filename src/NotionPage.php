@@ -21,18 +21,16 @@ class NotionPage
 
     }
 
-    public function create($notionDatabaseId,array|string $properties,array|string $content = null)
+    public function create($notionDatabaseId,array|string $properties, $content = null)
     {
-
-//        dd($this->createProperties($properties)['properties']);
 
         $response = Http::withToken(config('notion-wrapper.info.token'))->withHeaders(['Notion-Version'=>'2021-05-13'])
             ->post($this->URL,
                 [
                     'parent'=> array('database_id' => $notionDatabaseId)
 
-                    ,'properties' => $this->createProperties($properties)['properties']]);
-//        , !empty($content) ? $this->createContent($properties,$content) : ''
+                    ,'properties' => $this->createProperties($properties)['properties'],
+                    'children' =>$this->createContent($content)['children']]);
 
 
         $this->throwExceptions($response);
@@ -74,11 +72,65 @@ class NotionPage
 
     }
 
-    public function createContent(array|string $properties, array|string $children)
+    public function createContent(array|string $children =null)
     {
-        //TODO
-    }
 
+        if (!$children){
+            return array('children'=>[]);
+        }
+
+        return [
+            'children' => array([
+                'object'=>'block',
+                'type'=>$children['tag_type'],
+                $children['tag_type']=>array('text'=>array([
+                    'type'=>$children['content_type'],
+                    $children['content_type'] =>[
+                        'content'=> $children['content']
+                    ]
+
+                ]))
+
+
+            ])
+
+
+
+        ];
+    }
+//"children": [
+//        {
+//            "object": "block",
+//            "type": "heading_2",
+//            "heading_2": {
+//                "text": [
+//                    {
+//                        "type": "text",
+//                        "text": {
+//                            "content": "Lacinato kale"
+//                        }
+//                    }
+//                ]
+//            }
+//        },
+//        {
+//            "object": "block",
+//            "type": "paragraph",
+//            "paragraph": {
+//                "text": [
+//                    {
+//                        "type": "text",
+//                        "text": {
+//                            "content": "Lacinato kale is a variety of kale with a long tradition in Italian cuisine, especially that of Tuscany. It is also known as Tuscan kale, Italian kale, dinosaur kale, kale, flat back kale, palm tree kale, or black Tuscan palm.",
+//                            "link": {
+//                                "url": "https://en.wikipedia.org/wiki/Lacinato_kale"
+//                            }
+//                        }
+//                    }
+//                ]
+//            }
+//        }
+//    ]
     public function isSelectProperty($property)
     {
        return $property['type'] == 'select';

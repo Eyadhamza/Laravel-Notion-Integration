@@ -87,7 +87,7 @@ class NotionApiTest extends TestCase
     }
 
     /** @test */
-    public function it_should_return_properties_to_create_page()
+    public function it_should_add_properties_to_created_page()
     {
         $properties[0]['name'] = 'Name';
         $properties[0]['type'] = 'text';
@@ -112,6 +112,33 @@ class NotionApiTest extends TestCase
 
 
     }
+    /** @test */
+    public function it_should_add_properties_and_content_to_created_page()
+    {
+        $properties[0]['name'] = 'Name';
+        $properties[0]['type'] = 'text';
+        $properties[0]['content'] = 'New Media Article';
 
+        $properties[1]['name'] = 'Status';
+        $properties[1]['type'] = 'select';
+        $properties[1]['select_name'] = 'Ready to Start';
+        $properties[1]['color'] = 'yellow';
+
+        $properties[2]['name'] = 'Publisher';
+        $properties[2]['type'] = 'select';
+
+        $properties[2]['select_name'] = 'The Atlantic';
+        $properties[2]['color'] = 'red';
+
+        $content['tag_type'] = 'heading_2';
+        $content['content_type'] = 'text';
+        $content['content'] = 'this is my content';
+        $response =  (new NotionPage('819f5b54348f463580ef118b6a54bd0d'))->create('632b5fb7e06c4404ae12065c48280e4c',$properties,$content);
+
+
+        $this->assertStringContainsString('page',$response['object']);
+
+
+    }
 
 }
