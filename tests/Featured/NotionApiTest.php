@@ -93,16 +93,18 @@ class NotionApiTest extends TestCase
         $properties[0]['type'] = 'text';
         $properties[0]['content'] = 'New Media Article';
 
-        $properties[1]['name'] = 'Publisher';
+        $properties[1]['name'] = 'Status';
         $properties[1]['type'] = 'select';
-        $properties[1]['id'] = '8c4a056e-6709-4dd1-ba58-d34d9480855a';
         $properties[1]['select_name'] = 'Ready to Start';
         $properties[1]['color'] = 'yellow';
 
-        $properties[2]['name'] = 'Status';
+        $properties[2]['name'] = 'Publisher';
         $properties[2]['type'] = 'select';
+
         $properties[2]['select_name'] = 'The Atlantic';
         $properties[2]['color'] = 'red';
+
+
         $response =  (new NotionPage('819f5b54348f463580ef118b6a54bd0d'))->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
 
 

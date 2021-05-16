@@ -24,9 +24,9 @@ class NotionPage
     public function create($notionDatabaseId,array|string $properties,array|string $content = null)
     {
 
-        dd(array('properties' => $this->createProperties($properties)['properties']));
 //        dd($this->createProperties($properties)['properties']);
-        $response = Http::withToken(config('notion-wrapper.info.token'))
+
+        $response = Http::withToken(config('notion-wrapper.info.token'))->withHeaders(['Notion-Version'=>'2021-05-13'])
             ->post($this->URL,
                 [
                     'parent'=> array('database_id' => $notionDatabaseId)
@@ -54,7 +54,8 @@ class NotionPage
                         return
                             [$property['name'] , $property['name'] == 'Name' ? array(
                                 'title'=>[
-                                    $property['type'] => ['content' => $property['content']] ?? null
+                                    $property['type'] => ['content' => $property['content']] ?? null,
+
                                 ]
                             ) :
                                 array($property['type'] =>array(
