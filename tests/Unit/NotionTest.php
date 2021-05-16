@@ -24,6 +24,11 @@ class NotionTest extends TestCase
         $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
 
         $this->assertInstanceOf(NotionDatabase::class, $database);
+
+        $r = NotionDatabase::ofId('632b5fb7e06c4404ae12065c48280e4c');
+        $this->assertStringContainsString('database',$r['object']);
+
+
     }
 
     /** @test */
@@ -33,6 +38,9 @@ class NotionTest extends TestCase
 
 
         $this->assertInstanceOf(NotionPage::class, $page);
+
+        $r = NotionPage::ofId('834b5c8cc1204816905cd54dc2f3341d');
+        $this->assertStringContainsString('page',$r['object']);
     }
 
     /** @test */
