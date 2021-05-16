@@ -54,6 +54,17 @@ return [
 
 ## Usage
 
+### Setup Notion workspace
+
+in you .env file you should place your token using :
+```dotenv
+
+NOTION_TOKEN  = 'secret_{token}'
+
+```
+
+
+### Dealing with notion databases
 
 Get a notion database using id
 
@@ -63,7 +74,7 @@ use Pi\Notion\NotionDatabase;
 
 $object = NotionDatabase::ofId('834b5c8cc1204816905cd54dc2f3341d');
 
-// returns the information of notion page as a json response
+// returns the information of notion database as a json response
 ```
 
 Query the notion database contents using a specific select filter and value
@@ -108,6 +119,67 @@ $filters = array([
 $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents($filters, filterType: 'and');
 
 // returns the contents of notion database as a json response
+```
+
+### Dealing with Notion Pages
+
+Get a notion page using id
+
+```php
+
+use Pi\Notion\NotionPage;
+
+$object = NotionPage::ofId('834b5c8cc1204816905cd54dc2f3341d');
+
+// returns the information of notion page as a json response
+```
+
+For Adding a new page 
+
+```php
+
+use Pi\Notion\NotionPage;
+
+$properties = array(
+        [
+            'name' => 'Name',
+            'type' => 'text',
+            'content' => 'New Media Article',
+        ],
+        [
+            'name' => 'Status',
+            'type' => 'select',
+            'select_name' => 'Ready to Start',
+            'color' => 'yellow'
+        ],
+        [
+        'name' => 'Publisher',
+        'type' => 'select',
+
+        'select_name' => 'The Atlantic',
+        'color' => 'red',
+        ]);
+       
+$contents = array(
+            [
+            'tag_type' => 'heading_2',
+            'content_type' => 'text',
+            'content' => 'this is my content'
+            ],
+            [
+            'tag_type' => 'paragraph',
+            'content_type' => 'text',
+            'content' => 'this is my content paragraph'
+            ]);
+
+// note that the create() method takes two parameters, $properties which is required to define the specific properties you need to have in your page
+// $contents is optional, if you would like content to be added to your created page
+// the previous are just one example, you can add any notion specific type
+// possible tag_types & content_type are available at notion.so
+
+(new NotionPage)->create('632b5fb7e06c4404ae12065c48280e4c', $properties, $contents);
+
+// returns the information of notion page as a json response
 ```
 
 
