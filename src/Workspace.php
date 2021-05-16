@@ -4,11 +4,10 @@ namespace Pi\Notion;
 
 class Workspace
 {
-    private $token;
+    protected $token;
     public string $BASE_URL= 'https://api.notion.com/v1';
     public function __construct()
     {
-
         $token = \config('notion-wrapper.info.token');
         $this->token = $token;
     }

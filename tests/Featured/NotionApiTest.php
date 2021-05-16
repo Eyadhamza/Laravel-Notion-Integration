@@ -43,7 +43,7 @@ class NotionApiTest extends TestCase
         $id = '632b5fb7e06c4404ae12065c48280e4asdc';
 
         $this->expectException(NotionDatabaseException::class);
-        $response =  (new NotionDatabase($id))->get();
+        (new NotionDatabase($id))->get();
 
 
     }
@@ -119,11 +119,6 @@ class NotionApiTest extends TestCase
     /** @test */
     public function it_should_add_properties_and_content_to_created_page()
     {
-
-
-
-
-
         $properties = array([
             'name' => 'Name',
             'type' => 'text',
@@ -152,14 +147,23 @@ class NotionApiTest extends TestCase
             'tag_type' => 'paragraph',
             'content_type' => 'text',
             'content' => 'this is my content paragraph'
-            ]);
+        ]);
 
-        $response =  (new NotionPage('819f5b54348f463580ef118b6a54bd0d'))->create('632b5fb7e06c4404ae12065c48280e4c',$properties,$content);
+        $response =  (new NotionPage('819f5b54348f463580ef118b6a54bd0d'))
+            ->create('632b5fb7e06c4404ae12065c48280e4c',$properties,$content);
 
 
         $this->assertStringContainsString('page',$response['object']);
 
 
+    }
+    /** @test */
+    public function it_returns_search_result()
+    {
+        $response = (new NotionPage)
+            ->search('New Media Article');
+
+        $this->assertStringContainsString('list',$response['object']);
     }
 
 }

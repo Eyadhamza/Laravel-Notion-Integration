@@ -8,34 +8,33 @@ use Illuminate\Support\Facades\Http;
 use Pi\Notion\Traits\ThrowsExceptions;
 use Pi\Notion\Traits\RetrieveResource;
 
-class NotionPage
+class NotionPage extends Workspace
 {
     use RetrieveResource;
     use ThrowsExceptions;
+
+
+
     public function __construct($id = '')
     {
 
         # It's more common for an integration to receive a page ID by calling the search endpoint.
+        parent::__construct();
         $this->id = $id ;
-        $this->URL = (new Workspace)->BASE_URL."/pages/";
+        $this->URL = $this->BASE_URL."/pages/";
 
     }
 
     public function create($notionDatabaseId,array|string $properties, $content = null)
     {
 
-//        dd( [
-//            'parent'=> array('database_id' => $notionDatabaseId)
-//
-//            ,'properties' => $this->createProperties($properties)['properties'],
-//            'children' =>$this->createContent($content)['children']]);
         $response = Http::withToken(config('notion-wrapper.info.token'))->withHeaders(['Notion-Version'=>'2021-05-13'])
             ->post($this->URL,
                 [
                     'parent'=> array('database_id' => $notionDatabaseId)
 
-                    ,'properties' => $this->createProperties($properties)['properties'],
-                    'children' =>$this->createContent($content)['children']]);
+                    ,'properties' => $this->addProperties($properties)['properties'],
+                    'children' =>$this->addContent($content)['children']]);
 
 
         $this->throwExceptions($response);
@@ -43,7 +42,7 @@ class NotionPage
         return $response->json();
     }
 
-    public function createProperties(array|string $properties)
+    public function addProperties(array|string $properties)
     {
 
         $properties = collect($properties);
@@ -77,7 +76,7 @@ class NotionPage
 
     }
 
-    public function createContent(array|string $children =null)
+    public function addContent(array|string $children =null)
     {
 
         if (!$children){
@@ -103,39 +102,18 @@ class NotionPage
             })
         ];
     }
-//"children": [
-//        {
-//            "object": "block",
-//            "type": "heading_2",
-//            "heading_2": {
-//                "text": [
-//                    {
-//                        "type": "text",
-//                        "text": {
-//                            "content": "Lacinato kale"
-//                        }
-//                    }
-//                ]
-//            }
-//        },
-//        {
-//            "object": "block",
-//            "type": "paragraph",
-//            "paragraph": {
-//                "text": [
-//                    {
-//                        "type": "text",
-//                        "text": {
-//                            "content": "Lacinato kale is a variety of kale with a long tradition in Italian cuisine, especially that of Tuscany. It is also known as Tuscan kale, Italian kale, dinosaur kale, kale, flat back kale, palm tree kale, or black Tuscan palm.",
-//                            "link": {
-//                                "url": "https://en.wikipedia.org/wiki/Lacinato_kale"
-//                            }
-//                        }
-//                    }
-//                ]
-//            }
-//        }
-//    ]
+
+    public function search($pageTitle, $sortDirection = 'ascending',$timestamp = 'last_edited_time')
+    {
+        $response = Http::withToken(config('notion-wrapper.info.token'))->post($this->BASE_URL."/search",['query'=>$pageTitle,
+            'sort'=>[
+                'direction'=>$sortDirection,
+                'timestamp'=>$timestamp
+            ]]);
+
+        return $response->json();
+
+    }
     public function isSelectProperty($property)
     {
        return $property['type'] == 'select';
@@ -147,68 +125,4 @@ class NotionPage
     }
 
 }
-//{
-//    "parent": {
-//        "database_id": "632b5fb7e06c4404ae12065c48280e4c"
-//    },
-//    "properties": {
-//
-//        "Name": {
-//            "title": [
-//                {
-//                    "text": {
-//                        "content": "New Media Article"
-//                    }
-//                }
-//            ]
-//        },
-//        "Status": {
-//            "select": {
-//                "id": "8c4a056e-6709-4dd1-ba58-d34d9480855a",
-//                "name": "Ready to Start",
-//                "color": "yellow"
-//            }
-//        },
-//        "Publisher": {
-//            "select": {
-//                "id": "01f82d08-aa1f-4884-a4e0-3bc32f909ec4",
-//                "name": "The Atlantic",
-//                "color": "red"
-//            }
-//        }
-//
-//    },
-//    "children": [
-//        {
-//            "object": "block",
-//            "type": "heading_2",
-//            "heading_2": {
-//                "text": [
-//                    {
-//                        "type": "text",
-//                        "text": {
-//                            "content": "Lacinato kale"
-//                        }
-//                    }
-//                ]
-//            }
-//        },
-//        {
-//            "object": "block",
-//            "type": "paragraph",
-//            "paragraph": {
-//                "text": [
-//                    {
-//                        "type": "text",
-//                        "text": {
-//                            "content": "Lacinato kale is a variety of kale with a long tradition in Italian cuisine, especially that of Tuscany. It is also known as Tuscan kale, Italian kale, dinosaur kale, kale, flat back kale, palm tree kale, or black Tuscan palm.",
-//                            "link": {
-//                                "url": "https://en.wikipedia.org/wiki/Lacinato_kale"
-//                            }
-//                        }
-//                    }
-//                ]
-//            }
-//        }
-//    ]
-//}
+
