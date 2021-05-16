@@ -6,12 +6,12 @@ namespace Pi\Notion;
 
 use Illuminate\Support\Facades\Http;
 use Pi\Notion\Exceptions\NotionDatabaseException;
-use Pi\Notion\Traits\HandleExceptions;
+use Pi\Notion\Traits\ThrowsExceptions;
 use Pi\Notion\Traits\RetrieveResource;
 
 class NotionDatabase extends Workspace
 {
-    use HandleExceptions;
+    use ThrowsExceptions;
     use RetrieveResource;
 
     public function __construct($id = '')

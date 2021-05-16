@@ -5,13 +5,13 @@ namespace Pi\Notion;
 
 
 use Illuminate\Support\Facades\Http;
-use Pi\Notion\Traits\HandleExceptions;
+use Pi\Notion\Traits\ThrowsExceptions;
 use Pi\Notion\Traits\RetrieveResource;
 
 class NotionPage
 {
     use RetrieveResource;
-    use HandleExceptions;
+    use ThrowsExceptions;
     public function __construct($id = '')
     {
 
