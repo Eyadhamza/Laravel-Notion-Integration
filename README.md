@@ -54,10 +54,51 @@ return [
 
 ## Usage
 
+
+Get a notion database using id
+
 ```php
-$notion-wrapper = new Pi\Notion();
-echo $notion-wrapper->echoPhrase('Hello, Spatie!');
+
+use Pi\Notion\NotionDatabase;
+
+$object = NotionDatabase::ofId('834b5c8cc1204816905cd54dc2f3341d');
+
+// returns the information of notion page as a json response
 ```
+
+Query the notion database contents using a specific select filter and value
+
+```php
+
+use Pi\Notion\NotionDatabase;
+
+$filter = [
+    'property' => 'Status',
+    'select' => 'Reading'
+    ];
+             
+$response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents($filter);
+
+// returns the contents of notion database as a json response
+```
+
+
+Query the notion database contents using a multiple select filters and values
+
+```php
+
+use Pi\Notion\NotionDatabase;
+
+$filter = [
+    'property' => 'Status',
+    'select' => 'Reading'
+    ];
+             
+$response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents($filter);
+
+// returns the contents of notion database as a json response
+```
+
 
 ## Testing
 

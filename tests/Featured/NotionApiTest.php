@@ -50,9 +50,11 @@ class NotionApiTest extends TestCase
     /** @test */
     public function it_should_return_database_contents_with_single_query()
     {
-         $filter['property'] = 'Status';
-         $filter['select'] = 'Reading';
 
+         $filter = [
+             'property' => 'Status',
+             'select' => 'Reading'
+         ];
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents($filter);
 
 
@@ -83,6 +85,11 @@ class NotionApiTest extends TestCase
 
         $this->assertStringContainsString('page',$object['object']);
 
+
+        $object = NotionPage::ofId('834b5c8cc1204816905cd54dc2f3341d');
+
+
+        $this->assertStringContainsString('page',$object['object']);
 
     }
 

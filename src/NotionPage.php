@@ -17,7 +17,7 @@ class NotionPage extends Workspace
     protected mixed $created_time;
     protected mixed $last_edited_time;
 
-    public function __construct($id = '', ...$params )
+    public function __construct($id = '')
     {
 
 
@@ -25,6 +25,7 @@ class NotionPage extends Workspace
         parent::__construct();
         $this->id = $id ;
         $this->URL = $this->BASE_URL."/pages/";
+
 
 
     }
