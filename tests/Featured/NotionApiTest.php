@@ -166,4 +166,13 @@ class NotionApiTest extends TestCase
         $this->assertStringContainsString('list',$response['object']);
     }
 
+    /** @test */
+    public function it_can_get_page_blocks()
+    {
+
+        $page =  new NotionPage('834b5c8cc1204816905cd54dc2f3341d');
+        $response = $page->getBlocks();
+        $this->assertStringContainsString('list',$response['object']);
+    }
+
 }

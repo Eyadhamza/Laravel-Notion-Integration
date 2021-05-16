@@ -114,6 +114,13 @@ class NotionPage extends Workspace
         return $response->json();
 
     }
+    public function getBlocks()
+    {
+        $response = Http::withToken(config('notion-wrapper.info.token'))
+            ->get($this->BASE_URL."/blocks/$this->id/children");
+
+        return $response->json();
+    }
     public function isSelectProperty($property)
     {
        return $property['type'] == 'select';
