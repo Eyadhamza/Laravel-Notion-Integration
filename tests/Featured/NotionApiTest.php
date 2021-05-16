@@ -91,6 +91,7 @@ class NotionApiTest extends TestCase
     {
         $properties[0]['name'] = 'Name';
         $properties[0]['type'] = 'text';
+        $properties[0]['content'] = 'New Media Article';
 
         $properties[1]['name'] = 'Publisher';
         $properties[1]['type'] = 'select';
@@ -101,7 +102,7 @@ class NotionApiTest extends TestCase
         $properties[2]['name'] = 'Status';
         $properties[2]['type'] = 'select';
 
-        $response =  (new NotionPage('834b5c8cc1204816905cd54dc2f3341d'))->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
+        $response =  (new NotionPage('819f5b54348f463580ef118b6a54bd0d'))->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
 
 
         $this->assertStringContainsString('page',$response['object']);
