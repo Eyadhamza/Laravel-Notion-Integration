@@ -46,19 +46,23 @@ class NotionPage
             'properties' =>[
                 $properties->map(function ($property){
 
-                        return [
-
+                        return
                             $property['name'] == 'Name' ? array($property['name'] => [
                                 'title'=>[
                                     $property['type'] => $property['content'] ?? null
                                 ]
                             ]) : array([
                                 $property['name'] => [
-                                    $property['type'] => $property['content'] ?? null
+                                    $property['type'] == 'select' ? array($property['type'] => array(
+                                        $property['id'] ?? null,
+                                        $property['select_name'] ?? null,
+                                        $property['color'] ?? null
+                                        )) :
+                                        array( $property['type'] => $property['content'] ?? null)
                                 ]
 
                             ])
-                        ];
+                        ;
                     })
             ]
 

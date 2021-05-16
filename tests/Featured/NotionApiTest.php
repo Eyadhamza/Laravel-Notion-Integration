@@ -94,6 +94,9 @@ class NotionApiTest extends TestCase
 
         $properties[1]['name'] = 'Publisher';
         $properties[1]['type'] = 'select';
+        $properties[1]['id'] = '8c4a056e-6709-4dd1-ba58-d34d9480855a';
+        $properties[1]['select_name'] = 'Ready to Start';
+        $properties[1]['color'] = 'yellow';
 
         $properties[2]['name'] = 'Status';
         $properties[2]['type'] = 'select';
