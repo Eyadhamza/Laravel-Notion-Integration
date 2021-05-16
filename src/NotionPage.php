@@ -34,7 +34,7 @@ class NotionPage
                     ,'properties' => $this->createProperties($properties)['properties']]);
 //        , !empty($content) ? $this->createContent($properties,$content) : ''
 
-        dd($response->json());
+
         $this->throwExceptions($response);
 
         return $response->json();
@@ -52,16 +52,17 @@ class NotionPage
                 $properties->mapToAssoc(function ($property){
 
                         return
-                            [$property['name'] , $property['name'] == 'Name' ? array(
+                            [$property['name'] , $this->isNameProperty($property) ? array(
                                 'title'=>array([
                                     $property['type'] => ['content' => $property['content']] ?? null,
 
                                 ]
                             )) :
-                                array($property['type'] =>array(
-                                   'name'=>$property['select_name'],
-                                    'color'=>$property['color']
-                                )),
+                                 array($property['type'] =>
+                                    array(
+                                    'name'=>$property['select_name'] ?? null,
+                                    'color'=>$property['color']) ?? null
+                                ),
 
 
                             ];
@@ -81,6 +82,11 @@ class NotionPage
     public function isSelectProperty($property)
     {
        return $property['type'] == 'select';
+    }
+
+    private function isNameProperty($property)
+    {
+        return $property['name'] == 'Name';
     }
 
 }
