@@ -24,11 +24,12 @@ class NotionPage
     public function create($notionDatabaseId,array|string $properties,array|string $content = null)
     {
 
+        dd(array('properties' => $this->createProperties($properties)['properties']));
 //        dd($this->createProperties($properties)['properties']);
         $response = Http::withToken(config('notion-wrapper.info.token'))
             ->post($this->URL,
                 [
-                    'parent'=> array('page_id' => $notionDatabaseId,'database_id' => $notionDatabaseId)
+                    'parent'=> array('database_id' => $notionDatabaseId)
 
                     ,'properties' => $this->createProperties($properties)['properties']]);
 //        , !empty($content) ? $this->createContent($properties,$content) : ''
@@ -57,9 +58,9 @@ class NotionPage
                             ]) : array([
                                 $property['name'] => [
                                     $property['type'] == 'select' ? array($property['type'] => array(
-                                        $property['id'] ?? null,
-                                        $property['select_name'] ?? null,
-                                        $property['color'] ?? null
+
+                                        'name' => $property['select_name'] ?? null,
+                                        'color' => $property['color'] ?? null
                                         )) :
                                         array( $property['type'] => $property['content'] ?? null)
                                 ]

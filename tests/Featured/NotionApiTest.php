@@ -101,7 +101,8 @@ class NotionApiTest extends TestCase
 
         $properties[2]['name'] = 'Status';
         $properties[2]['type'] = 'select';
-
+        $properties[2]['select_name'] = 'The Atlantic';
+        $properties[2]['color'] = 'red';
         $response =  (new NotionPage('819f5b54348f463580ef118b6a54bd0d'))->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
 
 
