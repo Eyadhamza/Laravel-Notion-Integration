@@ -183,6 +183,32 @@ $contents = array(
 ```
 
 
+Search a notion page using its title
+
+```php
+
+use Pi\Notion\NotionPage;
+
+$response = (new NotionPage)
+            ->search('New Media Article');
+            
+      
+// returns the information of notion page as a json response
+```
+
+
+Get the blocks (contents) of a notion page using its title
+
+```php
+
+use Pi\Notion\NotionPage;
+
+$page =  (new NotionPage('834b5c8cc1204816905cd54dc2f3341d'))->getBlocks();
+      
+// returns the required information page as a json response
+```
+
+
 ## Testing
 
 ```bash
