@@ -89,12 +89,23 @@ Query the notion database contents using a multiple select filters and values
 
 use Pi\Notion\NotionDatabase;
 
-$filter = [
-    'property' => 'Status',
-    'select' => 'Reading'
-    ];
+// defining your filters as property name and the select value 
+
+$filters = array([
+                'property' => 'Status',
+                'select' => 'Reading',
+            ],
+            [
+                'property' => 'Publisher',
+                'select' => 'NYT',
+
+            ]);
+
+// getContents() takes two arguments, the first is the filter/s
+// the second is the filter type, can be "and" which means it will return content from "a" and "b" (both must satisfy condition), "or" returns content in a or b  
+
              
-$response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents($filter);
+$response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents($filters, filterType: 'and');
 
 // returns the contents of notion database as a json response
 ```

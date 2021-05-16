@@ -65,12 +65,19 @@ class NotionApiTest extends TestCase
     /** @test */
     public function it_should_return_database_contents_with_multiple_query()
     {
-        $filters[0]['property'] = 'Status';
-        $filters[0]['select'] = 'Reading';
 
-        $filters[1]['property'] = 'Publisher';
-        $filters[1]['select'] = 'NYT';
 
+
+        $filters = array(
+            [
+                'property' => 'Status',
+                'select' => 'Reading',
+            ],
+            [
+                'property' => 'Publisher',
+                'select' => 'NYT',
+
+            ]);
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents($filters,filterType: 'and');
 
 
@@ -96,11 +103,12 @@ class NotionApiTest extends TestCase
     /** @test */
     public function it_should_add_properties_to_created_page()
     {
-        $properties = array([
+        $properties = array(
+            [
             'name' => 'Name',
             'type' => 'text',
             'content' => 'New Media Article',
-        ],
+            ],
             [
                 'name' => 'Status',
                 'type' => 'select',
