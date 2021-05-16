@@ -119,6 +119,7 @@ class NotionPage extends Workspace
         return $response->json();
 
     }
+
     public function getBlocks()
     {
         $response = Http::withToken(config('notion-wrapper.info.token'))
@@ -126,12 +127,16 @@ class NotionPage extends Workspace
 
         return $response->json();
     }
+    public function update()
+    {
+        //TODO
+    }
     public function isSelectProperty($property)
     {
        return $property['type'] == 'select';
     }
 
-    private function isNameProperty($property)
+    public function isNameProperty($property)
     {
         return $property['name'] == 'Name';
     }

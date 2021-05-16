@@ -63,6 +63,19 @@ NOTION_TOKEN  = 'secret_{token}'
 
 ```
 
+### Workspace 
+
+You can get information regarding your workspace
+
+```php
+
+use Pi\Notion\Workspace;
+
+$object = Workspace::workspace();
+
+// returns the information of notion workspace as a json response
+```
+
 
 ### Dealing with notion databases
 
