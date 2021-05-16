@@ -44,29 +44,27 @@ class NotionPage
     {
 
         $properties = collect($properties);
+
 //        dd($properties);
         // the power of collections!
         return [
             'properties' =>
-                $properties->map(function ($property){
+                $properties->mapToAssoc(function ($property){
 
                         return
-                            $property['name'] == 'Name' ? array($property['name'] => [
+                            [$property['name'] , $property['name'] == 'Name' ? array(
                                 'title'=>[
-                                    $property['type'] => $property['content'] ?? null
+                                    $property['type'] => ['content' => $property['content']] ?? null
                                 ]
-                            ]) : array([
-                                $property['name'] => [
-                                    $property['type'] == 'select' ? array($property['type'] => array(
+                            ) :
+                                array($property['type'] =>array(
+                                   'name'=>$property['select_name'],
+                                    'color'=>$property['color']
+                                )),
 
-                                        'name' => $property['select_name'] ?? null,
-                                        'color' => $property['color'] ?? null
-                                        )) :
-                                        array( $property['type'] => $property['content'] ?? null)
-                                ]
 
-                            ])
-                        ;
+                            ];
+
                     })
 
 
@@ -77,6 +75,11 @@ class NotionPage
     public function createContent(array|string $properties, array|string $children)
     {
         //TODO
+    }
+
+    public function isSelectProperty($property)
+    {
+       return $property['type'] == 'select';
     }
 
 }
