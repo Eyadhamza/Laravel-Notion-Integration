@@ -21,12 +21,12 @@ class NotionPage
 
     }
 
-    public function create($notionDatabaseId,array|string $properties,array|string $children = null)
+    public function create($notionDatabaseId,array|string $properties,array|string $content = null)
     {
 
         $response = Http::withToken(config('notion-wrapper.info.token'))
             ->post($this->URL,
-                empty($children) ? $this->createWithoutChildren($properties) : $this->createWithChildren($properties,$children));
+                ['parent'=> $notionDatabaseId, $this->createProperties($properties), !empty($content) ? $this->createContent($properties,$content) : '']);
 
 
 
@@ -35,13 +35,14 @@ class NotionPage
         return $response->json();
     }
 
-    public function createWithoutChildren(array|string $properties)
+    public function createProperties(array|string $properties)
     {
+        //TODO
     }
 
-    public function createWithChildren(array|string $properties, array|string $children)
+    public function createContent(array|string $properties, array|string $children)
     {
-
+        //TODO
     }
 
 }
