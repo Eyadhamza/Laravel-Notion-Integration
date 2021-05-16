@@ -14,14 +14,18 @@ class NotionPage extends Workspace
     use ThrowsExceptions;
 
 
+    protected mixed $created_time;
+    protected mixed $last_edited_time;
 
-    public function __construct($id = '')
+    public function __construct($id = '', ...$params )
     {
+
 
         # It's more common for an integration to receive a page ID by calling the search endpoint.
         parent::__construct();
         $this->id = $id ;
         $this->URL = $this->BASE_URL."/pages/";
+
 
     }
 

@@ -78,10 +78,10 @@ class NotionApiTest extends TestCase
     /** @test */
     public function it_should_return_page_info()
     {
-        $response =  (new NotionPage('834b5c8cc1204816905cd54dc2f3341d'))->get();
+        $object = (new NotionPage)->get('834b5c8cc1204816905cd54dc2f3341d');
 
 
-        $this->assertStringContainsString('page',$response['object']);
+        $this->assertStringContainsString('page',$object['object']);
 
 
     }

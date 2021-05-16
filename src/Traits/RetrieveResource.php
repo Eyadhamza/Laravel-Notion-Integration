@@ -21,12 +21,13 @@ trait RetrieveResource
 
         $this->throwExceptions($response);
 
+
         return $response->json();
     }
 
     public static function ofId($id)
     {
-        return (new self($id))->get();
+        return (new self)->get($id);
     }
     # NotionPage::ofId('632b5fb7e06c4404ae12065c48280e4c')
 }
