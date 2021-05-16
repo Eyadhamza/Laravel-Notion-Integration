@@ -86,4 +86,25 @@ class NotionApiTest extends TestCase
 
     }
 
+    /** @test */
+    public function it_should_return_properties_to_create_page()
+    {
+        $properties[0]['name'] = 'Name';
+        $properties[0]['type'] = 'text';
+
+        $properties[1]['name'] = 'Publisher';
+        $properties[1]['type'] = 'select';
+
+        $properties[2]['name'] = 'Status';
+        $properties[2]['type'] = 'select';
+
+        $response =  (new NotionPage('834b5c8cc1204816905cd54dc2f3341d'))->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
+
+
+        $this->assertStringContainsString('page',$response['object']);
+
+
+    }
+
+
 }

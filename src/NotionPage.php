@@ -24,12 +24,13 @@ class NotionPage
     public function create($notionDatabaseId,array|string $properties,array|string $content = null)
     {
 
+        dd($this->createProperties($properties));
         $response = Http::withToken(config('notion-wrapper.info.token'))
             ->post($this->URL,
                 ['parent'=> $notionDatabaseId, $this->createProperties($properties), !empty($content) ? $this->createContent($properties,$content) : '']);
 
 
-
+        dd($response->json());
         $this->throwExceptions($response);
 
         return $response->json();
@@ -37,6 +38,31 @@ class NotionPage
 
     public function createProperties(array|string $properties)
     {
+
+        $properties = collect($properties);
+//        dd($properties);
+        // the power of collections!
+        return [
+            'properties' =>[
+                $properties->map(function ($property){
+
+                        return [
+
+                            $property['name'] == 'Name' ? array($property['name'] => [
+                                'title'=>[
+                                    $property['type'] => $property['content'] ?? null
+                                ]
+                            ]) : array([
+                                $property['name'] => [
+                                    $property['type'] => $property['content'] ?? null
+                                ]
+
+                            ])
+                        ];
+                    })
+            ]
+
+        ];
         //TODO
     }
 
