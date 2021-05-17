@@ -2,10 +2,12 @@
 
 namespace Pi\Notion\Tests\Featured;
 
+use Illuminate\Support\Collection;
 use Pi\Notion\NotionDatabase;
 
 use Pi\Notion\Exceptions\NotionDatabaseException;
 use Pi\Notion\NotionPage;
+use Pi\Notion\Properties\SelectProperty;
 use Pi\Notion\Tests\TestCase;
 use Pi\Notion\Workspace;
 
@@ -67,20 +69,14 @@ class NotionApiTest extends TestCase
     {
 
 
-
-        $filters = array(
-            [
-                'property' => 'Status',
-                'select' => 'Reading',
-            ],
-            [
-                'property' => 'Publisher',
-                'select' => 'NYT',
-
-            ]);
-        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents($filters,filterType: 'and');
+        $properties = new Collection();
+        $properties->add(SelectProperty::set('Status','Reading'))
+                ->add(SelectProperty::set('Publisher','NYT'));
 
 
+        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($properties,filterType: 'and');
+
+        dd($response);
         $this->assertStringContainsString('list',$response['object']);
 
     }

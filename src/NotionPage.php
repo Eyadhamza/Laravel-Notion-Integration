@@ -25,7 +25,7 @@ class NotionPage extends Workspace
         parent::__construct();
         $this->id = $id ;
         $this->URL = $this->BASE_URL."/pages/";
-
+        $this->fillPage();
 
 
     }
@@ -139,6 +139,12 @@ class NotionPage extends Workspace
     public function isNameProperty($property)
     {
         return $property['name'] == 'Name';
+    }
+
+    private function fillPage()
+    {
+
+
     }
 
 }

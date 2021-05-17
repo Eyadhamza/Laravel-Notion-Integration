@@ -4,6 +4,7 @@ namespace Pi\Notion;
 
 class Workspace
 {
+    //TODO users
     protected $token;
     public string $BASE_URL= 'https://api.notion.com/v1';
     public function __construct()
