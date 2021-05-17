@@ -4,14 +4,14 @@
 namespace Pi\Notion\Query;
 
 
-class FilterSelect implements Filterable
+class SelectFilter implements Filterable
 {
 
     public function set($property)
     {
 
        return [
-           'property'=> $property->key,
+           'property'=> $property->n,
                 'select'=> [
                     'equals' =>$property->value
                 ]

@@ -4,7 +4,7 @@
 namespace Pi\Notion\Query;
 
 
-class FilterMultiSelect implements Filterable
+class MultiSelectFilter implements Filterable
 {
 
     public function set($property)

@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Pi\Notion\Exceptions\NotionDatabaseException;
 use Pi\Notion\Query\Filterable;
-use Pi\Notion\Query\FilterMultiSelect;
+use Pi\Notion\Query\MultiSelectFilter;
 use Pi\Notion\Traits\ThrowsExceptions;
 use Pi\Notion\Traits\RetrieveResource;
 

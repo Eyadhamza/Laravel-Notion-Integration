@@ -4,19 +4,19 @@
 namespace Pi\Notion\Properties;
 
 
-use Pi\Notion\Query\FilterMultiSelect;
+use Pi\Notion\Query\MultiSelectFilter;
 
 class MultiSelect
 {
     public string $key;
     public $value;
-    public FilterMultiSelect $filter;
+    public MultiSelectFilter $filter;
 
     public function __construct($key, $value)
     {
         $this->key = $key;
         $this->value = $value;
-        $this->filter = new FilterMultiSelect();
+        $this->filter = new MultiSelectFilter();
     }
 
     public function setPropertyValues($key, $values): array // for page creation

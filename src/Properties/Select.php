@@ -4,21 +4,32 @@
 namespace Pi\Notion\Properties;
 
 
-use Pi\Notion\Query\FilterMultiSelect;
+use Pi\Notion\Query\MultiSelectFilter;
+use Pi\Notion\Query\SelectFilter;
 
-class Select
+class Select extends Property
 {
-    public $key;
-    public $value;
-    public $filter;
-    public function __construct($key,$value)
+
+    public SelectFilter $filter;
+    private $option;
+
+    private $color;
+
+    protected $name;
+    public function __construct($name , $option = null, $color = null,$id=null)
     {
-        $this->key = $key;
-        $this->value = $value;
-        $this->filter = new FilterMultiSelect();
+        $this->type = 'select';
+        $this->filter = new SelectFilter;
+
+        parent::__construct($id, $this->type);
+
+        $this->name = $name;
+        $this->option = $option;
+        $this->color = $color;
+
     }
 
-    public function setPropertyValues($key, $values): array // for page creation
+    public function setPropertyValues($name, $types): array // for page creation
     {
 
     }
