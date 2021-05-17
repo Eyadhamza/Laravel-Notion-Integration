@@ -59,7 +59,6 @@ class NotionDatabase extends Workspace
     public function filter($property): array
     {
 
-
        return [
            'filter'=> $this->setFilter($property->filter)->set($property)
        ];
