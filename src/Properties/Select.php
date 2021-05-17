@@ -11,11 +11,11 @@ class Select extends Property
 {
 
     public SelectFilter $filter;
-    private $option;
+    public $option;
 
-    private $color;
+    public $color;
 
-    protected $name;
+    public $name;
     public function __construct($name , $option = null, $color = null,$id=null)
     {
         $this->type = 'select';

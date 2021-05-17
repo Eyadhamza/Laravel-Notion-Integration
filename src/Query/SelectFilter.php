@@ -11,9 +11,9 @@ class SelectFilter implements Filterable
     {
 
        return [
-           'property'=> $property->n,
+           'property'=> $property->name,
                 'select'=> [
-                    'equals' =>$property->value
+                    'equals' =>$property->option
                 ]
        ];
 
