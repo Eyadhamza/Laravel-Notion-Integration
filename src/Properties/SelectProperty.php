@@ -4,22 +4,24 @@
 namespace Pi\Notion\Properties;
 
 
+use Pi\Notion\Query\FilterSelect;
+
 class SelectProperty
 {
-    private $key;
-    private $value;
-
-    public function __construct($key, $value)
+    public $key;
+    public $value;
+    public $filter;
+    public function __construct($key,$value)
     {
-
         $this->key = $key;
         $this->value = $value;
-
-
+        $this->filter = new FilterSelect();
     }
 
-    public static function set($key, $value): array
+    public function set($key, $value): array
     {
+
+
         return [
             'property' => $key,
 

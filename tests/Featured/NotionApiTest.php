@@ -70,13 +70,13 @@ class NotionApiTest extends TestCase
 
 
         $properties = new Collection();
-        $properties->add(SelectProperty::set('Status','Reading'))
-                ->add(SelectProperty::set('Publisher','NYT'));
+        $properties->add(new SelectProperty('Status','Reading'))
+                ->add(new SelectProperty('Publisher','NYT'));
 
 
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($properties,filterType: 'and');
 
-        dd($response);
+
         $this->assertStringContainsString('list',$response['object']);
 
     }
