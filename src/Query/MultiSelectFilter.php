@@ -13,9 +13,9 @@ class MultiSelectFilter implements Filterable
 
        return [
 
-           'property'=> $property->key,
+           'property'=> $property->name,
                 'multi_select'=> [
-                    'contains' =>$property->value
+                    'contains' =>$property->option
                 ],
 
        ];

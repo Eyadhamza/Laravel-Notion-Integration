@@ -16,16 +16,25 @@ class Select extends Property
     public $color;
 
     public $name;
+
+    public $equals;
+
+    public $notEqual;
+    public $isNotEmpty;
+
+    public $isEmpty;
+
     public function __construct($name , $option = null, $color = null,$id=null)
     {
         $this->type = 'select';
         $this->filter = new SelectFilter;
 
-        parent::__construct($id, $this->type);
+        parent::__construct($this->type,$id);
 
         $this->name = $name;
         $this->option = $option;
         $this->color = $color;
+
 
     }
 
@@ -34,5 +43,36 @@ class Select extends Property
 
     }
 
+
+    public function equals($option)
+    {
+         $this->equals = $option;
+
+         return $this;
+    }
+
+    public function notEqual($option)
+    {
+        $this->notEqual = $option;
+
+
+        return $this;
+    }
+
+    public function isNotEmpty()
+    {
+        $this->isNotEmpty = true;
+
+
+        return $this;
+    }
+
+    public function isEmpty()
+    {
+        $this->isEmpty = true;
+
+
+        return $this;
+    }
 
 }

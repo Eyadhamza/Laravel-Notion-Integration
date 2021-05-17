@@ -12,7 +12,7 @@ class Property
 
      public ?string $id;
      public string $type;
-    public function __construct(string $id = null,string $type)
+    public function __construct(string $type,string $id = null)
     {
 
         $this->id = $id ;

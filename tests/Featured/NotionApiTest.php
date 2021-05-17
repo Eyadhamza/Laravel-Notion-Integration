@@ -78,6 +78,26 @@ class NotionApiTest extends TestCase
 
         $this->assertStringContainsString('list',$response['object']);
 
+
+
+    }
+    /** @test */
+    public function it_should_return_database_contents_with_multiple_query_with_different_conditions()
+    {
+
+
+        $properties = new Collection();
+        $properties->add((new Select('Status'))->equals('Reading')->isNotEmpty())
+            ->add((new Select('Publisher'))->notEqual('NN')->isEmpty());
+
+
+        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($properties,filterType: 'and');
+
+
+        $this->assertStringContainsString('list',$response['object']);
+
+
+
     }
     /** @test */
     public function it_should_return_database_contents_with_multiple_query_multi_select_property()

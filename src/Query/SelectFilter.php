@@ -10,12 +10,26 @@ class SelectFilter implements Filterable
     public function set($property)
     {
 
+        $propertyConditions = collect($this->setFilterConditions($property));
+
        return [
            'property'=> $property->name,
-                'select'=> [
-                    'equals' =>$property->option
-                ]
+                'select'=>
+                    $propertyConditions->map(function ($condition){
+                    return $condition;
+                })
+
+
+
+
+
        ];
 
     }
+    public function setFilterConditions($property)
+    {
+        dd($property);
+        return ;
+    }
+
 }
