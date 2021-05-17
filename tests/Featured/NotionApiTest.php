@@ -115,6 +115,23 @@ class NotionApiTest extends TestCase
         $this->assertStringContainsString('list',$response['object']);
 
     }
+
+    /** @test */
+    public function it_should_return_database_contents_with_multiple_query_multi_select_property_with_conditions()
+    {
+
+
+        $properties = new Collection();
+        $properties->add((new MultiSelect('StatusMulti'))->contains('a'))
+            ->add((new MultiSelect('StatusMulti'))->contains('b'));
+
+
+        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($properties,filterType: 'and');
+
+
+        $this->assertStringContainsString('list',$response['object']);
+
+    }
     /** @test */
     public function it_should_return_page_info()
     {

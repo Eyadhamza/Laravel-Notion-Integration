@@ -16,6 +16,11 @@ class MultiSelect extends Property
     public $color;
 
     public $name;
+    public $contains;
+    public $notContain;
+    public  $isNotEmpty;
+    public  $isEmpty;
+
     public function __construct($name , $option = null, $color = null,$id=null)
     {
         $this->type = 'multi_select';
@@ -31,6 +36,38 @@ class MultiSelect extends Property
     public function setPropertyValues($key, $values): array // for page creation
     {
 
+    }
+
+
+    public function contains($option)
+    {
+        $this->contains = $option;
+
+        return $this;
+    }
+
+    public function notContain($option)
+    {
+        $this->notContain = $option;
+
+
+        return $this;
+    }
+
+    public function isNotEmpty()
+    {
+        $this->isNotEmpty = true;
+
+
+        return $this;
+    }
+
+    public function isEmpty()
+    {
+        $this->isEmpty = true;
+
+
+        return $this;
     }
 
 

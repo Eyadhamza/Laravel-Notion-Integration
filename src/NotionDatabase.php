@@ -48,7 +48,7 @@ class NotionDatabase extends Workspace
                 empty($filterType) ? $this->filter($properties) : $this->multipleFilters($properties,$filterType));
 
 
-        dd($response->json());
+        
         $this->throwExceptions($response);
 
         return $response->json();

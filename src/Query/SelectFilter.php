@@ -14,7 +14,7 @@ class SelectFilter implements Filterable
 
        return [
            'property'=> $property->name,
-                'select'=> $this->setFilterConditions($property)
+                'select'=> is_null($property->option) ? $this->setFilterConditions($property) :['equals'=>$property->option]
 
        ];
 
