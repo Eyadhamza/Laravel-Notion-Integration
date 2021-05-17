@@ -7,6 +7,7 @@ use Pi\Notion\NotionDatabase;
 
 use Pi\Notion\Exceptions\NotionDatabaseException;
 use Pi\Notion\NotionPage;
+use Pi\Notion\Properties\MultiSelect;
 use Pi\Notion\Properties\Select;
 use Pi\Notion\Tests\TestCase;
 use Pi\Notion\Workspace;
@@ -70,6 +71,21 @@ class NotionApiTest extends TestCase
         $properties = new Collection();
         $properties->add(new Select('Status','Reading'))
                 ->add(new Select('Publisher','NYT'));
+
+
+        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($properties,filterType: 'and');
+
+
+        $this->assertStringContainsString('list',$response['object']);
+
+    }
+    /** @test */
+    public function it_should_return_database_contents_with_multiple_query_multi_select_property()
+    {
+
+
+        $properties = new Collection();
+        $properties->add(new MultiSelect('StatusMulti','a'));
 
 
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($properties,filterType: 'and');

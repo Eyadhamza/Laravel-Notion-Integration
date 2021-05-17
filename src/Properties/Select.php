@@ -4,7 +4,7 @@
 namespace Pi\Notion\Properties;
 
 
-use Pi\Notion\Query\FilterSelect;
+use Pi\Notion\Query\FilterMultiSelect;
 
 class Select
 {
@@ -15,7 +15,7 @@ class Select
     {
         $this->key = $key;
         $this->value = $value;
-        $this->filter = new FilterSelect();
+        $this->filter = new FilterMultiSelect();
     }
 
     public function setPropertyValues($key, $values): array // for page creation

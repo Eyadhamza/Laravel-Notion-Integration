@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Pi\Notion\Exceptions\NotionDatabaseException;
 use Pi\Notion\Query\Filterable;
-use Pi\Notion\Query\FilterSelect;
+use Pi\Notion\Query\FilterMultiSelect;
 use Pi\Notion\Traits\ThrowsExceptions;
 use Pi\Notion\Traits\RetrieveResource;
 
@@ -48,7 +48,7 @@ class NotionDatabase extends Workspace
                 empty($filterType) ? $this->filter($properties) : $this->multipleFilters($properties,$filterType));
 
 
-
+        dd($response->json());
         $this->throwExceptions($response);
 
         return $response->json();
