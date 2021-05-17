@@ -4,32 +4,29 @@
 namespace Pi\Notion\Query;
 
 
+use Illuminate\Support\Collection;
+
 class SelectFilter implements Filterable
 {
 
     public function set($property)
     {
 
-        $propertyConditions = collect($this->setFilterConditions($property));
-
        return [
            'property'=> $property->name,
-                'select'=>
-                    $propertyConditions->map(function ($condition){
-                    return $condition;
-                })
-
-
-
-
+                'select'=> $this->setFilterConditions($property)
 
        ];
 
     }
     public function setFilterConditions($property)
     {
-        dd($property);
-        return ;
+        return [
+                'equals'=>$property->equals ,
+                'does_not_equal'=>$property->notEqual,
+                'is_not_empty'=>$property->isNotEmpty,
+                'is_empty'=>$property->isEmpty
+        ];
     }
 
 }
