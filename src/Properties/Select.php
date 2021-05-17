@@ -6,7 +6,7 @@ namespace Pi\Notion\Properties;
 
 use Pi\Notion\Query\FilterSelect;
 
-class SelectProperty
+class Select
 {
     public $key;
     public $value;
@@ -18,16 +18,9 @@ class SelectProperty
         $this->filter = new FilterSelect();
     }
 
-    public function set($key, $value): array
+    public function setPropertyValues($key, $values): array // for page creation
     {
 
-
-        return [
-            'property' => $key,
-
-            'select' => $value,
-
-        ];
     }
 
 

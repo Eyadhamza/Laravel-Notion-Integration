@@ -91,11 +91,11 @@ Query the notion database contents using a multiple select filters and values
 ```php
 
 use Pi\Notion\NotionDatabase;
-use Pi\Notion\Properties\SelectProperty;
+use Pi\Notion\Properties\Select;
 
 // defining your filters as property name and the select value 
 
-$filters = array(SelectProperty::set('Status','Reading'),
+$filters = array(Select::setProperty('Status','Reading'),
             [
                 'property' => 'Publisher',
                 'select' => 'NYT',

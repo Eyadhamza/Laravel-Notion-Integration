@@ -38,7 +38,7 @@ class NotionDatabase extends Workspace
         return $this->filter;
     }
 
-    public function getContents(Collection $properties , $id = null,array|string $sorts = [],$filterType = '')
+    public function getContents($properties , $id = null,array|string $sorts = [],$filterType = '')
     {
         $id = $id ?? $this->id;
 
@@ -59,11 +59,10 @@ class NotionDatabase extends Workspace
     public function filter($property): array
     {
 
-       return [
-           'filter'=>[
-               FilterSelect::set($property)
 
-            ],
+       return [
+
+           'filter'=> $this->setFilter(new $property->filter)->set($property)
        ];
     }
     public function multipleFilters($properties,$filterType): array
@@ -76,7 +75,7 @@ class NotionDatabase extends Workspace
             $filterType =>
                 $properties->map(function ($property){
 
-                    return $this->setFilter(new FilterSelect)->set($property);
+                    return $this->setFilter($property->filter)->set($property);
                 })
                 ]
 

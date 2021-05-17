@@ -7,7 +7,7 @@ use Pi\Notion\NotionDatabase;
 
 use Pi\Notion\Exceptions\NotionDatabaseException;
 use Pi\Notion\NotionPage;
-use Pi\Notion\Properties\SelectProperty;
+use Pi\Notion\Properties\Select;
 use Pi\Notion\Tests\TestCase;
 use Pi\Notion\Workspace;
 
@@ -53,11 +53,9 @@ class NotionApiTest extends TestCase
     public function it_should_return_database_contents_with_single_query()
     {
 
-         $filter = [
-             'property' => 'Status',
-             'select' => 'Reading'
-         ];
-        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents($filter);
+        $property = new Select('Status','Reading');
+
+        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents($property);
 
 
         $this->assertStringContainsString('list',$response['object']);
@@ -70,8 +68,8 @@ class NotionApiTest extends TestCase
 
 
         $properties = new Collection();
-        $properties->add(new SelectProperty('Status','Reading'))
-                ->add(new SelectProperty('Publisher','NYT'));
+        $properties->add(new Select('Status','Reading'))
+                ->add(new Select('Publisher','NYT'));
 
 
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($properties,filterType: 'and');

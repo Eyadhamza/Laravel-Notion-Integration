@@ -9,6 +9,7 @@ class FilterSelect implements Filterable
 
     public function set($property)
     {
+
        return [
            'property'=> $property->key,
                 'select'=> [
