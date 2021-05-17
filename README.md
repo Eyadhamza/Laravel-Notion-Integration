@@ -95,13 +95,12 @@ use Pi\Notion\Properties\Select;
 
 // defining your filters as property name and the select value 
 
-$filters = array(Select::setProperty('Status','Reading'),
-            [
-                'property' => 'Publisher',
-                'select' => 'NYT',
+$filters = new \Illuminate\Support\Collection();
 
-            ]);
-$filters->add();
+
+$filters->add(new Select('Status','open'))->add(new Select('Publisher','me'));
+
+
 // getContents() takes two arguments, the first is the filter/s
 // the second is the filter type, can be "and" which means it will return content from "a" and "b" (both must satisfy condition), "or" returns content in a or b  
 

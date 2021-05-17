@@ -31,14 +31,14 @@ class NotionDatabase extends Workspace
 
     }
 
-    public function setFilter(Filterable $filter)
+    public function setFilterInterface(Filterable $filter)
     {
         $this->filter = $filter;
 
         return $this->filter;
     }
 
-    public function getContents($properties , $id = null,array|string $sorts = [],$filterType = '')
+    public function getContents($properties , $id = null,string $sort = '',$filterType = '')
     {
         $id = $id ?? $this->id;
 
@@ -48,7 +48,7 @@ class NotionDatabase extends Workspace
                 empty($filterType) ? $this->filter($properties) : $this->multipleFilters($properties,$filterType));
 
 
-        
+
         $this->throwExceptions($response);
 
         return $response->json();
@@ -60,7 +60,7 @@ class NotionDatabase extends Workspace
     {
 
        return [
-           'filter'=> $this->setFilter($property->filter)->set($property)
+           'filter'=> $this->setFilterInterface($property->filter)->set($property)
        ];
     }
     public function multipleFilters($properties,$filterType): array
@@ -73,10 +73,15 @@ class NotionDatabase extends Workspace
             $filterType =>
                 $properties->map(function ($property){
 
-                    return $this->setFilter($property->filter)->set($property);
+                    return $this->setFilterInterface($property->filter)->set($property);
                 })
                 ]
 
         ];
+    }
+
+    public function sort()
+    {
+        // TODO, whenever i return objects !
     }
 }

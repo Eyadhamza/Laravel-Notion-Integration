@@ -20,10 +20,10 @@ class MultiSelectFilter implements Filterable
     public function setFilterConditions($property)
     {
         return [
-            'contains'=>$property->contains ,
-            'does_not_contain'=>$property->notContain,
-            'is_not_empty'=>$property->isNotEmpty,
-            'is_empty'=>$property->isEmpty
+            'contains' => $property->contains ,
+            'does_not_contain' => $property->notContain,
+            'is_not_empty' => $property->isNotEmpty,
+            'is_empty' => $property->isEmpty
         ];
     }
 }

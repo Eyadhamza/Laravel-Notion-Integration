@@ -19,4 +19,6 @@ class Property
         $this->type = $type;
 
     }
+
+
 }
