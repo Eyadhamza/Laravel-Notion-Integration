@@ -85,7 +85,8 @@ class NotionApiTest extends TestCase
 
 
         $properties = new Collection();
-        $properties->add(new MultiSelect('StatusMulti','a'));
+        $properties->add(new MultiSelect('StatusMulti','a'))
+                   ->add(new MultiSelect('StatusMulti','b'));
 
 
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($properties,filterType: 'and');

@@ -48,7 +48,7 @@ class NotionDatabase extends Workspace
                 empty($filterType) ? $this->filter($properties) : $this->multipleFilters($properties,$filterType));
 
 
-        dd($response->json());
+
         $this->throwExceptions($response);
 
         return $response->json();
@@ -61,8 +61,7 @@ class NotionDatabase extends Workspace
 
 
        return [
-
-           'filter'=> $this->setFilter(new $property->filter)->set($property)
+           'filter'=> $this->setFilter($property->filter)->set($property)
        ];
     }
     public function multipleFilters($properties,$filterType): array
