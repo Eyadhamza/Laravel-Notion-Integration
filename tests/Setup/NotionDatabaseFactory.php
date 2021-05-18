@@ -4,7 +4,7 @@
 namespace Pi\Notion\Tests\Setup;
 
 
-class NotionFactory
+class NotionDatabaseFactory
 {
 
 }

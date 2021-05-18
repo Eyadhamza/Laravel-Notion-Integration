@@ -8,7 +8,7 @@ use Pi\Notion\NotionPage;
 use Pi\Notion\Tests\TestCase;
 use Pi\Notion\Workspace;
 
-class DatabaseTest extends TestCase
+class NotionDatabaseTest extends TestCase
 {
 
     /** @test */

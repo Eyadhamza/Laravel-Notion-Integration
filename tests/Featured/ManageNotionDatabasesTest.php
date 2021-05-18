@@ -12,7 +12,7 @@ use Pi\Notion\Properties\Select;
 use Pi\Notion\Tests\TestCase;
 use Pi\Notion\Workspace;
 
-class ManageDatabasesTest extends TestCase
+class ManageNotionDatabasesTest extends TestCase
 {
     /** @test */
     public function it_should_return_database_info()
