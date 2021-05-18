@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection ALL */
 
 
 namespace Pi\Notion\Query;
@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 class SelectFilter implements Filterable
 {
 
-    public function set($property)
+    public function set($property): array
     {
 
        return [
@@ -19,7 +19,7 @@ class SelectFilter implements Filterable
        ];
 
     }
-    public function setFilterConditions($property)
+    public function setFilterConditions($property): array
     {
         return [
                 'equals'=>$property->equals ,
