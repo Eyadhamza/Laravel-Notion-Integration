@@ -42,7 +42,7 @@ class ManagePagesTest extends TestCase
 
         $response =  (new NotionPage)->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
 
-        dd($response);
+        dd($response->json());
         $this->assertStringContainsString('page',$response['object']);
 
 

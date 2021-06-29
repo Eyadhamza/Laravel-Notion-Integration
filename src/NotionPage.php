@@ -65,13 +65,13 @@ class NotionPage extends Workspace
                         return
                             array( $property->getName() , $property->getName() =='Name' ? array(
                                 'title'=>array(array(
-                                    'text' => array('content' => 'asd') ?? null,
+                                    'text' => array('content' => $property->getOption()) ?? null,
 
                                 )
                             )) : array($property->getType() =>
                                 array(
-                                    'name'=>'option name not property name' ?? null,
-                                    $property->getColor()=>'option color not property name') ?? null
+                                    'name'=>$property->getOption() ?? null,
+                                    'color'=>$property->getColor()) ?? null
                             ),
 
 
