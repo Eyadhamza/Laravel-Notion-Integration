@@ -75,4 +75,60 @@ class Select extends Property
         return $this;
     }
 
+    /**
+     * @return mixed|null
+     */
+    public function getColor(): mixed
+    {
+        return $this->color;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getOption(): mixed
+    {
+        return $this->option;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEquals()
+    {
+        return $this->equals;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotEqual()
+    {
+        return $this->notEqual;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsNotEmpty()
+    {
+        return $this->isNotEmpty;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsEmpty()
+    {
+        return $this->isEmpty;
+    }
+
 }
