@@ -41,6 +41,16 @@ class Title extends Property
         return $this->name;
     }
 
+    public function values(): array // for page creation
+    {
+        return
+            array(
+                    array(
+                        'text' => array('content' => $this->getOption())
+                    ) ?? null
+        );
+    }
+
     public function getContent()
     {
 
@@ -54,4 +64,13 @@ class Title extends Property
         return $this->option;
     }
 
+    // $property->getType() =='title' ?
+    //                                array(
+    //                                    $property->getType() =>array(
+    //                                        array(
+    //                                        'text' => array('content' => $property->getOption()) ?? null,
+    //
+    //                                    )
+    //                                )
+    //                            ) :
 }

@@ -44,13 +44,6 @@ class NotionPage extends Workspace
                     ]);
 
         dd($response->json());
-        dd( [
-            'parent'=> array('database_id' => $notionDatabaseId)
-
-            ,'properties' => $this->addProperties($properties),
-            'children' =>$this->addContent($content)['children']]);
-        $this->throwExceptions($response);
-
         return $response->json();
     }
 
@@ -63,14 +56,7 @@ class NotionPage extends Workspace
                 $properties->mapToAssoc(function ($property){
 
                         return
-                            array( $property->getName() , $property->getType() =='title' ? array(
-                                    $property->getType() =>array(
-                                        array(
-                                    'text' => array('content' => $property->getOption()) ?? null,
-
-                                    )
-                                )
-                            ) : array($property->getType() => $property->values() ?? null));
+                            array( $property->getName(),array($property->getType() => $property->values() ?? null));
 
                     })
 

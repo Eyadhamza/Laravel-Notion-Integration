@@ -38,7 +38,7 @@ class ManagePagesTest extends TestCase
 
         $properties = new Collection();
 
-        // $properties->add(new Title('Name','Eyad Hamza'));
+        $properties->add(new Title('Name','Eyad Hamza'));
         $properties->add(new Select('Status','1123','blue'));
 
         $response =  (new NotionPage)->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
