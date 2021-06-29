@@ -43,7 +43,6 @@ class NotionPage extends Workspace
                     ,'properties' => $this->addProperties($properties),
                     ]);
 
-        dd($response->json());
         return $response->json();
     }
 
@@ -54,9 +53,10 @@ class NotionPage extends Workspace
         return
 
                 $properties->mapToAssoc(function ($property){
-
                         return
-                            array( $property->getName(),array($property->getType() => $property->values() ?? null));
+                            array(
+                                $property->getName(),array($property->getType() => $property->values() ?? null)
+                            );
 
                     })
 

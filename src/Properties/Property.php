@@ -6,7 +6,7 @@ namespace Pi\Notion\Properties;
 
 use Pi\Notion\Query\MultiSelectFilter;
 
-class Property
+abstract class Property
 {
 
 
@@ -28,5 +28,5 @@ class Property
         return $this->type;
     }
 
-
+    abstract function values();
 }

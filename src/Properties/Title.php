@@ -6,19 +6,22 @@ namespace Pi\Notion\Properties;
 
 use Pi\Notion\Query\MultiSelectFilter;
 use Pi\Notion\Query\SelectFilter;
+use Pi\Notion\Query\TitleFilter;
 
 class Title extends Property
 {
 
 
-
+    public TitleFilter $filter;
     private $name;
     private $option;
 
 
     public function __construct($name , $option = null, $color = null,$id=null)
     {
+
         $this->type = 'title';
+        $this->filter = new TitleFilter();
 
         parent::__construct($this->type,$id);
 
@@ -64,13 +67,5 @@ class Title extends Property
         return $this->option;
     }
 
-    // $property->getType() =='title' ?
-    //                                array(
-    //                                    $property->getType() =>array(
-    //                                        array(
-    //                                        'text' => array('content' => $property->getOption()) ?? null,
-    //
-    //                                    )
-    //                                )
-    //                            ) :
+
 }

@@ -6,7 +6,7 @@ namespace Pi\Notion\Query;
 
 use Illuminate\Support\Collection;
 
-class SelectFilter implements Filterable
+class TitleFilter implements Filterable
 {
 
     public function set($filter): array
@@ -14,7 +14,7 @@ class SelectFilter implements Filterable
 
        return array(
            'property'=> $filter->getName(),
-                'select'=> is_null($filter->getOptionName()) ? $this->setFilterConditions($filter) : array('equals'=>$filter->getOptionName())
+                'select'=> is_null($filter->getOption()) ? $this->setFilterConditions($filter) : array('equals'=>$filter->getOption())
 
        );
 

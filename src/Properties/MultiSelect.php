@@ -139,4 +139,8 @@ class MultiSelect extends Property
         return $this->notContain;
     }
 
+    function values()
+    {
+        // TODO: Implement values() method.
+    }
 }
