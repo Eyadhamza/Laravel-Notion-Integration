@@ -7,23 +7,23 @@ namespace Pi\Notion\Query;
 class MultiSelectFilter implements Filterable
 {
 
-    public function set($property)
+    public function set($filter): array
     {
 
         return [
-            'property'=> $property->name,
-            'multi_select'=> is_null($property->option) ? $this->setFilterConditions($property) :['contains'=>$property->option]
+            'property'=> $filter->getName(),
+            'multi_select'=> is_null($filter->getOption()) ? $this->setFilterConditions($filter) :['contains'=>$filter->getOption()]
 
         ];
 
     }
-    public function setFilterConditions($property)
+    public function setFilterConditions($conditions): array
     {
         return [
-            'contains' => $property->contains ,
-            'does_not_contain' => $property->notContain,
-            'is_not_empty' => $property->isNotEmpty,
-            'is_empty' => $property->isEmpty
+            'contains' => $conditions->getContains() ,
+            'does_not_contain' => $conditions->getNotContain(),
+            'is_not_empty' => $conditions->getIsNotEmpty(),
+            'is_empty' => $conditions->getIsEmpty()
         ];
     }
 }

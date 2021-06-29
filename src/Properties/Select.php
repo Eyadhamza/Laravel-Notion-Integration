@@ -11,18 +11,18 @@ class Select extends Property
 {
 
     public SelectFilter $filter;
-    public $option;
+    private $option;
 
-    public $color;
+    private $color;
 
-    public $name;
+    private $name;
 
-    public $equals;
+    private $equals;
 
-    public $notEqual;
-    public $isNotEmpty;
+    private $notEqual;
+    private $isNotEmpty;
 
-    public $isEmpty;
+    private $isEmpty;
 
     public function __construct($name , $option = null, $color = null,$id=null)
     {

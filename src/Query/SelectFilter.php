@@ -9,23 +9,23 @@ use Illuminate\Support\Collection;
 class SelectFilter implements Filterable
 {
 
-    public function set($property): array
+    public function set($filter): array
     {
 
        return [
-           'property'=> $property->name,
-                'select'=> is_null($property->option) ? $this->setFilterConditions($property) :['equals'=>$property->option]
+           'property'=> $filter->name,
+                'select'=> is_null($filter->option) ? $this->setFilterConditions($filter) :['equals'=>$filter->option]
 
        ];
 
     }
-    public function setFilterConditions($property): array
+    public function setFilterConditions($conditions): array
     {
         return [
-                'equals'=>$property->equals ,
-                'does_not_equal'=>$property->notEqual,
-                'is_not_empty'=>$property->isNotEmpty,
-                'is_empty'=>$property->isEmpty
+                'equals'=>$conditions->equals ,
+                'does_not_equal'=>$conditions->notEqual,
+                'is_not_empty'=>$conditions->isNotEmpty,
+                'is_empty'=>$conditions->isEmpty
         ];
     }
 

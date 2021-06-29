@@ -11,15 +11,14 @@ class MultiSelect extends Property
 {
 
     public MultiSelectFilter $filter;
-    public $option;
 
-    public $color;
-
-    public $name;
-    public $contains;
-    public $notContain;
-    public  $isNotEmpty;
-    public  $isEmpty;
+    private mixed $option;
+    private mixed $color;
+    private string $name;
+    private $contains;
+    private $notContain;
+    private $isNotEmpty;
+    private $isEmpty;
 
     public function __construct($name , $option = null, $color = null,$id=null)
     {
@@ -82,5 +81,62 @@ class MultiSelect extends Property
     //      }
     //    ]
     //  }
+    /**
+     * @return mixed|null
+     */
+    public function getOption(): mixed
+    {
+        return $this->option;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getColor(): mixed
+    {
+        return $this->color;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getIsNotEmpty()
+    {
+        return $this->isNotEmpty;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsEmpty()
+    {
+        return $this->isEmpty;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContains()
+    {
+        return $this->contains;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotContain()
+    {
+        return $this->notContain;
+    }
 
 }
