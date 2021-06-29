@@ -4,6 +4,7 @@
 namespace Pi\Notion;
 
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Pi\Notion\Traits\ThrowsExceptions;
 use Pi\Notion\Traits\RetrieveResource;
@@ -30,54 +31,56 @@ class NotionPage extends Workspace
 
     }
 
-    public function create($notionDatabaseId,array|string $properties, $content = null)
+    public function create($notionDatabaseId,Collection $properties, $content = null)
     {
+
 
         $response = Http::withToken(config('notion-wrapper.info.token'))->withHeaders(['Notion-Version'=>'2021-05-13'])
             ->post($this->URL,
                 [
                     'parent'=> array('database_id' => $notionDatabaseId)
 
-                    ,'properties' => $this->addProperties($properties)['properties'],
-                    'children' =>$this->addContent($content)['children']]);
+                    ,'properties' => $this->addProperties($properties),
+                    ]);
 
+        dd($response->json());
+        dd( [
+            'parent'=> array('database_id' => $notionDatabaseId)
 
+            ,'properties' => $this->addProperties($properties),
+            'children' =>$this->addContent($content)['children']]);
         $this->throwExceptions($response);
 
         return $response->json();
     }
 
-    public function addProperties(array|string $properties)
+    public function addProperties(Collection $properties)
     {
 
-        $properties = collect($properties);
-
-//        dd($properties);
         // the power of collections!
-        return [
-            'properties' =>
+        return
+
                 $properties->mapToAssoc(function ($property){
 
                         return
-                            [$property['name'] , $this->isNameProperty($property) ? array(
-                                'title'=>array([
-                                    $property['type'] => ['content' => $property['content']] ?? null,
+                            array( $property->getName() , $property->getName() =='Name' ? array(
+                                'title'=>array(array(
+                                    'text' => array('content' => 'asd') ?? null,
 
-                                ]
-                            )) :
-                                 array($property['type'] =>
-                                    array(
-                                    'name'=>$property['select_name'] ?? null,
-                                    'color'=>$property['color']) ?? null
-                                ),
+                                )
+                            )) : array($property->getType() =>
+                                array(
+                                    'name'=>'option name not property name' ?? null,
+                                    $property->getColor()=>'option color not property name') ?? null
+                            ),
 
 
-                            ];
+                            );
 
                     })
 
 
-        ];
+        ;
 
     }
 
@@ -133,12 +136,12 @@ class NotionPage extends Workspace
     }
     public function isSelectProperty($property)
     {
-       return $property['type'] == 'select';
+       return $property->getType() == 'select';
     }
 
     public function isNameProperty($property)
     {
-        return $property['name'] == 'Name';
+        return $property->getName() == 'Name';
     }
 
     private function fillPage()

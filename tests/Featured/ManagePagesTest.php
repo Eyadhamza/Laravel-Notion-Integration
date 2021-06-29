@@ -8,6 +8,7 @@ use Pi\Notion\NotionDatabase;
 use Pi\Notion\Exceptions\NotionDatabaseException;
 use Pi\Notion\NotionPage;
 use Pi\Notion\Properties\MultiSelect;
+use Pi\Notion\Properties\Property;
 use Pi\Notion\Properties\Select;
 use Pi\Notion\Tests\TestCase;
 use Pi\Notion\Workspace;
@@ -31,32 +32,17 @@ class ManagePagesTest extends TestCase
     }
 
     /** @test */
-    public function it_should_add_properties_to_created_page()
+    public function it_should_add_select_properties_to_created_page_and_option()
     {
-        $properties = array(
-            [
-                'name' => 'Name',
-                'type' => 'text',
-                'content' => 'New Media Article',
-            ],
-            [
-                'name' => 'Status',
-                'type' => 'select',
-                'select_name' => 'Ready to Start',
-                'color' => 'yellow'
-            ],
-            [
-                'name' => 'Publisher',
-                'type' => 'select',
 
-                'select_name' => 'The Atlantic',
-                'color' => 'red',
-            ]);
+        $properties = new Collection();
 
+        $properties->add(new Select('Name','1123','blue'));
+        $properties->add(new Select('Status','1123','blue'));
 
         $response =  (new NotionPage)->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
 
-
+        dd($response);
         $this->assertStringContainsString('page',$response['object']);
 
 

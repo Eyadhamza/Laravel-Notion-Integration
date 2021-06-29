@@ -20,5 +20,13 @@ class Property
 
     }
 
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
 
 }
