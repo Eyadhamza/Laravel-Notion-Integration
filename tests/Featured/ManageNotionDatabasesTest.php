@@ -15,7 +15,7 @@ use Pi\Notion\Workspace;
 class ManageNotionDatabasesTest extends TestCase
 {
     /** @test */
-    public function it_should_return_database_info()
+    public function return_database_info()
     {
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->get();
 
@@ -30,7 +30,7 @@ class ManageNotionDatabasesTest extends TestCase
     }
 
     /** @test */
-    public function it_should_throw_exception_database_not_found()
+    public function throw_exception_database_not_found()
     {
         $id = '632b5fb7e06c4404ae12asdasd065c48280e4asdc';
 
@@ -41,7 +41,7 @@ class ManageNotionDatabasesTest extends TestCase
 
     }
     /** @test */
-    public function it_should_throw_exception_database_not_authorized()
+    public function throw_exception_database_not_authorized()
     {
         $id = '632b5fb7e06c4404ae12065c48280e4asdc';
 
@@ -51,7 +51,7 @@ class ManageNotionDatabasesTest extends TestCase
 
     }
     /** @test */
-    public function it_should_return_database_contents_with_single_query()
+    public function return_database_contents_with_single_query()
     {
 
         $property = new Select('Status','Reading');
@@ -64,7 +64,7 @@ class ManageNotionDatabasesTest extends TestCase
     }
 
     /** @test */
-    public function it_should_return_database_contents_with_multiple_query()
+    public function return_database_contents_with_multiple_query()
     {
 
 
@@ -82,7 +82,7 @@ class ManageNotionDatabasesTest extends TestCase
 
     }
     /** @test */
-    public function it_should_return_database_contents_with_multiple_query_with_different_conditions()
+    public function return_database_contents_with_multiple_query_with_different_conditions()
     {
 
 
@@ -100,7 +100,7 @@ class ManageNotionDatabasesTest extends TestCase
 
     }
     /** @test */
-    public function it_should_return_database_contents_with_multiple_query_multi_select_property()
+    public function return_database_contents_with_multiple_query_using_multiselect_property()
     {
 
 
@@ -117,7 +117,7 @@ class ManageNotionDatabasesTest extends TestCase
     }
 
     /** @test */
-    public function it_should_return_database_contents_with_multiple_query_multi_select_property_with_conditions()
+    public function return_database_contents_with_multiple_query_using_multiselect_property_with_conditions()
     {
 
 
