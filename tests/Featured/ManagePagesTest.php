@@ -50,6 +50,7 @@ class ManagePagesTest extends TestCase
     }
     /** @test */
 //    public function it_should_add_properties_and_content_to_created_page()
+// TODO
 //    {
 //        $properties = array([
 //            'name' => 'Name',
@@ -99,6 +100,7 @@ class ManagePagesTest extends TestCase
     }
 
     /** @test */
+// TODO
 //    public function it_can_get_page_blocks()
 //    {
 //
