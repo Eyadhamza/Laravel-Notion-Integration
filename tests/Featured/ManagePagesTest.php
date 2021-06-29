@@ -10,6 +10,7 @@ use Pi\Notion\NotionPage;
 use Pi\Notion\Properties\MultiSelect;
 use Pi\Notion\Properties\Property;
 use Pi\Notion\Properties\Select;
+use Pi\Notion\Properties\Title;
 use Pi\Notion\Tests\TestCase;
 use Pi\Notion\Workspace;
 
@@ -37,7 +38,7 @@ class ManagePagesTest extends TestCase
 
         $properties = new Collection();
 
-        $properties->add(new Select('Name','1123','blue'));
+        // $properties->add(new Title('Name','Eyad Hamza'));
         $properties->add(new Select('Status','1123','blue'));
 
         $response =  (new NotionPage)->create('632b5fb7e06c4404ae12065c48280e4c',$properties);

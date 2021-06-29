@@ -63,19 +63,14 @@ class NotionPage extends Workspace
                 $properties->mapToAssoc(function ($property){
 
                         return
-                            array( $property->getName() , $property->getName() =='Name' ? array(
-                                'title'=>array(array(
+                            array( $property->getName() , $property->getType() =='title' ? array(
+                                    $property->getType() =>array(
+                                        array(
                                     'text' => array('content' => $property->getOption()) ?? null,
 
+                                    )
                                 )
-                            )) : array($property->getType() =>
-                                array(
-                                    'name'=>$property->getOption() ?? null,
-                                    'color'=>$property->getColor()) ?? null
-                            ),
-
-
-                            );
+                            ) : array($property->getType() => $property->values() ?? null));
 
                     })
 

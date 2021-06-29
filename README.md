@@ -91,14 +91,14 @@ Query the notion database contents using a multiple select filters and values
 ```php
 
 use Pi\Notion\NotionDatabase;
-use Pi\Notion\Properties\Select;
+use Pi\Notion\Properties\Title;
 
 // defining your filters as property name and the select value 
 
 $filters = new \Illuminate\Support\Collection();
 
 
-$filters->add(new Select('Status','open'))->add(new Select('Publisher','me'));
+$filters->add(new Title('Status','open'))->add(new Title('Publisher','me'));
 
 
 // getContents() takes two arguments, the first is the filter/s

@@ -8,7 +8,7 @@ use Pi\Notion\NotionDatabase;
 use Pi\Notion\Exceptions\NotionDatabaseException;
 use Pi\Notion\NotionPage;
 use Pi\Notion\Properties\MultiSelect;
-use Pi\Notion\Properties\Select;
+use Pi\Notion\Properties\Title;
 use Pi\Notion\Tests\TestCase;
 use Pi\Notion\Workspace;
 
@@ -54,7 +54,7 @@ class ManageNotionDatabasesTest extends TestCase
     public function return_database_contents_with_single_query()
     {
 
-        $property = new Select('Status','Reading');
+        $property = new Title('Status','Reading');
 
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents($property);
 
@@ -69,8 +69,8 @@ class ManageNotionDatabasesTest extends TestCase
 
 
         $properties = new Collection();
-        $properties->add(new Select('Status','Reading'))
-                ->add(new Select('Publisher','NYT'));
+        $properties->add(new Title('Status','Reading'))
+                ->add(new Title('Publisher','NYT'));
 
 
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($properties,filterType: 'and');
@@ -87,8 +87,8 @@ class ManageNotionDatabasesTest extends TestCase
 
 
         $properties = new Collection();
-        $properties->add((new Select('Status'))->equals('Reading')->isNotEmpty())
-            ->add((new Select('Publisher'))->notEqual('NN')->isEmpty());
+        $properties->add((new Title('Status'))->equals('Reading')->isNotEmpty())
+            ->add((new Title('Publisher'))->notEqual('NN')->isEmpty());
 
 
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($properties,filterType: 'and');

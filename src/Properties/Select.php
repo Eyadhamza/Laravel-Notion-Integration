@@ -11,7 +11,7 @@ class Select extends Property
 {
 
     public SelectFilter $filter;
-    private $option;
+    private $optionName;
 
     private $color;
 
@@ -32,15 +32,18 @@ class Select extends Property
         parent::__construct($this->type,$id);
 
         $this->name = $name;
-        $this->option = $option;
+        $this->optionName = $option;
         $this->color = $color;
 
 
     }
 
-    public function setPropertyValues($name, $types): array // for page creation
+    public function values(): array // for page creation
     {
-
+        return array(
+                'name'=> $this->optionName ?? null,
+                'color'=>$this->color ?? null
+        );
     }
 
 
@@ -86,9 +89,9 @@ class Select extends Property
     /**
      * @return mixed|null
      */
-    public function getOption(): mixed
+    public function getOptionName(): mixed
     {
-        return $this->option;
+        return $this->optionName;
     }
 
     /**
