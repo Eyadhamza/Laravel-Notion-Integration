@@ -3,6 +3,7 @@
 namespace Pi\Notion\Tests\Featured;
 
 use Illuminate\Support\Collection;
+use Pi\Notion\ContentBlock\Block;
 use Pi\Notion\NotionDatabase;
 
 use Pi\Notion\Exceptions\NotionDatabaseException;
@@ -77,11 +78,16 @@ class ManagePagesTest extends TestCase
 
 
         $page = (new NotionPage);
-        $page->addBlock('heading_1','i want this to work!');
-        $page->addBlock('heading_2','i want this to work!');
-        $page->addBlock('paragraph','i want this to work!');
-        $response =  $page->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
+        $block1 = Block::create('heading_1','i want this to work!');
+        $page->addBlock($block1);
+        $block2 = Block::create('heading_1','i want this to work!');
+        $page->addBlock($block2);
 
+        $block3 =(new Block)->ofType('heading_1')->ofBody('i want this to work!')->createBlock();
+
+        $page->addBlock($block3);
+
+        $response =  $page->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
 
         $this->assertStringContainsString('page',$response['object']);
 

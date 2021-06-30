@@ -14,9 +14,10 @@ class Block
     private ?string $created_time;
     private ?string $last_edited_time;
     private ?bool $has_children;
-    private $type;
-    private $body;
+    private ?string $type;
+    private ?string $body;
     private  $content;
+    private ?NotionPage $notionPage;
 
 
     public function __construct($type = null,$body = null, $id= null, $created_time= null, $last_edited_time= null, $has_children= null)
@@ -31,10 +32,12 @@ class Block
 
         $this->type = $type;
         $this->body = $body;
+
     }
 
-    public static function get($page)
+    public static function add($page)
     {
+
         return $page->getBlocks()->map(function ($block){
             return array(
                 'object'=>$block->getObject(),
@@ -53,6 +56,36 @@ class Block
             );
 
         });
+    }
+    public static function create( string $type = null,string $body = null)
+    {
+
+        return new self($type, $body);
+
+    }
+
+
+    public function ofType(string $type)
+    {
+        $this->setType($type);
+
+        return $this;
+    }
+
+    public function ofBody(string $body)
+    {
+        $this->setBody($body);
+
+        return $this;
+    }
+    public function createBlock()
+    {
+
+        Block::create($this->type,$this->body);
+
+
+
+        return $this;
     }
     /**
      * @return string

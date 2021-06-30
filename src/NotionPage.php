@@ -39,25 +39,26 @@ class NotionPage extends Workspace
     public function create($notionDatabaseId,Collection $properties)
     {
 
-
         $response = Http::withToken(config('notion-wrapper.info.token'))
             ->withHeaders(['Notion-Version'=>'2021-05-13'])
             ->post($this->URL,
                 [
                     'parent'=> array('database_id' => $notionDatabaseId),
                     'properties' => Property::add($properties),
-                    'children'=> $this->addBlocks()
+                    'children'=> Block::add($this)
                 ]);
 
 
         return $response->json();
     }
 
-    public function addBlock(string $body, string $type): self
+    public function addBlock(Block $block): self
     {
-        $this->blocks->add(new Block($body,$type));
+
+        $this->blocks->add($block);
 
         return $this;
+
     }
 
 
@@ -75,10 +76,7 @@ class NotionPage extends Workspace
     }
 
 
-    public function addBlocks()
-    {
-       return Block::get($this);
-    }
+
     public function update()
     {
         //TODO
@@ -124,6 +122,8 @@ class NotionPage extends Workspace
     {
         $this->blocks = $blocks;
     }
+
+
 
     private function fillPage()
     {
