@@ -26,6 +26,7 @@ class MultiSelect extends Property
         $this->type = PropertyType::MULTISELECT;
         $this->filter = new MultiSelectFilter;
 
+
         parent::__construct($this->type,$id);
 
         $this->name = $name;
@@ -54,16 +55,16 @@ class MultiSelect extends Property
        );
     }
 
-    public function contains($option)
+    public function contains($optionName)
     {
-        $this->contains = $option;
+        $this->contains = $optionName;
 
         return $this;
     }
 
-    public function notContain($option)
+    public function notContain($optionName)
     {
-        $this->notContain = $option;
+        $this->notContain = $optionName;
 
 
         return $this;
@@ -89,11 +90,11 @@ class MultiSelect extends Property
 
 
     /**
-     * @return mixed|null
+     * @return \Collection
      */
-    public function getOption(): mixed
+    public function getOption(): Collection
     {
-        return $this->option;
+        return $this->optionNames;
     }
 
     /**

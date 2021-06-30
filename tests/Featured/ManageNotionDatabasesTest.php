@@ -104,10 +104,10 @@ class ManageNotionDatabasesTest extends TestCase
     public function return_database_contents_with_multiple_query_using_multiselect_property()
     {
 
-
+        // TODO BROKEN now after adding multiple option
         $properties = new Collection();
-        $properties->add(new MultiSelect('StatusMulti','a'))
-                   ->add(new MultiSelect('StatusMulti','b'));
+        $properties->add((new MultiSelect('StatusMulti','blue'))->addOptions(['A','B']))
+                   ->add((new MultiSelect('StatusMulti','blue'))->addOptions(['A','B']));
 
 
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($properties,filterType: 'and');

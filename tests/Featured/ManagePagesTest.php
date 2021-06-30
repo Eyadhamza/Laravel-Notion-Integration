@@ -4,6 +4,7 @@ namespace Pi\Notion\Tests\Featured;
 
 use Illuminate\Support\Collection;
 use Pi\Notion\ContentBlock\Block;
+use Pi\Notion\ContentBlock\BlockTypes;
 use Pi\Notion\NotionDatabase;
 
 use Pi\Notion\Exceptions\NotionDatabaseException;
@@ -78,22 +79,21 @@ class ManagePagesTest extends TestCase
 
 
         $page = (new NotionPage);
-        $block1 = Block::create('heading_1','i want this to work!');
+        $block1 = Block::create(BlockTypes::HEADING_1,'i want this to work!');
         $page->addBlock($block1);
-        $block2 = Block::create('heading_1','i want this to work!');
+        $block2 = Block::create(BlockTypes::HEADING_2,'i want this to work!');
         $page->addBlock($block2);
 
-        $block3 =(new Block)->ofType('heading_1')->ofBody('i want this to work!')->createBlock();
+        $block3 =(new Block)->ofType(BlockTypes::NUMBERED_LIST)->ofBody('i want this to work!')->createBlock();
 
         $page->addBlock($block3);
 
-        $block3 =(new Block)->ofType('to_do')->ofBody('i want this to work!')->createBlock();
+        $block3 =(new Block)->ofType(BlockTypes::TODO)->ofBody('i want this to work!')->createBlock();
 
         $page->addBlock($block3);
 
 
         $response =  $page->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
-        dd($response);
         $this->assertStringContainsString('page',$response['object']);
 
     }

@@ -14,10 +14,10 @@ class Title extends Property
 
     public TitleFilter $filter;
     private $name;
-    private $option;
+    private $optionName;
 
 
-    public function __construct($name , $option = null, $color = null,$id=null)
+    public function __construct($name , $optionName = null, $color = null, $id=null)
     {
 
         $this->type = PropertyType::TITLE;
@@ -27,7 +27,7 @@ class Title extends Property
 
         $this->name = $name;
 
-        $this->option = $option;
+        $this->optionName = $optionName;
 
 
     }
@@ -49,7 +49,7 @@ class Title extends Property
         return
             array(
                     array(
-                        'text' => array('content' => $this->getOption())
+                        'text' => array('content' => $this->getOptionName())
                     ) ?? null
         );
     }
@@ -62,9 +62,9 @@ class Title extends Property
     /**
      * @return mixed|null
      */
-    public function getOption(): mixed
+    public function getOptionName(): mixed
     {
-        return $this->option;
+        return $this->optionName;
     }
 
 

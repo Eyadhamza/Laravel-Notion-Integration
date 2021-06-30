@@ -24,7 +24,7 @@ class Select extends Property
 
     private $isEmpty;
 
-    public function __construct($name , $optionName = null, $color = null,$id=null)
+    public function __construct($name , $optionNameName = null, $color = null, $id=null)
     {
         $this->type = PropertyType::SELECT;
 
@@ -33,7 +33,7 @@ class Select extends Property
         parent::__construct($this->type,$id);
 
         $this->name = $name;
-        $this->optionName = $optionName;
+        $this->optionName = $optionNameName;
         $this->color = $color;
 
 
