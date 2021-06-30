@@ -74,13 +74,22 @@ class ManagePagesTest extends TestCase
         $properties->add((new MultiSelect('StatusMulti','blue'))->addOptions(['A','B']));
 
         $properties->add(new Select('Status','1123','blue'));
-        $response =  (new NotionPage)->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
 
-        $response =  (new NotionPage)->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
 
-        (new NotionPage)->addContentBody('hello world')->ofType('heading_1');
+        $page = (new NotionPage);
+        $page->addBlock('paragraph','i want this to work!');
+        $page->addBlock('paragraph','i want this to work!');
+        $page->addBlock('paragraph','i want this to work!');
+        $response =  $page->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
 
-        (new NotionPage)->addContentBody('i want this to work!')->ofType('paragraph');
+
+
+
+//        (new NotionPage)->addContentBody('hello world')->ofType('heading_1');
+//
+//        (new NotionPage)->addContentBody('i want this to work!')->ofType('paragraph');
+
+
 
         $this->assertStringContainsString('block',$response['children']['object']);
 

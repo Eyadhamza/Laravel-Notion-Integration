@@ -20,8 +20,9 @@ class NotionPage extends Workspace
     protected mixed $created_time;
     protected mixed $last_edited_time;
 
-    private $content;
-    public function __construct($id = '',$content ='')
+    private Collection $blocks;
+
+    public function __construct($id = '')
     {
 
 
@@ -30,8 +31,8 @@ class NotionPage extends Workspace
         $this->id = $id ;
         $this->URL = $this->BASE_URL."/pages/";
 
+        $this->blocks = new Collection();
 
-        $this->content = $content;
     }
 
 
@@ -45,26 +46,21 @@ class NotionPage extends Workspace
                 [
                     'parent'=> array('database_id' => $notionDatabaseId),
                     'properties' => Property::add($properties),
-                    'children'=> $this->content
-                    ]);
+                    'children'=> $this->getBlocks()
+                ]);
 
-        dump($response->json());
+
+        dd($response->json());
         return $response->json();
     }
 
-    public function addContentBody(string $body): self
+    public function addBlock(string $body, string $type): self
     {
-       (new Block)->addBlockBody($body);
+        $this->blocks->add(new Block($body,$type));
 
         return $this;
     }
 
-    public function ofType(string $type): self
-    {
-        (new Block)->addBlockType($type);
-
-        return $this;
-    }
 
 
     public function search($pageTitle, $sortDirection = 'ascending',$timestamp = 'last_edited_time')
@@ -81,10 +77,24 @@ class NotionPage extends Workspace
 
     public function getBlocks()
     {
-        $response = Http::withToken(config('notion-wrapper.info.token'))
-            ->get($this->BASE_URL."/blocks/$this->id/children");
+        return $this->blocks->map(function ($block){
+           return array(
+               'object'=>$block->getObject(),
+               'type' =>$block->getType(),
+               $block->getType() => [
+                   'text'=>[
+                       [
+                           'type'=>'text',
+                           'text'=>[
+                               'content'=>$block->getBody()
+                           ]
+                       ]
 
-        return $response->json();
+                   ]
+               ]
+           );
+
+        });
     }
     public function update()
     {
