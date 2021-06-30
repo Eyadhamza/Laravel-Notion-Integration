@@ -22,7 +22,7 @@ class MultiSelect extends Property
 
     public function __construct($name , $option = null, $color = null,$id=null)
     {
-        $this->type = 'multi_select';
+        $this->type = PropertyType::MULTISELECT;
         $this->filter = new MultiSelectFilter;
 
         parent::__construct($this->type,$id);

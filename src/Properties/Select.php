@@ -26,7 +26,8 @@ class Select extends Property
 
     public function __construct($name , $option = null, $color = null,$id=null)
     {
-        $this->type = 'select';
+        $this->type = PropertyType::SELECT;
+
         $this->filter = new SelectFilter;
 
         parent::__construct($this->type,$id);
