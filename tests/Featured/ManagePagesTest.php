@@ -87,8 +87,13 @@ class ManagePagesTest extends TestCase
 
         $page->addBlock($block3);
 
-        $response =  $page->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
+        $block3 =(new Block)->ofType('to_do')->ofBody('i want this to work!')->createBlock();
 
+        $page->addBlock($block3);
+
+
+        $response =  $page->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
+        dd($response);
         $this->assertStringContainsString('page',$response['object']);
 
     }

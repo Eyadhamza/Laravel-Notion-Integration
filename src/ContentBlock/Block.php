@@ -18,9 +18,10 @@ class Block
     private ?string $body;
     private  $content;
     private ?NotionPage $notionPage;
+    private $contentType;
 
 
-    public function __construct($type = null,$body = null, $id= null, $created_time= null, $last_edited_time= null, $has_children= null)
+    public function __construct($type = null,$body = null, $id= null, $contentType = null, $created_time= null, $last_edited_time= null, $has_children= null)
     {
 
 
@@ -32,7 +33,7 @@ class Block
 
         $this->type = $type;
         $this->body = $body;
-
+        $this->contentType = $contentType ?? 'text';
     }
 
     public static function add($page)
@@ -43,10 +44,10 @@ class Block
                 'object'=>$block->getObject(),
                 'type' =>$block->getType(),
                 $block->getType() => [
-                    'text'=>[
+                    $block->getContentType() =>[
                         [
-                            'type'=>'text',
-                            'text'=>[
+                            'type'=>$block->getContentType(),
+                            $block->getContentType()=>[
                                 'content'=>$block->getBody()
                             ]
                         ]
@@ -64,6 +65,12 @@ class Block
 
     }
 
+    public function ofContentType($contentType = null)
+    {
+        $this->contentType = $contentType;
+
+        return $this;
+    }
 
     public function ofType(string $type)
     {
@@ -197,6 +204,22 @@ class Block
     public function setBody(mixed $body): void
     {
         $this->body = $body;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContentType()
+    {
+        return $this->contentType;
+    }
+
+    /**
+     * @param mixed $contentType
+     */
+    public function setContentType($contentType): void
+    {
+        $this->contentType = $contentType;
     }
 
 
