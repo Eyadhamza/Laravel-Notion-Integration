@@ -10,8 +10,9 @@ abstract class Property
 {
 
 
-     public ?string $id;
-     public string $type;
+    public ?string $id;
+    public string $type;
+
     public function __construct(string $type,string $id = null)
     {
 
@@ -28,5 +29,17 @@ abstract class Property
         return $this->type;
     }
 
-    abstract function values();
+    abstract function getValues();
+
+    public static function add($properties)
+    {
+       return $properties->mapToAssoc(function ($property){
+            return
+                array(
+                    $property->getName(), array($property->getType() => $property->getValues() ?? null)
+                );
+
+        });
+    }
+
 }

@@ -24,7 +24,7 @@ class Select extends Property
 
     private $isEmpty;
 
-    public function __construct($name , $option = null, $color = null,$id=null)
+    public function __construct($name , $optionName = null, $color = null,$id=null)
     {
         $this->type = PropertyType::SELECT;
 
@@ -33,29 +33,30 @@ class Select extends Property
         parent::__construct($this->type,$id);
 
         $this->name = $name;
-        $this->optionName = $option;
+        $this->optionName = $optionName;
         $this->color = $color;
 
 
     }
 
-    public function values(): array // for page creation
+    public function getValues(): array // for page creation
     {
-        return array(
+        return
+            array(
                 'name'=> $this->optionName ?? null,
                 'color'=>$this->color ?? null
         );
     }
 
 
-    public function equals($option)
+    public function equals($option): self
     {
          $this->equals = $option;
 
          return $this;
     }
 
-    public function notEqual($option)
+    public function notEqual($option): self
     {
         $this->notEqual = $option;
 
@@ -63,7 +64,7 @@ class Select extends Property
         return $this;
     }
 
-    public function isNotEmpty()
+    public function isNotEmpty(): self
     {
         $this->isNotEmpty = true;
 
@@ -71,7 +72,7 @@ class Select extends Property
         return $this;
     }
 
-    public function isEmpty()
+    public function isEmpty(): self
     {
         $this->isEmpty = true;
 
@@ -98,7 +99,7 @@ class Select extends Property
     /**
      * @return mixed
      */
-    public function getName()
+    public function getName(): mixed
     {
         return $this->name;
     }
@@ -106,7 +107,7 @@ class Select extends Property
     /**
      * @return mixed
      */
-    public function getEquals()
+    public function getEquals(): mixed
     {
         return $this->equals;
     }
@@ -114,7 +115,7 @@ class Select extends Property
     /**
      * @return mixed
      */
-    public function getNotEqual()
+    public function getNotEqual(): mixed
     {
         return $this->notEqual;
     }
@@ -122,7 +123,7 @@ class Select extends Property
     /**
      * @return mixed
      */
-    public function getIsNotEmpty()
+    public function getIsNotEmpty(): mixed
     {
         return $this->isNotEmpty;
     }
@@ -130,7 +131,7 @@ class Select extends Property
     /**
      * @return mixed
      */
-    public function getIsEmpty()
+    public function getIsEmpty(): mixed
     {
         return $this->isEmpty;
     }

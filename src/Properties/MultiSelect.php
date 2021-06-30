@@ -4,6 +4,7 @@
 namespace Pi\Notion\Properties;
 
 
+use Illuminate\Support\Collection;
 use Pi\Notion\Query\MultiSelectFilter;
 use Pi\Notion\Query\SelectFilter;
 
@@ -12,7 +13,7 @@ class MultiSelect extends Property
 
     public MultiSelectFilter $filter;
 
-    private mixed $option;
+    private Collection $optionNames;
     private mixed $color;
     private string $name;
     private $contains;
@@ -20,7 +21,7 @@ class MultiSelect extends Property
     private $isNotEmpty;
     private $isEmpty;
 
-    public function __construct($name , $option = null, $color = null,$id=null)
+    public function __construct($name, $color = null,$id=null)
     {
         $this->type = PropertyType::MULTISELECT;
         $this->filter = new MultiSelectFilter;
@@ -28,15 +29,39 @@ class MultiSelect extends Property
         parent::__construct($this->type,$id);
 
         $this->name = $name;
-        $this->option = $option;
         $this->color = $color;
 
     }
-    public function setPropertyValues($key, $values): array // for page creation
+
+    //"Tags": {
+    //    "multi_select": [
+    //      {
+    //        "name": "B"
+    //      },
+    //      {
+    //        "name": "C"
+    //      }
+    //    ]
+    //  }
+    public function addOptions(array $optionNames)
     {
+        $optionNames = collect($optionNames);
+
+        $this->optionNames = $optionNames;
+
+        return $this;
 
     }
 
+    public function getValues()
+    {
+
+        return
+            $this->optionNames->map(function ($optionName){
+               return array("name" =>$optionName);
+           }
+       );
+    }
 
     public function contains($option)
     {
@@ -71,16 +96,7 @@ class MultiSelect extends Property
 
 
 
-    //"Tags": {
-    //    "multi_select": [
-    //      {
-    //        "name": "B"
-    //      },
-    //      {
-    //        "name": "C"
-    //      }
-    //    ]
-    //  }
+
     /**
      * @return mixed|null
      */
@@ -139,8 +155,5 @@ class MultiSelect extends Property
         return $this->notContain;
     }
 
-    function values()
-    {
-        // TODO: Implement values() method.
-    }
+
 }

@@ -6,6 +6,7 @@ namespace Pi\Notion;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Pi\Notion\Properties\Property;
 use Pi\Notion\Traits\ThrowsExceptions;
 use Pi\Notion\Traits\RetrieveResource;
 
@@ -35,7 +36,8 @@ class NotionPage extends Workspace
     {
 
 
-        $response = Http::withToken(config('notion-wrapper.info.token'))->withHeaders(['Notion-Version'=>'2021-05-13'])
+        $response = Http::withToken(config('notion-wrapper.info.token'))
+            ->withHeaders(['Notion-Version'=>'2021-05-13'])
             ->post($this->URL,
                 [
                     'parent'=> array('database_id' => $notionDatabaseId)
@@ -43,6 +45,8 @@ class NotionPage extends Workspace
                     ,'properties' => $this->addProperties($properties),
                     ]);
 
+        dd($response->json());
+        dd($this->addProperties($properties));
         return $response->json();
     }
 
@@ -50,18 +54,8 @@ class NotionPage extends Workspace
     {
 
         // the power of collections!
-        return
 
-                $properties->mapToAssoc(function ($property){
-                        return
-                            array(
-                                $property->getName(),array($property->getType() => $property->values() ?? null)
-                            );
-
-                    })
-
-
-        ;
+        return Property::add($properties);
 
     }
 

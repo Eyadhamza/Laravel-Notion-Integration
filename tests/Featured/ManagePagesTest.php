@@ -49,6 +49,22 @@ class ManagePagesTest extends TestCase
 
     }
     /** @test */
+    public function it_should_add_multiselect_properties_to_created_page_and_option()
+    {
+
+        $properties = new Collection();
+
+        $properties->add(new Title('Name','Eyad Hamza'));
+        $properties->add((new MultiSelect('StatusMulti','blue'))->addOptions(['A','B']));
+
+        $response =  (new NotionPage)->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
+
+
+        $this->assertStringContainsString('page',$response['object']);
+
+
+    }
+    /** @test */
 //    public function it_should_add_properties_and_content_to_created_page()
 // TODO
 //    {

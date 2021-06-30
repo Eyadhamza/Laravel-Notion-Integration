@@ -55,7 +55,7 @@ class ManageNotionDatabasesTest extends TestCase
     public function return_database_contents_with_single_query()
     {
 
-        $property = new Title('Status','Reading');
+        $property = new Select('Status','Reading');
 
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents($property);
 
@@ -70,8 +70,8 @@ class ManageNotionDatabasesTest extends TestCase
 
 
         $properties = new Collection();
-        $properties->add(new Title('Status','Reading'))
-                ->add(new Title('Publisher','NYT'));
+        $properties->add(new Select('Status','Reading'))
+                ->add(new Select('Publisher','NYT'));
 
 
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($properties,filterType: 'and');

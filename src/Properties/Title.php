@@ -44,7 +44,7 @@ class Title extends Property
         return $this->name;
     }
 
-    public function values(): array // for page creation
+    public function getValues(): array // for page creation
     {
         return
             array(
