@@ -33,17 +33,8 @@ class MultiSelect extends Property
 
     }
 
-    //"Tags": {
-    //    "multi_select": [
-    //      {
-    //        "name": "B"
-    //      },
-    //      {
-    //        "name": "C"
-    //      }
-    //    ]
-    //  }
-    public function addOptions(array $optionNames)
+
+    public function addOptions(array $optionNames): self
     {
         $optionNames = collect($optionNames);
 
@@ -53,7 +44,7 @@ class MultiSelect extends Property
 
     }
 
-    public function getValues()
+    public function getValues(): Collection
     {
 
         return

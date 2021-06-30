@@ -42,4 +42,14 @@ abstract class Property
         });
     }
 
+    public static function addContent($properties)
+    {
+        return $properties->mapToAssoc(function ($property){
+            return
+                array(
+                    $property->getName(), array($property->getType() => $property->getValues() ?? null)
+                );
+
+        });
+    }
 }

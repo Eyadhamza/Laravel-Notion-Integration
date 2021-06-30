@@ -42,22 +42,14 @@ class NotionPage extends Workspace
                 [
                     'parent'=> array('database_id' => $notionDatabaseId)
 
-                    ,'properties' => $this->addProperties($properties),
+                    ,'properties' => Property::add($properties),
                     ]);
 
-        dd($response->json());
-        dd($this->addProperties($properties));
+
         return $response->json();
     }
 
-    public function addProperties(Collection $properties)
-    {
 
-        // the power of collections!
-
-        return Property::add($properties);
-
-    }
 
     public function addContent(array|string $children =null)
     {
