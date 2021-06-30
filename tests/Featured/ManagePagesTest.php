@@ -77,21 +77,13 @@ class ManagePagesTest extends TestCase
 
 
         $page = (new NotionPage);
-        $page->addBlock('paragraph','i want this to work!');
-        $page->addBlock('paragraph','i want this to work!');
+        $page->addBlock('heading_1','i want this to work!');
+        $page->addBlock('heading_2','i want this to work!');
         $page->addBlock('paragraph','i want this to work!');
         $response =  $page->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
 
 
-
-
-//        (new NotionPage)->addContentBody('hello world')->ofType('heading_1');
-//
-//        (new NotionPage)->addContentBody('i want this to work!')->ofType('paragraph');
-
-
-
-        $this->assertStringContainsString('block',$response['children']['object']);
+        $this->assertStringContainsString('page',$response['object']);
 
     }
     /** @test */

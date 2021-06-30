@@ -46,11 +46,10 @@ class NotionPage extends Workspace
                 [
                     'parent'=> array('database_id' => $notionDatabaseId),
                     'properties' => Property::add($properties),
-                    'children'=> $this->getBlocks()
+                    'children'=> $this->addBlocks()
                 ]);
 
 
-        dd($response->json());
         return $response->json();
     }
 
@@ -75,26 +74,10 @@ class NotionPage extends Workspace
 
     }
 
-    public function getBlocks()
+
+    public function addBlocks()
     {
-        return $this->blocks->map(function ($block){
-           return array(
-               'object'=>$block->getObject(),
-               'type' =>$block->getType(),
-               $block->getType() => [
-                   'text'=>[
-                       [
-                           'type'=>'text',
-                           'text'=>[
-                               'content'=>$block->getBody()
-                           ]
-                       ]
-
-                   ]
-               ]
-           );
-
-        });
+       return Block::get($this);
     }
     public function update()
     {
@@ -124,6 +107,22 @@ class NotionPage extends Workspace
     public function setContent($content): void
     {
         $this->content = $content;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getBlocks(): Collection
+    {
+        return $this->blocks;
+    }
+
+    /**
+     * @param Collection $blocks
+     */
+    public function setBlocks(Collection $blocks): void
+    {
+        $this->blocks = $blocks;
     }
 
     private function fillPage()

@@ -5,6 +5,7 @@ namespace Pi\Notion\ContentBlock;
 
 
 use Illuminate\Support\Collection;
+use Pi\Notion\NotionPage;
 
 class Block
 {
@@ -32,69 +33,27 @@ class Block
         $this->body = $body;
     }
 
-    /**
-     * @return Collection
-     */
-//    public static function getBlocks()
-//    {
-//        return self::$blocks;
-//    }
-//
-//    /**
-//     * @param Collection $blocks
-//     */
-//    public static function setBlocks(Collection $blocks): void
-//    {
-//        self::$blocks = $blocks;
-//    }
-//
-//    public function getAllBlocks()
-//    {
-//        if (!isset(self::$blocks)){
-//            return array();
-//        }
-//
-//        return [
-//            'children' => self::getBlocks()->map(function($block){
-//                return
-//                    array(
-//                        'object'=>$block->object,
-//                        'type'=>$block->type,
-//                        $block->type =>
-//                            array('text'=>
-//                                array(
-//                                    array(
-//                                        'type'=>'text',
-//                                        'text' => array(
-//                                            'content'=> $block->body)
-//                                    )
-//                                )
-//                            )
-//                    );
-//            })
-//        ];
-//
-//    }
-//
-//
-//    public function addBlockDetails(string $body,string $type)
-//    {
-//        if (isset($body))
-//        {
-//            $this->type = $type;
-//            $this->body = $body;
-//
-//            self::$blocks->add(new Block($type,$body));
-//        }
-//
-//
-//    }
+    public static function get($page)
+    {
+        return $page->getBlocks()->map(function ($block){
+            return array(
+                'object'=>$block->getObject(),
+                'type' =>$block->getType(),
+                $block->getType() => [
+                    'text'=>[
+                        [
+                            'type'=>'text',
+                            'text'=>[
+                                'content'=>$block->getBody()
+                            ]
+                        ]
 
-//    public function addBlockType(string $type)
-//    {
-//
-//    }
+                    ]
+                ]
+            );
 
+        });
+    }
     /**
      * @return string
      */
