@@ -66,47 +66,25 @@ class ManagePagesTest extends TestCase
 
     }
     /** @test */
-//    public function it_should_add_properties_and_content_to_created_page()
-// TODO
-//    {
-//        $properties = array([
-//            'name' => 'Name',
-//            'type' => 'text',
-//            'content' => 'New Media Article',
-//        ],
-//            [
-//                'name' => 'Status',
-//                'type' => 'select',
-//                'select_name' => 'Ready to Start',
-//                'color' => 'yellow'
-//            ],
-//            [
-//                'name' => 'Publisher',
-//                'type' => 'select',
-//
-//                'select_name' => 'The Atlantic',
-//                'color' => 'red',
-//            ]);
-//        $content=array(
-//            [
-//                'tag_type' => 'heading_2',
-//                'content_type' => 'text',
-//                'content' => 'this is my content'
-//            ],
-//            [
-//                'tag_type' => 'paragraph',
-//                'content_type' => 'text',
-//                'content' => 'this is my content paragraph'
-//            ]);
-//
-//        $response =  (new NotionPage('819f5b54348f463580ef118b6a54bd0d'))
-//            ->create('632b5fb7e06c4404ae12065c48280e4c',$properties,$content);
-//
-//
-//        $this->assertStringContainsString('page',$response['object']);
-//
-//
-//    }
+    public function it_can_add_content_blocks_to_created_pages()
+    {
+        $properties = new Collection();
+
+        $properties->add(new Title('Name','Eyad Hamza'));
+        $properties->add((new MultiSelect('StatusMulti','blue'))->addOptions(['A','B']));
+
+        $properties->add(new Select('Status','1123','blue'));
+        $response =  (new NotionPage)->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
+
+        $response =  (new NotionPage)->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
+
+        (new NotionPage)->addContentBody('hello world')->ofType('heading_1');
+
+        (new NotionPage)->addContentBody('i want this to work!')->ofType('paragraph');
+
+        $this->assertStringContainsString('block',$response['children']['object']);
+
+    }
     /** @test */
     public function it_returns_search_result()
     {
