@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 class SelectFilter implements Filterable
 {
 
-    public function set($filter): array
+    public function setPropertyFilter($filter): array
     {
 
        return array(

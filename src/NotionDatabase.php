@@ -25,7 +25,7 @@ class NotionDatabase extends Workspace
         parent::__construct();
 
         $this->id = $id ;
-        $this->URL = $this->BASE_URL."/databases/";
+        $this->URL = Workspace::DATABASE_URL;
 
 
 
@@ -42,11 +42,11 @@ class NotionDatabase extends Workspace
     {
         $id = $id ?? $this->id;
 
+
         $response = Http::withToken(config('notion-wrapper.info.token'))
 
             ->post("$this->URL"."$id"."/query",
                 empty($filterType) ? $this->filter($properties) : $this->multipleFilters($properties,$filterType));
-
 
         dd($response->json());
         $this->throwExceptions($response);
@@ -58,9 +58,9 @@ class NotionDatabase extends Workspace
 
     public function filter($property): array
     {
-
+        dump('hey');
        return [
-           'filter'=> $this->setFilterInterface($property->filter)->set($property)
+           'filter'=> $this->setFilterInterface($property->filter)->setPropertyFilter($property)
        ];
     }
     public function multipleFilters($properties,$filterType): array
@@ -72,7 +72,7 @@ class NotionDatabase extends Workspace
             $filterType =>
                 $properties->map(function ($property){
 
-                    return $this->setFilterInterface($property->filter)->set($property);
+                    return $this->setFilterInterface($property->filter)->setPropertyFilter($property);
 
                 })
                 ]

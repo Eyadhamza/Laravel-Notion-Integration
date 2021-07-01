@@ -9,6 +9,7 @@ class Workspace
     const BASE_URL= 'https://api.notion.com/v1';
     const PAGE_URL = Workspace::BASE_URL.'/pages/';
     const SEARCH_PAGE_URL =  Workspace::BASE_URL.'/search';
+    const DATABASE_URL = Workspace::BASE_URL.'/databases/';
     const NOTION_VERSION = '2021-05-13';
 
     public function __construct()

@@ -20,7 +20,7 @@ class MultiSelect extends Property
     private $notContain;
     private $isNotEmpty;
     private $isEmpty;
-
+    private string $filterSearchOption;
     public function __construct($name, $color = null,$id=null)
     {
         $this->type = PropertyType::MULTISELECT;
@@ -28,10 +28,10 @@ class MultiSelect extends Property
 
 
         parent::__construct($this->type,$id);
-
+        $this->optionNames = new Collection();
         $this->name = $name;
         $this->color = $color;
-
+        $this->filterSearchOption = '';
     }
 
 
@@ -55,16 +55,16 @@ class MultiSelect extends Property
        );
     }
 
-    public function contains($optionName)
+    public function contains($filterSearchName)
     {
-        $this->contains = $optionName;
+        $this->contains = $filterSearchName;
 
         return $this;
     }
 
-    public function notContain($optionName)
+    public function notContain($filterSearchName)
     {
-        $this->notContain = $optionName;
+        $this->notContain = $filterSearchName;
 
 
         return $this;
@@ -88,14 +88,6 @@ class MultiSelect extends Property
 
 
 
-
-    /**
-     * @return \Collection
-     */
-    public function getOption(): Collection
-    {
-        return $this->optionNames;
-    }
 
     /**
      * @return mixed
@@ -145,6 +137,22 @@ class MultiSelect extends Property
     public function getNotContain()
     {
         return $this->notContain;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilterSearchOption(): string
+    {
+        return $this->filterSearchOption;
+    }
+
+    /**
+     * @param string $filterSearchOption
+     */
+    public function setFilterSearchOption(string $filterSearchOption): void
+    {
+        $this->filterSearchOption = $filterSearchOption;
     }
 
 
