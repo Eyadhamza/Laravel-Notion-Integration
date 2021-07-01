@@ -9,24 +9,31 @@ use Illuminate\Support\Collection;
 class TitleFilter implements Filterable
 {
 
-    public function set($filter): array
+    public function setPropertyFilter($filter): array
     {
 
        return array(
            'property'=> $filter->getName(),
-                'select'=> is_null($filter->getOption()) ? $this->setFilterConditions($filter) : array('equals'=>$filter->getOption())
+                'title'=> $this->setFilterConditions($filter)
 
        );
 
     }
-    public function setFilterConditions($conditions): array
+    public function setFilterConditions($filter): array
     {
-        return array(
-                'equals'=>$conditions->getEquals() ,
-                'does_not_equal'=>$conditions->getNotEqual(),
-                'is_not_empty'=>$conditions->getIsNotEmpty(),
-                'is_empty'=>$conditions->getIsEmpty()
-        );
+        dd($filter->equals());
+        if ($filter->getContains()){
+            return ['equals'=> $filter->equals()];
+        }
+        if ($filter->getNotContain()){
+            return ['does_not_equal'=> $filter->notEqual()];
+        }
+        if ($filter->getIsNotEmpty()){
+            return ['is_not_empty'=> $filter->getIsNotEmpty()];
+        }
+        if ($filter->getContains()){
+            return ['is_empty'=> $filter->getIsEmpty()];
+        }
     }
 
 }

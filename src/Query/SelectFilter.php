@@ -14,19 +14,29 @@ class SelectFilter implements Filterable
 
        return array(
            'property'=> $filter->getName(),
-                'select'=> is_null($filter->getOptionName()) ? $this->setFilterConditions($filter) : array('equals'=>$filter->getOptionName())
+           'select'=>  $this->setFilterConditions($filter)
 
        );
 
     }
-    public function setFilterConditions($conditions): array
+    public function setFilterConditions($filter): array|null
     {
-        return array(
-                'equals'=>$conditions->getEquals() ,
-                'does_not_equal'=>$conditions->getNotEqual(),
-                'is_not_empty'=>$conditions->getIsNotEmpty(),
-                'is_empty'=>$conditions->getIsEmpty()
-        );
+
+
+        if ($filter->getEquals()){
+            return ['equals'=> $filter->getEquals()];
+        }
+        if ($filter->getNotEqual()){
+            return ['does_not_equal'=> $filter->getNotEqual()];
+        }
+        if ($filter->getIsNotEmpty()){
+            return ['is_not_empty'=> $filter->getIsNotEmpty()];
+        }
+        if ($filter->getIsEmpty()){
+            return ['is_empty'=> $filter->getIsEmpty()];
+        }
+        return ['equals'=> $filter->getEquals()];
+
     }
 
 }

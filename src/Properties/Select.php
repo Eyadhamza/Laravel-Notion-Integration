@@ -24,7 +24,7 @@ class Select extends Property
 
     private $isEmpty;
 
-    public function __construct($name , $optionNameName = null, $color = null, $id=null)
+    public function __construct($name , $optionName = null, $color = null, $id=null)
     {
         $this->type = PropertyType::SELECT;
 
@@ -33,7 +33,7 @@ class Select extends Property
         parent::__construct($this->type,$id);
 
         $this->name = $name;
-        $this->optionName = $optionNameName;
+        $this->optionName = $optionName;
         $this->color = $color;
 
 
@@ -49,16 +49,16 @@ class Select extends Property
     }
 
 
-    public function equals($option): self
+    public function equals($optionName): self
     {
-         $this->equals = $option;
+         $this->equals = $optionName;
 
          return $this;
     }
 
-    public function notEqual($option): self
+    public function notEqual($optionName): self
     {
-        $this->notEqual = $option;
+        $this->notEqual = $optionName;
 
 
         return $this;

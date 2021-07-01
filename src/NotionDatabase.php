@@ -48,7 +48,7 @@ class NotionDatabase extends Workspace
             ->post("$this->URL"."$id"."/query",
                 empty($filterType) ? $this->filter($properties) : $this->multipleFilters($properties,$filterType));
 
-        dd($response->json());
+
         $this->throwExceptions($response);
 
         return $response->json();
@@ -58,7 +58,8 @@ class NotionDatabase extends Workspace
 
     public function filter($property): array
     {
-        dump('hey');
+
+
        return [
            'filter'=> $this->setFilterInterface($property->filter)->setPropertyFilter($property)
        ];

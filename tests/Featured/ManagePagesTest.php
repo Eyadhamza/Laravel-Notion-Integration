@@ -57,7 +57,7 @@ class ManagePagesTest extends TestCase
         $properties = new Collection();
 
         $properties->add(new Title('Name','Eyad Hamza'));
-        $properties->add((new MultiSelect('StatusMulti','blue'))->addOptions(['A','B']));
+        $properties->add((new MultiSelect('Status1','blue'))->addOptions(['A','B']));
 
         $properties->add(new Select('Status','1123','blue'));
         $response =  (new NotionPage)->createPage('632b5fb7e06c4404ae12065c48280e4c',$properties);
@@ -73,7 +73,7 @@ class ManagePagesTest extends TestCase
         $properties = new Collection();
 
         $properties->add(new Title('Name','Eyad Hamza'));
-        $properties->add((new MultiSelect('StatusMulti','blue'))->addOptions(['A','B']));
+        $properties->add((new MultiSelect('Status1','blue'))->addOptions(['A','B']));
 
         $properties->add(new Select('Status','1123','blue'));
 
@@ -94,6 +94,7 @@ class ManagePagesTest extends TestCase
 
 
         $response =  $page->createPage('632b5fb7e06c4404ae12065c48280e4c',$properties);
+
         $this->assertStringContainsString('page',$response['object']);
 
     }
