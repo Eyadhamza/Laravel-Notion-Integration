@@ -36,7 +36,7 @@ class Block
         $this->contentType = $contentType ?? 'text';
     }
 
-    public static function add($page)
+    public static function addBlocksToPage($page)
     {
 
         // expect an a page object or blocks itself

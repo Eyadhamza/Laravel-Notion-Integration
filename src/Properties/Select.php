@@ -136,9 +136,5 @@ class Select extends Property
         return $this->isEmpty;
     }
 
-    public function getContent()
-    {
-
-    }
 
 }

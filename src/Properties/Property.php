@@ -31,7 +31,7 @@ abstract class Property
 
     abstract function getValues();
 
-    public static function add($properties)
+    public static function addPropertiesToPage($properties)
     {
        return $properties->mapToAssoc(function ($property){
             return

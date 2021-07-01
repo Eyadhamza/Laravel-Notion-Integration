@@ -43,8 +43,8 @@ class NotionPage extends Workspace
             ->post($this->URL,
                 [
                     'parent'=> array('database_id' => $notionDatabaseId),
-                    'properties' => Property::add($properties),
-                    'children'=> Block::add($this)
+                    'properties' => Property::addPropertiesToPage($properties),
+                    'children'=> Block::addBlocksToPage($this)
                 ]);
 
 
