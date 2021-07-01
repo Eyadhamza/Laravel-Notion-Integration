@@ -39,6 +39,7 @@ class Block
     public static function add($page)
     {
 
+        // expect an a page object or blocks itself
         return $page->getBlocks()->map(function ($block){
             return array(
                 'object'=>$block->getObject(),

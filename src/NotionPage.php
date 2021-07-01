@@ -29,18 +29,17 @@ class NotionPage extends Workspace
         # It's more common for an integration to receive a page ID by calling the search endpoint.
         parent::__construct();
         $this->id = $id ;
-        $this->URL = $this->BASE_URL."/pages/";
-
+        $this->URL = Workspace::PAGE_URL;
         $this->blocks = new Collection();
 
     }
 
 
-    public function create($notionDatabaseId,Collection $properties)
+    public function createPage($notionDatabaseId, Collection $properties)
     {
 
         $response = Http::withToken(config('notion-wrapper.info.token'))
-            ->withHeaders(['Notion-Version'=>'2021-05-13'])
+            ->withHeaders(['Notion-Version'=> Workspace::NOTION_VERSION])
             ->post($this->URL,
                 [
                     'parent'=> array('database_id' => $notionDatabaseId),
@@ -52,6 +51,8 @@ class NotionPage extends Workspace
         return $response->json();
     }
 
+    // TODO createPageWithProperties
+    // TODO createPageWithBlocks
     public function addBlock(Block $block): self
     {
 
@@ -61,11 +62,9 @@ class NotionPage extends Workspace
 
     }
 
-
-
     public function search($pageTitle, $sortDirection = 'ascending',$timestamp = 'last_edited_time')
     {
-        $response = Http::withToken(config('notion-wrapper.info.token'))->post($this->BASE_URL."/search",['query'=>$pageTitle,
+        $response = Http::withToken(config('notion-wrapper.info.token'))->post(Workspace::SEARCH_PAGE_URL,['query'=>$pageTitle,
             'sort'=>[
                 'direction'=>$sortDirection,
                 'timestamp'=>$timestamp
@@ -81,55 +80,28 @@ class NotionPage extends Workspace
     {
         //TODO
     }
-    public function isSelectProperty($property)
-    {
-       return $property->getType() == 'select';
-    }
 
-    public function isNameProperty($property)
-    {
-        return $property->getName() == 'Name';
-    }
-
-    /**
-     * @return mixed
-     */
     public function getContent()
     {
         return $this->content;
     }
 
-    /**
-     * @param mixed $content
-     */
     public function setContent($content): void
     {
         $this->content = $content;
     }
 
-    /**
-     * @return Collection
-     */
     public function getBlocks(): Collection
     {
         return $this->blocks;
     }
 
-    /**
-     * @param Collection $blocks
-     */
     public function setBlocks(Collection $blocks): void
     {
         $this->blocks = $blocks;
     }
 
 
-
-    private function fillPage()
-    {
-
-
-    }
 
 
 

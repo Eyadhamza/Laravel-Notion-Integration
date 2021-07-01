@@ -43,7 +43,7 @@ class ManagePagesTest extends TestCase
         $properties->add(new Title('Name','Eyad Hamza'));
         $properties->add(new Select('Status','1123','blue'));
 
-        $response =  (new NotionPage)->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
+        $response =  (new NotionPage)->createPage('632b5fb7e06c4404ae12065c48280e4c',$properties);
 
 
         $this->assertStringContainsString('page',$response['object']);
@@ -60,7 +60,7 @@ class ManagePagesTest extends TestCase
         $properties->add((new MultiSelect('StatusMulti','blue'))->addOptions(['A','B']));
 
         $properties->add(new Select('Status','1123','blue'));
-        $response =  (new NotionPage)->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
+        $response =  (new NotionPage)->createPage('632b5fb7e06c4404ae12065c48280e4c',$properties);
 
 
         $this->assertStringContainsString('page',$response['object']);
@@ -93,7 +93,7 @@ class ManagePagesTest extends TestCase
         $page->addBlock($block3);
 
 
-        $response =  $page->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
+        $response =  $page->createPage('632b5fb7e06c4404ae12065c48280e4c',$properties);
         $this->assertStringContainsString('page',$response['object']);
 
     }
