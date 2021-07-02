@@ -50,14 +50,14 @@ class Block
 
         return $page->getBlocks()->map(function ($block){
             return array(
-                'object'=>$block->getObject(),
-                'type' =>$block->getType(),
-                $block->getType() => [
-                    $block->getContentType() =>[
+                'object'=> $block->object,
+                'type' => $block->type,
+                $block->type => [
+                    $block->contentType => [
                         [
-                            'type'=>$block->getContentType(),
-                            $block->getContentType()=>[
-                                'content'=>$block->getBody()
+                            'type'=> $block->contentType,
+                            $block->contentType => [
+                                'content' => $block->body
                             ]
                         ]
 
@@ -77,14 +77,14 @@ class Block
 
     public function ofType(string $type)
     {
-        $this->setType($type);
+        $this->type = $type;
 
         return $this;
     }
 
     public function ofBody(string $body)
     {
-        $this->setBody($body);
+        $this->body = $body;
 
         return $this;
     }
@@ -129,15 +129,7 @@ class Block
         $this->id = $id;
     }
 
-    public function getObject(): string
-    {
-        return $this->object;
-    }
 
-    public function setObject(string $object): void
-    {
-        $this->object = $object;
-    }
 
 
 }
