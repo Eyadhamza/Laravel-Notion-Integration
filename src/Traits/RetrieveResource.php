@@ -20,8 +20,6 @@ trait RetrieveResource
             ->get("$this->URL"."$id");
 
         $this->throwExceptions($response);
-
-
         return $response->json();
     }
 
@@ -29,5 +27,5 @@ trait RetrieveResource
     {
         return (new self)->get($id);
     }
-    # NotionPage::ofId('632b5fb7e06c4404ae12065c48280e4c')
+
 }

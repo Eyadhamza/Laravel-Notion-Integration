@@ -12,6 +12,8 @@ class Title extends Property
 {
 
 
+    // TODO CLASS OR CHANGE OR REMOVE
+
     public TitleFilter $filter;
     private $name;
     private $optionName;
@@ -22,11 +24,8 @@ class Title extends Property
 
         $this->type = PropertyType::TITLE;
         $this->filter = new TitleFilter();
-
         parent::__construct($this->type,$id);
-
         $this->name = $name;
-
         $this->optionName = $optionName;
 
 
@@ -59,9 +58,6 @@ class Title extends Property
 
     }
 
-    /**
-     * @return mixed|null
-     */
     public function getOptionName(): mixed
     {
         return $this->optionName;

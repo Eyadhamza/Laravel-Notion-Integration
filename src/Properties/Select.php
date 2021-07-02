@@ -12,26 +12,18 @@ class Select extends Property
 
     public SelectFilter $filter;
     private $optionName;
-
     private $color;
-
     private $name;
-
     private $equals;
-
     private $notEqual;
     private $isNotEmpty;
-
     private $isEmpty;
 
     public function __construct($name , $optionName = null, $color = null, $id=null)
     {
         $this->type = PropertyType::SELECT;
-
         $this->filter = new SelectFilter;
-
         parent::__construct($this->type,$id);
-
         $this->name = $name;
         $this->optionName = $optionName;
         $this->color = $color;
@@ -52,31 +44,24 @@ class Select extends Property
     public function equals($optionName): self
     {
          $this->equals = $optionName;
-
          return $this;
     }
 
     public function notEqual($optionName): self
     {
         $this->notEqual = $optionName;
-
-
         return $this;
     }
 
     public function isNotEmpty(): self
     {
         $this->isNotEmpty = true;
-
-
         return $this;
     }
 
     public function isEmpty(): self
     {
         $this->isEmpty = true;
-
-
         return $this;
     }
 

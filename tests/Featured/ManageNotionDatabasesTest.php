@@ -45,7 +45,6 @@ class ManageNotionDatabasesTest extends TestCase
     public function throw_exception_database_not_authorized()
     {
         $id = '632b5fb7e06c4404ae12065c48280e4asdc';
-
         $this->expectException(NotionDatabaseException::class);
         (new NotionDatabase($id))->get();
 
@@ -56,9 +55,7 @@ class ManageNotionDatabasesTest extends TestCase
     {
 
         $property =( new Select('Status'))->equals('Reading');
-
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents($property);
-
 
         $this->assertStringContainsString('list',$response['object']);
 

@@ -15,14 +15,11 @@ class SelectFilter implements Filterable
        return array(
            'property'=> $filter->getName(),
            'select'=>  $this->setFilterConditions($filter)
-
        );
 
     }
     public function setFilterConditions($filter): array|null
     {
-
-
         if ($filter->getEquals()){
             return ['equals'=> $filter->getEquals()];
         }

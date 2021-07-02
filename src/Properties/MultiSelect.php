@@ -25,8 +25,6 @@ class MultiSelect extends Property
     {
         $this->type = PropertyType::MULTISELECT;
         $this->filter = new MultiSelectFilter;
-
-
         parent::__construct($this->type,$id);
         $this->optionNames = new Collection();
         $this->name = $name;
@@ -38,9 +36,7 @@ class MultiSelect extends Property
     public function addOptions(array $optionNames): self
     {
         $optionNames = collect($optionNames);
-
         $this->optionNames = $optionNames;
-
         return $this;
 
     }
@@ -65,91 +61,56 @@ class MultiSelect extends Property
     public function notContain($filterSearchName)
     {
         $this->notContain = $filterSearchName;
-
-
         return $this;
     }
 
     public function isNotEmpty()
     {
         $this->isNotEmpty = true;
-
-
         return $this;
     }
 
     public function isEmpty()
     {
         $this->isEmpty = true;
-
-
         return $this;
     }
 
-
-
-
-    /**
-     * @return mixed
-     */
     public function getName()
     {
         return $this->name;
     }
 
-    /**
-     * @return mixed|null
-     */
     public function getColor(): mixed
     {
         return $this->color;
     }
 
-
-
-    /**
-     * @return mixed
-     */
     public function getIsNotEmpty()
     {
         return $this->isNotEmpty;
     }
 
-    /**
-     * @return mixed
-     */
     public function getIsEmpty()
     {
         return $this->isEmpty;
     }
 
-    /**
-     * @return mixed
-     */
     public function getContains()
     {
         return $this->contains;
     }
 
-    /**
-     * @return mixed
-     */
     public function getNotContain()
     {
         return $this->notContain;
     }
 
-    /**
-     * @return string
-     */
     public function getFilterSearchOption(): string
     {
         return $this->filterSearchOption;
     }
 
-    /**
-     * @param string $filterSearchOption
-     */
     public function setFilterSearchOption(string $filterSearchOption): void
     {
         $this->filterSearchOption = $filterSearchOption;

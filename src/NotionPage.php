@@ -24,16 +24,11 @@ class NotionPage extends Workspace
 
     public function __construct($id = '')
     {
-
-
-        # It's more common for an integration to receive a page ID by calling the search endpoint.
         parent::__construct();
         $this->id = $id ;
         $this->URL = Workspace::PAGE_URL;
         $this->blocks = new Collection();
-
     }
-
 
     public function createPage($notionDatabaseId, Collection $properties)
     {
@@ -53,11 +48,11 @@ class NotionPage extends Workspace
 
     // TODO createPageWithProperties
     // TODO createPageWithBlocks
+
     public function addBlock(Block $block): self
     {
 
         $this->blocks->add($block);
-
         return $this;
 
     }
@@ -69,7 +64,6 @@ class NotionPage extends Workspace
                 'direction'=>$sortDirection,
                 'timestamp'=>$timestamp
             ]]);
-
         return $response->json();
 
     }
