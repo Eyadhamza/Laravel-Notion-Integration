@@ -33,7 +33,7 @@ class Block
         $this->contentType = $contentType ?? 'text';
     }
 
-    public function createBlock()
+    public function createBlock(): self
     {
 
         Block::create($this->type,$this->body);
@@ -45,7 +45,7 @@ class Block
         return new self($type, $body);
     }
 
-    public static function addBlocksToPage($page)
+    public static function addBlocksToPage(NotionPage $page): Collection
     {
 
         return $page->getBlocks()->map(function ($block){
@@ -68,21 +68,21 @@ class Block
         });
     }
 
-    public function ofContentType($contentType = null)
+    public function ofContentType($contentType = null): self
     {
         $this->contentType = $contentType;
 
         return $this;
     }
 
-    public function ofType(string $type)
+    public function ofType(string $type): self
     {
         $this->type = $type;
 
         return $this;
     }
 
-    public function ofBody(string $body)
+    public function ofBody(string $body): self
     {
         $this->body = $body;
 
