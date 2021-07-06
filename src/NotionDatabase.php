@@ -19,6 +19,9 @@ class NotionDatabase extends Workspace
 
     private Filterable $filter ;
 
+    private mixed $id;
+    private string $URL;
+
     public function __construct($id = '')
     {
 

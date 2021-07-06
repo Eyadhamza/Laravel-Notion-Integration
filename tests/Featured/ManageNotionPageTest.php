@@ -15,7 +15,7 @@ use Pi\Notion\Properties\Title;
 use Pi\Notion\Tests\TestCase;
 use Pi\Notion\Workspace;
 
-class ManagePagesTest extends TestCase
+class ManageNotionPageTest extends TestCase
 {
     /** @test */
     public function it_should_return_page_info()
@@ -112,13 +112,6 @@ class ManagePagesTest extends TestCase
         $this->assertStringContainsString('list',$page['object']);
     }
 
-    /** @test */
-// TODO
-//    public function it_can_get_page_blocks()
-//    {
-//
-//        $page =  (new NotionPage('834b5c8cc1204816905cd54dc2f3341d'))->getBlocks();
-//
-//        $this->assertStringContainsString('list',$page['object']);
-//    }
+
+
 }

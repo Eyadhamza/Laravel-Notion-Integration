@@ -38,7 +38,7 @@ class NotionPage extends Workspace
 
     }
 
-    public function create($notionDatabaseId, Collection $properties = null)
+    public function create($notionDatabaseId)
     {
 
         $response = Http::withToken(config('notion-wrapper.info.token'))
@@ -54,9 +54,6 @@ class NotionPage extends Workspace
 
         return $this;
     }
-
-    // TODO createPageWithProperties
-    // TODO createPageWithBlocks
 
     public function addBlocks(Collection $blocks): self
     {
