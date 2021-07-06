@@ -18,7 +18,8 @@ trait RetrieveResource
             ->get("$this->URL"."$id");
 
         $this->throwExceptions($response);
-        return $response->json();
+        $this->constructObject($response->json());
+        return $this;
     }
 
     public static function ofId($id)

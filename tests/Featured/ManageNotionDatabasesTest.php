@@ -15,19 +15,20 @@ use Pi\Notion\Workspace;
 
 class ManageNotionDatabasesTest extends TestCase
 {
+
+
     /** @test */
     public function return_database_info()
     {
-        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->get();
+        $response =  (new NotionDatabase)->get('632b5fb7e06c4404ae12065c48280e4c');
 
 
-        $this->assertStringContainsString('database',$response['object']);
+        $this->assertObjectHasAttribute('properties',$response);
 
         $response =  (new NotionDatabase)->get('632b5fb7e06c4404ae12065c48280e4c');
 
-        $this->assertStringContainsString('database',$response['object']);
+        $this->assertObjectHasAttribute('properties',$response);
 
-        $this->assertStringNotContainsString('error',$response['object']);
     }
 
     /** @test */
@@ -57,7 +58,7 @@ class ManageNotionDatabasesTest extends TestCase
         $filter =( new Select('Status'))->equals('Reading');
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents($filter);
 
-        $this->assertStringContainsString('list',$response['object']);
+        $this->assertObjectHasAttribute('properties',$response);
 
     }
 
@@ -71,9 +72,10 @@ class ManageNotionDatabasesTest extends TestCase
                 ->add((new Select('Publisher'))->equals('NYT'));
 
 
-        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($filters,filterType: 'and');
+        $database =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($filters,filterType: 'and');
 
-        $this->assertStringContainsString('list',$response['object']);
+        $this->assertObjectHasAttribute('properties',$database);
+
 
 
 
@@ -91,7 +93,7 @@ class ManageNotionDatabasesTest extends TestCase
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($filters,filterType: 'and');
 
 
-        $this->assertStringContainsString('list',$response['object']);
+        $this->assertObjectHasAttribute('properties',$response);
 
 
 
@@ -109,7 +111,7 @@ class ManageNotionDatabasesTest extends TestCase
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($filters,filterType: 'and');
 
 
-        $this->assertStringContainsString('list',$response['object']);
+        $this->assertObjectHasAttribute('properties',$response);
 
     }
 
@@ -125,7 +127,7 @@ class ManageNotionDatabasesTest extends TestCase
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($filters,filterType: 'and');
 
 
-        $this->assertStringContainsString('list',$response['object']);
+        $this->assertObjectHasAttribute('properties',$response);
 
     }
 

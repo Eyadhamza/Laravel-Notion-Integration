@@ -50,7 +50,7 @@ class NotionPage extends Workspace
                     'children'=> Block::addBlocksToPage($this)
                 ]);
 
-        $this->constructPageObject($response->json());
+        $this->constructObject($response->json());
 
         return $this;
     }
@@ -113,7 +113,7 @@ class NotionPage extends Workspace
         $this->blocks = $blocks;
     }
 
-    private function constructPageObject(mixed $json)
+    public function constructObject(mixed $json)
     {
 
         $this->type = 'page';
@@ -121,6 +121,7 @@ class NotionPage extends Workspace
         $this->created_time = $json['created_time'];
         $this->last_edited_time = $json['last_edited_time'];
         $this->archived = $json['archived'];
+
         return $this;
     }
 
@@ -129,6 +130,8 @@ class NotionPage extends Workspace
      */
     public function getProperties(): Collection
     {
+
+
         return $this->properties;
     }
 

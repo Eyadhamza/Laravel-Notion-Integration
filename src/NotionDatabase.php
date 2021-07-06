@@ -7,6 +7,7 @@ namespace Pi\Notion;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Pi\Notion\Exceptions\NotionDatabaseException;
+use Pi\Notion\Properties\Property;
 use Pi\Notion\Query\Filterable;
 use Pi\Notion\Query\MultiSelectFilter;
 use Pi\Notion\Traits\ThrowsExceptions;
@@ -19,18 +20,23 @@ class NotionDatabase extends Workspace
 
     private Filterable $filter ;
 
-    private mixed $id;
+    private string $id;
     private string $URL;
+    private string $created_time;
+    private string $last_edited_time;
+    private string $title;
+    private Collection $properties;
+    private Collection $pages;
+    private $parentObject;
 
-    public function __construct($id = '')
+    public function __construct($id = '', $title = '')
     {
-
         parent::__construct();
         $this->id = $id ;
         $this->URL = Workspace::DATABASE_URL;
-
-
-
+        $this->title = $title;
+        $this->properties = new Collection();
+        $this->pages = new Collection();
     }
 
     public function setFilterInterface(Filterable $filter)
@@ -49,7 +55,9 @@ class NotionDatabase extends Workspace
                     $this->filter($filters) : $this->multipleFilters($filters,$filterType)
             );
         $this->throwExceptions($response);
-        return $response->json();
+        $this->constructObject($response->json());
+
+        return $this;
 
     }
 
@@ -77,4 +85,44 @@ class NotionDatabase extends Workspace
     {
         // TODO, whenever i return objects !
     }
+
+    private function constructObject(mixed $json): self
+    {
+
+
+        if (array_key_exists('results',$json))
+        {
+
+            $this->constructPages($json['results']);
+            return $this;
+        }
+        $this->id = $json['id'];
+        $this->title = $json['title'][0]['text']['content'];
+        $this->constructProperties($json['properties']);
+        return $this;
+
+    }
+
+    private function constructPages(mixed $results)
+    {
+        $pages = collect($results);
+        $pages->map(function ($page){
+
+            $this->constructProperties($page['properties']);
+            $page = (new NotionPage)->constructObject($page);
+
+            $this->pages->add($page);
+        });
+    }
+
+    private function constructProperties(mixed $properties)
+    {
+
+        $properties = collect($properties);
+        $properties->map(function ($property){
+            $this->properties->add($property);
+        });
+    }
+
+
 }

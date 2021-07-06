@@ -24,28 +24,17 @@ abstract class Property
 
     abstract function getValues();
 
-    public static function addPropertiesToPage($page)
+    public static function addPropertiesToPage($page = null, $properties = null)
     {
+        $properties = collect($properties) ?? $page -> getProperties();
 
-       return $page->getProperties()->mapToAssoc(function ($property){
+       return $properties->mapToAssoc(function ($property){
             return
                 array(
                     $property->getName(), array($property->getType() => $property->getValues() ?? null)
                 );
         });
     }
-
-    public static function addContentToPage($properties)
-    {
-        return $properties->mapToAssoc(function ($property){
-            return
-                array(
-                    $property->getName(), array($property->getType() => $property->getValues() ?? null)
-                );
-
-        });
-    }
-
 
     public function getType(): string
     {
