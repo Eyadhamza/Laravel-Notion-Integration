@@ -18,7 +18,7 @@ class Workspace
         $this->token = $token;
     }
 
-    public static function workspace()
+    public static function workspace(): self
     {
         return new self();
     }

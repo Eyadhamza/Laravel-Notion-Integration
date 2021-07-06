@@ -35,7 +35,6 @@ class Block
 
     public function createBlock(): self
     {
-
         Block::create($this->type,$this->body);
         return $this;
     }
@@ -94,11 +93,6 @@ class Block
         return $this->last_edited_time;
     }
 
-    public function setLastEditedTime(string $last_edited_time): void
-    {
-        $this->last_edited_time = $last_edited_time;
-    }
-
     public function isHasChildren(): bool
     {
         return $this->has_children;
@@ -112,11 +106,6 @@ class Block
     public function getCreatedTime(): string
     {
         return $this->created_time;
-    }
-
-    public function setCreatedTime(string $created_time): void
-    {
-        $this->created_time = $created_time;
     }
 
     public function getId(): string

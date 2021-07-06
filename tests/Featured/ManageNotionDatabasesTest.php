@@ -54,8 +54,8 @@ class ManageNotionDatabasesTest extends TestCase
     public function return_database_contents_with_single_query()
     {
 
-        $property =( new Select('Status'))->equals('Reading');
-        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents($property);
+        $filter =( new Select('Status'))->equals('Reading');
+        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents($filter);
 
         $this->assertStringContainsString('list',$response['object']);
 
@@ -66,12 +66,12 @@ class ManageNotionDatabasesTest extends TestCase
     {
 
 
-        $properties = new Collection();
-        $properties->add((new Select('Status'))->equals('Reading'))
+        $filters = new Collection();
+        $filters->add((new Select('Status'))->equals('Reading'))
                 ->add((new Select('Publisher'))->equals('NYT'));
 
 
-        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($properties,filterType: 'and');
+        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($filters,filterType: 'and');
 
         $this->assertStringContainsString('list',$response['object']);
 
@@ -83,12 +83,12 @@ class ManageNotionDatabasesTest extends TestCase
     {
 
 
-        $properties = new Collection();
-        $properties->add((new Select('Status'))->equals('Reading')->isNotEmpty())
+        $filters = new Collection();
+        $filters->add((new Select('Status'))->equals('Reading')->isNotEmpty())
             ->add((new Select('Publisher'))->notEqual('NN')->isEmpty());
 
 
-        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($properties,filterType: 'and');
+        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($filters,filterType: 'and');
 
 
         $this->assertStringContainsString('list',$response['object']);
@@ -100,13 +100,13 @@ class ManageNotionDatabasesTest extends TestCase
     public function return_database_contents_with_multiple_query_using_multiselect_property()
     {
 
-        // TODO BROKEN now after adding multiple option
-        $properties = new Collection();
-        $properties->add((new MultiSelect('Status1','blue'))->contains('B'))
+
+        $filters = new Collection();
+        $filters->add((new MultiSelect('Status1','blue'))->contains('B'))
                    ->add((new MultiSelect('Status2','blue'))->contains('A'));
 
 
-        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($properties,filterType: 'and');
+        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($filters,filterType: 'and');
 
 
         $this->assertStringContainsString('list',$response['object']);
@@ -118,11 +118,11 @@ class ManageNotionDatabasesTest extends TestCase
     {
 
 
-        $properties = new Collection();
-        $properties->add((new MultiSelect('StatusMulti'))->notContain('Ba'))
+        $filters = new Collection();
+        $filters->add((new MultiSelect('StatusMulti'))->notContain('Ba'))
             ->add((new MultiSelect('StatusMulti'))->contains('B'));
 
-        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($properties,filterType: 'and');
+        $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($filters,filterType: 'and');
 
 
         $this->assertStringContainsString('list',$response['object']);

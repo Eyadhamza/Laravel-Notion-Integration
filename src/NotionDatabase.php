@@ -36,14 +36,15 @@ class NotionDatabase extends Workspace
         return $this->filter;
     }
 
-    public function getContents($properties , $id = null,string $sort = '',$filterType = '')
+    public function getContents($filters , $id = null, string $sort = '', $filterType = '')
     {
+        // this should not be properties, they should be filters!! TODO
         $id = $id ?? $this->id;
         $queryURL = "$this->URL"."$id"."/query";
         $response = Http::withToken(config('notion-wrapper.info.token'))
             ->post($queryURL,
                 empty($filterType) ?
-                    $this->filter($properties) : $this->multipleFilters($properties,$filterType)
+                    $this->filter($filters) : $this->multipleFilters($filters,$filterType)
             );
         $this->throwExceptions($response);
         return $response->json();
@@ -59,8 +60,9 @@ class NotionDatabase extends Workspace
 
     public function multipleFilters($properties,$filterType): array
     {
+
         return [
-            'filter' =>[
+            'filter' => [
             $filterType =>
                 $properties->map(function ($property){
                     return $this->setFilterInterface($property->filter)->setPropertyFilter($property);
