@@ -41,7 +41,6 @@ class NotionDatabase extends Workspace
 
     public function getContents($filters , $id = null, string $sort = '', $filterType = '')
     {
-        // this should not be properties, they should be filters!! TODO
         $id = $id ?? $this->id;
         $queryURL = "$this->URL"."$id"."/query";
         $response = Http::withToken(config('notion-wrapper.info.token'))
