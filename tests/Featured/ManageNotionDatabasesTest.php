@@ -57,7 +57,6 @@ class ManageNotionDatabasesTest extends TestCase
 
         $filter =( new Select('Status'))->equals('Reading');
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents($filter);
-
         $this->assertObjectHasAttribute('properties',$response);
 
     }
@@ -73,7 +72,6 @@ class ManageNotionDatabasesTest extends TestCase
 
 
         $database =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($filters,filterType: 'and');
-
         $this->assertObjectHasAttribute('properties',$database);
 
 
@@ -91,8 +89,6 @@ class ManageNotionDatabasesTest extends TestCase
 
 
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($filters,filterType: 'and');
-
-
         $this->assertObjectHasAttribute('properties',$response);
 
 
@@ -109,8 +105,6 @@ class ManageNotionDatabasesTest extends TestCase
 
 
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($filters,filterType: 'and');
-
-
         $this->assertObjectHasAttribute('properties',$response);
 
     }
@@ -125,8 +119,6 @@ class ManageNotionDatabasesTest extends TestCase
             ->add((new MultiSelect('StatusMulti'))->contains('B'));
 
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($filters,filterType: 'and');
-
-
         $this->assertObjectHasAttribute('properties',$response);
 
     }

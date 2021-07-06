@@ -24,11 +24,10 @@ abstract class Property
 
     abstract function getValues();
 
-    public static function addPropertiesToPage($page = null, $properties = null)
+    public static function addPropertiesToPage($page)
     {
-        $properties = collect($properties) ?? $page -> getProperties();
 
-       return $properties->mapToAssoc(function ($property){
+       return $page->getProperties()->mapToAssoc(function ($property){
             return
                 array(
                     $property->getName(), array($property->getType() => $property->getValues() ?? null)

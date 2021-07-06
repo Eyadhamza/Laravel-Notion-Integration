@@ -51,8 +51,10 @@ class NotionDatabase extends Workspace
         $queryURL = "$this->URL"."$id"."/query";
         $response = Http::withToken(config('notion-wrapper.info.token'))
             ->post($queryURL,
-                empty($filterType) ?
-                    $this->filter($filters) : $this->multipleFilters($filters,$filterType)
+                [
+                    empty($filterType) ? $this->filter($filters) : $this->multipleFilters($filters,$filterType),
+
+                ]
             );
         $this->throwExceptions($response);
         $this->constructObject($response->json());

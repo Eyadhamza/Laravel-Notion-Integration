@@ -22,14 +22,8 @@ class ManageNotionPageTest extends TestCase
     public function it_should_return_page_info()
     {
         $object = (new NotionPage)->get('834b5c8cc1204816905cd54dc2f3341d');
-
-
         $this->assertObjectHasAttribute('properties',$object);
-
-
         $object = NotionPage::ofId('834b5c8cc1204816905cd54dc2f3341d');
-
-
         $this->assertObjectHasAttribute('properties',$object);
 
     }

@@ -15,9 +15,7 @@ class PageTest extends TestCase
     public function it_returns_new_database_instance()
     {
         $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
-
         $this->assertInstanceOf(NotionDatabase::class, $database);
-
         $r = NotionDatabase::ofId('632b5fb7e06c4404ae12065c48280e4c');
         $this->assertObjectHasAttribute('properties',$r);
 
