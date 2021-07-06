@@ -10,27 +10,35 @@ use Pi\Notion\ContentBlock\Block;
 use Pi\Notion\Properties\Property;
 use Pi\Notion\Traits\ThrowsExceptions;
 use Pi\Notion\Traits\RetrieveResource;
+use function PHPUnit\Framework\isNull;
 
 class NotionPage extends Workspace
 {
     use RetrieveResource;
     use ThrowsExceptions;
 
-
-    protected mixed $created_time;
-    protected mixed $last_edited_time;
-
+    private string $type;
+    private string $id;
+    private string $URL;
+    private mixed $created_time;
+    private mixed $last_edited_time;
     private Collection $blocks;
+    private Collection $properties;
+    private mixed $archived;
+
 
     public function __construct($id = '')
     {
         parent::__construct();
         $this->id = $id ;
         $this->URL = Workspace::PAGE_URL;
+        $this->type = 'page';
         $this->blocks = new Collection();
+        $this->properties = new Collection();
+
     }
 
-    public function createPage($notionDatabaseId, Collection $properties)
+    public function create($notionDatabaseId, Collection $properties = null)
     {
 
         $response = Http::withToken(config('notion-wrapper.info.token'))
@@ -38,23 +46,35 @@ class NotionPage extends Workspace
             ->post($this->URL,
                 [
                     'parent'=> array('database_id' => $notionDatabaseId),
-                    'properties' => Property::addPropertiesToPage($properties),
+                    'properties' => Property::addPropertiesToPage($this),
                     'children'=> Block::addBlocksToPage($this)
                 ]);
 
+        $this->constructPageObject($response->json());
 
-        return $response->json();
+        return $this;
     }
 
     // TODO createPageWithProperties
     // TODO createPageWithBlocks
 
-    public function addBlock(Block $block): self
+    public function addBlocks(Collection $blocks): self
     {
 
-        $this->blocks->add($block);
-        return $this;
+        $blocks->map(function ($block){
+            $this->blocks->add($block);
+        });
 
+        return $this;
+    }
+    public function addProperties(Collection $properties): self
+    {
+
+        $properties->map(function ($property){
+            $this->properties->add($property);
+        });
+
+        return $this;
     }
 
     public function search($pageTitle, $sortDirection = 'ascending',$timestamp = 'last_edited_time')
@@ -64,6 +84,7 @@ class NotionPage extends Workspace
                 'direction'=>$sortDirection,
                 'timestamp'=>$timestamp
             ]]);
+//        $this->constructPageObject($response->json()); TODO
         return $response->json();
 
     }
@@ -95,8 +116,24 @@ class NotionPage extends Workspace
         $this->blocks = $blocks;
     }
 
+    private function constructPageObject(mixed $json)
+    {
 
+        $this->type = 'page';
+        $this->id = $json['id'];
+        $this->created_time = $json['created_time'];
+        $this->last_edited_time = $json['last_edited_time'];
+        $this->archived = $json['archived'];
+        return $this;
+    }
 
+    /**
+     * @return Collection
+     */
+    public function getProperties(): Collection
+    {
+        return $this->properties;
+    }
 
 
 }

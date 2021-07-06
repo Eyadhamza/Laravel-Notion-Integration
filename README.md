@@ -166,7 +166,7 @@ $contents = array(
 // the previous are just one example, you can add any notion specific type
 // possible tag_types & content_type are available at notion.so
 
-(new NotionPage)->createPage('632b5fb7e06c4404ae12065c48280e4c', $properties, $contents);
+(new NotionPage)->create('632b5fb7e06c4404ae12065c48280e4c', $properties, $contents);
 
 // returns the information of notion page as a array response
 ```

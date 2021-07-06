@@ -10,7 +10,6 @@ use Pi\Notion\NotionDatabase;
 use Pi\Notion\Exceptions\NotionDatabaseException;
 use Pi\Notion\NotionPage;
 use Pi\Notion\Properties\MultiSelect;
-use Pi\Notion\Properties\Property;
 use Pi\Notion\Properties\Select;
 use Pi\Notion\Properties\Title;
 use Pi\Notion\Tests\TestCase;
@@ -35,18 +34,27 @@ class ManagePagesTest extends TestCase
     }
 
     /** @test */
+    public function i_can_create_a_page_object()
+    {
+        $page = \Pi\Notion\Facades\NotionPage::create('632b5fb7e06c4404ae12065c48280e4c');
+
+        $this->assertObjectHasAttribute('type',$page);
+
+    }
+    /** @test */
     public function it_should_add_select_properties_to_created_page_and_option()
     {
 
         $properties = new Collection();
-
+        $page = (new NotionPage);
         $properties->add(new Title('Name','Eyad Hamza'));
         $properties->add(new Select('Status','1123','blue'));
 
-        $response =  (new NotionPage)->createPage('632b5fb7e06c4404ae12065c48280e4c',$properties);
+        $page->addProperties($properties);
+        $page =  $page->create('632b5fb7e06c4404ae12065c48280e4c');
 
-
-        $this->assertStringContainsString('page',$response['object']);
+        $this->assertCount(2,$page->getProperties());
+        $this->assertObjectHasAttribute('properties',$page);
 
 
     }
@@ -55,15 +63,16 @@ class ManagePagesTest extends TestCase
     {
 
         $properties = new Collection();
-
+        $page =  (new NotionPage);
         $properties->add(new Title('Name','Eyad Hamza'));
         $properties->add((new MultiSelect('Status1','blue'))->addOptions(['A','B']));
 
         $properties->add(new Select('Status','1123','blue'));
-        $response =  (new NotionPage)->createPage('632b5fb7e06c4404ae12065c48280e4c',$properties);
+        $page->addProperties($properties);
+        $page->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
 
-
-        $this->assertStringContainsString('page',$response['object']);
+        $this->assertCount(3,$page->getProperties());
+        $this->assertObjectHasAttribute('properties',$page);
 
 
     }
@@ -74,37 +83,33 @@ class ManagePagesTest extends TestCase
 
         $properties->add(new Title('Name','Eyad Hamza'));
         $properties->add((new MultiSelect('Status1','blue'))->addOptions(['A','B']));
-
         $properties->add(new Select('Status','1123','blue'));
 
 
+        $blocks = new Collection();
+        $block1 = $blocks->add(Block::create(BlockTypes::HEADING_1,'i want this to work!'));
+        $block2 = $blocks->add(Block::create(BlockTypes::HEADING_2,'i want this to work!'));
+        $block3 =$blocks->add((new Block)->ofType(BlockTypes::NUMBERED_LIST)->ofBody('i want this to work!')->createBlock());
+        $block4 =$blocks->add((new Block)->ofType(BlockTypes::TODO)->ofBody('i want this to work!')->createBlock());
+
         $page = (new NotionPage);
-        $block1 = Block::create(BlockTypes::HEADING_1,'i want this to work!');
-        $page->addBlock($block1);
-        $block2 = Block::create(BlockTypes::HEADING_2,'i want this to work!');
-        $page->addBlock($block2);
-
-        $block3 =(new Block)->ofType(BlockTypes::NUMBERED_LIST)->ofBody('i want this to work!')->createBlock();
-
-        $page->addBlock($block3);
-
-        $block3 =(new Block)->ofType(BlockTypes::TODO)->ofBody('i want this to work!')->createBlock();
-
-        $page->addBlock($block3);
+        $page->addBlocks($blocks)->addProperties($properties)->create('632b5fb7e06c4404ae12065c48280e4c');
 
 
-        $response =  $page->createPage('632b5fb7e06c4404ae12065c48280e4c',$properties);
 
-        $this->assertStringContainsString('page',$response['object']);
+        $this->assertCount(3,$page->getProperties());
+        $this->assertCount(4,$page->getBlocks());
+        $this->assertObjectHasAttribute('properties',$page);
+
 
     }
     /** @test */
     public function it_returns_search_result()
     {
-        $response = (new NotionPage)
+        $page = (new NotionPage)
             ->search('New Media Article');
 
-        $this->assertStringContainsString('list',$response['object']);
+        $this->assertStringContainsString('list',$page['object']);
     }
 
     /** @test */

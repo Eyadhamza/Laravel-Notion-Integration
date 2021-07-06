@@ -24,14 +24,14 @@ abstract class Property
 
     abstract function getValues();
 
-    public static function addPropertiesToPage($properties)
+    public static function addPropertiesToPage($page)
     {
-       return $properties->mapToAssoc(function ($property){
+
+       return $page->getProperties()->mapToAssoc(function ($property){
             return
                 array(
                     $property->getName(), array($property->getType() => $property->getValues() ?? null)
                 );
-
         });
     }
 

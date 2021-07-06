@@ -5,7 +5,9 @@ namespace Pi\Notion;
 class Workspace
 {
     //TODO users
-    protected $token;
+    private $token;
+
+
     const BASE_URL= 'https://api.notion.com/v1';
     const PAGE_URL = Workspace::BASE_URL.'/pages/';
     const SEARCH_PAGE_URL =  Workspace::BASE_URL.'/search';

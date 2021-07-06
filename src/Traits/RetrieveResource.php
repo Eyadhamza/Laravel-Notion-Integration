@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Http;
 trait RetrieveResource
 {
 
-    protected string $URL;
-    protected string $id;
 
     public function get($id = null)
     {

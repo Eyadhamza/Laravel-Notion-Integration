@@ -54,7 +54,8 @@
                 "Pi\\Notion\\NotionServiceProvider"
             ],
             "aliases": {
-                "Notion": "Pi\\Notion\\NotionFacade"
+                "Notion": "Pi\\Notion\\Facades",
+                "NotionPage": "Pi\\Notion\\Facades\\NotionPage"
             }
         }
     },
