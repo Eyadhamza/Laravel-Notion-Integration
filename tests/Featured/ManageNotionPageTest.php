@@ -12,18 +12,20 @@ use Pi\Notion\NotionPage;
 use Pi\Notion\Properties\MultiSelect;
 use Pi\Notion\Properties\Select;
 use Pi\Notion\Properties\Title;
+use Facades\Pi\Notion\Tests\Setup\NotionPageFactory;
 use Pi\Notion\Tests\TestCase;
 use Pi\Notion\Workspace;
 
 class ManageNotionPageTest extends TestCase
 {
 
+
     /** @test */
     public function it_should_return_page_info()
     {
-        $object = (new NotionPage)->get('834b5c8cc1204816905cd54dc2f3341d');
+        $object = NotionPageFactory::getAnExistingPage();
         $this->assertObjectHasAttribute('properties',$object);
-        $object = NotionPage::ofId('834b5c8cc1204816905cd54dc2f3341d');
+        $object =NotionPageFactory::getAnExistingPageById();
         $this->assertObjectHasAttribute('properties',$object);
 
     }
@@ -31,23 +33,16 @@ class ManageNotionPageTest extends TestCase
     /** @test */
     public function i_can_create_a_page_object()
     {
-        $page = \Pi\Notion\Facades\NotionPage::create('632b5fb7e06c4404ae12065c48280e4c');
-
+        $page = NotionPageFactory::createNotionPage();
         $this->assertObjectHasAttribute('type',$page);
 
     }
+
     /** @test */
     public function it_should_add_select_properties_to_created_page_and_option()
     {
 
-        $properties = new Collection();
-        $page = (new NotionPage);
-        $properties->add(new Title('Name','Eyad Hamza'));
-        $properties->add(new Select('Status','1123','blue'));
-
-        $page->addProperties($properties);
-        $page =  $page->create('632b5fb7e06c4404ae12065c48280e4c');
-
+        $page = NotionPageFactory::createNotionPageWithSelectProperties();
         $this->assertCount(2,$page->getProperties());
         $this->assertObjectHasAttribute('properties',$page);
 
@@ -57,15 +52,7 @@ class ManageNotionPageTest extends TestCase
     public function it_should_add_multiselect_properties_to_created_page_and_option()
     {
 
-        $properties = new Collection();
-        $page =  (new NotionPage);
-        $properties->add(new Title('Name','Eyad Hamza'));
-        $properties->add((new MultiSelect('Status1','blue'))->addOptions(['A','B']));
-
-        $properties->add(new Select('Status','1123','blue'));
-        $page->addProperties($properties);
-        $page->create('632b5fb7e06c4404ae12065c48280e4c',$properties);
-
+        $page = NotionPageFactory::createNotionPageWithMultiSelectProperties();
         $this->assertCount(3,$page->getProperties());
         $this->assertObjectHasAttribute('properties',$page);
 
@@ -74,24 +61,7 @@ class ManageNotionPageTest extends TestCase
     /** @test */
     public function it_can_add_content_blocks_to_created_pages()
     {
-        $properties = new Collection();
-
-        $properties->add(new Title('Name','Eyad Hamza'));
-        $properties->add((new MultiSelect('Status1','blue'))->addOptions(['A','B']));
-        $properties->add(new Select('Status','1123','blue'));
-
-
-        $blocks = new Collection();
-        $block1 = $blocks->add(Block::create(BlockTypes::HEADING_1,'i want this to work!'));
-        $block2 = $blocks->add(Block::create(BlockTypes::HEADING_2,'i want this to work!'));
-        $block3 =$blocks->add((new Block)->ofType(BlockTypes::NUMBERED_LIST)->ofBody('i want this to work!')->createBlock());
-        $block4 =$blocks->add((new Block)->ofType(BlockTypes::TODO)->ofBody('i want this to work!')->createBlock());
-
-        $page = (new NotionPage);
-        $page->addBlocks($blocks)->addProperties($properties)->create('632b5fb7e06c4404ae12065c48280e4c');
-
-
-
+        $page = NotionPageFactory::addContentToCreatedPages();
         $this->assertCount(3,$page->getProperties());
         $this->assertCount(4,$page->getBlocks());
         $this->assertObjectHasAttribute('properties',$page);

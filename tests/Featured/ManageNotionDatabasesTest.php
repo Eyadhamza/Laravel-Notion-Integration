@@ -74,9 +74,18 @@ class ManageNotionDatabasesTest extends TestCase
         $database =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($filters,filterType: 'and');
         $this->assertObjectHasAttribute('properties',$database);
 
+    }
+    /** @test */
+    public function i_can_sort_database_results()
+    {
+        $filters = new Collection();
+        $filters->add((new Select('Status'))->equals('Reading'))
+            ->add((new Select('Publisher'))->equals('NYT'));
 
 
+        $database =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($filters,filterType: 'and');
 
+        $this->assertObjectHasAttribute('properties',$database);
     }
     /** @test */
     public function return_database_contents_with_multiple_query_with_different_conditions()
