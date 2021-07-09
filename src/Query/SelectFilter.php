@@ -30,6 +30,25 @@ class SelectFilter implements Filterable
        );
 
     }
+
+    public function setFilterConditions(): array|null
+    {
+
+        if ($this->equals){
+            return ['equals'=> $this->equals];
+        }
+        if ($this->notEqual){
+            return ['does_not_equal'=> $this->notEqual];
+        }
+        if ($this->isNotEmpty){
+            return ['is_not_empty'=> $this->isNotEmpty];
+        }
+        if ($this->isEmpty){
+            return ['is_empty'=> $this->isEmpty];
+        }
+        return ['equals'=> $this->equals];
+
+    }
     public function equals($optionName): self
     {
         $this->equals = $optionName;
@@ -52,23 +71,39 @@ class SelectFilter implements Filterable
         $this->isEmpty = true;
         return $this;
     }
-    public function setFilterConditions(): array|null
+
+    public function getColor(): mixed
     {
-
-        if ($this->equals){
-            return ['equals'=> $this->equals];
-        }
-        if ($this->notEqual){
-            return ['does_not_equal'=> $this->notEqual];
-        }
-        if ($this->isNotEmpty){
-            return ['is_not_empty'=> $this->isNotEmpty];
-        }
-        if ($this->isEmpty){
-            return ['is_empty'=> $this->isEmpty];
-        }
-        return ['equals'=> $this->equals];
-
+        return $this->color;
     }
 
+    public function getOptionName(): mixed
+    {
+        return $this->optionName;
+    }
+
+    public function getName(): mixed
+    {
+        return $this->name;
+    }
+
+    public function getEquals(): mixed
+    {
+        return $this->equals;
+    }
+
+    public function getNotEqual(): mixed
+    {
+        return $this->notEqual;
+    }
+
+    public function getIsNotEmpty(): mixed
+    {
+        return $this->isNotEmpty;
+    }
+
+    public function getIsEmpty(): mixed
+    {
+        return $this->isEmpty;
+    }
 }

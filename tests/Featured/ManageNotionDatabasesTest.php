@@ -10,6 +10,7 @@ use Pi\Notion\NotionPage;
 use Pi\Notion\Properties\MultiSelect;
 use Pi\Notion\Properties\Select;
 use Pi\Notion\Properties\Title;
+use Pi\Notion\Query\MultiSelectFilter;
 use Pi\Notion\Query\SelectFilter;
 use Pi\Notion\Tests\TestCase;
 use Pi\Notion\Workspace;
@@ -81,8 +82,8 @@ class ManageNotionDatabasesTest extends TestCase
     public function i_can_sort_database_results()
     {
         $filters = new Collection();
-        $filters->add((new Select('Status'))->equals('Reading'))
-            ->add((new Select('Publisher'))->equals('NYT'));
+        $filters->add((new SelectFilter('Status'))->equals('Reading'))
+            ->add((new SelectFilter('Publisher'))->equals('NYT'));
 
 
         $database =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($filters,filterType: 'and');
@@ -95,8 +96,8 @@ class ManageNotionDatabasesTest extends TestCase
 
 
         $filters = new Collection();
-        $filters->add((new Select('Status'))->equals('Reading')->isNotEmpty())
-            ->add((new Select('Publisher'))->notEqual('NN')->isEmpty());
+        $filters->add((new SelectFilter('Status'))->equals('Reading')->isNotEmpty())
+            ->add((new SelectFilter('Publisher'))->notEqual('NN')->isEmpty());
 
 
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($filters,filterType: 'and');
@@ -111,8 +112,8 @@ class ManageNotionDatabasesTest extends TestCase
 
 
         $filters = new Collection();
-        $filters->add((new MultiSelect('Status1','blue'))->contains('B'))
-                   ->add((new MultiSelect('Status2','blue'))->contains('A'));
+        $filters->add((new MultiSelectFilter('Status1','blue'))->contains('B'))
+                   ->add((new MultiSelectFilter('Status2','blue'))->contains('A'));
 
 
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($filters,filterType: 'and');
@@ -126,8 +127,8 @@ class ManageNotionDatabasesTest extends TestCase
 
 
         $filters = new Collection();
-        $filters->add((new MultiSelect('StatusMulti'))->notContain('Ba'))
-            ->add((new MultiSelect('StatusMulti'))->contains('B'));
+        $filters->add((new MultiSelectFilter('StatusMulti'))->notContain('Ba'))
+            ->add((new MultiSelectFilter('StatusMulti'))->contains('B'));
 
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($filters,filterType: 'and');
         $this->assertObjectHasAttribute('properties',$response);
