@@ -39,11 +39,6 @@ class NotionDatabase extends Workspace
         $this->pages = new Collection();
     }
 
-    public function setFilterInterface(Filterable $filter)
-    {
-        $this->filter = $filter;
-        return $this->filter;
-    }
 
     public function getContents($filters , $id = null, string $sort = '', $filterType = '')
     {
@@ -63,21 +58,22 @@ class NotionDatabase extends Workspace
 
     }
 
-    public function filter($property): array
+    public function filter($filter): array
     {
+
        return [
-           'filter'=> $this->setFilterInterface($property->filter)->setPropertyFilter($property)
+           'filter'=> $filter->setPropertyFilter()
        ];
     }
 
-    public function multipleFilters($properties,$filterType): array
+    public function multipleFilters($filters, $filterType): array
     {
 
         return [
             'filter' => [
             $filterType =>
-                $properties->map(function ($property){
-                    return $this->setFilterInterface($property->filter)->setPropertyFilter($property);
+                $filters->map(function ($filter){
+                    return $filter->setPropertyFilter();
                 })
             ]
         ];

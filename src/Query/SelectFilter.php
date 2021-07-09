@@ -5,34 +5,69 @@ namespace Pi\Notion\Query;
 
 
 use Illuminate\Support\Collection;
+use Pi\Notion\Properties\Select;
 
 class SelectFilter implements Filterable
 {
+    private $equals;
+    private $notEqual;
+    private $isNotEmpty;
+    private $isEmpty;
+    private string $propertyName;
 
-    public function setPropertyFilter($filter): array
+    public function __construct(string $propertyName)
+    {
+
+        $this->propertyName = $propertyName;
+    }
+
+    public function setPropertyFilter(): array
     {
 
        return array(
-           'property'=> $filter->getName(),
-           'select'=>  $this->setFilterConditions($filter)
+           'property'=> $this->propertyName,
+           'select'=>  $this->setFilterConditions()
        );
 
     }
-    public function setFilterConditions($filter): array|null
+    public function equals($optionName): self
     {
-        if ($filter->getEquals()){
-            return ['equals'=> $filter->getEquals()];
+        $this->equals = $optionName;
+        return $this;
+    }
+
+    public function notEqual($optionName): self
+    {
+        $this->notEqual = $optionName;
+        return $this;
+    }
+    public function isNotEmpty(): self
+    {
+        $this->isNotEmpty = true;
+        return $this;
+    }
+
+    public function isEmpty(): self
+    {
+        $this->isEmpty = true;
+        return $this;
+    }
+    public function setFilterConditions(): array|null
+    {
+
+        if ($this->equals){
+            return ['equals'=> $this->equals];
         }
-        if ($filter->getNotEqual()){
-            return ['does_not_equal'=> $filter->getNotEqual()];
+        if ($this->notEqual){
+            return ['does_not_equal'=> $this->notEqual];
         }
-        if ($filter->getIsNotEmpty()){
-            return ['is_not_empty'=> $filter->getIsNotEmpty()];
+        if ($this->isNotEmpty){
+            return ['is_not_empty'=> $this->isNotEmpty];
         }
-        if ($filter->getIsEmpty()){
-            return ['is_empty'=> $filter->getIsEmpty()];
+        if ($this->isEmpty){
+            return ['is_empty'=> $this->isEmpty];
         }
-        return ['equals'=> $filter->getEquals()];
+        return ['equals'=> $this->equals];
 
     }
 
