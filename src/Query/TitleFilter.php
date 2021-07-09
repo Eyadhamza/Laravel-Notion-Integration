@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 class TitleFilter implements Filterable
 {
 
-    public function setPropertyFilter($filter): array
+    public function setPropertyFilter(): array
     {
 
        return array(
@@ -19,7 +19,7 @@ class TitleFilter implements Filterable
        );
 
     }
-    public function setFilterConditions($filter): array
+    public function setFilterConditions(): array
     {
         dd($filter->equals());
         if ($filter->getContains()){

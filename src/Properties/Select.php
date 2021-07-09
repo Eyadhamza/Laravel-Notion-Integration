@@ -10,7 +10,6 @@ use Pi\Notion\Query\SelectFilter;
 class Select extends Property
 {
 
-    public SelectFilter $filter;
     private $optionName;
     private $color;
     private $name;
@@ -37,6 +36,11 @@ class Select extends Property
         );
     }
 
+
+    public function getName()
+    {
+        return $this->name;
+    }
 
 
 }
