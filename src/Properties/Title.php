@@ -28,7 +28,7 @@ class Title extends Property
 
     }
 
-    public function setPropertyValues($name, $types): array // for page creation
+    public function setPropertyValues($name, $types): array
     {
 
     }
@@ -40,14 +40,16 @@ class Title extends Property
         return $this->name;
     }
 
-    public function getValues(): array // for page creation
+    public function getValues(): array
     {
         return
-            array(
-                    array(
+            array
+            (
+                    array
+                    (
                         'text' => array('content' => $this->getOptionName())
                     ) ?? null
-        );
+            );
     }
 
     public function getContent()

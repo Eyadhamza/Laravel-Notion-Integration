@@ -40,7 +40,7 @@ class NotionDatabase extends Workspace
     }
 
 
-    public function getContents($filters , $id = null, string $sort = '', $filterType = '')
+    public function getContents(Collection | Filterable $filters , $id = null, string $sort = '', $filterType = '')
     {
         $id = $id ?? $this->id;
         $queryURL = "$this->URL"."$id"."/query";
@@ -58,7 +58,7 @@ class NotionDatabase extends Workspace
 
     }
 
-    public function filter($filter): array
+    public function filter(Filterable $filter): array
     {
 
        return [
@@ -66,13 +66,13 @@ class NotionDatabase extends Workspace
        ];
     }
 
-    public function multipleFilters($filters, $filterType): array
+    public function multipleFilters(Collection $filters,string $filterType): array
     {
 
         return [
             'filter' => [
             $filterType =>
-                $filters->map(function ($filter){
+                $filters->map(function (Filterable $filter){
                     return $filter->setPropertyFilter();
                 })
             ]
@@ -90,7 +90,6 @@ class NotionDatabase extends Workspace
 
         if (array_key_exists('results',$json))
         {
-
             $this->constructPages($json['results']);
             return $this;
         }

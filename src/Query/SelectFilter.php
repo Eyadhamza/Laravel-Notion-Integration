@@ -9,16 +9,19 @@ use Pi\Notion\Properties\Select;
 
 class SelectFilter implements Filterable
 {
-    private $equals;
-    private $notEqual;
-    private $isNotEmpty;
-    private $isEmpty;
-    private string $propertyName;
+    private string $equals;
+    private ?string $notEqual;
+    private ?bool $isNotEmpty;
+    private ?bool $isEmpty;
+    private ?string $propertyName;
 
-    public function __construct(string $propertyName)
+    public function __construct(string $propertyName, string $equals = null, string $notEqual  = null, bool $isNotEmpty  = null, bool $isEmpty  = null)
     {
-
         $this->propertyName = $propertyName;
+        $this->equals = $equals ?? '';
+        $this->notEqual = $notEqual ?? '';
+        $this->isNotEmpty = $isNotEmpty ?? true;
+        $this->isEmpty = $isEmpty ?? false;
     }
 
     public function setPropertyFilter(): array

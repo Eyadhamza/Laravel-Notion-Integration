@@ -112,8 +112,8 @@ class ManageNotionDatabasesTest extends TestCase
 
 
         $filters = new Collection();
-        $filters->add((new MultiSelectFilter('Status1','blue'))->contains('B'))
-                   ->add((new MultiSelectFilter('Status2','blue'))->contains('A'));
+        $filters->add((new MultiSelectFilter('Status1'))->contains('B'))
+                   ->add((new MultiSelectFilter('Status2'))->contains('A'));
 
 
         $response =  (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c' ))->getContents($filters,filterType: 'and');

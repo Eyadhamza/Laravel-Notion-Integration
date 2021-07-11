@@ -6,16 +6,20 @@ namespace Pi\Notion\Query;
 
 class MultiSelectFilter implements Filterable
 {
-    private $contains;
-    private $notContain;
-    private $isNotEmpty;
-    private $isEmpty;
-    private string $filterSearchOption;
-    private string $propertyName;
+    private string $contains;
+    private ?string $notContain;
+    private ?bool $isNotEmpty;
+    private ?bool $isEmpty;
+    private ?string $filterSearchOption;
+    private ?string $propertyName;
 
-    public function __construct(string $propertyName)
+    public function __construct(string $propertyName, string $contains =null, string $notContain =null, bool $isNotEmpty =null, bool $isEmpty =null)
     {
         $this->propertyName = $propertyName;
+        $this->contains = $contains ?? '';
+        $this->notContain = $notContain ?? '';
+        $this->isNotEmpty = $isNotEmpty ?? true;
+        $this->isEmpty = $isEmpty ?? false;
     }
     public function setPropertyFilter(): array
     {
