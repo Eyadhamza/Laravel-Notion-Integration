@@ -8,10 +8,13 @@ use Pi\Notion\Query\MultiSelectFilter;
 
 abstract class Property
 {
+    const TITLE = 'title';
+    const MULTISELECT = 'multi_select';
+    const SELECT = 'select';
 
 
-    public ?string $id;
-    public string $type;
+    private ?string $id;
+    private string $type;
 
 
     public function __construct(string $type,string $id = null)

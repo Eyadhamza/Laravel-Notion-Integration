@@ -21,10 +21,7 @@ class Title extends Property
 
     public function __construct($name , $optionName = null, $color = null, $id=null)
     {
-
-        $this->type = PropertyType::TITLE;
-        $this->filter = new TitleFilter();
-        parent::__construct($this->type,$id);
+        parent::__construct(Property::TITLE,$id);
         $this->name = $name;
         $this->optionName = $optionName;
 

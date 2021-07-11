@@ -16,8 +16,7 @@ class MultiSelect extends Property
 
     public function __construct($name, $color = null,$id=null)
     {
-        $this->type = PropertyType::MULTISELECT;
-        parent::__construct($this->type,$id);
+        parent::__construct(Property::MULTISELECT,$id);
         $this->optionNames = new Collection();
         $this->name = $name;
         $this->color = $color;
