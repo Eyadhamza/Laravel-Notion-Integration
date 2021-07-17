@@ -10,20 +10,13 @@ use Pi\Notion\Query\SelectFilter;
 class Select extends Property
 {
 
-    private $optionName;
     private $color;
-    private $name;
 
-
-
-    public function __construct($name , $optionName = null, $color = null, $id=null)
+    public function __construct($name, $optionName = null, $color = null, $id=null)
     {
 
-        parent::__construct(Property::SELECT,$id);
-        $this->name = $name;
-        $this->optionName = $optionName;
+        parent::__construct(Property::SELECT, $name, $optionName, $id);
         $this->color = $color;
-
 
     }
 
@@ -31,16 +24,9 @@ class Select extends Property
     {
         return
             array(
-                'name'=> $this->optionName ?? null,
+                'name'=> $this->getOptionName() ?? null,
                 'color'=>$this->color ?? null
         );
     }
-
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
 
 }

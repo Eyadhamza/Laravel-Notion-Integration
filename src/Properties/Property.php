@@ -6,26 +6,39 @@ namespace Pi\Notion\Properties;
 
 use Pi\Notion\Query\MultiSelectFilter;
 
-abstract class Property
+class Property
 {
+
     const TITLE = 'title';
     const MULTISELECT = 'multi_select';
     const SELECT = 'select';
+    const PHONE= 'phone_number';
+    const EMAIL = 'email';
+    const URL_PROP = 'url';
+    const CHECKBOX = 'checkbox';
+    const NUMBER = 'number';
 
-
-    private ?string $id;
     private string $type;
+    private string $name;
+    private ?string $optionName;
+    private ?string $id;
 
-
-    public function __construct(string $type,string $id = null)
+    public function __construct(string $type, string $name, string $optionName = null, string $id = null)
     {
 
-        $this->id = $id ;
+        $this->id = $id;
         $this->type = $type;
-
+        $this->name = $name;
+        $this->optionName = $optionName;
     }
 
-    abstract function getValues();
+    public function getValues()
+    {
+        return
+            array(
+                $this->type => $this->optionName,
+            );
+    }
 
     public static function addPropertiesToPage($page)
     {
@@ -33,7 +46,7 @@ abstract class Property
        return $page->getProperties()->mapToAssoc(function ($property){
             return
                 array(
-                    $property->getName(), array($property->getType() => $property->getValues() ?? null)
+                    $property->name, array($property->getType() => $property->getValues() ?? null)
                 );
         });
     }
@@ -41,6 +54,11 @@ abstract class Property
     public function getType(): string
     {
         return $this->type;
+    }
+
+    public function getOptionName(): string
+    {
+        return $this->optionName;
     }
 
 }

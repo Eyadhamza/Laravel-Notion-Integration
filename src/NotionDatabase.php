@@ -47,7 +47,7 @@ class NotionDatabase extends Workspace
         $response = Http::withToken(config('notion-wrapper.info.token'))
             ->post($queryURL,
                 [
-                    empty($filterType) ? $this->filter($filters) : $this->multipleFilters($filters,$filterType),
+                    empty($filterType) ? $this->applyFilter($filters) : $this->applyMultipleFilters($filters,$filterType),
 
                 ]
             );
@@ -58,7 +58,7 @@ class NotionDatabase extends Workspace
 
     }
 
-    public function filter(Filterable $filter): array
+    public function applyFilter(Filterable $filter): array
     {
 
        return [
@@ -66,7 +66,7 @@ class NotionDatabase extends Workspace
        ];
     }
 
-    public function multipleFilters(Collection $filters,string $filterType): array
+    public function applyMultipleFilters(Collection $filters, string $filterType): array
     {
 
         return [

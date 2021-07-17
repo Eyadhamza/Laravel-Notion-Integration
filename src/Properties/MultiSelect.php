@@ -12,13 +12,12 @@ class MultiSelect extends Property
 {
     private Collection $optionNames;
     private mixed $color;
-    private string $name;
+
 
     public function __construct($name, $color = null,$id=null)
     {
-        parent::__construct(Property::MULTISELECT,$id);
+        parent::__construct(Property::MULTISELECT,$name, null,$id);
         $this->optionNames = new Collection();
-        $this->name = $name;
         $this->color = $color;
 
     }
@@ -44,11 +43,6 @@ class MultiSelect extends Property
     public function getColor(): mixed
     {
         return $this->color;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
     }
 
 

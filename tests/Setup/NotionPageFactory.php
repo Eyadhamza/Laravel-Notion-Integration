@@ -5,6 +5,7 @@ namespace Pi\Notion\Tests\Setup;
 
 
 use Illuminate\Support\Collection;
+use PhpParser\Builder\Property;
 use Pi\Notion\ContentBlock\Block;
 use Pi\Notion\ContentBlock\BlockTypes;
 use Pi\Notion\NotionPage;
@@ -55,7 +56,6 @@ class NotionPageFactory
     public function addContentToCreatedPages()
     {
         $properties = new Collection();
-
         $properties->add(new Title('Name','Eyad Hamza'));
         $properties->add((new MultiSelect('Status1','blue'))->addOptions(['A','B']));
         $properties->add(new Select('Status','1123','blue'));
