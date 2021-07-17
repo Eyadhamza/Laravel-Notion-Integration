@@ -17,13 +17,14 @@ class Property
     const URL_PROP = 'url';
     const CHECKBOX = 'checkbox';
     const NUMBER = 'number';
+    const DATE = 'date';
 
     private string $type;
     private string $name;
-    private ?string $optionName;
+    private  $optionName;
     private ?string $id;
 
-    public function __construct(string $type, string $name, string $optionName = null, string $id = null)
+    public function __construct(string $type, string $name, $optionName = null, string $id = null)
     {
 
         $this->id = $id;
@@ -34,16 +35,14 @@ class Property
 
     public function getValues()
     {
-        return
-            array(
-                $this->type => $this->optionName,
-            );
+        return $this->optionName;
     }
 
     public static function addPropertiesToPage($page)
     {
 
        return $page->getProperties()->mapToAssoc(function ($property){
+
             return
                 array(
                     $property->name, array($property->getType() => $property->getValues() ?? null)

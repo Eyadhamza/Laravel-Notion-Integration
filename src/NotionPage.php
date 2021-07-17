@@ -38,7 +38,7 @@ class NotionPage extends Workspace
 
     }
 
-    public function create($notionDatabaseId)
+    public function create($notionDatabaseId) : self
     {
 
         $response = Http::withToken(config('notion-wrapper.info.token'))
@@ -64,6 +64,7 @@ class NotionPage extends Workspace
 
         return $this;
     }
+
     public function addProperties(Collection $properties): self
     {
 
@@ -86,21 +87,9 @@ class NotionPage extends Workspace
 
     }
 
-
-
     public function update()
     {
         //TODO
-    }
-
-    public function getContent()
-    {
-        return $this->content;
-    }
-
-    public function setContent($content): void
-    {
-        $this->content = $content;
     }
 
     public function getBlocks(): Collection
@@ -113,7 +102,7 @@ class NotionPage extends Workspace
         $this->blocks = $blocks;
     }
 
-    public function constructObject(mixed $json)
+    public function constructObject(mixed $json): self
     {
 
         $this->type = 'page';
@@ -121,17 +110,12 @@ class NotionPage extends Workspace
         $this->created_time = $json['created_time'];
         $this->last_edited_time = $json['last_edited_time'];
         $this->archived = $json['archived'];
-
         return $this;
+
     }
 
-    /**
-     * @return Collection
-     */
     public function getProperties(): Collection
     {
-
-
         return $this->properties;
     }
 

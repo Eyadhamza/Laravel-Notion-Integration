@@ -18,6 +18,7 @@ class Title extends Property
 
     public function getValues(): array
     {
+
         return
             array
             (

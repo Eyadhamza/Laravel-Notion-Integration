@@ -49,11 +49,31 @@ class ManageNotionPageTest extends TestCase
 
     }
     /** @test */
+    public function it_should_add_other_properties_types_to_created_page_and_option()
+    {
+
+        $page = NotionPageFactory::createNotionPageWithOtherTypesOfProps();
+        $this->assertCount(6,$page->getProperties());
+        $this->assertObjectHasAttribute('properties',$page);
+
+
+    }
+    /** @test */
     public function it_should_add_multiselect_properties_to_created_page_and_option()
     {
 
         $page = NotionPageFactory::createNotionPageWithMultiSelectProperties();
         $this->assertCount(3,$page->getProperties());
+        $this->assertObjectHasAttribute('properties',$page);
+
+
+    }
+    /** @test */
+    public function it_should_add_date_properties_to_created_page_and_other_props()
+    {
+
+        $page = NotionPageFactory::createNotionPageWithOtherTypesOfPropsAndDate();
+        $this->assertCount(8,$page->getProperties());
         $this->assertObjectHasAttribute('properties',$page);
 
 

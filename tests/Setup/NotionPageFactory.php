@@ -5,11 +5,12 @@ namespace Pi\Notion\Tests\Setup;
 
 
 use Illuminate\Support\Collection;
-use PhpParser\Builder\Property;
 use Pi\Notion\ContentBlock\Block;
 use Pi\Notion\ContentBlock\BlockTypes;
 use Pi\Notion\NotionPage;
+use Pi\Notion\Properties\DateProperty;
 use Pi\Notion\Properties\MultiSelect;
+use Pi\Notion\Properties\Property;
 use Pi\Notion\Properties\Select;
 use Pi\Notion\Properties\Title;
 
@@ -72,5 +73,35 @@ class NotionPageFactory
 
         return $page;
     }
+    public function createNotionPageWithOtherTypesOfProps(): NotionPage
+    {
+        $properties = new Collection();
+        $page =  (new NotionPage);
+        $properties->add(new Title('Name','Eyad Hamza'));
+        $properties->add((new MultiSelect('Status1','blue'))->addOptions(['A','B']));
+        $properties->add(new Select('Status','1123','blue'));
+        $properties->add(new Property(Property::PHONE,'My Phone Number','1118310451'));
+        $properties->add(new Property(Property::URL_PROP,'My Url','www.something.com'));
+        $properties->add(new Property(Property::EMAIL,'My Email','eyadhamza@outlook.com'));
 
+        $page->addProperties($properties);
+        return $page->create('632b5fb7e06c4404ae12065c48280e4c');
+    }
+
+    public function createNotionPageWithOtherTypesOfPropsAndDate()
+    {
+        $properties = new Collection();
+        $page =  (new NotionPage);
+        $properties->add(new Title('Name','Eyad Hamza'));
+        $properties->add((new MultiSelect('Status1','blue'))->addOptions(['A','B']));
+        $properties->add(new Select('Status','1123','blue'));
+        $properties->add(new Property(Property::PHONE,'My Phone Number','1118310451'));
+        $properties->add(new Property(Property::URL_PROP,'My Url','www.something.com'));
+        $properties->add(new Property(Property::EMAIL,'My Email','eyadhamza@outlook.com'));
+        $properties->add(new DateProperty(Property::DATE,'My date','2021-04-26','2021-05-07'));
+        $properties->add(new DateProperty(Property::DATE,'My start date','2021-04-26'));
+
+        $page->addProperties($properties);
+        return $page->create('632b5fb7e06c4404ae12065c48280e4c');
+    }
 }
