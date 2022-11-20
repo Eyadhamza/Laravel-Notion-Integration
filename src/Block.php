@@ -1,11 +1,10 @@
 <?php
 
 
-namespace Pi\Notion\ContentBlock;
+namespace Pi\Notion;
 
 
 use Illuminate\Support\Collection;
-use Pi\Notion\NotionPage;
 
 class Block
 {

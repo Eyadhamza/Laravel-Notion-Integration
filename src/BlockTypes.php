@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Pi\Notion\ContentBlock;
+namespace Pi\Notion;
 
 
 abstract class BlockTypes

@@ -6,11 +6,8 @@ namespace Pi\Notion;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
-use Pi\Notion\ContentBlock\Block;
-use Pi\Notion\Properties\Property;
-use Pi\Notion\Traits\ThrowsExceptions;
 use Pi\Notion\Traits\RetrieveResource;
-use function PHPUnit\Framework\isNull;
+use Pi\Notion\Traits\ThrowsExceptions;
 
 class NotionPage extends Workspace
 {
@@ -30,7 +27,7 @@ class NotionPage extends Workspace
     public function __construct($id = '')
     {
         parent::__construct();
-        $this->id = $id ;
+        $this->id = $id;
         $this->URL = Workspace::PAGE_URL;
         $this->type = 'page';
         $this->blocks = new Collection();
@@ -38,49 +35,43 @@ class NotionPage extends Workspace
 
     }
 
-    public function create($notionDatabaseId) : self
+    public function create($notionDatabaseId): self
     {
-
         $response = Http::withToken(config('notion-wrapper.info.token'))
-            ->withHeaders(['Notion-Version'=> Workspace::NOTION_VERSION])
-            ->post($this->URL,
-                [
-                    'parent'=> array('database_id' => $notionDatabaseId),
-                    'properties' => Property::addPropertiesToPage($this),
-                    'children'=> Block::addBlocksToPage($this)
-                ]);
-
-//        $this->constructObject($response->json());
-
+            ->withHeaders(['Notion-Version' => Workspace::NOTION_VERSION])
+            ->post($this->URL, [
+                'parent' => array('database_id' => $notionDatabaseId),
+                'properties'=> Property::addPropertiesToPage($this),
+                'children' => Block::addBlocksToPage($this)
+            ]);
         return $this;
     }
 
     public function addBlocks(Collection $blocks): self
     {
 
-        $blocks->map(function ($block){
+        $blocks->map(function ($block) {
             $this->blocks->add($block);
         });
 
         return $this;
     }
 
-    public function addProperties(Collection $properties): self
+    public function setProperties(Collection $properties): self
     {
 
-        $properties->map(function ($property){
+        $properties->map(function ($property) {
             $this->properties->add($property);
         });
-
         return $this;
     }
 
-    public function search($pageTitle, $sortDirection = 'ascending',$timestamp = 'last_edited_time')
+    public function search($pageTitle, $sortDirection = 'ascending', $timestamp = 'last_edited_time')
     {
-        $response = Http::withToken(config('notion-wrapper.info.token'))->post(Workspace::SEARCH_PAGE_URL,['query'=>$pageTitle,
-            'sort'=>[
-                'direction'=>$sortDirection,
-                'timestamp'=>$timestamp
+        $response = Http::withToken(config('notion-wrapper.info.token'))->post(Workspace::SEARCH_PAGE_URL, ['query' => $pageTitle,
+            'sort' => [
+                'direction' => $sortDirection,
+                'timestamp' => $timestamp
             ]]);
 //        $this->constructPageObject($response->json()); TODO
         return $response->json();
@@ -120,4 +111,3 @@ class NotionPage extends Workspace
 
 
 }
-
