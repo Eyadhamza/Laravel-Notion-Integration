@@ -31,14 +31,7 @@ class Block
         $this->body = $body;
         $this->contentType = $contentType ?? 'text';
     }
-
-    public function createBlock(): self
-    {
-        Block::create($this->type,$this->body);
-        return $this;
-    }
-
-    public static function create(string $type = null,string $body = null): self
+    public static function make(string $type = null, string $body = null): self
     {
         return new self($type, $body);
     }
@@ -64,27 +57,6 @@ class Block
             );
 
         });
-    }
-
-    public function ofContentType($contentType = null): self
-    {
-        $this->contentType = $contentType;
-
-        return $this;
-    }
-
-    public function ofType(string $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    public function ofBody(string $body): self
-    {
-        $this->body = $body;
-
-        return $this;
     }
 
     public function getLastEditedTime(): string
@@ -116,6 +88,71 @@ class Block
     {
         $this->id = $id;
     }
+    public static function headingOne(string $body): self
+    {
+        return Block::make(BlockTypes::HEADING_1, $body);
+    }
+    public static function headingTwo(string $body): self
+    {
+        return Block::make(BlockTypes::HEADING_2, $body);
+    }
+    public static function headingThree(string $body): self
+    {
+        return Block::make(BlockTypes::HEADING_3, $body);
+    }
+    public static function paragraph(string $body): self
+    {
+        return Block::make(BlockTypes::PARAGRAPH, $body);
+    }
+    public static function bulletedList(string $body): self
+    {
+        return Block::make(BlockTypes::BULLET_LIST, $body);
+    }
+    public static function numberedList(string $body): self
+    {
+        return Block::make(BlockTypes::NUMBERED_LIST, $body);
+    }
+    public static function toggle(string $body): self
+    {
+        return Block::make(BlockTypes::TOGGLE, $body);
+    }
+    public static function quote(string $body): self
+    {
+        return Block::make(BlockTypes::QUOTE, $body);
+    }
+    public static function callout(string $body): self
+    {
+        return Block::make(BlockTypes::CALLOUT, $body);
+    }
+    public static function divider(): self
+    {
+        return Block::make(BlockTypes::DIVIDER);
+    }
+    public static function code(string $body): self
+    {
+        return Block::make(BlockTypes::CODE, $body);
+    }
+    public static function childPage(string $body): self
+    {
+        return Block::make(BlockTypes::CHILD_PAGE, $body);
+    }
+    public static function embed(string $body): self
+    {
+        return Block::make(BlockTypes::EMBED, $body);
+    }
+    public static function image(string $body): self
+    {
+        return Block::make(BlockTypes::IMAGE, $body);
+    }
+    public static function video(string $body): self
+    {
+        return Block::make(BlockTypes::VIDEO, $body);
+    }
+    public static function file(string $body): self
+    {
+        return Block::make(BlockTypes::FILE, $body);
+    }
+
 
 
 
