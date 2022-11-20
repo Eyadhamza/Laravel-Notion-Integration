@@ -15,7 +15,7 @@ class NotionDatabase extends Workspace
     use ThrowsExceptions;
     use RetrieveResource;
 
-    private Filterable $filter ;
+    private Filterable $filter;
 
     private string $id;
     private string $URL;
@@ -29,7 +29,7 @@ class NotionDatabase extends Workspace
     public function __construct($id = '', $title = '')
     {
         parent::__construct();
-        $this->id = $id ;
+        $this->id = $id;
         $this->URL = Workspace::DATABASE_URL;
         $this->title = $title;
         $this->properties = new Collection();
@@ -37,14 +37,14 @@ class NotionDatabase extends Workspace
     }
 
 
-    public function getContents(Collection | Filterable $filters , $id = null, string $sort = '', $filterType = '')
+    public function getContents(Collection|Filterable $filters, $id = null, string $sort = '', $filterType = '')
     {
         $id = $id ?? $this->id;
-        $queryURL = "$this->URL"."$id"."/query";
+        $queryURL = "$this->URL" . "$id" . "/query";
         $response = Http::withToken(config('notion-wrapper.info.token'))
             ->post($queryURL,
                 [
-                    empty($filterType) ? $this->applyFilter($filters) : $this->applyMultipleFilters($filters,$filterType),
+                    empty($filterType) ? $this->applyFilter($filters) : $this->applyMultipleFilters($filters, $filterType),
 
                 ]
             );
@@ -58,9 +58,9 @@ class NotionDatabase extends Workspace
     public function applyFilter(Filterable $filter): array
     {
 
-       return [
-           'filter'=> $filter->setPropertyFilter()
-       ];
+        return [
+            'filter' => $filter->setPropertyFilter()
+        ];
     }
 
     public function applyMultipleFilters(Collection $filters, string $filterType): array
@@ -68,10 +68,10 @@ class NotionDatabase extends Workspace
 
         return [
             'filter' => [
-            $filterType =>
-                $filters->map(function (Filterable $filter){
-                    return $filter->setPropertyFilter();
-                })
+                $filterType =>
+                    $filters->map(function (Filterable $filter) {
+                        return $filter->setPropertyFilter();
+                    })
             ]
         ];
     }
@@ -83,10 +83,7 @@ class NotionDatabase extends Workspace
 
     private function constructObject(mixed $json): self
     {
-
-
-        if (array_key_exists('results',$json))
-        {
+        if (array_key_exists('results', $json)) {
             $this->constructPages($json['results']);
             return $this;
         }
@@ -100,7 +97,7 @@ class NotionDatabase extends Workspace
     private function constructPages(mixed $results)
     {
         $pages = collect($results);
-        $pages->map(function ($page){
+        $pages->map(function ($page) {
 
             $this->constructProperties($page['properties']);
             $page = (new NotionPage)->constructObject($page);
@@ -113,7 +110,7 @@ class NotionDatabase extends Workspace
     {
 
         $properties = collect($properties);
-        $properties->map(function ($property){
+        $properties->map(function ($property) {
             $this->properties->add($property);
         });
     }
@@ -122,6 +119,7 @@ class NotionDatabase extends Workspace
     {
         $this->id = $notionDatabaseId;
     }
+
     protected function getDatabaseId(): string
     {
         return $this->id;

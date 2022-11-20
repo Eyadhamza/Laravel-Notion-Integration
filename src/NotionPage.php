@@ -45,12 +45,11 @@ class NotionPage extends NotionDatabase
             ->withHeaders(['Notion-Version' => Workspace::NOTION_VERSION])
             ->post($this->URL, [
                 'parent' => array('database_id' => $this->getDatabaseId()),
-                'properties' =>Property::addPropertiesToPage($this),
+                'properties' => Property::addPropertiesToPage($this),
                 'children' => Block::addBlocksToPage($this)
             ]);
         return $this;
     }
-
 
 
     public function search($pageTitle, $sortDirection = 'ascending', $timestamp = 'last_edited_time')
