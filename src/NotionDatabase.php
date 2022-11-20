@@ -118,5 +118,12 @@ class NotionDatabase extends Workspace
         });
     }
 
-
+    public function setDatabaseId(string $notionDatabaseId)
+    {
+        $this->id = $notionDatabaseId;
+    }
+    protected function getDatabaseId(): string
+    {
+        return $this->id;
+    }
 }

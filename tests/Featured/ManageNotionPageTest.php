@@ -33,9 +33,19 @@ class ManageNotionPageTest extends TestCase
     }
 
     /** @test */
+    public function it_should_add_properties_to_created_page_using_page_class()
+    {
+        $page = NotionPageFactory::createNotionPageWithPropertiesUsingPage();
+        $this->assertCount(7, $page->getProperties());
+        $this->assertObjectHasAttribute('properties', $page);
+    }
+
+
+    /** @test */
     public function it_should_add_properties_to_created_page()
     {
-        $page = NotionPageFactory::createNotionPageWithProperties();
+        $page = NotionPageFactory::createNotionPageWithPropertiesUsingPropertyClass();
+
         $this->assertCount(7, $page->getProperties());
         $this->assertObjectHasAttribute('properties', $page);
     }

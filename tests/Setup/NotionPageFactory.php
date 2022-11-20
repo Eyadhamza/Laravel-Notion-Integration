@@ -36,35 +36,50 @@ class NotionPageFactory
     }
 
 
-    public function createNotionPageWithProperties(): NotionPage
+    public function createNotionPageWithPropertiesUsingPropertyClass(): NotionPage
     {
+        $page = new NotionPage();
+        $page->setDatabaseId($this->notionDatabaseId);
 
-       return (new NotionPage)->setProperties([
-            NotionPage::setTitle('Name', 'Eyad Hamza'),
-            NotionPage::setMultiSelect('Status1', ['A', 'B']),
-            NotionPage::setSelect('Status', 'A'),
-            NotionPage::setDate('Date', [
+       return $page->setProperties([
+            Property::title('Name', 'Eyad Hamza'),
+            Property::multiSelect('Status1', ['A', 'B']),
+            Property::select('Status', 'A'),
+            Property::date('Date', [
                 'start' => "2020-12-08T12:00:00Z",
                 'end' => "2020-12-08T12:00:00Z",
             ]),
-            NotionPage::setUrl('URL','https://developers.notion.com'),
-            NotionPage::setEmail('Email','Eyadhamza0@outlook.com'),
-            NotionPage::setPhone()->values('0123456789')
-        ])->create($this->notionDatabaseId);
+            Property::url('Url','https://developers.notion.com'),
+            Property::email('Email','Eyadhamza0@outlook.com'),
+            Property::phone()->values('0123456789')
+        ])->create();
     }
+    public function createNotionPageWithPropertiesUsingPage(): NotionPage
+    {
+        $page = new NotionPage();
+        $page->setDatabaseId($this->notionDatabaseId);
 
+       return $page
+            ->title('Name','Eyad Hamza')
+            ->select('Status', 'A')
+            ->multiSelect('Status1', ['A', 'B'])
+            ->date('Date', [
+                'start' => "2020-12-08T12:00:00Z",
+                'end' => "2020-12-08T12:00:00Z",
+            ])->email('Email', 'eyad@outlook.com')
+            ->phone('Phone', '123456789')
+            ->url('Url', 'https://www.google.com')
+            ->create();
+
+    }
     public function addContentToCreatedPages()
     {
-        $properties = new Collection();
         $page = (new NotionPage);
+        $page->setDatabaseId($this->notionDatabaseId);
 
-        $properties->add(NotionPage::setTitle('Eyad Hamza'));
-        $properties->add(NotionPage::setMultiSelect('Status1')
-            ->multipleValues([
-                ['name'  => 'A'],
-                ['name' => 'B'],
-                ['name' => 'C'],
-            ]));
+        $page
+            ->title('Name','Eyad Hamza')
+            ->multiSelect('Status1', ['A', 'B']);
 
         $blocks = new Collection();
         $block1 = $blocks->add(Block::create(BlockTypes::HEADING_1, 'i want this to work!'));
@@ -72,11 +87,9 @@ class NotionPageFactory
         $block3 = $blocks->add((new Block)->ofType(BlockTypes::NUMBERED_LIST)->ofBody('i want this to work!')->createBlock());
         $block4 = $blocks->add((new Block)->ofType(BlockTypes::TODO)->ofBody('i want this to work!')->createBlock());
 
-        $page = (new NotionPage);
         $page
             ->addBlocks($blocks)
-            ->setProperties($properties)
-            ->create($this->notionDatabaseId);
+            ->create();
 
         return $page;
     }
