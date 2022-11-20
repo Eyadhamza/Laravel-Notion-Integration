@@ -25,6 +25,7 @@ class ManageNotionPageTest extends TestCase
     {
         $object = NotionPageFactory::getAnExistingPage();
         $this->assertObjectHasAttribute('properties',$object);
+
         $object =NotionPageFactory::getAnExistingPageById();
         $this->assertObjectHasAttribute('properties',$object);
 

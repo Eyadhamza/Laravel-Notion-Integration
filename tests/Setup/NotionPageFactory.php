@@ -16,16 +16,15 @@ use Pi\Notion\Properties\Title;
 
 class NotionPageFactory
 {
-    private $notionPageId = '834b5c8cc1204816905cd54dc2f3341d';
+    private $notionPageId = '819f5b54348f463580ef118b6a54bd0d';
     private $notionDatabaseId = '632b5fb7e06c4404ae12065c48280e4c';
-
     public function getAnExistingPage(): NotionPage
     {
-        return (new NotionPage)->get($this->notionPageId);
+        return (new NotionPage)->get('c66f166ec9cf466baa3321d26aceed08');
     }
     public function getAnExistingPageById(): NotionPage
     {
-        return  NotionPage::ofId($this->notionPageId);
+        return NotionPage::ofId('c66f166ec9cf466baa3321d26aceed08');
     }
 
     public function createNotionPage()
@@ -51,7 +50,7 @@ class NotionPageFactory
         $properties->add((new MultiSelect('Status1','blue'))->addOptions(['A','B']));
         $properties->add(new Select('Status','1123','blue'));
         $page->addProperties($properties);
-        return $page->create('632b5fb7e06c4404ae12065c48280e4c');
+        return $page->create($this->notionDatabaseId);
     }
 
     public function addContentToCreatedPages()
@@ -69,7 +68,10 @@ class NotionPageFactory
         $block4 =$blocks->add((new Block)->ofType(BlockTypes::TODO)->ofBody('i want this to work!')->createBlock());
 
         $page = (new NotionPage);
-        $page->addBlocks($blocks)->addProperties($properties)->create('632b5fb7e06c4404ae12065c48280e4c');
+        $page
+            ->addBlocks($blocks)
+            ->addProperties($properties)
+            ->create($this->notionDatabaseId);
 
         return $page;
     }
@@ -85,7 +87,7 @@ class NotionPageFactory
         $properties->add(new Property(Property::EMAIL,'My Email','eyadhamza@outlook.com'));
 
         $page->addProperties($properties);
-        return $page->create('632b5fb7e06c4404ae12065c48280e4c');
+        return $page->create($this->notionDatabaseId);
     }
 
     public function createNotionPageWithOtherTypesOfPropsAndDate()
@@ -102,6 +104,6 @@ class NotionPageFactory
         $properties->add(new DateProperty(Property::DATE,'My start date','2021-04-26'));
 
         $page->addProperties($properties);
-        return $page->create('632b5fb7e06c4404ae12065c48280e4c');
+        return $page->create($this->notionDatabaseId);
     }
 }

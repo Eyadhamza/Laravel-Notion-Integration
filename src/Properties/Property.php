@@ -26,7 +26,6 @@ class Property
 
     public function __construct(string $type, string $name, $optionName = null, string $id = null)
     {
-
         $this->id = $id;
         $this->type = $type;
         $this->name = $name;

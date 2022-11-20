@@ -16,14 +16,16 @@ trait RetrieveResource
 
         $response = Http::withToken(config('notion-wrapper.info.token'))
             ->get("$this->URL"."$id");
-
         $this->throwExceptions($response);
+
+
         $this->constructObject($response->json());
         return $this;
     }
 
     public static function ofId($id)
     {
+
         return (new self)->get($id);
     }
 

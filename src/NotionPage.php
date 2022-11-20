@@ -50,7 +50,7 @@ class NotionPage extends Workspace
                     'children'=> Block::addBlocksToPage($this)
                 ]);
 
-        $this->constructObject($response->json());
+//        $this->constructObject($response->json());
 
         return $this;
     }
@@ -104,7 +104,6 @@ class NotionPage extends Workspace
 
     public function constructObject(mixed $json): self
     {
-
         $this->type = 'page';
         $this->id = $json['id'];
         $this->created_time = $json['created_time'];
