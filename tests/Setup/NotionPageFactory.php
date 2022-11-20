@@ -38,32 +38,19 @@ class NotionPageFactory
 
     public function createNotionPageWithProperties(): NotionPage
     {
-        $properties = new Collection();
-        $page = (new NotionPage);
 
-        $properties->add(Property::setTitle()
-            ->values([
-                    'text' => ['content' => 'Eyad Hamza'],
-            ]))
-            ->add(Property::setMultiSelect('Status1')->multipleValues([
-                ['name'  => 'A'],
-                ['name' => 'B'],
-                ['name' => 'C'],
-            ]))->add(Property::setSelect('Status')
-            ->values([
-               'name'  => 'A'
-            ]))
-            ->add(Property::setDate()
-            ->values([
+       return (new NotionPage)->setProperties([
+            NotionPage::setTitle('Name', 'Eyad Hamza'),
+            NotionPage::setMultiSelect('Status1', ['A', 'B']),
+            NotionPage::setSelect('Status', 'A'),
+            NotionPage::setDate('Date', [
                 'start' => "2020-12-08T12:00:00Z",
                 'end' => "2020-12-08T12:00:00Z",
-            ]))
-            ->add(Property::setUrl()->values('https://developers.notion.com'))
-            ->add(Property::setEmail()->values('Eyadhamza0@outlook.com'))
-            ->add(Property::setPhone()->values('0123456789'));
-
-        $page->setProperties($properties);
-        return $page->create($this->notionDatabaseId);
+            ]),
+            NotionPage::setUrl('URL','https://developers.notion.com'),
+            NotionPage::setEmail('Email','Eyadhamza0@outlook.com'),
+            NotionPage::setPhone()->values('0123456789')
+        ])->create($this->notionDatabaseId);
     }
 
     public function addContentToCreatedPages()
@@ -71,18 +58,13 @@ class NotionPageFactory
         $properties = new Collection();
         $page = (new NotionPage);
 
-        $properties->add(Property::make(PropertyType::TITLE, 'Name')
-            ->values([
-                'text' => ['content' => 'Eyad Hamza'],
-            ])
-        );
-        $properties->add(Property::make(PropertyType::MULTISELECT, 'Status1')
+        $properties->add(NotionPage::setTitle('Eyad Hamza'));
+        $properties->add(NotionPage::setMultiSelect('Status1')
             ->multipleValues([
                 ['name'  => 'A'],
                 ['name' => 'B'],
                 ['name' => 'C'],
             ]));
-
 
         $blocks = new Collection();
         $block1 = $blocks->add(Block::create(BlockTypes::HEADING_1, 'i want this to work!'));

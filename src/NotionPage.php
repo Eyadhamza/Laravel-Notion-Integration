@@ -41,7 +41,7 @@ class NotionPage extends Workspace
             ->withHeaders(['Notion-Version' => Workspace::NOTION_VERSION])
             ->post($this->URL, [
                 'parent' => array('database_id' => $notionDatabaseId),
-                'properties'=> Property::addPropertiesToPage($this),
+                'properties' => Property::addPropertiesToPage($this),
                 'children' => Block::addBlocksToPage($this)
             ]);
         return $this;
@@ -57,8 +57,9 @@ class NotionPage extends Workspace
         return $this;
     }
 
-    public function setProperties(Collection $properties): self
+    public function setProperties(Collection|array $properties): self
     {
+        $properties = is_array($properties) ? collect($properties) : $properties;
 
         $properties->map(function ($property) {
             $this->properties->add($property);
@@ -109,5 +110,126 @@ class NotionPage extends Workspace
         return $this->properties;
     }
 
+    public static function setSelect($name = 'Select', array|string $values = null): Property
+    {
+        $property =  Property::make(PropertyType::SELECT, $name);
+
+        return $values ? $property->values($values) : $property;
+
+    }
+
+    public static function setMultiSelect($name = 'MultiSelect', array|string $values = null): Property
+    {
+        $property = Property::make(PropertyType::MULTISELECT, $name);
+
+        return $values ? $property->values($values) : $property;
+
+    }
+
+    public static function setTitle($name = 'Name', array|string $values = null): Property
+    {
+        $property = Property::make(PropertyType::TITLE, $name);
+
+        return $values ? $property->values(['text' => ['content' => $values]]) : $property;
+
+    }
+
+    public static function setRichText($name = 'RichText', array|string $values = null): Property
+    {
+        $property = Property::make(PropertyType::RICH_TEXT, $name);
+
+        return $values ? $property->values($values) : $property;
+    }
+
+    public static function setNumber($name = 'Number', string $values = null): Property
+    {
+        $property = Property::make(PropertyType::NUMBER, $name);
+
+        return $values ? $property->values($values) : $property;
+    }
+
+    public static function setCheckbox($name = 'Checkbox', string $values = null): Property
+    {
+        $property = Property::make(PropertyType::CHECKBOX, $name);
+
+        return $values ? $property->values($values) : $property;
+    }
+
+    public static function setUrl($name = 'Url', string $values = null): Property
+    {
+        $property = Property::make(PropertyType::URL, $name);
+
+        return $values ? $property->values($values) : $property;
+    }
+
+    public static function setEmail($name = 'Email', string $values = null): Property
+    {
+        $property = Property::make(PropertyType::EMAIL, $name);
+
+        return $values ? $property->values($values) : $property;
+    }
+
+    public static function setPhone($name = 'Phone', string $values = null): Property
+    {
+        $property = Property::make(PropertyType::PHONE, $name);
+
+        return $values ? $property->values($values) : $property;
+    }
+
+    public static function setDate($name = 'Date', array $values = null): Property
+    {
+        $property = Property::make(PropertyType::DATE, $name);
+
+        return $values ? $property->values($values) : $property;
+    }
+
+    public static function setRelation($name = 'Relation', string $values = null): Property
+    {
+        $property = Property::make(PropertyType::RELATION, $name);
+
+        return $values ? $property->values($values) : $property;
+    }
+
+    public static function setRollup($name = 'Rollup', string $values = null): Property
+    {
+        $property = Property::make(PropertyType::ROLLUP, $name);
+
+        return $values ? $property->values($values) : $property;
+    }
+
+    public static function setFormula($name = 'Formula', string $values = null): Property
+    {
+        $property = Property::make(PropertyType::FORMULA, $name);
+
+        return $values ? $property->values($values) : $property;
+    }
+
+    public static function setFile($name = 'File', string $values = null): Property
+    {
+        $property = Property::make(PropertyType::FILE, $name);
+
+        return $values ? $property->values($values) : $property;
+    }
+
+    public static function setPeople($name = 'People', string $values = null): Property
+    {
+        $property = Property::make(PropertyType::PEOPLE, $name);
+
+        return $values ? $property->values($values) : $property;
+    }
+
+    public static function setCreatedTime($name = 'Created Time', string $values = null): Property
+    {
+        $property = Property::make(PropertyType::CREATED_TIME, $name);
+
+        return $values ? $property->values($values) : $property;
+    }
+
+    public static function setLastEditedTime($name = 'Last Edited Time', string $values = null): Property
+    {
+        $property = Property::make(PropertyType::LAST_EDITED_TIME, $name);
+
+        return $values ? $property->values($values) : $property;
+    }
 
 }
