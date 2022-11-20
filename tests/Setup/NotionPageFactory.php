@@ -81,15 +81,36 @@ class NotionPageFactory
             ->title('Name','Eyad Hamza')
             ->multiSelect('Status1', ['A', 'B']);
 
-        $blocks = new Collection();
-        $block1 = $blocks->add(Block::create(BlockTypes::HEADING_1, 'i want this to work!'));
-        $block2 = $blocks->add(Block::create(BlockTypes::HEADING_2, 'i want this to work!'));
-        $block3 = $blocks->add((new Block)->ofType(BlockTypes::NUMBERED_LIST)->ofBody('i want this to work!')->createBlock());
-        $block4 = $blocks->add((new Block)->ofType(BlockTypes::TODO)->ofBody('i want this to work!')->createBlock());
+        $page->setBlocks([
+            Block::headingOne('Heading 1'),
+            Block::headingTwo('Heading 2'),
+            Block::headingThree('Heading 3'),
+            Block::numberedList('Numbered List'),
+            Block::bulletedList('Bullet List'),
+        ]);
+
+        $page->create();
+
+        return $page;
+    }
+    public function addContentToCreatedPagesUsingPageClass()
+    {
+        $page = (new NotionPage);
+        $page->setDatabaseId($this->notionDatabaseId);
 
         $page
-            ->addBlocks($blocks)
-            ->create();
+            ->title('Name','Eyad Hamza')
+            ->multiSelect('Status1', ['A', 'B']);
+
+        $page
+            ->headingOne('Heading 1')
+            ->headingTwo('Heading 2')
+            ->headingThree('Heading 3')
+            ->numberedList('Numbered List')
+            ->bulletedList('Bullet List');
+
+
+        $page->create();
 
         return $page;
     }

@@ -4,9 +4,6 @@ namespace Pi\Notion\Tests\Featured;
 
 use Facades\Pi\Notion\Tests\Setup\NotionPageFactory;
 use Pi\Notion\NotionPage;
-use Pi\Notion\Properties\MultiSelect;
-use Pi\Notion\Properties\Select;
-use Pi\Notion\Properties\Title;
 use Pi\Notion\Tests\TestCase;
 
 class ManageNotionPageTest extends TestCase
@@ -55,12 +52,21 @@ class ManageNotionPageTest extends TestCase
     {
         $page = NotionPageFactory::addContentToCreatedPages();
         $this->assertCount(2, $page->getProperties());
-        $this->assertCount(4, $page->getBlocks());
+        $this->assertCount(5, $page->getBlocks());
         $this->assertObjectHasAttribute('properties', $page);
 
 
     }
+    /** @test */
+    public function it_can_add_content_blocks_to_created_pages_using_page_class()
+    {
+        $page = NotionPageFactory::addContentToCreatedPagesUsingPageClass();
+        $this->assertCount(2, $page->getProperties());
+        $this->assertCount(5, $page->getBlocks());
+        $this->assertObjectHasAttribute('properties', $page);
 
+
+    }
     /** @test */
     public function it_returns_search_result()
     {

@@ -6,6 +6,7 @@ namespace Pi\Notion;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Pi\Notion\Traits\HandleBlocks;
 use Pi\Notion\Traits\HandleProperties;
 use Pi\Notion\Traits\RetrieveResource;
 use Pi\Notion\Traits\ThrowsExceptions;
@@ -15,6 +16,8 @@ class NotionPage extends NotionDatabase
     use RetrieveResource;
     use ThrowsExceptions;
     use HandleProperties;
+    use HandleBlocks;
+
     private string $type;
     private string $id;
     private string $URL;
@@ -48,16 +51,6 @@ class NotionPage extends NotionDatabase
         return $this;
     }
 
-    public function addBlocks(Collection $blocks): self
-    {
-
-        $blocks->map(function ($block) {
-            $this->blocks->add($block);
-        });
-
-        return $this;
-    }
-
 
 
     public function search($pageTitle, $sortDirection = 'ascending', $timestamp = 'last_edited_time')
@@ -77,15 +70,6 @@ class NotionPage extends NotionDatabase
         //TODO
     }
 
-    public function getBlocks(): Collection
-    {
-        return $this->blocks;
-    }
-
-    public function Blocks(Collection $blocks): void
-    {
-        $this->blocks = $blocks;
-    }
 
     public function constructObject(mixed $json): self
     {

@@ -24,7 +24,6 @@ trait HandleProperties
 
     public function title($name = 'Name', string $values = null): self
     {
-
         $this->properties->add(Property::title($name, $values));
         return $this;
     }

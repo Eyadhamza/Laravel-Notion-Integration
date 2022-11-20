@@ -14,6 +14,14 @@ abstract class BlockTypes
     const TODO ='to_do';
     const TOGGLE ='toggle';
     const CHILD_PAGE ='child_page';
-
+    const FILE = 'file';
+    const VIDEO = 'video';
+    const IMAGE = 'image';
+    const EMBED = 'embed';
+    const QUOTE = 'quote';
+    const DIVIDER = 'divider';
+    const CODE = 'code';
+    const CALLOUT = 'callout';
+    const PARAGRAPH = 'paragraph';
 
 }
