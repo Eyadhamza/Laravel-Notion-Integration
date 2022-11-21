@@ -64,6 +64,7 @@ class ManageNotionDatabasesTest extends TestCase
             Filter::make('title', 'Name')
                 ->apply('contains', 'MMMM')
         )->get();
+
         $this->assertArrayHasKey('results', $response);
 
 
@@ -76,24 +77,27 @@ class ManageNotionDatabasesTest extends TestCase
         $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
 
         $response = $database->filters([
-            Filter::make('select', 'Status')
-                ->apply('equals', 'Reading'),
-            Filter::make('multi_select', 'Status2')
-                ->apply('contains', 'A'),
-            Filter::make('title', 'Name')
-                ->apply('contains', 'MMMM'),
-        ], 'and')->get();
+            Filter::groupWithAnd([
+                Filter::select('Status')
+                    ->equals('Reading'),
+                Filter::multiSelect('Status2')
+                    ->contains('A'),
+                Filter::title('Name')
+                    ->contains('MMMM')
+            ])
+        ])->get();
 
         $this->assertCount('1', $response['results']);
         $response = $database->filters([
-            Filter::select('Status')
-                ->equals('Reading'),
-            Filter::multiSelect('Status2')
-                ->contains('A'),
-            Filter::title('Name')
-                ->contains('MMMM'),
-        ], 'or')->get();
-
+            Filter::groupWithOr([
+                Filter::select('Status')
+                    ->equals('Reading'),
+                Filter::multiSelect('Status2')
+                    ->contains('A'),
+                Filter::title('Name')
+                    ->contains('MMMM')
+            ])
+        ])->get();
         $this->assertCount('4', $response['results']);
 
     }
@@ -106,7 +110,7 @@ class ManageNotionDatabasesTest extends TestCase
         $response = $database->filters([
             Filter::select('Status')
                 ->equals('Reading')
-                ->groupWithOrConnective([
+                ->nestedOrGroup([
                     Filter::multiSelect('Status2')
                         ->contains('A'),
                     Filter::title('Name')

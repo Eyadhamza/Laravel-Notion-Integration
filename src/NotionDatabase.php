@@ -24,8 +24,6 @@ class NotionDatabase extends Workspace
     private Collection $pages;
     private Collection $filters;
     private Collection $sorts;
-    private $parentObject;
-    private string $filterConnective;
 
     public function __construct($id = '', $title = '')
     {
@@ -44,14 +42,13 @@ class NotionDatabase extends Workspace
         isset($this->filters) ? $requestBody['filter'] = $this->getFilterResults() : null;
         isset($this->sorts) ? $requestBody['sorts'] = $this->getSortResults() : null;
 
-        $response = Http::withToken(config('notion-wrapper.info.token'));
 
+        $response = Http::withToken(config('notion-wrapper.info.token'));
         $response = $requestBody ?
             $response->post($this->URL . "/query", $requestBody)
             : $response->get($this->URL);
 
         $this->throwExceptions($response);
-
 //        $this->constructObject($response->json());
 
         return $response->json();
@@ -68,11 +65,12 @@ class NotionDatabase extends Workspace
         return $this;
     }
 
-
-    public function setFilterConnective($filterConnective): void
+    public function usingConnective(string $connective): self
     {
-        $this->filterConnective = $filterConnective;
+        $this->filters[0]->setConnective($connective);
+        return $this;
     }
+
 
     private function constructObject(mixed $json): self
     {
@@ -122,5 +120,4 @@ class NotionDatabase extends Workspace
     {
         return $this->sorts->map->get()->toArray();
     }
-
 }

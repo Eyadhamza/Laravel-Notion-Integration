@@ -24,7 +24,6 @@ trait NotionFilters
 
     public function equals(string $query): self
     {
-
         return $this->apply('equals', $query);
     }
 

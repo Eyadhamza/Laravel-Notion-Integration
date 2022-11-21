@@ -20,11 +20,10 @@ trait HandleFilters
         return $this;
     }
 
-    public function filters(Collection|array $filters, $filterConnective = ''): self
+    public function filters(Collection|array $filters): self
     {
 
         $filters = is_array($filters) ? collect($filters) : $filters;
-        $this->setFilterConnective($filterConnective);
         $this->setFilters($filters);
 
         return $this;
@@ -38,12 +37,9 @@ trait HandleFilters
 
     private function getFilterResults(): array
     {
-        if ($this->filters->count() > 1) {
-            return $this->resultsWithConnective();
-        }
-        if ($this->filters[0]->getFilterGroup()->isNotEmpty()) {
 
-            return $this->resultsWithFilterGroup();
+        if ($this->filters[0]->getFilterGroup()->isNotEmpty()) {
+            return $this->filters[0]->getFilterGroup()[0];
         }
         return $this->resultsWithSingleFilter();
     }
@@ -55,24 +51,8 @@ trait HandleFilters
         });
     }
 
-    private function resultsWithConnective(): array
-    {
-        return [$this->filterConnective => $this->mapFilters()];
-    }
-
-    private function resultsWithFilterGroup(): array
-    {
-        return  $this->filters[0]->getFilterGroup()[0]
-        ;
-    }
     private function resultsWithSingleFilter(): array
     {
-        return  $this->mapFilters()[0];
+        return $this->mapFilters()[0];
     }
-//    public function filterSelect(string $propertyName): Filter
-//    {
-//        return Filter::select($propertyName);
-//    }
-//    // public filter{anything}
-    // { $database->filterSelect('Status', 'done')->get(); }
 }

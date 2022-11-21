@@ -29,6 +29,23 @@ class Filter
         return new self($type, $property);
     }
 
+    public static function group(array $filters, $connective)
+    {
+        $filter = new self('group', 'group');
+
+        $filter->setFilterGroup($filters, $connective);
+
+        return $filter;
+    }
+
+    public static function groupWithOr(array $filters): Filter
+    {
+        return self::group($filters, 'or');
+    }
+    public static function groupWithAnd(array $filters): Filter
+    {
+        return self::group($filters, 'and');
+    }
 
     public function apply(string $filter, string $query): Filter
     {
@@ -62,24 +79,24 @@ class Filter
         $this->filterName = $filter;
     }
 
-    public function groupWithOrConnective(array $filters, $nestedConnective): self
+    public function nestedOrGroup(array $filters, $nestedConnective): self
     {
+
         $this->filterGroup->add([
             'or' => [
                 $this->get(),
                 [$nestedConnective => collect($filters)->map->get()]
             ]
         ]);
-
         return $this;
     }
 
-    public function groupWithAndConnective(array $filters, $nestedConnective): self
+    public function nestedAndGroup(array $filters, $nestedConnective): self
     {
         $this->filterGroup->add([
             'and' => [
                 $this->get(),
-                [$nestedConnective => collect($filters)->map->get()]
+                [$nestedConnective => collect($filters)->map->get()->toArray()]
             ]
         ]);
 
@@ -88,6 +105,27 @@ class Filter
 
     public function getFilterGroup(): Collection
     {
+        return $this->filterGroup;
+    }
+
+    public function setConnective(string $connective): void
+    {
+        $this->connective = $connective;
+    }
+
+    public function getConnective(): string
+    {
+        return $this->connective;
+    }
+
+    private function setFilterGroup(array $filters, $connective): Collection
+    {
+        $this->filterGroup->add([
+            $connective =>
+                collect($filters)->map(function (Filter $filter) {
+                    return $filter->get();
+                })
+        ]);
         return $this->filterGroup;
     }
 }
