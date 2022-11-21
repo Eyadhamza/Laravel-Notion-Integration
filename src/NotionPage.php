@@ -13,7 +13,6 @@ use Pi\Notion\Traits\ThrowsExceptions;
 
 class NotionPage extends NotionDatabase
 {
-    use RetrieveResource;
     use ThrowsExceptions;
     use HandleProperties;
     use HandleBlocks;

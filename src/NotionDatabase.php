@@ -6,17 +6,14 @@ namespace Pi\Notion;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
-use Pi\Notion\Query\Filterable;
+use Pi\Notion\Traits\HandleFilters;
 use Pi\Notion\Traits\RetrieveResource;
 use Pi\Notion\Traits\ThrowsExceptions;
 
 class NotionDatabase extends Workspace
 {
     use ThrowsExceptions;
-    use RetrieveResource;
-
-    private Filterable $filter;
-
+    use HandleFilters;
     private string $id;
     private string $URL;
     private string $created_time;
@@ -24,57 +21,36 @@ class NotionDatabase extends Workspace
     private string $title;
     private Collection $properties;
     private Collection $pages;
+    private Collection $filters;
     private $parentObject;
+    private string $filterType;
 
     public function __construct($id = '', $title = '')
     {
         parent::__construct();
         $this->id = $id;
-        $this->URL = Workspace::DATABASE_URL;
+        $this->URL = Workspace::DATABASE_URL . "$id" . "/query";;
         $this->title = $title;
         $this->properties = new Collection();
         $this->pages = new Collection();
     }
 
-
-    public function getContents(Collection|Filterable $filters, $id = null, string $sort = '', $filterType = '')
+    public function get($id = null, string $sort = '', $filterType = '')
     {
         $id = $id ?? $this->id;
-        $queryURL = "$this->URL" . "$id" . "/query";
-        $response = Http::withToken(config('notion-wrapper.info.token'))
-            ->post($queryURL,
-                [
-                    empty($filterType) ? $this->applyFilter($filters) : $this->applyMultipleFilters($filters, $filterType),
 
-                ]
+        $response = Http::withToken(config('notion-wrapper.info.token'))
+            ->post($this->URL,
+                $this->getFilterResults()
             );
         $this->throwExceptions($response);
-        $this->constructObject($response->json());
 
-        return $this;
+//        $this->constructObject($response->json());
+
+        return $response->json();
 
     }
 
-    public function applyFilter(Filterable $filter): array
-    {
-
-        return [
-            'filter' => $filter->setPropertyFilter()
-        ];
-    }
-
-    public function applyMultipleFilters(Collection $filters, string $filterType): array
-    {
-
-        return [
-            'filter' => [
-                $filterType =>
-                    $filters->map(function (Filterable $filter) {
-                        return $filter->setPropertyFilter();
-                    })
-            ]
-        ];
-    }
 
     public function sort()
     {
@@ -124,4 +100,5 @@ class NotionDatabase extends Workspace
     {
         return $this->id;
     }
+
 }
