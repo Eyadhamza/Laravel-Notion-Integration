@@ -11,7 +11,7 @@ class Workspace
     const PAGE_URL = Workspace::BASE_URL.'/pages/';
     const SEARCH_PAGE_URL =  Workspace::BASE_URL.'/search';
     const DATABASE_URL = Workspace::BASE_URL.'/databases/';
-    const NOTION_VERSION = '2021-05-13';
+    const NOTION_VERSION = '2022-02-22';
 
     private string $token;
 

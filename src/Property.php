@@ -39,7 +39,7 @@ class Property extends PropertyType
         return $this->values;
     }
 
-    public static function addPropertiesToPage($page)
+    public static function mapsPropertiesToPage($page)
     {
 
         return $page->getProperties()->mapToAssoc(function ($property) {

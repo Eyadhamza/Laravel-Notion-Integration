@@ -36,7 +36,7 @@ class Block
         return new self($type, $body);
     }
 
-    public static function addBlocksToPage(NotionPage $page): Collection
+    public static function mapsBlocksToPage(NotionPage $page): Collection
     {
 
         return $page->getBlocks()->map(function ($block){

@@ -4,6 +4,7 @@
 namespace Pi\Notion;
 
 
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Pi\Notion\Traits\HandleBlocks;
@@ -40,32 +41,38 @@ class NotionPage extends NotionDatabase
 
     public function create(): self
     {
-        $response = Http::withToken(config('notion-wrapper.info.token'))
-            ->withHeaders(['Notion-Version' => Workspace::NOTION_VERSION])
+        $response = $this
+            ->prepareHttp()
             ->post($this->URL, [
                 'parent' => array('database_id' => $this->getDatabaseId()),
-                'properties' => Property::addPropertiesToPage($this),
-                'children' => Block::addBlocksToPage($this)
+                'properties' => Property::mapsPropertiesToPage($this),
+                'children' => Block::mapsBlocksToPage($this)
             ]);
         return $this;
     }
 
-
-    public function search($pageTitle, $sortDirection = 'ascending', $timestamp = 'last_edited_time')
+    public function update(): self
     {
-        $response = Http::withToken(config('notion-wrapper.info.token'))->post(Workspace::SEARCH_PAGE_URL, ['query' => $pageTitle,
-            'sort' => [
-                'direction' => $sortDirection,
-                'timestamp' => $timestamp
-            ]]);
-//        $this->constructPageObject($response->json()); TODO
-        return $response->json();
+        $response = $this->prepareHttp()
+            ->patch($this->URL . $this->id, [
+                'properties' => Property::mapsPropertiesToPage($this),
+            ]);
 
+        return $this;
     }
 
-    public function update()
+    public function search(string $pageTitle)
     {
-        //TODO
+
+        $response = $this->prepareHttp()
+            ->post(Workspace::SEARCH_PAGE_URL,
+                [
+                    'query' => $pageTitle
+                ]);
+
+//      $this->constructPageObject($response->json());
+        return $response->json();
+
     }
 
 
@@ -78,6 +85,12 @@ class NotionPage extends NotionDatabase
         $this->archived = $json['archived'];
         return $this;
 
+    }
+
+    private function prepareHttp(): PendingRequest
+    {
+        return Http::withToken(config('notion-wrapper.info.token'))
+            ->withHeaders(['Notion-Version' => Workspace::NOTION_VERSION]);
     }
 
 }

@@ -35,7 +35,16 @@ class ManageNotionPageTest extends TestCase
         $this->assertObjectHasAttribute('properties', $page);
     }
 
+    /** @test */
+    public function it_should_update_properties_to_created_page_using_page_class()
+    {
+        $page = new NotionPage('b4f8e429038744ca9c8d5afa93ea2edd');
+        $response = $page
+            ->select('Status', 'In Progress')
+            ->update();
 
+        $this->assertObjectHasAttribute('properties', $page);
+    }
     /** @test */
     public function it_should_add_properties_to_created_page()
     {
@@ -68,10 +77,10 @@ class ManageNotionPageTest extends TestCase
     /** @test */
     public function it_returns_search_result()
     {
-        $page = (new NotionPage)
-            ->search('New Media Article');
+        $response = (new NotionPage)
+            ->search('Eyad');
 
-        $this->assertStringContainsString('list', $page['object']);
+        $this->assertArrayHasKey('object', $response);
     }
 
 

@@ -68,6 +68,7 @@ class NotionDatabase extends Workspace
     public function usingConnective(string $connective): self
     {
         $this->filters[0]->setConnective($connective);
+
         return $this;
     }
 
