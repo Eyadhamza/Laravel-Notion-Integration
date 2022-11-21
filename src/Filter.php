@@ -42,18 +42,6 @@ class Filter
         return $this->property;
     }
 
-    public function ofType(string $type): self
-    {
-        $this->type = $type;
-        return $this;
-    }
-
-    public function ofProperty(string $property): self
-    {
-        $this->property = $property;
-        return $this;
-    }
-
     public function get(): array
     {
         return [
@@ -74,36 +62,32 @@ class Filter
         $this->filterName = $filter;
     }
 
-    public function or(Closure $closure, $nestedConnective): self
+    public function groupWithOrConnective(array $filters, $nestedConnective): self
     {
         $this->filterGroup->add([
             'or' => [
                 $this->get(),
-                [$nestedConnective => collect($closure($this))->map->get()]
+                [$nestedConnective => collect($filters)->map->get()]
             ]
         ]);
 
         return $this;
     }
 
-    public function and(Closure $closure, $nestedConnective): self
+    public function groupWithAndConnective(array $filters, $nestedConnective): self
     {
         $this->filterGroup->add([
             'and' => [
                 $this->get(),
-                [$nestedConnective => collect($closure($this))->map->get()]
+                [$nestedConnective => collect($filters)->map->get()]
             ]
         ]);
 
         return $this;
     }
 
-    public function getFilterGroup()
+    public function getFilterGroup(): Collection
     {
         return $this->filterGroup;
     }
-//    public function setFilterGroup(Collection $filterGroup, $connective): void
-//    {
-//        $this->filterGroup = $filterGroup;
-//    }
 }

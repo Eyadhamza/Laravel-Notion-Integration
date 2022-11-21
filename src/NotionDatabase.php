@@ -14,6 +14,7 @@ class NotionDatabase extends Workspace
 {
     use ThrowsExceptions;
     use HandleFilters;
+
     private string $id;
     private string $URL;
     private string $created_time;
@@ -22,6 +23,7 @@ class NotionDatabase extends Workspace
     private Collection $properties;
     private Collection $pages;
     private Collection $filters;
+    private Collection $sorts;
     private $parentObject;
     private string $filterConnective;
 
@@ -35,15 +37,19 @@ class NotionDatabase extends Workspace
         $this->pages = new Collection();
     }
 
-    public function get($id = null, string $sort = '', $filterType = '')
+    public function get($id = null)
     {
         $id = $id ?? $this->id;
+
+
         $response = Http::withToken(config('notion-wrapper.info.token'))
-            ->post($this->URL,
-                $this->getFilterResults()
-            );
+            ->post($this->URL, [
+                'filter' => isset($this->filters) ? $this->getFilterResults() : '',
+                'sorts' => isset($this->sorts) ? $this->getSortResults() : '',
+            ]);
         $this->throwExceptions($response);
 
+        dd($response->json());
 //        $this->constructObject($response->json());
 
         return $response->json();
@@ -51,9 +57,13 @@ class NotionDatabase extends Workspace
     }
 
 
-    public function sort()
+    public function sort(Collection|array $sorts): self
     {
-        // TODO, whenever i return objects !
+        $sorts = is_array($sorts) ? collect($sorts) : $sorts;
+
+        $this->sorts = $sorts;
+
+        return $this;
     }
 
 
@@ -106,33 +116,9 @@ class NotionDatabase extends Workspace
         return $this->id;
     }
 
-}
-//$response = $database->filters([
-//    FilterGroup::setOrConnective([
-//        Filter::select('Status')
-//            ->equals('Reading'),
-//        FilterGroup::setAndConnective([
-//            Filter::select('Status')
-//                ->equals('Reading'),
-//            Filter::multiSelect('Status2')
-//                ->contains('A'),
-//            Filter::title('Name')
-//                ->contains('MMMM')
-//        ])
-//    ])
-//])->get();
+    private function getSortResults(): array
+    {
+        return $this->sorts->map->get()->toArray();
+    }
 
-//$response = $database->filters([
-//    Filter::select('Status')
-//        ->equals('Reading')
-//        ->or(function () {
-//            return [
-//                Filter::multiSelect('Status2')
-//                    ->contains('A')
-//                    ->and()
-//                    ->title('Name')
-//                    ->contains('MMMM')
-//            ];
-//        })
-//])->get();
-//dd($response);
+}

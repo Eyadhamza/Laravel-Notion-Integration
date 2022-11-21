@@ -42,6 +42,7 @@ trait HandleFilters
             return $this->resultsWithConnective();
         }
         if ($this->filters[0]->getFilterGroup()->isNotEmpty()) {
+
             return $this->resultsWithFilterGroup();
         }
         return $this->resultsWithSingleFilter();
@@ -56,22 +57,17 @@ trait HandleFilters
 
     private function resultsWithConnective(): array
     {
-        return [
-            'filter' => [$this->filterConnective => $this->mapFilters()]
-        ];
+        return [$this->filterConnective => $this->mapFilters()];
     }
 
     private function resultsWithFilterGroup(): array
     {
-        return [
-            'filter' => $this->filters[0]->getFilterGroup()[0]
-        ];
+        return  $this->filters[0]->getFilterGroup()[0]
+        ;
     }
     private function resultsWithSingleFilter(): array
     {
-        return [
-            'filter' => $this->mapFilters()[0]
-        ];
+        return  $this->mapFilters()[0];
     }
 //    public function filterSelect(string $propertyName): Filter
 //    {

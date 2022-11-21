@@ -13,6 +13,7 @@ use Pi\Notion\Properties\Select;
 use Pi\Notion\Properties\Title;
 use Pi\Notion\Query\MultiSelectFilter;
 use Pi\Notion\Query\SelectFilter;
+use Pi\Notion\Sort;
 use Pi\Notion\Tests\TestCase;
 use Pi\Notion\Workspace;
 
@@ -109,14 +110,12 @@ class ManageNotionDatabasesTest extends TestCase
         $response = $database->filters([
             Filter::select('Status')
                 ->equals('Reading')
-                ->or(function () {
-                    return [
+                ->groupWithOrConnective([
                         Filter::multiSelect('Status2')
                             ->contains('A'),
                         Filter::title('Name')
                             ->contains('MMMM')
-                    ];
-                }, 'or')
+                    ], 'and')
         ])->get();
         $this->assertArrayHasKey('results', $response);
 
@@ -126,18 +125,14 @@ class ManageNotionDatabasesTest extends TestCase
     public
     function i_can_sort_database_results()
     {
-        $filters = new Collection();
-        $filters->add((new SelectFilter('Status'))->equals('Reading'))
-            ->add((new SelectFilter('Publisher'))->equals('NYT'));
 
-
-        $database = (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents($filters, filterType: 'and');
-
+        $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
         $database->sort([
-            Sort::ofType('select')->property('Status1')->ascending(),
-            Sort::ofType('multi_select')->property('Status2')->descending(),
-            Sort::ofType('title')->property('Status2')->ascending(),
-        ]);
+            Sort::property('Name')->ascending(),
+        ])->filter(
+            Filter::title('Name')
+                ->contains('A'),
+        )->get();
 
         $this->assertObjectHasAttribute('properties', $database);
     }
