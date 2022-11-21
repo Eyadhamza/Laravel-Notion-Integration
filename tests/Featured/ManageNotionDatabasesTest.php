@@ -57,7 +57,6 @@ class ManageNotionDatabasesTest extends TestCase
     }
 
 
-
     /** @test */
     public function test_database_can_be_filtered_with_one_filter()
     {
@@ -79,45 +78,53 @@ class ManageNotionDatabasesTest extends TestCase
 
         $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
 
-        $response = $database->applyFilters([
+        $response = $database->filters([
             Filter::make('select', 'Status')
                 ->apply('equals', 'Reading'),
             Filter::make('multi_select', 'Status2')
                 ->apply('contains', 'A'),
             Filter::make('title', 'Name')
                 ->apply('contains', 'MMMM'),
-        ],'and')->get();
+        ], 'and')->get();
 
         $this->assertCount('1', $response['results']);
-        $response = $database->applyFilters([
-            Filter::make('select', 'Status')
-                ->apply('equals', 'Reading'),
-            Filter::make('multi_select', 'Status2')
-                ->apply('contains', 'A'),
-            Filter::make('title', 'Name')
-                ->apply('contains', 'MMMM'),
-        ],'or')->get();
+        $response = $database->filters([
+            Filter::select('Status')
+                ->equals('Reading'),
+            Filter::multiSelect('Status2')
+                ->contains('A'),
+            Filter::title('Name')
+                ->contains('MMMM'),
+        ], 'or')->get();
 
         $this->assertCount('4', $response['results']);
 
     }
 
-    public function test_database_can_be_filtered_with_many_filters_using_database_api()
+    public function test_database_can_be_filtered_with_nested_filters()
     {
 
+        $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
 
-        $database
-            ->ofSelect('Status1', 'B')
-            ->ofMultiSelect('Status2', 'A')
-            ->ofTitle('Name', 'A');
+        $response = $database->filters([
+            Filter::select('Status')
+                ->equals('Reading')
+                ->or(function () {
+                    return [
+                        Filter::multiSelect('Status2')
+                            ->contains('A'),
+                        Filter::title('Name')
+                            ->contains('MMMM')
+                    ];
+                }, 'or')
+        ])->get();
+        $this->assertArrayHasKey('results', $response);
 
-        $response = (new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c'))->getContents($filters, filterType: 'and');
-        $this->assertObjectHasAttribute('properties', $response);
     }
 
-
     /** @test */
-    public function i_can_sort_database_results()
+    public
+    function i_can_sort_database_results()
     {
         $filters = new Collection();
         $filters->add((new SelectFilter('Status'))->equals('Reading'))

@@ -2,7 +2,10 @@
 
 namespace Pi\Notion\Traits;
 
+use BadMethodCallException;
+use Closure;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Pi\Notion\Filter;
 
 trait HandleFilters
@@ -17,10 +20,11 @@ trait HandleFilters
         return $this;
     }
 
-    public function applyFilters(Collection|array $filters, $filterType): self
+    public function filters(Collection|array $filters, $filterConnective = ''): self
     {
+
         $filters = is_array($filters) ? collect($filters) : $filters;
-        $this->setFilterType($filterType);
+        $this->setFilterConnective($filterConnective);
         $this->setFilters($filters);
 
         return $this;
@@ -31,21 +35,16 @@ trait HandleFilters
         $this->filters = $filters;
     }
 
-    private function setFilterType($filterType): void
-    {
-        $this->filterType = $filterType;
-    }
 
     private function getFilterResults(): array
     {
         if ($this->filters->count() > 1) {
-            return [
-                'filter' => [$this->filterType => $this->mapFilters()]
-            ];
+            return $this->resultsWithConnective();
         }
-        return [
-            'filter' => $this->mapFilters()[0]
-        ];
+        if ($this->filters[0]->getFilterGroup()->isNotEmpty()) {
+            return $this->resultsWithFilterGroup();
+        }
+        return $this->resultsWithSingleFilter();
     }
 
     private function mapFilters(): Collection
@@ -54,4 +53,30 @@ trait HandleFilters
             return $filter->get();
         });
     }
+
+    private function resultsWithConnective(): array
+    {
+        return [
+            'filter' => [$this->filterConnective => $this->mapFilters()]
+        ];
+    }
+
+    private function resultsWithFilterGroup(): array
+    {
+        return [
+            'filter' => $this->filters[0]->getFilterGroup()[0]
+        ];
+    }
+    private function resultsWithSingleFilter(): array
+    {
+        return [
+            'filter' => $this->mapFilters()[0]
+        ];
+    }
+//    public function filterSelect(string $propertyName): Filter
+//    {
+//        return Filter::select($propertyName);
+//    }
+//    // public filter{anything}
+    // { $database->filterSelect('Status', 'done')->get(); }
 }

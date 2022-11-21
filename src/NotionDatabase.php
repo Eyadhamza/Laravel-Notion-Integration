@@ -23,7 +23,7 @@ class NotionDatabase extends Workspace
     private Collection $pages;
     private Collection $filters;
     private $parentObject;
-    private string $filterType;
+    private string $filterConnective;
 
     public function __construct($id = '', $title = '')
     {
@@ -38,7 +38,6 @@ class NotionDatabase extends Workspace
     public function get($id = null, string $sort = '', $filterType = '')
     {
         $id = $id ?? $this->id;
-
         $response = Http::withToken(config('notion-wrapper.info.token'))
             ->post($this->URL,
                 $this->getFilterResults()
@@ -55,6 +54,12 @@ class NotionDatabase extends Workspace
     public function sort()
     {
         // TODO, whenever i return objects !
+    }
+
+
+    public function setFilterConnective($filterConnective): void
+    {
+        $this->filterConnective = $filterConnective;
     }
 
     private function constructObject(mixed $json): self
@@ -102,3 +107,32 @@ class NotionDatabase extends Workspace
     }
 
 }
+//$response = $database->filters([
+//    FilterGroup::setOrConnective([
+//        Filter::select('Status')
+//            ->equals('Reading'),
+//        FilterGroup::setAndConnective([
+//            Filter::select('Status')
+//                ->equals('Reading'),
+//            Filter::multiSelect('Status2')
+//                ->contains('A'),
+//            Filter::title('Name')
+//                ->contains('MMMM')
+//        ])
+//    ])
+//])->get();
+
+//$response = $database->filters([
+//    Filter::select('Status')
+//        ->equals('Reading')
+//        ->or(function () {
+//            return [
+//                Filter::multiSelect('Status2')
+//                    ->contains('A')
+//                    ->and()
+//                    ->title('Name')
+//                    ->contains('MMMM')
+//            ];
+//        })
+//])->get();
+//dd($response);
