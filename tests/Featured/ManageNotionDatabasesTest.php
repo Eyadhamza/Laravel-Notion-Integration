@@ -27,11 +27,7 @@ class ManageNotionDatabasesTest extends TestCase
         $response = (new NotionDatabase)->get('632b5fb7e06c4404ae12065c48280e4c');
 
 
-        $this->assertObjectHasAttribute('properties', $response);
-
-        $response = (new NotionDatabase)->get('632b5fb7e06c4404ae12065c48280e4c');
-
-        $this->assertObjectHasAttribute('properties', $response);
+        $this->assertArrayHasKey('object', $response);
 
     }
 
@@ -111,11 +107,11 @@ class ManageNotionDatabasesTest extends TestCase
             Filter::select('Status')
                 ->equals('Reading')
                 ->groupWithOrConnective([
-                        Filter::multiSelect('Status2')
-                            ->contains('A'),
-                        Filter::title('Name')
-                            ->contains('MMMM')
-                    ], 'and')
+                    Filter::multiSelect('Status2')
+                        ->contains('A'),
+                    Filter::title('Name')
+                        ->contains('MMMM')
+                ], 'and')
         ])->get();
         $this->assertArrayHasKey('results', $response);
 

@@ -31,7 +31,7 @@ class NotionDatabase extends Workspace
     {
         parent::__construct();
         $this->id = $id;
-        $this->URL = Workspace::DATABASE_URL . "$id" . "/query";;
+        $this->URL = Workspace::DATABASE_URL . "$id";;
         $this->title = $title;
         $this->properties = new Collection();
         $this->pages = new Collection();
@@ -40,16 +40,18 @@ class NotionDatabase extends Workspace
     public function get($id = null)
     {
         $id = $id ?? $this->id;
+        $requestBody = [];
+        isset($this->filters) ? $requestBody['filter'] = $this->getFilterResults() : null;
+        isset($this->sorts) ? $requestBody['sorts'] = $this->getSortResults() : null;
 
+        $response = Http::withToken(config('notion-wrapper.info.token'));
 
-        $response = Http::withToken(config('notion-wrapper.info.token'))
-            ->post($this->URL, [
-                'filter' => isset($this->filters) ? $this->getFilterResults() : '',
-                'sorts' => isset($this->sorts) ? $this->getSortResults() : '',
-            ]);
+        $response = $requestBody ?
+            $response->post($this->URL . "/query", $requestBody)
+            : $response->get($this->URL);
+
         $this->throwExceptions($response);
 
-        dd($response->json());
 //        $this->constructObject($response->json());
 
         return $response->json();

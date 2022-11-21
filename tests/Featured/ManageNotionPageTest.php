@@ -14,10 +14,8 @@ class ManageNotionPageTest extends TestCase
     public function it_should_return_page_info()
     {
         $object = NotionPageFactory::getAnExistingPage();
-        $this->assertObjectHasAttribute('properties', $object);
+        $this->assertArrayHasKey('object', $object);
 
-        $object = NotionPageFactory::getAnExistingPageById();
-        $this->assertObjectHasAttribute('properties', $object);
 
     }
 

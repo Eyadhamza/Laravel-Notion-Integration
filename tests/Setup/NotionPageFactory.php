@@ -20,16 +20,10 @@ class NotionPageFactory
     private $notionPageId = '819f5b54348f463580ef118b6a54bd0d';
     private $notionDatabaseId = '632b5fb7e06c4404ae12065c48280e4c';
 
-    public function getAnExistingPage(): NotionPage
+    public function getAnExistingPage()
     {
-        return (new NotionPage)->get('c66f166ec9cf466baa3321d26aceed08');
+        return (new NotionPage)->get('819f5b54348f463580ef118b6a54bd0d');
     }
-
-    public function getAnExistingPageById(): NotionPage
-    {
-        return NotionPage::ofId('c66f166ec9cf466baa3321d26aceed08');
-    }
-
     public function createNotionPage()
     {
         return \Pi\Notion\Facades\NotionPage::create($this->notionDatabaseId);
