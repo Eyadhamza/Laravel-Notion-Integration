@@ -35,7 +35,7 @@ abstract class NotionObject
         $this->archived = $response['archived'] ?? null;
         $this->createdTime = $response['created_time'] ?? null;
         $this->lastEditedTime = $response['last_edited_time'] ?? null;
-        $this->lastEditedBy = new NotionUser($response['last_edited_by']['id']) ?? null;
+        $this->lastEditedBy = new NotionUser($response['last_edited_by']['id'] ?? '') ?? null;
         $this->icon = $response['icon'] ?? null;
         $this->cover = $response['cover'] ?? null;
 

@@ -97,7 +97,6 @@ class NotionPage extends NotionObject
     public function build($response): static
     {
         $this->properties = new Collection();
-        $this->blocks = new Collection();
 
         parent::build($response);
 

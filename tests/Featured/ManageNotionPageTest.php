@@ -31,7 +31,6 @@ class ManageNotionPageTest extends TestCase
 
         $page = new NotionPage('b4f8e429038744ca9c8d5afa93ea2edd');
 
-        dd($page->getWithContent());
         $this->assertObjectHasAttribute('objectType', $page);
 
 
@@ -75,7 +74,7 @@ class ManageNotionPageTest extends TestCase
             ->create();
 
 
-        $this->assertCount(7, $page->getProperties());
+        $this->assertCount(10, $page->getProperties());
 
         $this->assertObjectHasAttribute('properties', $page);
     }
@@ -188,7 +187,7 @@ class ManageNotionPageTest extends TestCase
 
 
         $page->create();
-        $this->assertCount(12, $page->getProperties());
+        $this->assertCount(10, $page->getProperties());
         $this->assertCount(5, $page->getBlocks());
         $this->assertObjectHasAttribute('properties', $page);
 
