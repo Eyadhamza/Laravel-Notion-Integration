@@ -9,21 +9,18 @@ use Pi\Notion\Traits\HandleFilters;
 use Pi\Notion\Traits\HandleProperties;
 use Pi\Notion\Traits\ThrowsExceptions;
 
-class NotionDatabase
+class NotionDatabase extends NotionObject
 {
     use ThrowsExceptions;
     use HandleFilters;
     use HandleProperties;
 
-    private string $parentPageId;
-    private string $id;
-    private string $title;
     private string $link;
 
-    private Collection $properties;
-    private Collection $pages;
-    private Collection $filters;
-    private Collection $sorts;
+    protected Collection $properties;
+    protected Collection $pages;
+    protected Collection $filters;
+    protected Collection $sorts;
 
     public function __construct($id = '')
     {
@@ -36,16 +33,12 @@ class NotionDatabase
 
     public function get()
     {
-        $response = prepareHttp()
-            ->get(
-                $this->url()
-            );
+
+        $response = prepareHttp()->get($this->url());
 
         $this->throwExceptions($response);
 
-
-
-        return $response->json();
+        return $this->build($response->json());
 
     }
 
@@ -56,10 +49,9 @@ class NotionDatabase
         if (isset($this->sorts)) $requestBody['sorts'] = $this->getSortResults();
 
         $response = prepareHttp()->post($this->queryUrl(), $requestBody);
-
         $this->throwExceptions($response);
 
-        return $response->json();
+        return $this->buildList($response);
     }
 
     public function sort(Collection|array $sorts): self
@@ -71,7 +63,7 @@ class NotionDatabase
         return $this;
     }
 
-    public function create(): array
+    public function create(): NotionDatabase
     {
 
         $response = prepareHttp()
@@ -88,7 +80,7 @@ class NotionDatabase
 
         $this->throwExceptions($response);
 
-        return $response->json();
+        return $this->build($response->json());
     }
 
     public function update()
@@ -100,9 +92,10 @@ class NotionDatabase
         if (isset($this->properties)) $requestBody['properties'] = Property::mapsProperties($this);
 
         $response = prepareHttp()->patch($this->url(), $requestBody);
+
         $this->throwExceptions($response);
 
-        return $response->json();
+        return $this->build($response->json());
 
     }
 
@@ -135,12 +128,12 @@ class NotionDatabase
 
     public function getParentPageId(): string
     {
-        return $this->parentPageId;
+        return $this->parentId;
     }
 
-    public function setParentPageId(string $parentPageId): self
+    public function setParentPageId(string $parentId): self
     {
-        $this->parentPageId = $parentPageId;
+        $this->parentId = $parentId;
 
         return $this;
     }
@@ -172,6 +165,14 @@ class NotionDatabase
         $this->link = $link;
 
         return $this;
+    }
+
+    private function buildList($response): Collection
+    {
+        // TODO Pagination
+        return collect($response['results'])->map(function ($page) {
+            return (new NotionPage)->build($page);
+        });
     }
 
 

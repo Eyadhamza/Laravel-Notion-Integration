@@ -121,6 +121,40 @@ class ManageNotionPageTest extends TestCase
         ]);
 
         $page->create();
+        $this->assertCount(2, $page->getProperties());
+        $this->assertCount(5, $page->getBlocks());
+        $this->assertObjectHasAttribute('properties', $page);
+
+
+    }
+    /** @test */
+    public function it_can_add_nested_content_blocks_to_created_pages()
+    {
+        $page = (new NotionPage);
+        $page->setDatabaseId($this->notionDatabaseId);
+
+        $page
+            ->title('Name','Eyad Hamza')
+            ->multiSelect('Status1', ['A', 'B']);
+
+        $page->setBlocks([
+            Block::paragraph('asdasdasd')
+                ->color('red')
+                ->addChildren([
+                    Block::headingTwo('Heading 2')
+                        ->color('blue')
+                        ->contentLink('https://www.google.com'),
+                    Block::headingThree('Heading 3'),
+                    Block::numberedList('Numbered List'),
+                    Block::bulletedList('Bullet List'),
+                ]),
+            Block::headingTwo('Heading 2'),
+            Block::headingThree('Heading 3'),
+            Block::numberedList('Numbered List'),
+            Block::bulletedList('Bullet List'),
+        ]);
+        $page->create();
+        dd($page);
 
         $this->assertCount(2, $page->getProperties());
         $this->assertCount(5, $page->getBlocks());

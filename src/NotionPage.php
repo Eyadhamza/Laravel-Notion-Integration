@@ -45,6 +45,9 @@ class NotionPage extends NotionObject
                 'properties' => Property::mapsProperties($this),
                 'children' => Block::mapsBlocksToPage($this)
             ]);
+        dd($response->json());
+        $this->throwExceptions($response);
+        return $this->build($response->json());
         return $this;
     }
 
@@ -54,16 +57,16 @@ class NotionPage extends NotionObject
             ->patch($this->getUrl(), [
                 'properties' => Property::mapsProperties($this),
             ]);
-
-        return  $this;
+        $this->throwExceptions($response);
+        return $this->build($response->json());
     }
 
     public function delete(): self
     {
         $response = prepareHttp()
             ->delete(Workspace::BLOCK_URL . $this->id);
-
-        return $this;
+        $this->throwExceptions($response);
+        return $this->build($response->json());
     }
     public function search(string $pageTitle)
     {
@@ -71,7 +74,8 @@ class NotionPage extends NotionObject
         $response = prepareHttp()
             ->post(Workspace::SEARCH_PAGE_URL, ['query' => $pageTitle]);
 
-        return $this;
+        $this->throwExceptions($response);
+        return $this->build($response->json());
 
     }
 

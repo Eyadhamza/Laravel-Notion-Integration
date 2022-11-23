@@ -24,8 +24,7 @@ class ManageNotionDatabasesTest extends TestCase
     {
 
         $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
-
-        $this->assertArrayHasKey('object', $database->get());
+        $this->assertObjectHasAttribute('objectType', $database->get());
 
     }
 
@@ -46,7 +45,7 @@ class ManageNotionDatabasesTest extends TestCase
             ])
             ->create();
 
-        $this->assertArrayHasKey('object', $database);
+        $this->assertObjectHasAttribute('objectType', $database);
 
     }
     /** @test */
@@ -64,7 +63,7 @@ class ManageNotionDatabasesTest extends TestCase
             ])
             ->update();
 
-        $this->assertArrayHasKey('object', $database);
+        $this->assertObjectHasAttribute('objectType', $database);
 
     }
     /** @test */
@@ -101,7 +100,7 @@ class ManageNotionDatabasesTest extends TestCase
                 ->apply('contains', 'MMMM')
         )->query();
 
-        $this->assertArrayHasKey('results', $response);
+        $this->assertInstanceOf(Collection::class, $response);
 
 
     }
@@ -122,8 +121,8 @@ class ManageNotionDatabasesTest extends TestCase
                     ->contains('MMMM')
             ])
         ])->query();
+        $this->assertInstanceOf(Collection::class, $response);
 
-        $this->assertCount('1', $response['results']);
         $response = $database->filters([
             Filter::groupWithOr([
                 Filter::select('Status')
@@ -134,8 +133,7 @@ class ManageNotionDatabasesTest extends TestCase
                     ->contains('MMMM')
             ])
         ])->query();
-        $this->assertCount('4', $response['results']);
-
+        $this->assertCount(4, $response);
     }
 
     public function test_database_can_be_filtered_with_nested_filters()
@@ -153,7 +151,8 @@ class ManageNotionDatabasesTest extends TestCase
                         ->contains('MMMM')
                 ], 'and')
         ])->query();
-        $this->assertArrayHasKey('results', $response);
+
+        $this->assertCount(2, $response);
 
     }
 
@@ -163,13 +162,13 @@ class ManageNotionDatabasesTest extends TestCase
     {
 
         $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
-        $database->sort([
+        $response = $database->sort([
             Sort::property('Name')->ascending(),
         ])->filter(
             Filter::title('Name')
                 ->contains('A'),
         )->query();
 
-        $this->assertObjectHasAttribute('properties', $database);
+        $this->assertInstanceOf(Collection::class, $response);
     }
 }

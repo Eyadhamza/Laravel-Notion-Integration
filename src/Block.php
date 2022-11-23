@@ -9,15 +9,19 @@ use Illuminate\Support\Collection;
 class Block extends NotionObject
 {
 
-    private string $type;
-    private string $body;
+    private string $name;
+    private string $content;
+    private string $contentLink;
     private string $contentType;
+    private string $color;
+    private Collection $children;
 
-    public function __construct($type = '', $body = '')
+    public function __construct($name = '', $content = '')
     {
-        $this->type = $type;
-        $this->body = $body;
-        $this->contentType = 'text';
+        $this->name = $name;
+        $this->content = $content;
+        $this->contentType = 'rich_text';
+        $this->children = new Collection();
     }
 
     public static function make(string $type = null, string $body = null): self
@@ -28,27 +32,25 @@ class Block extends NotionObject
     public static function mapsBlocksToPage(NotionPage $page): Collection
     {
 
-        return $page->getBlocks()->map(function ($block) {
+        return $page->getBlocks()->map(function (Block $block) {
             return array(
-                'object' => 'block',
-                'type' => $block->type,
-                $block->type => [
-                    $block->contentType => [
-                        [
-                            'type' => $block->contentType,
-                            $block->contentType => [
-                                'content' => $block->body
-                            ]
-                        ]
-
-                    ]
-                ]
+                'type' => $block->name,
+                $block->name => $block->contentBody(),
             );
-
         });
     }
 
-    public static function buildBlock(string $name, array $body)
+    public function color(string $color): self
+    {
+        $this->color = $color;
+        return $this;
+    }
+    public function contentLink(string $contentLink): self
+    {
+        $this->contentLink = $contentLink;
+        return $this;
+    }
+    public static function buildBlock(string $name, array $body): Block
     {
         $block = Block::make($body['type'], $name);
 
@@ -148,6 +150,40 @@ class Block extends NotionObject
     public static function file(string $body): self
     {
         return Block::make(BlockTypes::FILE, $body);
+    }
+
+
+    public function addChildren(array $blocks): self
+    {
+        collect($blocks)->each(function (Block $block) {
+            $this->children->add($block);
+        });
+        return $this;
+    }
+
+    private function contentBody(): array
+    {
+        $body = [];
+        if (isset($this->content)) $body['content'] = $this->content;
+
+        if (isset($this->contentLink)) $body['link'] = ['url' => $this->contentLink];
+
+        return [ $this->contentType => [
+                [
+                    'type' => 'text',
+                    'text' => $body,
+                ]
+            ],
+            'color' => $this->color ?? 'default',
+            'children' => $this->children->map(function (Block $child) {
+                return array(
+                    'type' => $child->name,
+                    'object' => 'block',
+                    $child->name => $child->contentBody()
+                );
+            })
+        ];
+
     }
 
 
