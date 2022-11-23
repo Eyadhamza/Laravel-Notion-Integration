@@ -8,11 +8,7 @@ use Pi\Notion\NotionDatabase;
 
 use Pi\Notion\Exceptions\NotionDatabaseException;
 use Pi\Notion\NotionPage;
-use Pi\Notion\Properties\MultiSelect;
-use Pi\Notion\Properties\Select;
-use Pi\Notion\Properties\Title;
-use Pi\Notion\Query\MultiSelectFilter;
-use Pi\Notion\Query\SelectFilter;
+use Pi\Notion\Property;
 use Pi\Notion\Sort;
 use Pi\Notion\Tests\TestCase;
 use Pi\Notion\Workspace;
@@ -32,15 +28,43 @@ class ManageNotionDatabasesTest extends TestCase
     }
 
     /** @test */
-    public function test_it_can_build_a_database_object()
+    public function test_it_can_create_a_database_object()
     {
 
-        $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
+        $database = (new NotionDatabase)
+            ->setParentPageId('fa4379661ed948d7af52df923177028e')
+            ->setTitle('Test Database2')
+            ->setProperties([
+                Property::title(),
+                Property::select('Status')->setOptions([
+                    ['name' => 'A', 'color' => 'red'],
+                    ['name' => 'B', 'color' => 'green']
+                ]),
+                Property::date()
+            ])
+            ->create();
 
-        $this->assertArrayHasKey('object', $database->get());
+        $this->assertArrayHasKey('object', $database);
 
     }
+    /** @test */
+    public function test_it_can_update_a_database_object()
+    {
 
+        $database = (new NotionDatabase)
+            ->setDatabaseId('a5f8af6484334c09b69d5dd5f54b378f')
+            ->setProperties([
+                Property::select('Status2')->setOptions([
+                    ['name' => 'A', 'color' => 'red'],
+                    ['name' => 'B', 'color' => 'green']
+                ]),
+                Property::date('Created')
+            ])
+            ->update();
+
+        $this->assertArrayHasKey('object', $database);
+
+    }
     /** @test */
     public function throw_exception_database_not_found()
     {

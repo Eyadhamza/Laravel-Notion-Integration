@@ -5,58 +5,55 @@ namespace Pi\Notion;
 
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
 use Pi\Notion\Traits\HandleFilters;
-use Pi\Notion\Traits\RetrieveResource;
+use Pi\Notion\Traits\HandleProperties;
 use Pi\Notion\Traits\ThrowsExceptions;
 
-class NotionDatabase extends Workspace
+class NotionDatabase
 {
     use ThrowsExceptions;
     use HandleFilters;
+    use HandleProperties;
 
+    private string $parentPageId;
     private string $id;
-    private string $created_time;
-    private string $last_edited_time;
     private string $title;
+    private string $link;
+
     private Collection $properties;
     private Collection $pages;
     private Collection $filters;
     private Collection $sorts;
-    private mixed $objectType;
 
-    public function __construct($id = '', $title = '')
+    public function __construct($id = '')
     {
-        parent::__construct();
         $this->id = $id;
-        $this->title = $title;
-        $this->properties = new Collection();
-        $this->pages = new Collection();
     }
 
     public function get()
     {
         $response = prepareHttp()
-            ->get($this->getUrl());
+            ->get(
+                $this->url()
+            );
 
         $this->throwExceptions($response);
 
         return $response->json();
 
     }
+
     public function query()
     {
         $requestBody = [];
-        isset($this->filters) ? $requestBody['filter'] = $this->getFilterResults() : null;
-        isset($this->sorts) ? $requestBody['sorts'] = $this->getSortResults() : null;
+        if (isset($this->filters)) $requestBody['filter'] = $this->getFilterResults();
+        if (isset($this->sorts)) $requestBody['sorts'] = $this->getSortResults();
 
-        $response = prepareHttp()
-            ->post($this->queryUrl(), $requestBody);
+        $response = prepareHttp()->post($this->queryUrl(), $requestBody);
 
         $this->throwExceptions($response);
 
         return $response->json();
-
     }
 
     public function sort(Collection|array $sorts): self
@@ -68,16 +65,46 @@ class NotionDatabase extends Workspace
         return $this;
     }
 
-    public function usingConnective(string $connective): self
+    public function create(): array
     {
-        $this->filters[0]->setConnective($connective);
 
-        return $this;
+        $response = prepareHttp()
+            ->post(
+                Workspace::DATABASE_URL, [
+                    'parent' => [
+                        'type' => 'page_id',
+                        'page_id' => $this->getParentPageId()
+                    ],
+                    'title' => $this->mapTitle($this),
+                    'properties' => Property::mapsProperties($this)
+                ]
+            );
+
+        $this->throwExceptions($response);
+
+        return $response->json();
     }
 
-    public function setDatabaseId(string $notionDatabaseId)
+    public function update()
     {
-        $this->id = $notionDatabaseId;
+        $requestBody = [];
+
+        if (isset($this->title)) $requestBody['title'] = $this->mapTitle($this);
+
+        if (isset($this->properties)) $requestBody['properties'] = Property::mapsProperties($this);
+
+        $response = prepareHttp()->patch($this->url(), $requestBody);
+        $this->throwExceptions($response);
+
+        return $response->json();
+
+    }
+
+    public function setDatabaseId(string $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getDatabaseId(): string
@@ -90,13 +117,56 @@ class NotionDatabase extends Workspace
         return $this->sorts->map->get()->toArray();
     }
 
-    private function getUrl(): string
+    private function url(): string
     {
         return Workspace::DATABASE_URL . $this->id;
     }
 
     private function queryUrl(): string
     {
-      return $this->getUrl() . "/query";
+        return $this->url() . "/query";
     }
+
+    public function getParentPageId(): string
+    {
+        return $this->parentPageId;
+    }
+
+    public function setParentPageId(string $parentPageId): self
+    {
+        $this->parentPageId = $parentPageId;
+
+        return $this;
+    }
+
+    private function mapTitle(): array
+    {
+        return
+            array(
+                array(
+                    'type' => 'text',
+                    'text' => array(
+                        'content' => $this->title ?? 'Untitled Database',
+                        'link' => $this->link ?? null
+                    )
+                )
+            );
+
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function setLink(string $link): self
+    {
+        $this->link = $link;
+
+        return $this;
+    }
+
+
 }

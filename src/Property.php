@@ -4,13 +4,16 @@
 namespace Pi\Notion;
 
 
+use stdClass;
+
 class Property extends PropertyType
 {
 
     private string $type;
     private string $name;
     private ?string $id;
-    private array|string $values;
+    private array|string|null $values;
+    private array|string|null $options;
 
     public function __construct(string $type, string $name)
     {
@@ -32,20 +35,22 @@ class Property extends PropertyType
 
     public function getValues(): array|string
     {
-
+        if (!isset($this->values)) {
+            return [];
+        }
         if (is_array($this->values)) {
             return $this->isNested() ? array($this->values) : array($this->values)[0];
         }
         return $this->values;
     }
 
-    public static function mapsPropertiesToPage($page)
+    public static function mapsProperties($page)
     {
 
-        return $page->getProperties()->mapToAssoc(function ($property) {
+        return $page->getProperties()->mapToAssoc(function (Property $property) {
             return
                 array(
-                    $property->name, array($property->getType() => $property->getValues() ?? null)
+                    $property->name, array($property->getType() => empty($property->getValues()) ? $property->getOptions() : $property->getValues())
                 );
         });
     }
@@ -64,8 +69,26 @@ class Property extends PropertyType
     {
 
         $this->values = collect($values)->map(function ($optionName) {
-            return [ 'name' => $optionName];
+            return ['name' => $optionName];
         })->toArray();
+        return $this;
+    }
+
+    public function getOptions()
+    {
+        if (!isset($this->options)) {
+            return new stdClass();
+        }
+        if (is_array($this->options)) {
+            return [
+                'options' => $this->options
+            ];
+        }
+        return array($this->options);
+    }
+    public function setOptions(array|string $options): self
+    {
+        $this->options = $options;
         return $this;
     }
 
@@ -77,9 +100,9 @@ class Property extends PropertyType
         ]);
     }
 
-    public static function select($name = 'Select', array|string $values = null): Property
+    public static function select($name = 'Select', string $values = null): Property
     {
-        $property =  Property::make(PropertyType::SELECT, $name);
+        $property = Property::make(PropertyType::SELECT, $name);
 
         return $values ? $property->values(['name' => $values]) : $property;
 
@@ -198,4 +221,6 @@ class Property extends PropertyType
 
         return $values ? $property->values($values) : $property;
     }
+
+
 }

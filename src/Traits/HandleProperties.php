@@ -7,6 +7,19 @@ use Pi\Notion\Property;
 
 trait HandleProperties
 {
+    public function createProperties(Collection|array $properties): self
+    {
+        $properties = is_array($properties) ? collect($properties) : $properties;
+
+        $properties->map(function (Property $property) {
+            $this->properties->add([
+                $property->getName() => [
+                    $property->getType() => $property->getOptions()
+                ]
+            ]);
+        });
+        return $this;
+    }
     public function setProperties(Collection|array $properties): self
     {
         $properties = is_array($properties) ? collect($properties) : $properties;

@@ -38,12 +38,9 @@ class NotionPage
     }
     public function get()
     {
-        $response = Http::withToken(config('notion-wrapper.info.token'))
-            ->get($this->getUrl());
+        $response = prepareHttp()->get($this->getUrl());
 
         $this->throwExceptions($response);
-
-//        $this->buildPage($response->json());
 
         return $response->json();
     }
@@ -53,7 +50,7 @@ class NotionPage
         $response = prepareHttp()
             ->post(Workspace::PAGE_URL, [
                 'parent' => array('database_id' => $this->notionDatabase->getDatabaseId()),
-                'properties' => Property::mapsPropertiesToPage($this),
+                'properties' => Property::mapsProperties($this),
                 'children' => Block::mapsBlocksToPage($this)
             ]);
         return $this;
@@ -63,7 +60,7 @@ class NotionPage
     {
         $response = prepareHttp()
             ->patch($this->getUrl(), [
-                'properties' => Property::mapsPropertiesToPage($this),
+                'properties' => Property::mapsProperties($this),
             ]);
 
         return $this;
@@ -73,25 +70,9 @@ class NotionPage
     {
 
         $response = prepareHttp()
-            ->post(Workspace::SEARCH_PAGE_URL,
-                [
-                    'query' => $pageTitle
-                ]);
+            ->post(Workspace::SEARCH_PAGE_URL, ['query' => $pageTitle]);
 
-//      $this->constructPageObject($response->json());
         return $response->json();
-
-    }
-
-
-    public function constructObject(mixed $json): self
-    {
-        $this->type = 'page';
-        $this->id = $json['id'];
-        $this->created_time = $json['created_time'];
-        $this->last_edited_time = $json['last_edited_time'];
-        $this->archived = $json['archived'];
-        return $this;
 
     }
 

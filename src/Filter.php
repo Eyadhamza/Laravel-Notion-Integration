@@ -42,6 +42,7 @@ class Filter
     {
         return self::group($filters, 'or');
     }
+
     public static function groupWithAnd(array $filters): Filter
     {
         return self::group($filters, 'and');
