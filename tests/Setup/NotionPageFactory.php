@@ -17,16 +17,20 @@ use Pi\Notion\PropertyType;
 
 class NotionPageFactory
 {
-    private string $notionPageId = '819f5b54348f463580ef118b6a54bd0d';
+    private string $notionPageId = 'b4f8e429038744ca9c8d5afa93ea2edd';
     private string $notionDatabaseId = '632b5fb7e06c4404ae12065c48280e4c';
 
     public function getAnExistingPage()
     {
-        return (new NotionPage)->get('819f5b54348f463580ef118b6a54bd0d');
+        return (new NotionPage($this->notionPageId))->get();
     }
     public function createNotionPage()
     {
-        return \Pi\Notion\Facades\NotionPage::create($this->notionDatabaseId);
+        $page = new NotionPage();
+        $page->setDatabaseId($this->notionDatabaseId);
+        $page->create();
+
+        return $page;
     }
 
 

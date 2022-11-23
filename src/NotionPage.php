@@ -21,7 +21,6 @@ class NotionPage
     private NotionDatabase $notionDatabase;
     private string $type;
     private string $id;
-    private string $URL;
     private mixed $created_time;
     private mixed $last_edited_time;
     private Collection $blocks;
@@ -32,7 +31,6 @@ class NotionPage
     public function __construct($id = '')
     {
         $this->id = $id;
-        $this->URL = Workspace::PAGE_URL;
         $this->type = 'page';
         $this->blocks = new Collection();
         $this->properties = new Collection();
@@ -40,14 +38,20 @@ class NotionPage
     }
     public function get()
     {
+        $response = Http::withToken(config('notion-wrapper.info.token'))
+            ->get($this->getUrl());
+        $this->throwExceptions($response);
 
+//        $this->buildPage($response->json());
+
+        return $response->json();
     }
 
     public function create(): self
     {
         $response = $this
             ->prepareHttp()
-            ->post($this->URL, [
+            ->post(Workspace::PAGE_URL, [
                 'parent' => array('database_id' => $this->notionDatabase->getDatabaseId()),
                 'properties' => Property::mapsPropertiesToPage($this),
                 'children' => Block::mapsBlocksToPage($this)
@@ -58,7 +62,7 @@ class NotionPage
     public function update(): self
     {
         $response = $this->prepareHttp()
-            ->patch($this->URL . $this->id, [
+            ->patch($this->getUrl(), [
                 'properties' => Property::mapsPropertiesToPage($this),
             ]);
 
@@ -100,6 +104,11 @@ class NotionPage
     public function setDatabaseId(string $notionDatabaseId): void
     {
         $this->notionDatabase = new NotionDatabase($notionDatabaseId);
+    }
+
+    private function getUrl(): string
+    {
+        return Workspace::PAGE_URL . $this->id;
     }
 
 }
