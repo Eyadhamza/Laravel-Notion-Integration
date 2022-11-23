@@ -20,6 +20,9 @@ class ManageNotionPageTest extends TestCase
 
         $page = new NotionPage('b4f8e429038744ca9c8d5afa93ea2edd');
 
+
+        $page->get();
+
         $this->assertObjectHasAttribute('object', $page);
 
 
@@ -95,7 +98,7 @@ class ManageNotionPageTest extends TestCase
             ]),
             Property::url('Url','https://developers.notion.com'),
             Property::email('Email','Eyadhamza0@outlook.com'),
-            Property::phone()->values('0123456789')
+            Property::phone()->setValues('0123456789')
         ])->create();
 
         $this->assertCount(7, $page->getProperties());

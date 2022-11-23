@@ -59,6 +59,18 @@ class Block
         });
     }
 
+    public static function build($block)
+    {
+        return (new self())
+            ->setId($block['id'])
+            ->setCreatedTime($block['created_time'])
+            ->setLastEditedTime($block['last_edited_time'])
+            ->setHasChildren($block['has_children'])
+            ->setType($block['type'])
+            ->setBody($block['paragraph']['text'][0]['plain_text'])
+            ->setContentType($block['paragraph']['text'][0]['type']);
+    }
+
     public function getLastEditedTime(): string
     {
         return $this->last_edited_time;

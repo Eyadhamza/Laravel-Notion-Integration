@@ -4,31 +4,26 @@
 namespace Pi\Notion;
 
 
-use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
 use Pi\Notion\Traits\HandleBlocks;
 use Pi\Notion\Traits\HandleProperties;
 use Pi\Notion\Traits\RetrieveResource;
 use Pi\Notion\Traits\ThrowsExceptions;
 
-class NotionPage
+class NotionPage extends NotionObject
 {
     use ThrowsExceptions;
     use HandleProperties;
     use HandleBlocks;
 
     private NotionDatabase $notionDatabase;
-    private string $type;
-    private string $id;
-    private Collection $blocks;
-    private Collection $properties;
+    protected Collection $blocks;
+    protected Collection $properties;
 
 
     public function __construct($id = '')
     {
         $this->id = $id;
-        $this->type = 'page';
         $this->blocks = new Collection();
         $this->properties = new Collection();
 
@@ -39,6 +34,9 @@ class NotionPage
 
         $this->throwExceptions($response);
 
+        $page = $this->build($response->json())
+            ->buildProperties($response->json()['properties']);
+        dd($page);
         return $this;
     }
 
@@ -88,5 +86,6 @@ class NotionPage
     {
         return Workspace::PAGE_URL . $this->id;
     }
+
 
 }
