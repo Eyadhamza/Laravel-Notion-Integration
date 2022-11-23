@@ -21,11 +21,8 @@ class NotionPage
     private NotionDatabase $notionDatabase;
     private string $type;
     private string $id;
-    private mixed $created_time;
-    private mixed $last_edited_time;
     private Collection $blocks;
     private Collection $properties;
-    private mixed $archived;
 
 
     public function __construct($id = '')
@@ -42,7 +39,7 @@ class NotionPage
 
         $this->throwExceptions($response);
 
-        return $response->json();
+        return $this;
     }
 
     public function create(): self
@@ -53,7 +50,7 @@ class NotionPage
                 'properties' => Property::mapsProperties($this),
                 'children' => Block::mapsBlocksToPage($this)
             ]);
-        return $this;
+        return  $this;
     }
 
     public function update(): self
@@ -63,16 +60,22 @@ class NotionPage
                 'properties' => Property::mapsProperties($this),
             ]);
 
-        return $this;
+        return  $this;
     }
 
+    public function delete(): self
+    {
+        $response = prepareHttp()
+            ->delete(Workspace::BLOCK_URL . $this->id);
+        return  $this;
+    }
     public function search(string $pageTitle)
     {
 
         $response = prepareHttp()
             ->post(Workspace::SEARCH_PAGE_URL, ['query' => $pageTitle]);
 
-        return $response->json();
+        return $this;
 
     }
 

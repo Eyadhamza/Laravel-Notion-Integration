@@ -16,6 +16,8 @@ use Pi\Notion\Workspace;
 class ManageNotionDatabasesTest extends TestCase
 {
 
+    private string $notionPageId = 'b4f8e429038744ca9c8d5afa93ea2edd';
+    private string $notionDatabaseId = '632b5fb7e06c4404ae12065c48280e4c';
 
     /** @test */
     public function return_database_info()
@@ -82,7 +84,7 @@ class ManageNotionDatabasesTest extends TestCase
     {
         $id = '632b5fb7e06c4404ae12065c48280e4asdc';
         $this->expectException(NotionDatabaseException::class);
-        (new NotionDatabase($id))->query();
+        (new NotionDatabase($id))->get();
 
 
     }

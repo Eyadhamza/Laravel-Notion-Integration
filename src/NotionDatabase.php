@@ -28,6 +28,10 @@ class NotionDatabase
     public function __construct($id = '')
     {
         $this->id = $id;
+        $this->properties = new Collection();
+        $this->pages = new Collection();
+        $this->filters = new Collection();
+        $this->sorts = new Collection();
     }
 
     public function get()
@@ -38,6 +42,8 @@ class NotionDatabase
             );
 
         $this->throwExceptions($response);
+
+
 
         return $response->json();
 
