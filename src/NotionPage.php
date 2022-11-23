@@ -40,6 +40,7 @@ class NotionPage
     {
         $response = Http::withToken(config('notion-wrapper.info.token'))
             ->get($this->getUrl());
+
         $this->throwExceptions($response);
 
 //        $this->buildPage($response->json());
@@ -49,8 +50,7 @@ class NotionPage
 
     public function create(): self
     {
-        $response = $this
-            ->prepareHttp()
+        $response = prepareHttp()
             ->post(Workspace::PAGE_URL, [
                 'parent' => array('database_id' => $this->notionDatabase->getDatabaseId()),
                 'properties' => Property::mapsPropertiesToPage($this),
@@ -61,7 +61,7 @@ class NotionPage
 
     public function update(): self
     {
-        $response = $this->prepareHttp()
+        $response = prepareHttp()
             ->patch($this->getUrl(), [
                 'properties' => Property::mapsPropertiesToPage($this),
             ]);
@@ -72,7 +72,7 @@ class NotionPage
     public function search(string $pageTitle)
     {
 
-        $response = $this->prepareHttp()
+        $response = prepareHttp()
             ->post(Workspace::SEARCH_PAGE_URL,
                 [
                     'query' => $pageTitle
@@ -93,12 +93,6 @@ class NotionPage
         $this->archived = $json['archived'];
         return $this;
 
-    }
-
-    private function prepareHttp(): PendingRequest
-    {
-        return Http::withToken(config('notion-wrapper.info.token'))
-            ->withHeaders(['Notion-Version' => Workspace::NOTION_VERSION]);
     }
 
     public function setDatabaseId(string $notionDatabaseId): void

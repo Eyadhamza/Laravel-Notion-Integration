@@ -34,30 +34,26 @@ class NotionDatabase extends Workspace
         $this->pages = new Collection();
     }
 
+    public function get()
+    {
+        $response = prepareHttp()
+            ->get($this->getUrl());
+
+        $this->throwExceptions($response);
+
+        return $response->json();
+
+    }
     public function query()
     {
         $requestBody = [];
         isset($this->filters) ? $requestBody['filter'] = $this->getFilterResults() : null;
         isset($this->sorts) ? $requestBody['sorts'] = $this->getSortResults() : null;
 
-        $response = Http::withToken(config('notion-wrapper.info.token'))
+        $response = prepareHttp()
             ->post($this->queryUrl(), $requestBody);
 
         $this->throwExceptions($response);
-
-//        $this->buildDatabase($response->json());
-
-        return $response->json();
-
-    }
-    public function get()
-    {
-        $response = Http::withToken(config('notion-wrapper.info.token'))
-            ->get($this->getUrl());
-
-        $this->throwExceptions($response);
-
-//        $this->buildDatabase($response->json());
 
         return $response->json();
 
@@ -77,43 +73,6 @@ class NotionDatabase extends Workspace
         $this->filters[0]->setConnective($connective);
 
         return $this;
-    }
-
-
-    private function buildDatabase(mixed $json): self
-    {
-        dd($json);
-        $this->objectType = $json['object'];
-        if (array_key_exists('results', $json)) {
-            $this->constructPages($json['results']);
-            return $this;
-        }
-        $this->id = $json['id'];
-        $this->title = $json['title'][0]['text']['content'];
-        $this->constructProperties($json['properties']);
-        return $this;
-
-    }
-
-    private function constructPages(mixed $results)
-    {
-        $pages = collect($results);
-        $pages->map(function ($page) {
-
-            $this->constructProperties($page['properties']);
-            $page = (new NotionPage)->buildPage($page);
-
-            $this->pages->add($page);
-        });
-    }
-
-    private function constructProperties(mixed $properties)
-    {
-
-        $properties = collect($properties);
-        $properties->map(function ($property) {
-            $this->properties->add($property);
-        });
     }
 
     public function setDatabaseId(string $notionDatabaseId)

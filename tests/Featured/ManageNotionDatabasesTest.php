@@ -32,6 +32,16 @@ class ManageNotionDatabasesTest extends TestCase
     }
 
     /** @test */
+    public function test_it_can_build_a_database_object()
+    {
+
+        $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
+
+        $this->assertArrayHasKey('object', $database->get());
+
+    }
+
+    /** @test */
     public function throw_exception_database_not_found()
     {
         $id = '632b5fb7e06c4404ae12asdasd065c48280e4asdc';
