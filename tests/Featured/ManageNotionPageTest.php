@@ -153,8 +153,6 @@ class ManageNotionPageTest extends TestCase
             Block::numberedList('Numbered List'),
             Block::bulletedList('Bullet List'),
         ]);
-        $page->create();
-        dd($page);
 
         $this->assertCount(2, $page->getProperties());
         $this->assertCount(5, $page->getBlocks());

@@ -45,10 +45,8 @@ class NotionPage extends NotionObject
                 'properties' => Property::mapsProperties($this),
                 'children' => Block::mapsBlocksToPage($this)
             ]);
-        dd($response->json());
         $this->throwExceptions($response);
         return $this->build($response->json());
-        return $this;
     }
 
     public function update(): self
