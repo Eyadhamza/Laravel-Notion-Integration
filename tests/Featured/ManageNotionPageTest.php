@@ -2,18 +2,27 @@
 
 namespace Pi\Notion\Tests\Featured;
 
-use Facades\Pi\Notion\Tests\Setup\NotionPageFactory;
 use Pi\Notion\NotionPage;
+use Pi\Notion\Tests\Setup\NotionPageFactory;
 use Pi\Notion\Tests\TestCase;
 
 class ManageNotionPageTest extends TestCase
 {
+    private NotionPageFactory $notionPageFactory;
 
+    public function __construct(?string $name = null, array $data = [], $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+        $this->notionPageFactory = new NotionPageFactory();
+    }
 
     /** @test */
     public function it_should_return_page_info()
     {
-        $object = NotionPageFactory::getAnExistingPage();
+        $this->withoutExceptionHandling();
+
+        $object = $this->notionPageFactory->getAnExistingPage();
+
         $this->assertArrayHasKey('object', $object);
 
 
@@ -22,7 +31,7 @@ class ManageNotionPageTest extends TestCase
     /** @test */
     public function i_can_create_a_page_object()
     {
-        $page = NotionPageFactory::createNotionPage();
+        $page = $this->notionPageFactory->createNotionPage();
         $this->assertObjectHasAttribute('type', $page);
 
     }
@@ -30,8 +39,10 @@ class ManageNotionPageTest extends TestCase
     /** @test */
     public function it_should_add_properties_to_created_page_using_page_class()
     {
-        $page = NotionPageFactory::createNotionPageWithPropertiesUsingPage();
+        $page = $this->notionPageFactory->createNotionPageWithPropertiesUsingPage();
+
         $this->assertCount(7, $page->getProperties());
+
         $this->assertObjectHasAttribute('properties', $page);
     }
 
@@ -48,7 +59,7 @@ class ManageNotionPageTest extends TestCase
     /** @test */
     public function it_should_add_properties_to_created_page()
     {
-        $page = NotionPageFactory::createNotionPageWithPropertiesUsingPropertyClass();
+        $page = $this->notionPageFactory->createNotionPageWithPropertiesUsingPropertyClass();
 
         $this->assertCount(7, $page->getProperties());
         $this->assertObjectHasAttribute('properties', $page);
@@ -57,7 +68,7 @@ class ManageNotionPageTest extends TestCase
     /** @test */
     public function it_can_add_content_blocks_to_created_pages()
     {
-        $page = NotionPageFactory::addContentToCreatedPages();
+        $page = $this->notionPageFactory->addContentToCreatedPages();
         $this->assertCount(2, $page->getProperties());
         $this->assertCount(5, $page->getBlocks());
         $this->assertObjectHasAttribute('properties', $page);
@@ -67,7 +78,7 @@ class ManageNotionPageTest extends TestCase
     /** @test */
     public function it_can_add_content_blocks_to_created_pages_using_page_class()
     {
-        $page = NotionPageFactory::addContentToCreatedPagesUsingPageClass();
+        $page = $this->notionPageFactory->addContentToCreatedPagesUsingPageClass();
         $this->assertCount(2, $page->getProperties());
         $this->assertCount(5, $page->getBlocks());
         $this->assertObjectHasAttribute('properties', $page);

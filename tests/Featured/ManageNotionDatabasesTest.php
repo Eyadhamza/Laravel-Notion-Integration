@@ -24,10 +24,10 @@ class ManageNotionDatabasesTest extends TestCase
     /** @test */
     public function return_database_info()
     {
-        $response = (new NotionDatabase)->get('632b5fb7e06c4404ae12065c48280e4c');
 
+        $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
 
-        $this->assertArrayHasKey('object', $response);
+        $this->assertArrayHasKey('object', $database->get());
 
     }
 
@@ -38,7 +38,7 @@ class ManageNotionDatabasesTest extends TestCase
 
         $this->expectException(NotionDatabaseException::class);
 
-        $response = (new NotionDatabase($id))->get();
+        (new NotionDatabase($id))->query();
 
 
     }
@@ -48,7 +48,7 @@ class ManageNotionDatabasesTest extends TestCase
     {
         $id = '632b5fb7e06c4404ae12065c48280e4asdc';
         $this->expectException(NotionDatabaseException::class);
-        (new NotionDatabase($id))->get();
+        (new NotionDatabase($id))->query();
 
 
     }
@@ -63,7 +63,7 @@ class ManageNotionDatabasesTest extends TestCase
         $response = $database->filter(
             Filter::make('title', 'Name')
                 ->apply('contains', 'MMMM')
-        )->get();
+        )->query();
 
         $this->assertArrayHasKey('results', $response);
 
@@ -85,7 +85,7 @@ class ManageNotionDatabasesTest extends TestCase
                 Filter::title('Name')
                     ->contains('MMMM')
             ])
-        ])->get();
+        ])->query();
 
         $this->assertCount('1', $response['results']);
         $response = $database->filters([
@@ -97,7 +97,7 @@ class ManageNotionDatabasesTest extends TestCase
                 Filter::title('Name')
                     ->contains('MMMM')
             ])
-        ])->get();
+        ])->query();
         $this->assertCount('4', $response['results']);
 
     }
@@ -116,7 +116,7 @@ class ManageNotionDatabasesTest extends TestCase
                     Filter::title('Name')
                         ->contains('MMMM')
                 ], 'and')
-        ])->get();
+        ])->query();
         $this->assertArrayHasKey('results', $response);
 
     }
@@ -132,7 +132,7 @@ class ManageNotionDatabasesTest extends TestCase
         ])->filter(
             Filter::title('Name')
                 ->contains('A'),
-        )->get();
+        )->query();
 
         $this->assertObjectHasAttribute('properties', $database);
     }

@@ -17,8 +17,8 @@ use Pi\Notion\PropertyType;
 
 class NotionPageFactory
 {
-    private $notionPageId = '819f5b54348f463580ef118b6a54bd0d';
-    private $notionDatabaseId = '632b5fb7e06c4404ae12065c48280e4c';
+    private string $notionPageId = '819f5b54348f463580ef118b6a54bd0d';
+    private string $notionDatabaseId = '632b5fb7e06c4404ae12065c48280e4c';
 
     public function getAnExistingPage()
     {

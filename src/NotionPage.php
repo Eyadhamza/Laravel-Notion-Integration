@@ -12,12 +12,13 @@ use Pi\Notion\Traits\HandleProperties;
 use Pi\Notion\Traits\RetrieveResource;
 use Pi\Notion\Traits\ThrowsExceptions;
 
-class NotionPage extends NotionDatabase
+class NotionPage
 {
     use ThrowsExceptions;
     use HandleProperties;
     use HandleBlocks;
 
+    private NotionDatabase $notionDatabase;
     private string $type;
     private string $id;
     private string $URL;
@@ -30,12 +31,15 @@ class NotionPage extends NotionDatabase
 
     public function __construct($id = '')
     {
-        parent::__construct();
         $this->id = $id;
         $this->URL = Workspace::PAGE_URL;
         $this->type = 'page';
         $this->blocks = new Collection();
         $this->properties = new Collection();
+
+    }
+    public function get()
+    {
 
     }
 
@@ -44,7 +48,7 @@ class NotionPage extends NotionDatabase
         $response = $this
             ->prepareHttp()
             ->post($this->URL, [
-                'parent' => array('database_id' => $this->getDatabaseId()),
+                'parent' => array('database_id' => $this->notionDatabase->getDatabaseId()),
                 'properties' => Property::mapsPropertiesToPage($this),
                 'children' => Block::mapsBlocksToPage($this)
             ]);
@@ -91,6 +95,11 @@ class NotionPage extends NotionDatabase
     {
         return Http::withToken(config('notion-wrapper.info.token'))
             ->withHeaders(['Notion-Version' => Workspace::NOTION_VERSION]);
+    }
+
+    public function setDatabaseId(string $notionDatabaseId): void
+    {
+        $this->notionDatabase = new NotionDatabase($notionDatabaseId);
     }
 
 }

@@ -16,7 +16,6 @@ class NotionDatabase extends Workspace
     use HandleFilters;
 
     private string $id;
-    private string $URL;
     private string $created_time;
     private string $last_edited_time;
     private string $title;
@@ -24,37 +23,45 @@ class NotionDatabase extends Workspace
     private Collection $pages;
     private Collection $filters;
     private Collection $sorts;
+    private mixed $objectType;
 
     public function __construct($id = '', $title = '')
     {
         parent::__construct();
         $this->id = $id;
-        $this->URL = Workspace::DATABASE_URL . "$id";;
         $this->title = $title;
         $this->properties = new Collection();
         $this->pages = new Collection();
     }
 
-    public function get($id = null)
+    public function query()
     {
-        $id = $id ?? $this->id;
         $requestBody = [];
         isset($this->filters) ? $requestBody['filter'] = $this->getFilterResults() : null;
         isset($this->sorts) ? $requestBody['sorts'] = $this->getSortResults() : null;
 
-
-        $response = Http::withToken(config('notion-wrapper.info.token'));
-        $response = $requestBody ?
-            $response->post($this->URL . "/query", $requestBody)
-            : $response->get($this->URL);
+        $response = Http::withToken(config('notion-wrapper.info.token'))
+            ->post($this->queryUrl(), $requestBody);
 
         $this->throwExceptions($response);
-//        $this->constructObject($response->json());
+
+//        $this->buildDatabase($response->json());
 
         return $response->json();
 
     }
+    public function get()
+    {
+        $response = Http::withToken(config('notion-wrapper.info.token'))
+            ->get($this->getUrl());
 
+        $this->throwExceptions($response);
+
+//        $this->buildDatabase($response->json());
+
+        return $response->json();
+
+    }
 
     public function sort(Collection|array $sorts): self
     {
@@ -73,8 +80,10 @@ class NotionDatabase extends Workspace
     }
 
 
-    private function constructObject(mixed $json): self
+    private function buildDatabase(mixed $json): self
     {
+        dd($json);
+        $this->objectType = $json['object'];
         if (array_key_exists('results', $json)) {
             $this->constructPages($json['results']);
             return $this;
@@ -92,7 +101,7 @@ class NotionDatabase extends Workspace
         $pages->map(function ($page) {
 
             $this->constructProperties($page['properties']);
-            $page = (new NotionPage)->constructObject($page);
+            $page = (new NotionPage)->buildPage($page);
 
             $this->pages->add($page);
         });
@@ -112,7 +121,7 @@ class NotionDatabase extends Workspace
         $this->id = $notionDatabaseId;
     }
 
-    protected function getDatabaseId(): string
+    public function getDatabaseId(): string
     {
         return $this->id;
     }
@@ -120,5 +129,15 @@ class NotionDatabase extends Workspace
     private function getSortResults(): array
     {
         return $this->sorts->map->get()->toArray();
+    }
+
+    private function getUrl(): string
+    {
+        return Workspace::DATABASE_URL . $this->id;
+    }
+
+    private function queryUrl(): string
+    {
+      return $this->getUrl() . "/query";
     }
 }
