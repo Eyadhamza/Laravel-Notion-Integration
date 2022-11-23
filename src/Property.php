@@ -59,14 +59,13 @@ class Property extends PropertyType
         return $this->type;
     }
 
-    public static function build(string $name, array $body)
+    public static function build(string $name, array $body): Property
     {
         $property = Property::make($body['type'], $name);
 
         foreach ($body as $key => $value) {
             $property->$key = $value;
         }
-
 
         return $property;
     }

@@ -16,7 +16,8 @@ class NotionPage extends NotionObject
     use HandleProperties;
     use HandleBlocks;
 
-    private NotionDatabase $notionDatabase;
+
+    private string $notionDatabaseId;
     protected Collection $blocks;
     protected Collection $properties;
 
@@ -26,7 +27,6 @@ class NotionPage extends NotionObject
         $this->id = $id;
         $this->blocks = new Collection();
         $this->properties = new Collection();
-
     }
     public function get()
     {
@@ -34,21 +34,18 @@ class NotionPage extends NotionObject
 
         $this->throwExceptions($response);
 
-        $page = $this->build($response->json())
-            ->buildProperties($response->json()['properties']);
-        dd($page);
-        return $this;
+        return $this->build($response->json());
     }
 
     public function create(): self
     {
         $response = prepareHttp()
             ->post(Workspace::PAGE_URL, [
-                'parent' => array('database_id' => $this->notionDatabase->getDatabaseId()),
+                'parent' => array('database_id' => $this->getDatabaseId()),
                 'properties' => Property::mapsProperties($this),
                 'children' => Block::mapsBlocksToPage($this)
             ]);
-        return  $this;
+        return $this;
     }
 
     public function update(): self
@@ -65,7 +62,8 @@ class NotionPage extends NotionObject
     {
         $response = prepareHttp()
             ->delete(Workspace::BLOCK_URL . $this->id);
-        return  $this;
+
+        return $this;
     }
     public function search(string $pageTitle)
     {
@@ -79,13 +77,23 @@ class NotionPage extends NotionObject
 
     public function setDatabaseId(string $notionDatabaseId): void
     {
-        $this->notionDatabase = new NotionDatabase($notionDatabaseId);
+        $this->notionDatabaseId = $notionDatabaseId;
     }
 
     private function getUrl(): string
     {
         return Workspace::PAGE_URL . $this->id;
     }
+    protected function build($response): static
+    {
+        parent::build($response);
 
+        return $this;
+    }
+
+    private function getDatabaseId()
+    {
+        return $this->notionDatabaseId;
+    }
 
 }

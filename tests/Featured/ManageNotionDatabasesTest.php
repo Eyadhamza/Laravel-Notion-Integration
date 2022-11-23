@@ -74,7 +74,7 @@ class ManageNotionDatabasesTest extends TestCase
 
         $this->expectException(NotionDatabaseException::class);
 
-        (new NotionDatabase($id))->query();
+        (new NotionDatabase($id))->get();
 
 
     }

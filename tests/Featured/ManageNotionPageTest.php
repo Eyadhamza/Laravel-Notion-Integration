@@ -20,10 +20,7 @@ class ManageNotionPageTest extends TestCase
 
         $page = new NotionPage('b4f8e429038744ca9c8d5afa93ea2edd');
 
-
-        $page->get();
-
-        $this->assertObjectHasAttribute('object', $page);
+        $this->assertObjectHasAttribute('objectType', $page);
 
 
     }
@@ -35,7 +32,7 @@ class ManageNotionPageTest extends TestCase
         $page->setDatabaseId($this->notionDatabaseId);
         $page->create();
 
-        $this->assertObjectHasAttribute('type', $page);
+        $this->assertObjectHasAttribute('objectType', $page);
 
     }
     /** @test */
@@ -44,7 +41,7 @@ class ManageNotionPageTest extends TestCase
         $page = (new NotionPage('ec9df16fa65f4eef96776ee41ee3d4d4'))
             ->delete();
 
-        $this->assertObjectHasAttribute('type', $page);
+        $this->assertObjectHasAttribute('objectType', $page);
 
     }
     /** @test */
@@ -88,7 +85,7 @@ class ManageNotionPageTest extends TestCase
         $page = new NotionPage();
         $page->setDatabaseId($this->notionDatabaseId);
 
-        return $page->setProperties([
+         $page->setProperties([
             Property::title('Name', 'Eyad Hamza'),
             Property::multiSelect('Status1', ['A', 'B']),
             Property::select('Status', 'A'),
@@ -163,7 +160,7 @@ class ManageNotionPageTest extends TestCase
         $response = (new NotionPage)
             ->search('Eyad');
 
-        $this->assertObjectHasAttribute('object', $response);
+        $this->assertObjectHasAttribute('objectType', $response);
     }
 
 

@@ -2,6 +2,8 @@
 
 namespace Pi\Notion;
 
+use Illuminate\Support\Collection;
+
 abstract class NotionObject
 {
     protected string $objectType;
@@ -17,8 +19,11 @@ abstract class NotionObject
     protected ?string $icon;
     protected ?string $cover;
 
+
+
     protected function build($response): static
     {
+
         $this->objectType = $response['object'];
         $this->id = $response['id'] ?? null;
         $this->title = $response['title'][0]['plain_text'] ?? null;
@@ -32,22 +37,29 @@ abstract class NotionObject
         $this->icon = $response['icon'] ?? null;
         $this->cover = $response['cover'] ?? null;
 
+        if (array_key_exists('properties', $response)) {
+            $this->buildProperties($response);
+        }
+        if (array_key_exists('blocks', $response)) {
+            $this->buildBlocks($response);
+        }
         return $this;
     }
 
-    protected function buildProperties(array $properties): static
+    protected function buildProperties($response): static
     {
+        foreach ($response['properties'] as $name => $body) {
+            $this->properties->add(Property::build($name, $body));
+        }
 
-        collect($properties)->mapWithKeys(function ($body, $name) {
-            return $this->properties->add(Property::build($name, $body));
-        });
         return $this;
     }
-    protected function buildBlocks(array $blocks): static
+
+    protected function buildBlocks($response): static
     {
-        $this->blocks = collect($blocks)->map(function ($block) {
-            return Block::build($block);
-        });
+        foreach ($response['blocks'] as $name => $body) {
+            $this->blocks->add(Block::buildBlock($name, $body));
+        }
         return $this;
     }
 }
