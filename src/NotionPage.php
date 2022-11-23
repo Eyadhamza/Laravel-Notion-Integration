@@ -10,7 +10,7 @@ use Pi\Notion\Traits\HandleProperties;
 use Pi\Notion\Traits\RetrieveResource;
 use Pi\Notion\Traits\ThrowsExceptions;
 
-class NotionPage extends NotionObject
+class NotionPage
 {
     use ThrowsExceptions;
     use HandleProperties;
@@ -34,13 +34,10 @@ class NotionPage extends NotionObject
 
         $this->throwExceptions($response);
 
-        $page = $this->build($response->json())
-            ->buildProperties($response->json()['properties']);
-        dd($page);
-        return $this;
+        return $response->json();
     }
 
-    public function create(): self
+    public function create(): array
     {
         $response = prepareHttp()
             ->post(Workspace::PAGE_URL, [
@@ -48,24 +45,26 @@ class NotionPage extends NotionObject
                 'properties' => Property::mapsProperties($this),
                 'children' => Block::mapsBlocksToPage($this)
             ]);
-        return  $this;
+
+        return $response->json();
     }
 
-    public function update(): self
+    public function update(): array
     {
         $response = prepareHttp()
             ->patch($this->getUrl(), [
                 'properties' => Property::mapsProperties($this),
             ]);
 
-        return  $this;
+        return $response->json();
     }
 
-    public function delete(): self
+    public function delete(): array
     {
         $response = prepareHttp()
             ->delete(Workspace::BLOCK_URL . $this->id);
-        return  $this;
+
+        return $response->json();
     }
     public function search(string $pageTitle)
     {
@@ -73,7 +72,7 @@ class NotionPage extends NotionObject
         $response = prepareHttp()
             ->post(Workspace::SEARCH_PAGE_URL, ['query' => $pageTitle]);
 
-        return $this;
+        return $response->json();
 
     }
 

@@ -20,10 +20,9 @@ class ManageNotionPageTest extends TestCase
 
         $page = new NotionPage('b4f8e429038744ca9c8d5afa93ea2edd');
 
+        $response = $page->get();
 
-        $page->get();
-
-        $this->assertObjectHasAttribute('object', $page);
+        $this->assertArrayHasKey('object', $response);
 
 
     }
@@ -33,9 +32,9 @@ class ManageNotionPageTest extends TestCase
     {
         $page = new NotionPage();
         $page->setDatabaseId($this->notionDatabaseId);
-        $page->create();
+        $response = $page->create();
 
-        $this->assertObjectHasAttribute('type', $page);
+        $this->assertArrayHasKey('object', $response);
 
     }
     /** @test */
@@ -44,7 +43,7 @@ class ManageNotionPageTest extends TestCase
         $page = (new NotionPage('ec9df16fa65f4eef96776ee41ee3d4d4'))
             ->delete();
 
-        $this->assertObjectHasAttribute('type', $page);
+        $this->assertArrayHasKey('type', $page);
 
     }
     /** @test */
@@ -54,7 +53,7 @@ class ManageNotionPageTest extends TestCase
         $page = new NotionPage();
         $page->setDatabaseId($this->notionDatabaseId);
 
-        $page
+        $response = $page
             ->title('Name','Eyad Hamza')
             ->select('Status', 'A')
             ->multiSelect('Status1', ['A', 'B'])
@@ -69,7 +68,7 @@ class ManageNotionPageTest extends TestCase
 
         $this->assertCount(7, $page->getProperties());
 
-        $this->assertObjectHasAttribute('properties', $page);
+        $this->assertArrayHasKey('properties', $response);
     }
 
     /** @test */
@@ -80,7 +79,7 @@ class ManageNotionPageTest extends TestCase
             ->select('Status', 'In Progress')
             ->update();
 
-        $this->assertObjectHasAttribute('properties', $page);
+        $this->assertArrayHasKey('properties', $response);
     }
     /** @test */
     public function it_should_add_properties_to_created_page()
@@ -88,7 +87,7 @@ class ManageNotionPageTest extends TestCase
         $page = new NotionPage();
         $page->setDatabaseId($this->notionDatabaseId);
 
-        return $page->setProperties([
+        $response = $page->setProperties([
             Property::title('Name', 'Eyad Hamza'),
             Property::multiSelect('Status1', ['A', 'B']),
             Property::select('Status', 'A'),
@@ -102,7 +101,7 @@ class ManageNotionPageTest extends TestCase
         ])->create();
 
         $this->assertCount(7, $page->getProperties());
-        $this->assertObjectHasAttribute('properties', $page);
+        $this->assertArrayHasKey('properties', $response);
     }
 
     /** @test */
@@ -123,11 +122,11 @@ class ManageNotionPageTest extends TestCase
             Block::bulletedList('Bullet List'),
         ]);
 
-        $page->create();
+        $response = $page->create();
 
         $this->assertCount(2, $page->getProperties());
         $this->assertCount(5, $page->getBlocks());
-        $this->assertObjectHasAttribute('properties', $page);
+        $this->assertArrayHasKey('object', $response);
 
 
     }
@@ -149,11 +148,11 @@ class ManageNotionPageTest extends TestCase
             ->bulletedList('Bullet List');
 
 
-        $page->create();
+        $response = $page->create();
 
         $this->assertCount(2, $page->getProperties());
         $this->assertCount(5, $page->getBlocks());
-        $this->assertObjectHasAttribute('properties', $page);
+        $this->assertArrayHasKey('object', $response);
 
 
     }
@@ -163,7 +162,7 @@ class ManageNotionPageTest extends TestCase
         $response = (new NotionPage)
             ->search('Eyad');
 
-        $this->assertObjectHasAttribute('object', $response);
+        $this->assertArrayHasKey('object', $response);
     }
 
 

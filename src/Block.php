@@ -8,28 +8,13 @@ use Illuminate\Support\Collection;
 
 class Block
 {
-    private ?string $object;
     private ?string $id;
-    private ?string $created_time;
-    private ?string $last_edited_time;
-    private ?bool $has_children;
-    private ?string $type;
-    private ?string $body;
-    private  $content;
     private ?NotionPage $notionPage;
-    private $contentType;
 
 
     public function __construct($type = null,$body = null, $id= null, $contentType = null, $created_time= null, $last_edited_time= null, $has_children= null)
     {
-        $this->object = 'block';
         $this->id = $id;
-        $this->created_time = $created_time;
-        $this->last_edited_time = $last_edited_time;
-        $this->has_children = $has_children;
-        $this->type = $type;
-        $this->body = $body;
-        $this->contentType = $contentType ?? 'text';
     }
     public static function make(string $type = null, string $body = null): self
     {
@@ -59,37 +44,6 @@ class Block
         });
     }
 
-    public static function build($block)
-    {
-        return (new self())
-            ->setId($block['id'])
-            ->setCreatedTime($block['created_time'])
-            ->setLastEditedTime($block['last_edited_time'])
-            ->setHasChildren($block['has_children'])
-            ->setType($block['type'])
-            ->setBody($block['paragraph']['text'][0]['plain_text'])
-            ->setContentType($block['paragraph']['text'][0]['type']);
-    }
-
-    public function getLastEditedTime(): string
-    {
-        return $this->last_edited_time;
-    }
-
-    public function isHasChildren(): bool
-    {
-        return $this->has_children;
-    }
-
-    public function setHasChildren(bool $has_children): void
-    {
-        $this->has_children = $has_children;
-    }
-
-    public function getCreatedTime(): string
-    {
-        return $this->created_time;
-    }
 
     public function getId(): string
     {
