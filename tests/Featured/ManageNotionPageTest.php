@@ -24,7 +24,18 @@ class ManageNotionPageTest extends TestCase
 
 
     }
+    /** @test */
+    public function it_should_return_page_info_with_blocks()
+    {
+        $this->withoutExceptionHandling();
 
+        $page = new NotionPage('b4f8e429038744ca9c8d5afa93ea2edd');
+
+        dd($page->getWithContent());
+        $this->assertObjectHasAttribute('objectType', $page);
+
+
+    }
     /** @test */
     public function i_can_create_a_page_object()
     {
@@ -97,8 +108,7 @@ class ManageNotionPageTest extends TestCase
             Property::email('Email','Eyadhamza0@outlook.com'),
             Property::phone()->setValues('0123456789')
         ])->create();
-
-        $this->assertCount(7, $page->getProperties());
+        $this->assertCount(10, $page->getProperties());
         $this->assertObjectHasAttribute('properties', $page);
     }
 
@@ -121,7 +131,7 @@ class ManageNotionPageTest extends TestCase
         ]);
 
         $page->create();
-        $this->assertCount(2, $page->getProperties());
+        $this->assertCount(10, $page->getProperties());
         $this->assertCount(5, $page->getBlocks());
         $this->assertObjectHasAttribute('properties', $page);
 
@@ -169,7 +179,6 @@ class ManageNotionPageTest extends TestCase
         $page
             ->title('Name','Eyad Hamza')
             ->multiSelect('Status1', ['A', 'B']);
-
         $page
             ->headingOne('Heading 1')
             ->headingTwo('Heading 2')
@@ -179,8 +188,7 @@ class ManageNotionPageTest extends TestCase
 
 
         $page->create();
-
-        $this->assertCount(2, $page->getProperties());
+        $this->assertCount(12, $page->getProperties());
         $this->assertCount(5, $page->getBlocks());
         $this->assertObjectHasAttribute('properties', $page);
 

@@ -24,9 +24,8 @@ abstract class NotionObject
     private mixed $parentType;
 
 
-    protected function build($response): static
+    public function build($response): static
     {
-
         $this->objectType = $response['object'] ?? null;
         $this->title = $response['title'][0]['plain_text'] ?? null;
         $this->description = $response['description'][0]['plain_text'] ?? null;
@@ -43,9 +42,6 @@ abstract class NotionObject
         if (array_key_exists('properties', $response)) {
             $this->buildProperties($response);
         }
-        if (array_key_exists('blocks', $response)) {
-            $this->buildBlocks($response);
-        }
 
         return $this;
     }
@@ -59,11 +55,10 @@ abstract class NotionObject
         return $this;
     }
 
-    protected function buildBlocks($response): static
+    public function buildList($response): Collection
     {
-        foreach ($response['blocks'] as $name => $body) {
-            $this->blocks->add(Block::buildBlock($name, $body));
-        }
-        return $this;
+        return collect($response['results'])->map(function ($data) {
+            return $this->build($data);
+        });
     }
 }

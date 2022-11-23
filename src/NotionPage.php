@@ -28,6 +28,7 @@ class NotionPage extends NotionObject
         $this->blocks = new Collection();
         $this->properties = new Collection();
     }
+
     public function get()
     {
         $response = prepareHttp()->get($this->getUrl());
@@ -35,6 +36,11 @@ class NotionPage extends NotionObject
         $this->throwExceptions($response);
 
         return $this->build($response->json());
+    }
+
+    public function getWithContent(): Collection
+    {
+        return (new Block)->get($this->id);
     }
 
     public function create(): self
@@ -66,6 +72,7 @@ class NotionPage extends NotionObject
         $this->throwExceptions($response);
         return $this->build($response->json());
     }
+
     public function search(string $pageTitle)
     {
 
@@ -86,8 +93,12 @@ class NotionPage extends NotionObject
     {
         return Workspace::PAGE_URL . $this->id;
     }
-    protected function build($response): static
+
+    public function build($response): static
     {
+        $this->properties = new Collection();
+        $this->blocks = new Collection();
+
         parent::build($response);
 
         return $this;

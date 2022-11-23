@@ -51,7 +51,7 @@ class NotionDatabase extends NotionObject
         $response = prepareHttp()->post($this->queryUrl(), $requestBody);
         $this->throwExceptions($response);
 
-        return $this->buildList($response);
+        return $this->buildList($response->json());
     }
 
     public function sort(Collection|array $sorts): self
@@ -167,13 +167,6 @@ class NotionDatabase extends NotionObject
         return $this;
     }
 
-    private function buildList($response): Collection
-    {
-        // TODO Pagination
-        return collect($response['results'])->map(function ($page) {
-            return (new NotionPage)->build($page);
-        });
-    }
 
 
 }

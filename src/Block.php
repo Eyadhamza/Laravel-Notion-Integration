@@ -5,12 +5,14 @@ namespace Pi\Notion;
 
 
 use Illuminate\Support\Collection;
+use Pi\Notion\Traits\ThrowsExceptions;
 
 class Block extends NotionObject
 {
+    use ThrowsExceptions;
 
     private string $name;
-    private string $content;
+    private string|array $content;
     private string $contentLink;
     private string $contentType;
     private string $color;
@@ -24,9 +26,9 @@ class Block extends NotionObject
         $this->children = new Collection();
     }
 
-    public static function make(string $type = null, string $body = null): self
+    public static function make(string $type = null, string|array $content = null): self
     {
-        return new self($type, $body);
+        return new self($type, $content);
     }
 
     public static function mapsBlocksToPage(NotionPage $page): Collection
@@ -40,25 +42,31 @@ class Block extends NotionObject
         });
     }
 
+    public function get(mixed $id): Collection
+    {
+        $response = prepareHttp()->get(Workspace::BLOCK_URL . $id . '/children');
+
+        $this->throwExceptions($response);
+        return $this->buildList($response->json());
+    }
+
     public function color(string $color): self
     {
         $this->color = $color;
         return $this;
     }
+
     public function contentLink(string $contentLink): self
     {
         $this->contentLink = $contentLink;
         return $this;
     }
-    public static function buildBlock(string $name, array $body): Block
+
+    public function build($response): static
     {
-        $block = Block::make($body['type'], $name);
+        parent::build($response);
 
-        foreach ($body as $key => $value) {
-            $block->$key = $value;
-        }
-
-        return $block;
+        return Block::make($response['type'], $response[$response['type']]);
     }
 
 
@@ -168,12 +176,12 @@ class Block extends NotionObject
 
         if (isset($this->contentLink)) $body['link'] = ['url' => $this->contentLink];
 
-        return [ $this->contentType => [
-                [
-                    'type' => 'text',
-                    'text' => $body,
-                ]
-            ],
+        return [$this->contentType => [
+            [
+                'type' => 'text',
+                'text' => $body,
+            ]
+        ],
             'color' => $this->color ?? 'default',
             'children' => $this->children->map(function (Block $child) {
                 return array(
