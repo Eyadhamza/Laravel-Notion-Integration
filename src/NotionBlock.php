@@ -53,14 +53,14 @@ class NotionBlock extends NotionObject
 
     public function get(mixed $id): Collection
     {
-        $response = prepareHttp()->get(Workspace::BLOCK_URL . $id . '/children');
+        $response = prepareHttp()->get(NotionWorkspace::BLOCK_URL . $id . '/children');
 
         $this->throwExceptions($response);
         return $this->buildList($response->json());
     }
     public function delete(mixed $id): static
     {
-        $response = prepareHttp()->delete(Workspace::BLOCK_URL . $id);
+        $response = prepareHttp()->delete(NotionWorkspace::BLOCK_URL . $id);
 
         $this->throwExceptions($response);
         return $this->build($response->json());

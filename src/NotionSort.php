@@ -2,7 +2,7 @@
 
 namespace Pi\Notion;
 
-class Sort
+class NotionSort
 {
     private string $property;
     private string $direction;
@@ -13,12 +13,12 @@ class Sort
         $this->direction = $direction;
     }
 
-    public static function make(string $property, string $direction): Sort
+    public static function make(string $property, string $direction): NotionSort
     {
         return new self($property, $direction);
     }
 
-    public static function property(string $property): Sort
+    public static function property(string $property): NotionSort
     {
         return self::make($property, 'ascending');
     }

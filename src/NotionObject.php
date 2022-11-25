@@ -37,7 +37,7 @@ abstract class NotionObject
     protected function buildProperties($response): static
     {
         foreach ($response['properties'] as $name => $body) {
-            $this->properties->add(Property::buildProperty($name, $body));
+            $this->properties->add(NotionProperty::buildProperty($name, $body));
         }
 
         return $this;

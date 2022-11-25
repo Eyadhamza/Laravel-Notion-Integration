@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 use Pi\Notion\NotionBlock;
 use Pi\Notion\NotionDatabase;
 use Pi\Notion\NotionPage;
-use Pi\Notion\Property;
+use Pi\Notion\NotionProperty;
 use Pi\Notion\Tests\TestCase;
 
 class ManageNotionPageTest extends TestCase
@@ -96,16 +96,16 @@ class ManageNotionPageTest extends TestCase
         $page->setDatabaseId($this->notionDatabaseId);
 
          $page->setProperties([
-            Property::title('Name', 'Eyad Hamza'),
-            Property::multiSelect('Status1', ['A', 'B']),
-            Property::select('Status', 'A'),
-            Property::date('Date', [
+            NotionProperty::title('Name', 'Eyad Hamza'),
+            NotionProperty::multiSelect('Status1', ['A', 'B']),
+            NotionProperty::select('Status', 'A'),
+            NotionProperty::date('Date', [
                 'start' => "2020-12-08T12:00:00Z",
                 'end' => "2020-12-08T12:00:00Z",
             ]),
-            Property::url('Url','https://developers.notion.com'),
-            Property::email('Email','Eyadhamza0@outlook.com'),
-            Property::phone()->setValues('0123456789')
+            NotionProperty::url('Url','https://developers.notion.com'),
+            NotionProperty::email('Email','Eyadhamza0@outlook.com'),
+            NotionProperty::phone()->setValues('0123456789')
         ])->create();
         $this->assertCount(7, $page->getProperties());
         $this->assertObjectHasAttribute('properties', $page);

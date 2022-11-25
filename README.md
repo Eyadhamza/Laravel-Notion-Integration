@@ -42,15 +42,15 @@ NOTION_TOKEN  = 'secret_{token}'
 
 ```
 
-### Workspace 
+### NotionWorkspace 
 
 You can get information regarding your workspace
 
 ```php
 
-use Pi\Notion\Workspace;
+use Pi\Notion\NotionWorkspace;
 
-$object = Workspace::workspace();
+$object = NotionWorkspace::workspace();
 
 ```
 

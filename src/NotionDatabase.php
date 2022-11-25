@@ -82,13 +82,13 @@ class NotionDatabase extends NotionObject
 
         $response = prepareHttp()
             ->post(
-                Workspace::DATABASE_URL, [
+                NotionWorkspace::DATABASE_URL, [
                     'parent' => [
                         'type' => 'page_id',
                         'page_id' => $this->getParentPageId()
                     ],
                     'title' => $this->mapTitle($this),
-                    'properties' => Property::mapsProperties($this)
+                    'properties' => NotionProperty::mapsProperties($this)
                 ]
             );
 
@@ -103,7 +103,7 @@ class NotionDatabase extends NotionObject
 
         if (isset($this->title)) $requestBody['title'] = $this->mapTitle($this);
 
-        if (isset($this->properties)) $requestBody['properties'] = Property::mapsProperties($this);
+        if (isset($this->properties)) $requestBody['properties'] = NotionProperty::mapsProperties($this);
 
         $response = prepareHttp()->patch($this->url(), $requestBody);
 
@@ -132,7 +132,7 @@ class NotionDatabase extends NotionObject
 
     private function url(): string
     {
-        return Workspace::DATABASE_URL . $this->id;
+        return NotionWorkspace::DATABASE_URL . $this->id;
     }
 
     private function queryUrl(): string

@@ -60,9 +60,9 @@ class NotionPage extends NotionObject
     public function create(): self
     {
         $response = prepareHttp()
-            ->post(Workspace::PAGE_URL, [
+            ->post(NotionWorkspace::PAGE_URL, [
                 'parent' => array('database_id' => $this->getDatabaseId()),
-                'properties' => Property::mapsProperties($this),
+                'properties' => NotionProperty::mapsProperties($this),
                 'children' => NotionBlock::mapsBlocksToPage($this)
             ]);
         $this->throwExceptions($response);
@@ -74,7 +74,7 @@ class NotionPage extends NotionObject
     {
         $response = prepareHttp()
             ->patch($this->getUrl(), [
-                'properties' => Property::mapsProperties($this),
+                'properties' => NotionProperty::mapsProperties($this),
             ]);
         $this->throwExceptions($response);
         return $this->build($response->json());
@@ -89,7 +89,7 @@ class NotionPage extends NotionObject
     {
 
         $response = prepareHttp()
-            ->post(Workspace::SEARCH_PAGE_URL, ['query' => $pageTitle]);
+            ->post(NotionWorkspace::SEARCH_PAGE_URL, ['query' => $pageTitle]);
         $this->throwExceptions($response);
         return $this->buildList($response->json());
 
@@ -103,7 +103,7 @@ class NotionPage extends NotionObject
 
     private function getUrl(): string
     {
-        return Workspace::PAGE_URL . $this->id;
+        return NotionWorkspace::PAGE_URL . $this->id;
     }
 
 

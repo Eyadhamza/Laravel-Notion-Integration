@@ -3,7 +3,7 @@
 namespace Pi\Notion\Traits;
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Property;
+use Pi\Notion\NotionProperty;
 
 trait HandleProperties
 {
@@ -11,7 +11,7 @@ trait HandleProperties
     {
         $properties = is_array($properties) ? collect($properties) : $properties;
 
-        $properties->map(function (Property $property) {
+        $properties->map(function (NotionProperty $property) {
             $this->properties->add([
                 $property->getName() => [
                     $property->getType() => $property->getOptions()
@@ -37,37 +37,37 @@ trait HandleProperties
 
     public function title($name = 'Name', string $values = null): self
     {
-        $this->properties->add(Property::title($name, $values));
+        $this->properties->add(NotionProperty::title($name, $values));
         return $this;
     }
     public function select($name = 'Select', string $values = null): self
     {
-        $this->properties->add(Property::select($name, $values));
+        $this->properties->add(NotionProperty::select($name, $values));
         return $this;
     }
     public function multiSelect($name = 'MultiSelect', array|string $values = null): self
     {
-        $this->properties->add(Property::multiSelect($name, $values));
+        $this->properties->add(NotionProperty::multiSelect($name, $values));
         return $this;
     }
     public function date($name = 'Date', array|string $values = null): self
     {
-        $this->properties->add(Property::date($name, $values));
+        $this->properties->add(NotionProperty::date($name, $values));
         return $this;
     }
     public function email($name = 'Email', array|string $values = null): self
     {
-        $this->properties->add(Property::email($name, $values));
+        $this->properties->add(NotionProperty::email($name, $values));
         return $this;
     }
     public function phone($name = 'Phone', array|string $values = null): self
     {
-        $this->properties->add(Property::phone($name, $values));
+        $this->properties->add(NotionProperty::phone($name, $values));
         return $this;
     }
     public function url($name = 'Url', array|string $values = null): self
     {
-        $this->properties->add(Property::url($name, $values));
+        $this->properties->add(NotionProperty::url($name, $values));
         return $this;
     }
 }

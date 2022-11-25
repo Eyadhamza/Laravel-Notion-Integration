@@ -6,12 +6,12 @@ use BadMethodCallException;
 use Closure;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Pi\Notion\Filter;
+use Pi\Notion\NotionFilter;
 
 trait HandleFilters
 {
 
-    public function filter(Filter $filter): self
+    public function filter(NotionFilter $filter): self
     {
         $this->filters = new Collection();
 
@@ -46,7 +46,7 @@ trait HandleFilters
 
     private function mapFilters(): Collection
     {
-        return $this->filters->map(function (Filter $filter) {
+        return $this->filters->map(function (NotionFilter $filter) {
             return $filter->get();
         });
     }

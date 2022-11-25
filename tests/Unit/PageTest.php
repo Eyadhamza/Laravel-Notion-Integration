@@ -6,7 +6,7 @@ use Pi\Notion\NotionDatabase;
 
 use Pi\Notion\NotionPage;
 use Pi\Notion\Tests\TestCase;
-use Pi\Notion\Workspace;
+use Pi\Notion\NotionWorkspace;
 
 class PageTest extends TestCase
 {

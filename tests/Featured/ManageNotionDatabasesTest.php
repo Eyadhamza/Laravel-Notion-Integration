@@ -3,15 +3,15 @@
 namespace Pi\Notion\Tests\Featured;
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Filter;
+use Pi\Notion\NotionFilter;
 use Pi\Notion\NotionDatabase;
 
 use Pi\Notion\Exceptions\NotionDatabaseException;
 use Pi\Notion\NotionPage;
-use Pi\Notion\Property;
-use Pi\Notion\Sort;
+use Pi\Notion\NotionProperty;
+use Pi\Notion\NotionSort;
 use Pi\Notion\Tests\TestCase;
-use Pi\Notion\Workspace;
+use Pi\Notion\NotionWorkspace;
 
 class ManageNotionDatabasesTest extends TestCase
 {
@@ -36,12 +36,12 @@ class ManageNotionDatabasesTest extends TestCase
             ->setParentPageId('fa4379661ed948d7af52df923177028e')
             ->setTitle('Test Database2')
             ->setProperties([
-                Property::title(),
-                Property::select('Status')->setOptions([
+                NotionProperty::title(),
+                NotionProperty::select('Status')->setOptions([
                     ['name' => 'A', 'color' => 'red'],
                     ['name' => 'B', 'color' => 'green']
                 ]),
-                Property::date()
+                NotionProperty::date()
             ])
             ->create();
 
@@ -55,11 +55,11 @@ class ManageNotionDatabasesTest extends TestCase
         $database = (new NotionDatabase)
             ->setDatabaseId('a5f8af6484334c09b69d5dd5f54b378f')
             ->setProperties([
-                Property::select('Status2')->setOptions([
+                NotionProperty::select('Status2')->setOptions([
                     ['name' => 'A', 'color' => 'red'],
                     ['name' => 'B', 'color' => 'green']
                 ]),
-                Property::date('Created')
+                NotionProperty::date('Created')
             ])
             ->update();
 
@@ -96,7 +96,7 @@ class ManageNotionDatabasesTest extends TestCase
         $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
 
         $response = $database->filter(
-            Filter::make('title', 'Name')
+            NotionFilter::make('title', 'Name')
                 ->apply('contains', 'MMMM')
         )->query();
 
@@ -112,24 +112,24 @@ class ManageNotionDatabasesTest extends TestCase
         $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
 
         $response = $database->filters([
-            Filter::groupWithAnd([
-                Filter::select('Status')
+            NotionFilter::groupWithAnd([
+                NotionFilter::select('Status')
                     ->equals('Reading'),
-                Filter::multiSelect('Status2')
+                NotionFilter::multiSelect('Status2')
                     ->contains('A'),
-                Filter::title('Name')
+                NotionFilter::title('Name')
                     ->contains('MMMM')
             ])
         ])->query();
         $this->assertInstanceOf(Collection::class, $response);
 
         $response = $database->filters([
-            Filter::groupWithOr([
-                Filter::select('Status')
+            NotionFilter::groupWithOr([
+                NotionFilter::select('Status')
                     ->equals('Reading'),
-                Filter::multiSelect('Status2')
+                NotionFilter::multiSelect('Status2')
                     ->contains('A'),
-                Filter::title('Name')
+                NotionFilter::title('Name')
                     ->contains('MMMM')
             ])
         ])->query();
@@ -142,12 +142,12 @@ class ManageNotionDatabasesTest extends TestCase
         $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
 
         $response = $database->filters([
-            Filter::select('Status')
+            NotionFilter::select('Status')
                 ->equals('Reading')
                 ->nestedOrGroup([
-                    Filter::multiSelect('Status2')
+                    NotionFilter::multiSelect('Status2')
                         ->contains('A'),
-                    Filter::title('Name')
+                    NotionFilter::title('Name')
                         ->contains('MMMM')
                 ], 'and')
         ])->query();
@@ -163,9 +163,9 @@ class ManageNotionDatabasesTest extends TestCase
 
         $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
         $response = $database->sort([
-            Sort::property('Name')->ascending(),
+            NotionSort::property('Name')->ascending(),
         ])->filter(
-            Filter::title('Name')
+            NotionFilter::title('Name')
                 ->contains('A'),
         )->query();
 

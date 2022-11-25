@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Support\Collection;
 use Pi\Notion\Traits\NotionFilters;
 
-class Filter
+class NotionFilter
 {
     use NotionFilters;
 
@@ -24,7 +24,7 @@ class Filter
         $this->filterGroup = new Collection();
     }
 
-    public static function make(string $type, string $property): Filter
+    public static function make(string $type, string $property): NotionFilter
     {
         return new self($type, $property);
     }
@@ -38,17 +38,17 @@ class Filter
         return $filter;
     }
 
-    public static function groupWithOr(array $filters): Filter
+    public static function groupWithOr(array $filters): NotionFilter
     {
         return self::group($filters, 'or');
     }
 
-    public static function groupWithAnd(array $filters): Filter
+    public static function groupWithAnd(array $filters): NotionFilter
     {
         return self::group($filters, 'and');
     }
 
-    public function apply(string $filter, string $query): Filter
+    public function apply(string $filter, string $query): NotionFilter
     {
         $this->setQuery($query);
         $this->setFilterName($filter);
@@ -123,7 +123,7 @@ class Filter
     {
         $this->filterGroup->add([
             $connective =>
-                collect($filters)->map(function (Filter $filter) {
+                collect($filters)->map(function (NotionFilter $filter) {
                     return $filter->get();
                 })
         ]);
