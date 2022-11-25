@@ -2,7 +2,8 @@
 
 namespace Pi\Notion\Tests\Featured;
 
-use Pi\Notion\Block;
+use Illuminate\Support\Collection;
+use Pi\Notion\NotionBlock;
 use Pi\Notion\NotionDatabase;
 use Pi\Notion\NotionPage;
 use Pi\Notion\Property;
@@ -50,7 +51,6 @@ class ManageNotionPageTest extends TestCase
     {
         $page = (new NotionPage('ec9df16fa65f4eef96776ee41ee3d4d4'))
             ->delete();
-
         $this->assertObjectHasAttribute('objectType', $page);
 
     }
@@ -74,7 +74,7 @@ class ManageNotionPageTest extends TestCase
             ->create();
 
 
-        $this->assertCount(10, $page->getProperties());
+        $this->assertCount(7, $page->getProperties());
 
         $this->assertObjectHasAttribute('properties', $page);
     }
@@ -107,7 +107,7 @@ class ManageNotionPageTest extends TestCase
             Property::email('Email','Eyadhamza0@outlook.com'),
             Property::phone()->setValues('0123456789')
         ])->create();
-        $this->assertCount(10, $page->getProperties());
+        $this->assertCount(7, $page->getProperties());
         $this->assertObjectHasAttribute('properties', $page);
     }
 
@@ -122,15 +122,15 @@ class ManageNotionPageTest extends TestCase
             ->multiSelect('Status1', ['A', 'B']);
 
         $page->setBlocks([
-            Block::headingOne('Heading 1'),
-            Block::headingTwo('Heading 2'),
-            Block::headingThree('Heading 3'),
-            Block::numberedList('Numbered List'),
-            Block::bulletedList('Bullet List'),
+            NotionBlock::headingOne('Heading 1'),
+            NotionBlock::headingTwo('Heading 2'),
+            NotionBlock::headingThree('Heading 3'),
+            NotionBlock::numberedList('Numbered List'),
+            NotionBlock::bulletedList('Bullet List'),
         ]);
 
         $page->create();
-        $this->assertCount(10, $page->getProperties());
+        $this->assertCount(2, $page->getProperties());
         $this->assertCount(5, $page->getBlocks());
         $this->assertObjectHasAttribute('properties', $page);
 
@@ -147,20 +147,20 @@ class ManageNotionPageTest extends TestCase
             ->multiSelect('Status1', ['A', 'B']);
 
         $page->setBlocks([
-            Block::paragraph('asdasdasd')
+            NotionBlock::paragraph('asdasdasd')
                 ->color('red')
                 ->addChildren([
-                    Block::headingTwo('Heading 2')
+                    NotionBlock::headingTwo('Heading 2')
                         ->color('blue')
                         ->contentLink('https://www.google.com'),
-                    Block::headingThree('Heading 3'),
-                    Block::numberedList('Numbered List'),
-                    Block::bulletedList('Bullet List'),
+                    NotionBlock::headingThree('Heading 3'),
+                    NotionBlock::numberedList('Numbered List'),
+                    NotionBlock::bulletedList('Bullet List'),
                 ]),
-            Block::headingTwo('Heading 2'),
-            Block::headingThree('Heading 3'),
-            Block::numberedList('Numbered List'),
-            Block::bulletedList('Bullet List'),
+            NotionBlock::headingTwo('Heading 2'),
+            NotionBlock::headingThree('Heading 3'),
+            NotionBlock::numberedList('Numbered List'),
+            NotionBlock::bulletedList('Bullet List'),
         ]);
 
         $this->assertCount(2, $page->getProperties());
@@ -172,22 +172,19 @@ class ManageNotionPageTest extends TestCase
     /** @test */
     public function it_can_add_content_blocks_to_created_pages_using_page_class()
     {
-        $page = (new NotionPage);
+        $page = new NotionPage;
         $page->setDatabaseId($this->notionDatabaseId);
 
         $page
             ->title('Name','Eyad Hamza')
-            ->multiSelect('Status1', ['A', 'B']);
-        $page
+            ->multiSelect('Status1', ['A', 'B'])
             ->headingOne('Heading 1')
             ->headingTwo('Heading 2')
             ->headingThree('Heading 3')
             ->numberedList('Numbered List')
-            ->bulletedList('Bullet List');
-
-
-        $page->create();
-        $this->assertCount(10, $page->getProperties());
+            ->bulletedList('Bullet List')
+            ->create();
+        $this->assertCount(2, $page->getProperties());
         $this->assertCount(5, $page->getBlocks());
         $this->assertObjectHasAttribute('properties', $page);
 
@@ -198,8 +195,7 @@ class ManageNotionPageTest extends TestCase
     {
         $response = (new NotionPage)
             ->search('Eyad');
-
-        $this->assertObjectHasAttribute('objectType', $response);
+        $this->assertInstanceOf(Collection::class, $response);
     }
 
 

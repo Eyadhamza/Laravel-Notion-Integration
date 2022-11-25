@@ -29,6 +29,20 @@ class NotionPage extends NotionObject
         $this->properties = new Collection();
     }
 
+    public static function build($response): static
+    {
+
+        $page = parent::build($response);
+        $page->lastEditedBy = new NotionUser($response['last_edited_by']['id'] ?? '') ?? null;
+        $page->url = $response['url'] ?? null;
+        $page->icon = $response['icon'] ?? null;
+        $page->cover = $response['cover'] ?? null;
+
+        $page->properties = new Collection();
+        $page->buildProperties($response);
+        return $page;
+    }
+
     public function get()
     {
         $response = prepareHttp()->get($this->getUrl());
@@ -40,7 +54,7 @@ class NotionPage extends NotionObject
 
     public function getWithContent(): Collection
     {
-        return (new Block)->get($this->id);
+        return (new NotionBlock)->get($this->id);
     }
 
     public function create(): self
@@ -49,9 +63,10 @@ class NotionPage extends NotionObject
             ->post(Workspace::PAGE_URL, [
                 'parent' => array('database_id' => $this->getDatabaseId()),
                 'properties' => Property::mapsProperties($this),
-                'children' => Block::mapsBlocksToPage($this)
+                'children' => NotionBlock::mapsBlocksToPage($this)
             ]);
         $this->throwExceptions($response);
+
         return $this->build($response->json());
     }
 
@@ -65,12 +80,9 @@ class NotionPage extends NotionObject
         return $this->build($response->json());
     }
 
-    public function delete(): self
+    public function delete(): NotionBlock
     {
-        $response = prepareHttp()
-            ->delete(Workspace::BLOCK_URL . $this->id);
-        $this->throwExceptions($response);
-        return $this->build($response->json());
+        return (new NotionBlock)->delete($this->id);
     }
 
     public function search(string $pageTitle)
@@ -78,11 +90,11 @@ class NotionPage extends NotionObject
 
         $response = prepareHttp()
             ->post(Workspace::SEARCH_PAGE_URL, ['query' => $pageTitle]);
-
         $this->throwExceptions($response);
-        return $this->build($response->json());
+        return $this->buildList($response->json());
 
     }
+
 
     public function setDatabaseId(string $notionDatabaseId): void
     {
@@ -94,14 +106,6 @@ class NotionPage extends NotionObject
         return Workspace::PAGE_URL . $this->id;
     }
 
-    public function build($response): static
-    {
-        $this->properties = new Collection();
-
-        parent::build($response);
-
-        return $this;
-    }
 
     private function getDatabaseId()
     {

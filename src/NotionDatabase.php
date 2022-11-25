@@ -11,11 +11,11 @@ use Pi\Notion\Traits\ThrowsExceptions;
 
 class NotionDatabase extends NotionObject
 {
-    use ThrowsExceptions;
-    use HandleFilters;
-    use HandleProperties;
+    use ThrowsExceptions, HandleFilters, HandleProperties;
 
     private string $link;
+    protected string $title;
+    protected ?string $description;
 
     protected Collection $properties;
     protected Collection $pages;
@@ -31,6 +31,20 @@ class NotionDatabase extends NotionObject
         $this->sorts = new Collection();
     }
 
+    public static function build($response): static
+    {
+        $database = parent::build($response);
+        $database->title = $response['title'][0]['plain_text'] ?? null;
+        $database->description = $response['description'][0]['plain_text'] ?? null;
+        $database->url = $response['url'] ?? null;
+        $database->icon = $response['icon'] ?? null;
+        $database->cover = $response['cover'] ?? null;
+        $database->buildProperties($response);
+
+
+        return $database;
+    }
+
     public function get()
     {
 
@@ -42,7 +56,7 @@ class NotionDatabase extends NotionObject
 
     }
 
-    public function query()
+    public function query(): Collection
     {
         $requestBody = [];
         if (isset($this->filters)) $requestBody['filter'] = $this->getFilterResults();
@@ -51,7 +65,7 @@ class NotionDatabase extends NotionObject
         $response = prepareHttp()->post($this->queryUrl(), $requestBody);
         $this->throwExceptions($response);
 
-        return $this->buildList($response->json());
+        return (new NotionPage)->buildList($response->json());
     }
 
     public function sort(Collection|array $sorts): self
@@ -166,7 +180,6 @@ class NotionDatabase extends NotionObject
 
         return $this;
     }
-
 
 
 }
