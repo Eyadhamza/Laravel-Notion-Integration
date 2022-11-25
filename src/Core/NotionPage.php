@@ -58,7 +58,6 @@ class NotionPage extends NotionObject
 
     public function create(): self
     {
-//        dd(NotionBlock::mapsBlocksToPage($this))    ;
         $response = prepareHttp()
             ->post(NotionWorkspace::PAGE_URL, [
                 'parent' => array('database_id' => $this->getDatabaseId()),

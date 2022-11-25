@@ -152,7 +152,6 @@ class ManageNotionPageTest extends TestCase
 
         $page->setBlocks([
             NotionBlock::paragraph('asdasdasd')
-                ->color('red')
                 ->addChildren([
                     NotionBlock::headingTwo(NotionRichText::make('Eyad Hamza')
                         ->bold()
