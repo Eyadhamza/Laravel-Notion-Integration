@@ -2,11 +2,8 @@
 
 namespace Pi\Notion\Traits;
 
-use BadMethodCallException;
-use Closure;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
-use Pi\Notion\NotionFilter;
+use Pi\Notion\Core\NotionFilter;
 
 trait HandleFilters
 {

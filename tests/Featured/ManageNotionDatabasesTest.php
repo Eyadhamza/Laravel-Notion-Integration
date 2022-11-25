@@ -3,15 +3,12 @@
 namespace Pi\Notion\Tests\Featured;
 
 use Illuminate\Support\Collection;
-use Pi\Notion\NotionFilter;
-use Pi\Notion\NotionDatabase;
-
+use Pi\Notion\Core\NotionDatabase;
+use Pi\Notion\Core\NotionFilter;
+use Pi\Notion\Core\NotionProperty;
+use Pi\Notion\Core\NotionSort;
 use Pi\Notion\Exceptions\NotionDatabaseException;
-use Pi\Notion\NotionPage;
-use Pi\Notion\NotionProperty;
-use Pi\Notion\NotionSort;
 use Pi\Notion\Tests\TestCase;
-use Pi\Notion\NotionWorkspace;
 
 class ManageNotionDatabasesTest extends TestCase
 {

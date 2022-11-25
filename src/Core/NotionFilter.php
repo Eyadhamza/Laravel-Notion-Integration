@@ -1,8 +1,7 @@
 <?php
 
-namespace Pi\Notion;
+namespace Pi\Notion\Core;
 
-use Closure;
 use Illuminate\Support\Collection;
 use Pi\Notion\Traits\NotionFilters;
 

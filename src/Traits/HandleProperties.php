@@ -3,7 +3,7 @@
 namespace Pi\Notion\Traits;
 
 use Illuminate\Support\Collection;
-use Pi\Notion\NotionProperty;
+use Pi\Notion\Core\NotionProperty;
 
 trait HandleProperties
 {

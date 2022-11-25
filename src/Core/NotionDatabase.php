@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Pi\Notion;
+namespace Pi\Notion\Core;
 
 
 use Illuminate\Support\Collection;

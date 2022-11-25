@@ -1,9 +1,10 @@
 <?php
 
 
-namespace Pi\Notion;
+namespace Pi\Notion\Core;
 
 
+use Pi\Notion\PropertyType;
 use stdClass;
 
 class NotionProperty extends PropertyType
@@ -134,7 +135,7 @@ class NotionProperty extends PropertyType
 
     }
 
-    public static function richText($name = 'RichText', array|string $values = null): NotionProperty
+    public static function richText($name = 'NotionRichText', array|string $values = null): NotionProperty
     {
         $property = NotionProperty::make(PropertyType::RICH_TEXT, $name);
 

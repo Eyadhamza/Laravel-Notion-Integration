@@ -3,10 +3,10 @@
 namespace Pi\Notion\Tests\Featured;
 
 use Illuminate\Support\Collection;
-use Pi\Notion\NotionBlock;
-use Pi\Notion\NotionDatabase;
-use Pi\Notion\NotionPage;
-use Pi\Notion\NotionProperty;
+use Pi\Notion\Common\NotionRichText;
+use Pi\Notion\Core\NotionBlock;
+use Pi\Notion\Core\NotionPage;
+use Pi\Notion\Core\NotionProperty;
 use Pi\Notion\Tests\TestCase;
 
 class ManageNotionPageTest extends TestCase
@@ -118,18 +118,22 @@ class ManageNotionPageTest extends TestCase
         $page->setDatabaseId($this->notionDatabaseId);
 
         $page
-            ->title('Name','Eyad Hamza')
+            ->title('Name','1111')
             ->multiSelect('Status1', ['A', 'B']);
 
         $page->setBlocks([
-            NotionBlock::headingOne('Heading 1'),
+            NotionBlock::headingOne(NotionRichText::make('Eyad Hamza')
+                ->bold()
+                ->italic()
+                ->strikethrough()
+                ->underline()
+                ->code()
+                ->color('red')),
             NotionBlock::headingTwo('Heading 2'),
             NotionBlock::headingThree('Heading 3'),
             NotionBlock::numberedList('Numbered List'),
             NotionBlock::bulletedList('Bullet List'),
         ]);
-
-        $page->create();
         $this->assertCount(2, $page->getProperties());
         $this->assertCount(5, $page->getBlocks());
         $this->assertObjectHasAttribute('properties', $page);
@@ -143,16 +147,17 @@ class ManageNotionPageTest extends TestCase
         $page->setDatabaseId($this->notionDatabaseId);
 
         $page
-            ->title('Name','Eyad Hamza')
+            ->title('Name','322323')
             ->multiSelect('Status1', ['A', 'B']);
 
         $page->setBlocks([
             NotionBlock::paragraph('asdasdasd')
                 ->color('red')
                 ->addChildren([
-                    NotionBlock::headingTwo('Heading 2')
-                        ->color('blue')
-                        ->contentLink('https://www.google.com'),
+                    NotionBlock::headingTwo(NotionRichText::make('Eyad Hamza')
+                        ->bold()
+                        ->setLink('https://www.google.com')
+                        ->color('red')),
                     NotionBlock::headingThree('Heading 3'),
                     NotionBlock::numberedList('Numbered List'),
                     NotionBlock::bulletedList('Bullet List'),
@@ -162,7 +167,7 @@ class ManageNotionPageTest extends TestCase
             NotionBlock::numberedList('Numbered List'),
             NotionBlock::bulletedList('Bullet List'),
         ]);
-
+        $page->create();
         $this->assertCount(2, $page->getProperties());
         $this->assertCount(5, $page->getBlocks());
         $this->assertObjectHasAttribute('properties', $page);

@@ -1,13 +1,12 @@
 <?php
 
 
-namespace Pi\Notion;
+namespace Pi\Notion\Core;
 
 
 use Illuminate\Support\Collection;
 use Pi\Notion\Traits\HandleBlocks;
 use Pi\Notion\Traits\HandleProperties;
-use Pi\Notion\Traits\RetrieveResource;
 use Pi\Notion\Traits\ThrowsExceptions;
 
 class NotionPage extends NotionObject
@@ -59,12 +58,14 @@ class NotionPage extends NotionObject
 
     public function create(): self
     {
+//        dd(NotionBlock::mapsBlocksToPage($this))    ;
         $response = prepareHttp()
             ->post(NotionWorkspace::PAGE_URL, [
                 'parent' => array('database_id' => $this->getDatabaseId()),
                 'properties' => NotionProperty::mapsProperties($this),
                 'children' => NotionBlock::mapsBlocksToPage($this)
             ]);
+        dd($response->json());
         $this->throwExceptions($response);
 
         return $this->build($response->json());

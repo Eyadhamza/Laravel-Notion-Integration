@@ -1,6 +1,6 @@
 <?php
 
-namespace Pi\Notion;
+namespace Pi\Notion\Core;
 
 class NotionUser
 {

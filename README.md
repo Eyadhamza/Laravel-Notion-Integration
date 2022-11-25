@@ -48,7 +48,7 @@ You can get information regarding your workspace
 
 ```php
 
-use Pi\Notion\NotionWorkspace;
+use Pi\Notion\Core\NotionWorkspace;
 
 $object = NotionWorkspace::workspace();
 
@@ -61,7 +61,7 @@ Get a notion database using id
 
 ```php
 
-use Pi\Notion\NotionDatabase;
+use Pi\Notion\Core\NotionDatabase;
 
 $object = NotionDatabase::ofId('834b5c8cc1204816905cd54dc2f3341d');
 
@@ -88,7 +88,7 @@ Get a notion page using id
 
 ```php
 
-use Pi\Notion\NotionPage;
+use Pi\Notion\Core\NotionPage;
 
 $object = NotionPage::ofId('834b5c8cc1204816905cd54dc2f3341d');
 
@@ -98,8 +98,6 @@ For Adding a new page
 
 ```php
 
-use Pi\Notion\NotionPage;
-
 ```
 
 
@@ -107,7 +105,7 @@ Search a notion page using its title
 
 ```php
 
-use Pi\Notion\NotionPage;
+use Pi\Notion\Core\NotionPage;
 
 $response = (new NotionPage)
             ->search('New Media Article');
@@ -120,7 +118,7 @@ Get the blocks (contents) of a notion page using its title
 
 ```php
 
-use Pi\Notion\NotionPage;
+use Pi\Notion\Core\NotionPage;
 
 $page =  (new NotionPage('834b5c8cc1204816905cd54dc2f3341d'))->getBlocks();
       

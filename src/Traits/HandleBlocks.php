@@ -3,8 +3,7 @@
 namespace Pi\Notion\Traits;
 
 use Illuminate\Support\Collection;
-use Pi\Notion\NotionBlock;
-use Pi\Notion\BlockTypes;
+use Pi\Notion\Core\NotionBlock;
 
 trait HandleBlocks
 {

@@ -4,6 +4,7 @@ namespace Pi\Notion;
 
 use Illuminate\Support\Collection;
 use Pi\Notion\Commands\NotionCommand;
+use Pi\Notion\Core\NotionPage;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
