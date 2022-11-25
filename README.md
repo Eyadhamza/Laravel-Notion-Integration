@@ -7,7 +7,11 @@
 
 ---
 ## About 
-This package is a laravel wrapper on the REST API provided by notion.so, It saves alot of time by providing clean and easy to use api for interacting with your notion application
+This package is a laravel wrapper on the REST API provided by notion.so, It saves alot of time by providing clean and easy to use api for interacting with your notion workspace.
+
+The package provides easy and fluent interface to manipulate pages, databases, users, blocks, and more.
+
+
 ## Installation
 
 You can install the package via composer:
@@ -18,52 +22,32 @@ composer require pi/notion-wrapper
 
 
 
-You can publish the config file with:
-```bash
-php artisan vendor:publish --provider="Pi\Notion\NotionServiceProvider" --tag="notion-wrapper-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-
-];
-```
-
 ## Usage
 
 ### Setup Notion workspace
 
-in you .env file you should place your token using :
+in you .env file you should place your token using:
 ```dotenv
 
 NOTION_TOKEN  = 'secret_{token}'
 
 ```
-
-### NotionWorkspace 
-
-You can get information regarding your workspace
-
-```php
-
-use Pi\Notion\Core\NotionWorkspace;
-
-$object = NotionWorkspace::workspace();
-
-```
+> For information on how to create your first integration please visit: [Notion Create an integration](https://developers.notion.com/docs/create-a-notion-integration)
+> 
+> To get your secret token please visit [Notion API](https://developers.notion.com/docs/authorization)
 
 
-### Dealing with notion databases
+### Working With Notion Databases
 
-Get a notion database using id
-
+1. Get fetch notion database by id:
+- This will return a NotionDatabase object with the following information:
+  - Information such as: title, description etc.
+  - All the database properties.
 ```php
 
 use Pi\Notion\Core\NotionDatabase;
 
-$object = NotionDatabase::ofId('834b5c8cc1204816905cd54dc2f3341d');
+$database = NotionDatabase::find('632b5fb7e06c4404ae12065c48280e4c');
 
 ```
 

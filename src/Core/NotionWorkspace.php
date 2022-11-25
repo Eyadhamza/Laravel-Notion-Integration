@@ -4,8 +4,6 @@ namespace Pi\Notion\Core;
 
 class NotionWorkspace
 {
-    //TODO
-    // users
 
     const BASE_URL= 'https://api.notion.com/v1';
     const PAGE_URL = NotionWorkspace::BASE_URL.'/pages/';

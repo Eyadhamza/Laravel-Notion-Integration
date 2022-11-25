@@ -20,8 +20,9 @@ class ManageNotionDatabasesTest extends TestCase
     public function return_database_info()
     {
 
-        $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
-        $this->assertObjectHasAttribute('objectType', $database->get());
+        $database = NotionDatabase::find('632b5fb7e06c4404ae12065c48280e4c');
+
+        $this->assertObjectHasAttribute('objectType', $database);
 
     }
 

@@ -31,6 +31,12 @@ class NotionDatabase extends NotionObject
         $this->sorts = new Collection();
     }
 
+
+    public static function find($id): self
+    {
+        return (new NotionDatabase($id))->get();
+    }
+
     public static function build($response): static
     {
         $database = parent::build($response);
