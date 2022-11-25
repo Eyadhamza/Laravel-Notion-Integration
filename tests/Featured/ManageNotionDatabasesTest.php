@@ -93,10 +93,9 @@ class ManageNotionDatabasesTest extends TestCase
 
         $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
 
-        $response = $database->filter(
-            NotionFilter::make('title', 'Name')
-                ->apply('contains', 'MMMM')
-        )->query();
+        $pages = $database->filter(
+            NotionFilter::title('Name')->contains('MMMM'))
+            ->query();
 
         $this->assertInstanceOf(Collection::class, $response);
 
@@ -142,7 +141,7 @@ class ManageNotionDatabasesTest extends TestCase
         $response = $database->filters([
             NotionFilter::select('Status')
                 ->equals('Reading')
-                ->nestedOrGroup([
+                ->compoundOrGroup([
                     NotionFilter::multiSelect('Status2')
                         ->contains('A'),
                     NotionFilter::title('Name')

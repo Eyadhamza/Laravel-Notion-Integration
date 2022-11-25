@@ -79,7 +79,7 @@ class NotionFilter
         $this->filterName = $filter;
     }
 
-    public function nestedOrGroup(array $filters, $nestedConnective): self
+    public function compoundOrGroup(array $filters, $nestedConnective): self
     {
 
         $this->filterGroup->add([
@@ -91,7 +91,7 @@ class NotionFilter
         return $this;
     }
 
-    public function nestedAndGroup(array $filters, $nestedConnective): self
+    public function compoundAndGroup(array $filters, $nestedConnective): self
     {
         $this->filterGroup->add([
             'and' => [

@@ -74,7 +74,7 @@ class NotionDatabase extends NotionObject
         return (new NotionPage)->buildList($response->json());
     }
 
-    public function sort(Collection|array $sorts): self
+    public function sort(Collection|array|NotionSort $sorts): self
     {
         $sorts = is_array($sorts) ? collect($sorts) : $sorts;
 
