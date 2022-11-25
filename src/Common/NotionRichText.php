@@ -6,7 +6,6 @@ use Illuminate\Support\Collection;
 
 class NotionRichText extends BlockContent
 {
-    protected string $value;
     private Collection $annotations;
     private array $link;
     private array $values;

@@ -4,7 +4,7 @@ namespace Pi\Notion\Common;
 
 class BlockContent
 {
-    protected string $value;
+    protected string|array $value;
     private string $type;
     public function __construct($value = '', $type = '')
     {

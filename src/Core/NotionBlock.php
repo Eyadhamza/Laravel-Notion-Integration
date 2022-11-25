@@ -15,7 +15,7 @@ class NotionBlock extends NotionObject
     use ThrowsExceptions;
 
     private string $type;
-    private BlockContent $blockContent;
+    private BlockContent|null $blockContent;
     private string $color;
     private Collection $children;
 
@@ -31,7 +31,7 @@ class NotionBlock extends NotionObject
 
         $block = parent::build($response);
         $block->type = $response['type'] ?? null;
-        $block->blockContent = $response[$block->type] ?? null;
+        $block->blockContent = new BlockContent($response[$block->type]);
         return $block;
     }
 

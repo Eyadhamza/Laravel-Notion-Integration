@@ -64,7 +64,6 @@ class NotionPage extends NotionObject
                 'properties' => NotionProperty::mapsProperties($this),
                 'children' => NotionBlock::mapsBlocksToPage($this)
             ]);
-        dd($response->json());
         $this->throwExceptions($response);
 
         return $this->build($response->json());
