@@ -10,15 +10,6 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class NotionServiceProvider extends PackageServiceProvider
 {
-    public function register()
-    {
-        $this->app->bind('notion-page', function($app) {
-            return new NotionPage();
-        });
-
-        return parent::register();
-    }
-
     public function configurePackage(Package $package): void
     {
 

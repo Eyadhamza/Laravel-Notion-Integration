@@ -38,53 +38,16 @@ class NotionDatabase extends NotionObject
         return (new NotionDatabase($id))->get();
     }
 
-    public static function build($response): static
-    {
-        $database = parent::build($response);
-        $database->title = $response['title'][0]['plain_text'] ?? null;
-        $database->description = $response['description'][0]['plain_text'] ?? null;
-        $database->url = $response['url'] ?? null;
-        $database->icon = $response['icon'] ?? null;
-        $database->cover = $response['cover'] ?? null;
-        $database->buildProperties($response);
-
-
-        return $database;
-    }
-
-    public function get()
+    public function get(): self
     {
 
         $response = prepareHttp()->get($this->url());
-
         $this->throwExceptions($response);
-
         return $this->build($response->json());
 
     }
 
-    public function query(): Collection
-    {
-        $requestBody = [];
-        if (isset($this->filters)) $requestBody['filter'] = $this->getFilterResults();
-        if (isset($this->sorts)) $requestBody['sorts'] = $this->getSortResults();
-
-        $response = prepareHttp()->post($this->queryUrl(), $requestBody);
-        $this->throwExceptions($response);
-
-        return (new NotionPage)->buildList($response->json());
-    }
-
-    public function sorts(array|NotionSort $sorts): self
-    {
-        $sorts = is_array($sorts) ? collect($sorts) : $sorts;
-
-        $this->sorts = $sorts;
-
-        return $this;
-    }
-
-    public function create(): NotionDatabase
+    public function create(): self
     {
 
         $response = prepareHttp()
@@ -104,7 +67,8 @@ class NotionDatabase extends NotionObject
         return $this->build($response->json());
     }
 
-    public function update()
+
+    public function update(): self
     {
         $requestBody = [];
 
@@ -120,6 +84,46 @@ class NotionDatabase extends NotionObject
 
     }
 
+    public function query(): Collection
+    {
+        $requestBody = [];
+        if (isset($this->filters)) $requestBody['filter'] = $this->getFilterResults();
+        if (isset($this->sorts)) $requestBody['sorts'] = $this->getSortResults();
+
+        $response = prepareHttp()->post($this->queryUrl(), $requestBody);
+        $this->throwExceptions($response);
+
+        return (new NotionPage)->buildList($response->json());
+    }
+
+    private function getSortResults(): array
+    {
+        return $this->sorts->map->get()->toArray();
+    }
+
+    public static function build($response): static
+    {
+        $database = parent::build($response);
+        $database->title = $response['title'][0]['plain_text'] ?? null;
+        $database->description = $response['description'][0]['plain_text'] ?? null;
+        $database->url = $response['url'] ?? null;
+        $database->icon = $response['icon'] ?? null;
+        $database->cover = $response['cover'] ?? null;
+        $database->buildProperties($response);
+
+        return $database;
+    }
+
+
+    public function sorts(array|NotionSort $sorts): self
+    {
+        $sorts = is_array($sorts) ? collect($sorts) : $sorts;
+
+        $this->sorts = $sorts;
+
+        return $this;
+    }
+
     public function setDatabaseId(string $id): self
     {
         $this->id = $id;
@@ -132,10 +136,6 @@ class NotionDatabase extends NotionObject
         return $this->id;
     }
 
-    private function getSortResults(): array
-    {
-        return $this->sorts->map->get()->toArray();
-    }
 
     private function url(): string
     {
@@ -171,7 +171,6 @@ class NotionDatabase extends NotionObject
                     )
                 )
             );
-
     }
 
     public function setTitle(string $title): self
@@ -187,13 +186,4 @@ class NotionDatabase extends NotionObject
 
         return $this;
     }
-
-    public function getProperty(string $name): NotionProperty
-    {
-        return $this->properties->each(function ($property) use ($name) {
-           return $property->getName() == $name ?  $property : null;
-        })->firstOrFail();
-    }
-
-
 }

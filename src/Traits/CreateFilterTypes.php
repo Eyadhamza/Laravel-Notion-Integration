@@ -6,9 +6,8 @@ use BadMethodCallException;
 use Closure;
 use Illuminate\Support\Str;
 
-trait NotionFilters
+trait CreateFilterTypes
 {
-
     public static function select(string $propertyName): self
     {
         return self::make('select', $propertyName);

@@ -111,7 +111,7 @@ class NotionPage extends NotionObject
         return (new NotionBlock)->delete($this->id);
     }
 
-    public function search(string $pageTitle)
+    public function search(string $pageTitle): Collection
     {
 
         $response = prepareHttp()

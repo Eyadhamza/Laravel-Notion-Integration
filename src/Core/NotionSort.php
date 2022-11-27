@@ -22,17 +22,6 @@ class NotionSort
     {
         return self::make($property, 'ascending');
     }
-
-    public function getProperty(): string
-    {
-        return $this->property;
-    }
-
-    public function getDirection(): string
-    {
-        return $this->direction;
-    }
-
     public function get(): array
     {
         return [
@@ -51,5 +40,14 @@ class NotionSort
     {
         $this->direction = 'ascending';
         return $this;
+    }
+    public function getProperty(): string
+    {
+        return $this->property;
+    }
+
+    public function getDirection(): string
+    {
+        return $this->direction;
     }
 }

@@ -28,8 +28,6 @@ trait HandleFilters
     {
         $this->filters = $filters;
     }
-
-
     private function getFilterResults(): array
     {
 
@@ -38,14 +36,12 @@ trait HandleFilters
         }
         return $this->resultsWithSingleFilter();
     }
-
     private function mapFilters(): Collection
     {
         return $this->filters->map(function (NotionFilter $filter) {
             return $filter->get();
         });
     }
-
     private function resultsWithSingleFilter(): array
     {
         return $this->mapFilters()[0];

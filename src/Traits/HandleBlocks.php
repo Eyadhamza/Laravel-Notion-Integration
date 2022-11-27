@@ -7,8 +7,6 @@ use Pi\Notion\Core\NotionBlock;
 
 trait HandleBlocks
 {
-
-
     public function setBlocks(array $blocks): self
     {
         collect($blocks)->map(function ($block) {

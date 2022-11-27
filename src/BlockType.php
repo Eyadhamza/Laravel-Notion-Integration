@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Pi\Notion;
-
 
 abstract class BlockType
 {

@@ -3,11 +3,11 @@
 namespace Pi\Notion\Core;
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Traits\NotionFilters;
+use Pi\Notion\Traits\CreateFilterTypes;
 
 class NotionFilter
 {
-    use NotionFilters;
+    use CreateFilterTypes;
 
     private string $property;
     private string|array $query;
@@ -54,10 +54,6 @@ class NotionFilter
         return $this;
     }
 
-    public function getProperty(): string
-    {
-        return $this->property;
-    }
 
     public function get(): array
     {
@@ -67,16 +63,6 @@ class NotionFilter
                 $this->filterName => $this->query
             ]
         ];
-    }
-
-    private function setQuery(string $query): void
-    {
-        $this->query = $query;
-    }
-
-    private function setFilterName(string $filter): void
-    {
-        $this->filterName = $filter;
     }
 
     public function compoundOrGroup(array $filters, $nestedConnective): self
@@ -103,6 +89,28 @@ class NotionFilter
         return $this;
     }
 
+
+    private function setQuery(string $query): void
+    {
+        $this->query = $query;
+    }
+
+    private function setFilterName(string $filter): void
+    {
+        $this->filterName = $filter;
+    }
+
+    private function setFilterGroup(array $filters, $connective): Collection
+    {
+        $this->filterGroup->add([
+            $connective =>
+                collect($filters)->map(function (NotionFilter $filter) {
+                    return $filter->get();
+                })
+        ]);
+        return $this->filterGroup;
+    }
+
     public function getFilterGroup(): Collection
     {
         return $this->filterGroup;
@@ -118,14 +126,8 @@ class NotionFilter
         return $this->connective;
     }
 
-    private function setFilterGroup(array $filters, $connective): Collection
+    public function getProperty(): string
     {
-        $this->filterGroup->add([
-            $connective =>
-                collect($filters)->map(function (NotionFilter $filter) {
-                    return $filter->get();
-                })
-        ]);
-        return $this->filterGroup;
+        return $this->property;
     }
 }

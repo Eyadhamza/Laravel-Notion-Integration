@@ -4,7 +4,6 @@ namespace Pi\Notion\Core;
 
 class NotionWorkspace
 {
-
     const BASE_URL= 'https://api.notion.com/v1';
     const PAGE_URL = NotionWorkspace::BASE_URL.'/pages/';
     const BLOCK_URL = NotionWorkspace::BASE_URL.'/blocks/';
@@ -14,17 +13,13 @@ class NotionWorkspace
 
     private string $token;
 
-
-
     public function __construct()
     {
         $token = \config('notion-wrapper.info.token');
         $this->token = $token;
     }
-
     public static function workspace(): self
     {
         return new self();
     }
-
 }

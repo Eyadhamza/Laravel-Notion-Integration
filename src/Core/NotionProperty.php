@@ -6,10 +6,12 @@ namespace Pi\Notion\Core;
 
 use Illuminate\Support\Collection;
 use Pi\Notion\PropertyType;
+use Pi\Notion\Traits\CreatePropertyTypes;
 use stdClass;
 
 class NotionProperty
 {
+    use CreatePropertyTypes;
 
     private string $type;
     private string $name;
@@ -28,13 +30,44 @@ class NotionProperty
         return new self($type, $name);
     }
 
+    public static function mapsProperties($page)
+    {
+        return $page->getProperties()->mapToAssoc(function (NotionProperty $property) {
+            return
+                array(
+                    $property->name, array($property->getType() => empty($property->getValues()) ? $property->getOptions() : $property->getValues())
+                );
+        });
+    }
+    public static function buildProperty(string $name, array $body): NotionProperty
+    {
+        $property = NotionProperty::make($body['type'], $name);
+        $property->id = $body['id'];
+
+        $property->options = $body[$body['type']]['options'] ?? [];
+        return $property;
+    }
+    public static function buildList(mixed $response): Collection
+    {
+        $list = new Collection();
+        collect($response['results'])->each(function ($item) use ($list) {
+            $list->add(self::buildProperty($item['type'], $item));
+        });
+        return $list;
+    }
     public function setValues(array|string $values): self
     {
         $this->values = $values;
         return $this;
-
     }
 
+    public function setMultipleValues(array $values): self
+    {
+        $this->values = collect($values)->map(function ($optionName) {
+            return ['name' => $optionName];
+        })->toArray();
+        return $this;
+    }
     public function getValues(): array|string
     {
         if (!isset($this->values)) {
@@ -46,52 +79,28 @@ class NotionProperty
         return $this->values;
     }
 
-    public static function mapsProperties($page)
-    {
-        return $page->getProperties()->mapToAssoc(function (NotionProperty $property) {
-            return
-                array(
-                    $property->name, array($property->getType() => empty($property->getValues()) ? $property->getOptions() : $property->getValues())
-                );
-        });
-    }
 
     public function getType(): string
     {
         return $this->type;
     }
 
-    public static function buildProperty(string $name, array $body): NotionProperty
+    private function isNested(): bool
     {
-
-        $property = NotionProperty::make($body['type'], $name);
-        $property->id = $body['id'];
-
-        $property->options = $body[$body['type']]['options'] ?? [];
-        return $property;
+        return in_array($this->type, [
+            PropertyType::TITLE,
+            PropertyType::RICH_TEXT
+        ]);
     }
 
-    public static function buildList(mixed $response)
+    public function isPaginated(): bool
     {
-        $list = new Collection();
-        collect($response['results'])->each(function ($item) use ($list) {
-            $list->add(self::buildProperty($item['type'], $item));
-        });
-        return $list;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function multipleValues(array $values)
-    {
-
-        $this->values = collect($values)->map(function ($optionName) {
-            return ['name' => $optionName];
-        })->toArray();
-        return $this;
+        return in_array($this->type, [
+            PropertyType::TITLE,
+            PropertyType::RICH_TEXT,
+            PropertyType::RELATION,
+            PropertyType::PEOPLE,
+        ]);
     }
 
     public function getOptions()
@@ -111,137 +120,6 @@ class NotionProperty
         $this->options = $options;
         return $this;
     }
-
-    private function isNested(): bool
-    {
-        return in_array($this->type, [
-            PropertyType::TITLE,
-            PropertyType::RICH_TEXT
-        ]);
-    }
-
-    public static function select($name = 'Select', string $values = null): NotionProperty
-    {
-        $property = NotionProperty::make(PropertyType::SELECT, $name);
-
-        return $values ? $property->setValues(['name' => $values]) : $property;
-
-    }
-
-    public static function multiSelect($name = 'MultiSelect', array|string $values = null): NotionProperty
-    {
-        $property = NotionProperty::make(PropertyType::MULTISELECT, $name);
-
-        return $values ? $property->multipleValues($values) : $property;
-
-    }
-
-    public static function title($name = 'Name', array|string $values = null): NotionProperty
-    {
-        $property = NotionProperty::make(PropertyType::TITLE, $name);
-
-        return $values ? $property->setValues(['text' => ['content' => $values]]) : $property;
-
-    }
-
-    public static function richText($name = 'NotionRichText', array|string $values = null): NotionProperty
-    {
-        $property = NotionProperty::make(PropertyType::RICH_TEXT, $name);
-
-        return $values ? $property->setValues($values) : $property;
-    }
-
-    public static function number($name = 'Number', string $values = null): NotionProperty
-    {
-        $property = NotionProperty::make(PropertyType::NUMBER, $name);
-
-        return $values ? $property->setValues($values) : $property;
-    }
-
-    public static function checkbox($name = 'Checkbox', string $values = null): NotionProperty
-    {
-        $property = NotionProperty::make(PropertyType::CHECKBOX, $name);
-
-        return $values ? $property->setValues($values) : $property;
-    }
-
-    public static function url($name = 'Url', string $values = null): NotionProperty
-    {
-        $property = NotionProperty::make(PropertyType::URL, $name);
-
-        return $values ? $property->setValues($values) : $property;
-    }
-
-    public static function email($name = 'Email', string $values = null): NotionProperty
-    {
-        $property = NotionProperty::make(PropertyType::EMAIL, $name);
-
-        return $values ? $property->setValues($values) : $property;
-    }
-
-    public static function phone($name = 'Phone', string $values = null): NotionProperty
-    {
-        $property = NotionProperty::make(PropertyType::PHONE, $name);
-
-        return $values ? $property->setValues($values) : $property;
-    }
-
-    public static function date($name = 'Date', array $values = null): NotionProperty
-    {
-        $property = NotionProperty::make(PropertyType::DATE, $name);
-
-        return $values ? $property->setValues($values) : $property;
-    }
-
-    public static function relation($name = 'Relation', string $values = null): NotionProperty
-    {
-        $property = NotionProperty::make(PropertyType::RELATION, $name);
-
-        return $values ? $property->setValues($values) : $property;
-    }
-
-    public static function rollup($name = 'Rollup', string $values = null): NotionProperty
-    {
-        $property = NotionProperty::make(PropertyType::ROLLUP, $name);
-
-        return $values ? $property->setValues($values) : $property;
-    }
-
-    public static function formula($name = 'Formula', string $values = null): NotionProperty
-    {
-        $property = NotionProperty::make(PropertyType::FORMULA, $name);
-
-        return $values ? $property->setValues($values) : $property;
-    }
-
-    public static function file($name = 'File', string $values = null): NotionProperty
-    {
-        $property = NotionProperty::make(PropertyType::FILE, $name);
-
-        return $values ? $property->setValues($values) : $property;
-    }
-
-    public static function people($name = 'People', string $values = null): NotionProperty
-    {
-        $property = NotionProperty::make(PropertyType::PEOPLE, $name);
-
-        return $values ? $property->setValues($values) : $property;
-    }
-
-    public static function createdTime($name = 'Created Time', string $values = null): NotionProperty
-    {
-        $property = NotionProperty::make(PropertyType::CREATED_TIME, $name);
-
-        return $values ? $property->setValues($values) : $property;
-    }
-
-    public static function lastEditedTime($name = 'Last Edited Time', string $values = null): NotionProperty
-    {
-        $property = NotionProperty::make(PropertyType::LAST_EDITED_TIME, $name);
-
-        return $values ? $property->setValues($values) : $property;
-    }
-
     public function getId(): ?string
     {
         return $this->id;
@@ -252,13 +130,9 @@ class NotionProperty
         return $this->name == $name;
     }
 
-    public function isPaginated(): bool
+    public function getName(): string
     {
-        return in_array($this->type, [
-            PropertyType::TITLE,
-            PropertyType::RICH_TEXT,
-            PropertyType::RELATION,
-            PropertyType::PEOPLE,
-        ]);
+        return $this->name;
     }
+
 }
