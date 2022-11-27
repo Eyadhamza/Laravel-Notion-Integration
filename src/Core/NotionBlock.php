@@ -40,7 +40,10 @@ class NotionBlock extends NotionObject
         $blockContent = is_string($blockContent) ? new BlockContent($blockContent) : $blockContent;
         return new self($type, $blockContent);
     }
-
+    public static function find($id): self
+    {
+        return (new NotionBlock)->setId($id)->get();
+    }
     public static function mapsBlocksToPage(NotionPage $page): Collection
     {
 
@@ -62,11 +65,10 @@ class NotionBlock extends NotionObject
 
     }
 
-    public function getChildren(mixed $id = null): Collection
+    public function getChildren(): Collection
     {
-        $id = $id ?? $this->id;
 
-        $response = prepareHttp()->get(NotionWorkspace::BLOCK_URL . $id . '/children');
+        $response = prepareHttp()->get(NotionWorkspace::BLOCK_URL . $this->id . '/children');
 
         $this->throwExceptions($response);
         return $this->buildList($response->json());
@@ -93,7 +95,7 @@ class NotionBlock extends NotionObject
     }
 
 
-    public function appendChildren()
+    public function create(): Collection
     {
         $response = prepareHttp()->patch($this->getUrl() . '/children', [
             'children' => $this->mapChildren()

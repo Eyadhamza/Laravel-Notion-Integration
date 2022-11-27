@@ -39,7 +39,7 @@ NOTION_TOKEN  = 'secret_{token}'
 >
 > To get your secret token please visit [Notion API](https://developers.notion.com/docs/authorization)
 
-### Working With Notion Databases
+### Handling Notion Databases
 
 #### Fetch notion database by id:
 
@@ -182,7 +182,7 @@ $pages = $database->sorts([
         ])->query();
 ```
 
-### Dealing with Notion Pages
+### Handling Notion Pages
 
 #### Fetch a page by id (without the page contents)
 
@@ -304,6 +304,50 @@ $property = $page->getProperty('Status');
 $pages = (new NotionPage)->search('Eyad Hamza');
 ```
 
+### Handling Notion Blocks
+
+#### Retrieve a block
+
+```php
+$block = NotionBlock::find('b4f8e429038744ca9c8d5afa93ea2edd');
+```
+#### Retrieve a block children
+
+```php
+$block = NotionBlock::find('b4f8e429038744ca9c8d5afa93ea2edd');
+$children = $block->getChildren();
+```
+
+#### Update a new Notion Block
+```php
+$block = NotionBlock::headingOne('This is a paragraph')
+            ->setId($this->notionBlockId)
+            ->update();
+
+```
+#### Append Block Children
+```php
+ $block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
+
+$block = $block->addChildren([
+    NotionBlock::headingTwo(
+        NotionRichText::make('Eyad Hamza')
+            ->bold()
+            ->setLink('https://www.google.com')
+            ->color('red')
+        ),
+    NotionBlock::headingThree('Heading 3'),
+    NotionBlock::numberedList('Numbered List'),
+    NotionBlock::bulletedList('Bullet List'),
+])->create();
+
+```
+
+#### Delete a Block
+```php
+$block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
+$block->delete();
+```
 
 ## Testing
 

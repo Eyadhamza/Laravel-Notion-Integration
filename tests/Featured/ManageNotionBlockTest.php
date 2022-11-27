@@ -19,18 +19,17 @@ class ManageNotionBlockTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $block = new NotionBlock();
-        $block->setId($this->notionBlockId);
+        $block = NotionBlock::find('b1cfe8df181543039b2f9e3f2c87516c');
 
-        $this->assertObjectHasAttribute('objectType', $block->get());
+        $this->assertObjectHasAttribute('objectType', $block);
     }
     /** @test */
     public function it_should_return_block_children()
     {
         $this->withoutExceptionHandling();
 
-        $block = new NotionBlock();
-        $block->setId('62ec21df1f9241ba9954828e0958da69');
+        $block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
+
         $children = $block->addChildren([
             NotionBlock::headingTwo(NotionRichText::make('Eyad Hamza')
                 ->bold()
@@ -39,7 +38,7 @@ class ManageNotionBlockTest extends TestCase
             NotionBlock::headingThree('Heading 3'),
             NotionBlock::numberedList('Numbered List'),
             NotionBlock::bulletedList('Bullet List'),
-        ])->appendChildren();
+        ])->create();
         $this->assertCount(4, $children);
     }
 
@@ -60,8 +59,7 @@ class ManageNotionBlockTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $block = new NotionBlock();
-        $block->setId($this->notionBlockId);
+        $block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
 
         $block = $block->addChildren([
             NotionBlock::headingTwo(NotionRichText::make('Eyad Hamza')
@@ -81,8 +79,7 @@ class ManageNotionBlockTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $block = new NotionBlock();
-        $block->setId($this->notionBlockId);
+        $block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
 
         $this->assertObjectHasAttribute('objectType', $block);
     }
