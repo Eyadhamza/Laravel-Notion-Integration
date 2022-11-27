@@ -108,7 +108,9 @@ class NotionPage extends NotionObject
 
     public function delete(): NotionBlock
     {
-        return (new NotionBlock)->delete($this->id);
+        return (new NotionBlock)
+            ->setId($this->id)
+            ->delete();
     }
 
     public function search(string $pageTitle): Collection
