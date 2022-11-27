@@ -72,7 +72,7 @@ class NotionPage extends NotionObject
     }
     public function getWithContent(): Collection
     {
-        return (new NotionBlock)->get($this->id);
+        return (new NotionBlock)->getChildren($this->id);
     }
 
     public static function find($id): self

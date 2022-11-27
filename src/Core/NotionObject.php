@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 abstract class NotionObject
 {
     protected ?string $objectType;
-    protected string $id;
+    protected ?string $id;
     private string $parentType;
     protected ?string $parentId;
     protected ?bool $archived;

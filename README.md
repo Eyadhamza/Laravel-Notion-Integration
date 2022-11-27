@@ -299,6 +299,11 @@ $page = NotionPage::find('b4f8e429038744ca9c8d5afa93ea2edd');
 $property = $page->getProperty('Status');
 
 ```
+#### Search Pages
+```php
+$pages = (new NotionPage)->search('Eyad Hamza');
+```
+
 
 ## Testing
 

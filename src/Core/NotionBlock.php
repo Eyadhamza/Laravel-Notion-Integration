@@ -15,7 +15,7 @@ class NotionBlock extends NotionObject
     use ThrowsExceptions;
 
     private string $type;
-    private BlockContent|null $blockContent;
+    private BlockContent|null|string $blockContent;
     private string $color;
     private Collection $children;
 
@@ -35,8 +35,9 @@ class NotionBlock extends NotionObject
         return $block;
     }
 
-    public static function make(string $type, BlockContent $blockContent = null): self
+    public static function make(string $type, BlockContent|string $blockContent = null): self
     {
+        $blockContent = is_string($blockContent) ? new BlockContent($blockContent) : $blockContent;
         return new self($type, $blockContent);
     }
 
@@ -51,22 +52,55 @@ class NotionBlock extends NotionObject
         });
     }
 
-    public function get(mixed $id): Collection
+    public function get():self
     {
+        $response = prepareHttp()->get($this->getUrl());
+
+        $this->throwExceptions($response);
+
+        return $this->build($response->json());
+
+    }
+
+    public function getChildren(mixed $id = null): Collection
+    {
+        $id = $id ?? $this->id;
+
         $response = prepareHttp()->get(NotionWorkspace::BLOCK_URL . $id . '/children');
 
         $this->throwExceptions($response);
         return $this->buildList($response->json());
     }
 
-    public function delete(mixed $id): static
+    public function delete(mixed $id = null): static
     {
+        $id = $id ?? $this->id;
+
         $response = prepareHttp()->delete(NotionWorkspace::BLOCK_URL . $id);
 
         $this->throwExceptions($response);
         return $this->build($response->json());
     }
 
+    public function update():self
+    {
+        $response = prepareHttp()->patch($this->getUrl(), [
+            $this->type => $this->contentBody()
+        ]);
+        $this->throwExceptions($response);
+
+        return $this->build($response->json());
+    }
+
+
+    public function appendChildren()
+    {
+        $response = prepareHttp()->patch($this->getUrl() . '/children', [
+            'children' => $this->mapChildren()
+        ]);
+        $this->throwExceptions($response);
+        return (new NotionBlock())->buildList($response->json());
+    }
     public function color(string $color): self
     {
         $this->color = $color;
@@ -78,9 +112,10 @@ class NotionBlock extends NotionObject
         return $this->id;
     }
 
-    public function setId(string $id): void
+    public function setId(string $id)
     {
         $this->id = $id;
+        return $this;
     }
 
     public static function headingOne(string|NotionRichText $body): self
@@ -189,19 +224,30 @@ class NotionBlock extends NotionObject
 
     private function contentBody(): array
     {
+        $body = [];
+        $body[$this->blockContent->getType()] = $this->blockContent->getValue();
+        $body['color'] = $this->color ?? 'default';
+        if ($this->children->isNotEmpty()) {
+            $body['children'] = $this->mapChildren();
+        }
+        return $body;
 
-        return [
-            $this->blockContent->getType() => $this->blockContent->getValue(),
-            'color' => $this->color ?? 'default',
-            'children' => $this->children->map(function (NotionBlock $child) {
-                return array(
-                   'type' => $child->type,
-                   'object' => 'block',
-                   $child->type => $child->contentBody()
-                );
-            })
-        ];
+    }
 
+    private function getUrl(): string
+    {
+        return NotionWorkspace::BLOCK_URL . $this->id;
+    }
+
+    private function mapChildren(): Collection
+    {
+        return $this->children->map(function (NotionBlock $child) {
+            return array(
+                'type' => $child->type,
+                'object' => 'block',
+                $child->type => $child->contentBody()
+            );
+        });
     }
 
 
