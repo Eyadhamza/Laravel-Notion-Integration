@@ -7,11 +7,10 @@ use Pi\Notion\Core\NotionProperty;
 
 trait HandleProperties
 {
-    public function createProperties(Collection|array $properties): self
+    public function createProperties(array $properties): self
     {
-        $properties = is_array($properties) ? collect($properties) : $properties;
 
-        $properties->map(function (NotionProperty $property) {
+        collect($properties)->map(function (NotionProperty $property) {
             $this->properties->add([
                 $property->getName() => [
                     $property->getType() => $property->getOptions()
@@ -20,11 +19,10 @@ trait HandleProperties
         });
         return $this;
     }
-    public function setProperties(Collection|array $properties): self
+    public function setProperties(array $properties): self
     {
-        $properties = is_array($properties) ? collect($properties) : $properties;
 
-        $properties->map(function ($property) {
+        collect($properties)->map(function ($property) {
             $this->properties->add($property);
         });
         return $this;

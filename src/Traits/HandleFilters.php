@@ -17,11 +17,9 @@ trait HandleFilters
         return $this;
     }
 
-    public function filters(Collection|array $filters): self
+    public function filters(array $filters): self
     {
-
-        $filters = is_array($filters) ? collect($filters) : $filters;
-        $this->setFilters($filters);
+        $this->setFilters(collect($filters));
 
         return $this;
     }

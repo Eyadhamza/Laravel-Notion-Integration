@@ -5,6 +5,7 @@ namespace Pi\Notion\Core;
 
 
 use Illuminate\Support\Collection;
+use PhpParser\Builder\Property;
 use Pi\Notion\Traits\HandleBlocks;
 use Pi\Notion\Traits\HandleProperties;
 use Pi\Notion\Traits\ThrowsExceptions;
@@ -47,15 +48,41 @@ class NotionPage extends NotionObject
         $response = prepareHttp()->get($this->getUrl());
 
         $this->throwExceptions($response);
-
         return $this->build($response->json());
     }
+    public function getProperty(string $name)
+    {
+        $property = $this
+            ->properties
+            ->filter
+            ->ofName($name)
+            ->firstOrFail();
 
+        $response = prepareHttp()->get($this->getUrl() . '/properties/' . $property->getId());
+
+        $property->setValues($response->json()[$property->getType()] ?? []);
+
+        if ($property->isPaginated()) {
+            NotionProperty::buildList($response->json());
+        }
+
+        $this->throwExceptions($response);
+
+        return $property;
+    }
     public function getWithContent(): Collection
     {
         return (new NotionBlock)->get($this->id);
     }
 
+    public static function find($id): self
+    {
+        return (new NotionPage($id))->get();
+    }
+    public static function findContent($id): Collection
+    {
+        return (new NotionPage($id))->getWithContent();
+    }
     public function create(): self
     {
         $response = prepareHttp()

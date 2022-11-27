@@ -97,7 +97,7 @@ class ManageNotionDatabasesTest extends TestCase
             NotionFilter::title('Name')->contains('MMMM'))
             ->query();
 
-        $this->assertInstanceOf(Collection::class, $response);
+        $this->assertInstanceOf(Collection::class, $pages);
 
 
     }
@@ -159,7 +159,7 @@ class ManageNotionDatabasesTest extends TestCase
     {
 
         $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
-        $response = $database->sort([
+        $response = $database->sorts([
             NotionSort::property('Name')->ascending(),
         ])->filter(
             NotionFilter::title('Name')

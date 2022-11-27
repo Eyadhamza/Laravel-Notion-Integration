@@ -5,6 +5,7 @@ namespace Pi\Notion\Core;
 
 
 use Illuminate\Support\Collection;
+use PhpParser\Builder\Property;
 use Pi\Notion\Traits\HandleFilters;
 use Pi\Notion\Traits\HandleProperties;
 use Pi\Notion\Traits\ThrowsExceptions;
@@ -74,7 +75,7 @@ class NotionDatabase extends NotionObject
         return (new NotionPage)->buildList($response->json());
     }
 
-    public function sort(Collection|array|NotionSort $sorts): self
+    public function sorts(array|NotionSort $sorts): self
     {
         $sorts = is_array($sorts) ? collect($sorts) : $sorts;
 
@@ -185,6 +186,13 @@ class NotionDatabase extends NotionObject
         $this->link = $link;
 
         return $this;
+    }
+
+    public function getProperty(string $name): NotionProperty
+    {
+        return $this->properties->each(function ($property) use ($name) {
+           return $property->getName() == $name ?  $property : null;
+        })->firstOrFail();
     }
 
 

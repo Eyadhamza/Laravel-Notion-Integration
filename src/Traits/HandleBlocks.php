@@ -9,11 +9,9 @@ trait HandleBlocks
 {
 
 
-    public function setBlocks(Collection|array $blocks): self
+    public function setBlocks(array $blocks): self
     {
-        $blocks = is_array($blocks) ? collect($blocks) : $blocks;
-
-        $blocks->map(function ($block) {
+        collect($blocks)->map(function ($block) {
             $this->blocks->add($block);
         });
 

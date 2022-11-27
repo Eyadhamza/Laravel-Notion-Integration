@@ -5,6 +5,7 @@ namespace Pi\Notion\Tests\Featured;
 use Illuminate\Support\Collection;
 use Pi\Notion\Common\NotionRichText;
 use Pi\Notion\Core\NotionBlock;
+use Pi\Notion\Core\NotionDatabase;
 use Pi\Notion\Core\NotionPage;
 use Pi\Notion\Core\NotionProperty;
 use Pi\Notion\Tests\TestCase;
@@ -103,7 +104,7 @@ class ManageNotionPageTest extends TestCase
                 'start' => "2020-12-08T12:00:00Z",
                 'end' => "2020-12-08T12:00:00Z",
             ]),
-            NotionProperty::url('Url','https://developers.notion.com'),
+            NotionProperty::url(values: 'https://developers.notion.com'),
             NotionProperty::email('Email','Eyadhamza0@outlook.com'),
             NotionProperty::phone()->setValues('0123456789')
         ])->create();
@@ -151,7 +152,7 @@ class ManageNotionPageTest extends TestCase
             ->multiSelect('Status1', ['A', 'B']);
 
         $page->setBlocks([
-            NotionBlock::paragraph('asdasdasd')
+            NotionBlock::paragraph('Hello There im a parent of the following blocks!')
                 ->addChildren([
                     NotionBlock::headingTwo(NotionRichText::make('Eyad Hamza')
                         ->bold()
@@ -201,6 +202,15 @@ class ManageNotionPageTest extends TestCase
             ->search('Eyad');
         $this->assertInstanceOf(Collection::class, $response);
     }
+    /** @test */
+    public function it_returns_a_property_by_id()
+    {
 
+        $page = NotionPage::find('b4f8e429038744ca9c8d5afa93ea2edd');
+
+        $property = $page->getProperty('Status');
+
+        $this->assertInstanceOf(NotionProperty::class, $property);
+    }
 
 }

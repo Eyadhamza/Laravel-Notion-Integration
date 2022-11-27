@@ -4,10 +4,11 @@
 namespace Pi\Notion\Core;
 
 
+use Illuminate\Support\Collection;
 use Pi\Notion\PropertyType;
 use stdClass;
 
-class NotionProperty extends PropertyType
+class NotionProperty
 {
 
     private string $type;
@@ -62,13 +63,21 @@ class NotionProperty extends PropertyType
 
     public static function buildProperty(string $name, array $body): NotionProperty
     {
+
         $property = NotionProperty::make($body['type'], $name);
+        $property->id = $body['id'];
 
-        foreach ($body as $value) {
-            $property->options = $value;
-        }
-
+        $property->options = $body[$body['type']]['options'] ?? [];
         return $property;
+    }
+
+    public static function buildList(mixed $response)
+    {
+        $list = new Collection();
+        collect($response['results'])->each(function ($item) use ($list) {
+            $list->add(self::buildProperty($item['type'], $item));
+        });
+        return $list;
     }
 
     public function getName(): string
@@ -106,8 +115,8 @@ class NotionProperty extends PropertyType
     private function isNested(): bool
     {
         return in_array($this->type, [
-            self::TITLE,
-            self::RICH_TEXT
+            PropertyType::TITLE,
+            PropertyType::RICH_TEXT
         ]);
     }
 
@@ -233,11 +242,23 @@ class NotionProperty extends PropertyType
         return $values ? $property->setValues($values) : $property;
     }
 
-    private function setId(string $id)
+    public function getId(): ?string
     {
-        $this->id = $id;
-
+        return $this->id;
     }
 
+    public function ofName(string $name): bool
+    {
+        return $this->name == $name;
+    }
 
+    public function isPaginated(): bool
+    {
+        return in_array($this->type, [
+            PropertyType::TITLE,
+            PropertyType::RICH_TEXT,
+            PropertyType::RELATION,
+            PropertyType::PEOPLE,
+        ]);
+    }
 }

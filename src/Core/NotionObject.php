@@ -23,7 +23,7 @@ abstract class NotionObject
     public static function build($response): static
     {
         $object = new static();
-
+        $object->id = $response['id'] ?? null;
         $object->objectType = $response['object'];
         $object->parentType = $response['parent']['type'];
         $object->parentId = $response['parent'][$object->parentType];
