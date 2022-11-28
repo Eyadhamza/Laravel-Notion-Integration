@@ -5,6 +5,7 @@ namespace Pi\Notion\Core;
 
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 use Pi\Notion\Exceptions\NotionException;
 use Pi\Notion\Traits\HandleFilters;
 use Pi\Notion\Traits\HandleProperties;
@@ -41,7 +42,7 @@ class NotionDatabase extends NotionObject
     public function get(): self
     {
 
-        $response = prepareHttp()->get($this->url())
+        $response = Http::prepareHttp()->get($this->url())
             ->onError(
                 fn($response) => NotionException::matchException($response->json())
             );
@@ -52,7 +53,7 @@ class NotionDatabase extends NotionObject
     public function create(): self
     {
 
-        $response = prepareHttp()
+        $response = Http::prepareHttp()
             ->post(
                 NotionWorkspace::DATABASE_URL, [
                     'parent' => [
@@ -79,7 +80,7 @@ class NotionDatabase extends NotionObject
 
         if (isset($this->properties)) $requestBody['properties'] = NotionProperty::mapsProperties($this);
 
-        $response = prepareHttp()->patch($this->url(), $requestBody)
+        $response = Http::prepareHttp()->patch($this->url(), $requestBody)
             ->onError(
                 fn($response) => NotionException::matchException($response->json())
             );
@@ -94,7 +95,7 @@ class NotionDatabase extends NotionObject
         if (isset($this->filters)) $requestBody['filter'] = $this->getFilterResults();
         if (isset($this->sorts)) $requestBody['sorts'] = $this->getSortResults();
 
-        $response = prepareHttp()->post($this->queryUrl(), $requestBody)
+        $response = Http::prepareHttp()->post($this->queryUrl(), $requestBody)
             ->onError(
                 fn($response) => NotionException::matchException($response->json())
             );

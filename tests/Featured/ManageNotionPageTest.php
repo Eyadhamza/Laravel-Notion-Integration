@@ -83,7 +83,7 @@ class ManageNotionPageTest extends TestCase
     /** @test */
     public function it_should_update_properties_to_created_page_using_page_class()
     {
-        $page = new NotionPage('b4f8e429038744ca9c8d5afa93ea2edd');
+        $page = new NotionPage('687e13b1b8bb4eb9957d5843404b6d5d');
         $response = $page
             ->select('Status', 'In Progress')
             ->update();
@@ -206,7 +206,7 @@ class ManageNotionPageTest extends TestCase
     public function it_returns_a_property_by_id()
     {
 
-        $page = NotionPage::find('b4f8e429038744ca9c8d5afa93ea2edd');
+        $page = NotionPage::find('687e13b1b8bb4eb9957d5843404b6d5d');
 
         $property = $page->getProperty('Status');
 

@@ -28,9 +28,6 @@
         "phpunit/phpunit": "^9.3"
     },
     "autoload": {
-        "files": [
-            "src/helpers.php"
-        ],
         "psr-4": {
             "Pi\\Notion\\": "src"
 

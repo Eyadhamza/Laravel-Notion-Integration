@@ -5,6 +5,7 @@ namespace Pi\Notion\Core;
 
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 use Pi\Notion\Common\BlockContent;
 use Pi\Notion\Exceptions\NotionException;
 use Pi\Notion\Traits\CreateBlockTypes;
@@ -30,7 +31,7 @@ class NotionBlock extends NotionObject
     }
     public function get():self
     {
-        $response = prepareHttp()
+        $response = Http::prepareHttp()
             ->get($this->getUrl())
             ->onError(
                 fn($response) => NotionException::matchException($response->json())
@@ -41,7 +42,7 @@ class NotionBlock extends NotionObject
 
     public function getChildren(): Collection
     {
-        $response = prepareHttp()->get(NotionWorkspace::BLOCK_URL . $this->id . '/children')
+        $response = Http::prepareHttp()->get(NotionWorkspace::BLOCK_URL . $this->id . '/children')
             ->onError(
                 fn($response) => NotionException::matchException($response->json())
             );
@@ -50,7 +51,7 @@ class NotionBlock extends NotionObject
 
     public function create(): Collection
     {
-        $response = prepareHttp()->patch($this->getUrl() . '/children', [
+        $response = Http::prepareHttp()->patch($this->getUrl() . '/children', [
             'children' => $this->mapChildren()
         ])->onError(
                 fn($response) => NotionException::matchException($response->json())
@@ -60,7 +61,7 @@ class NotionBlock extends NotionObject
 
     public function update():self
     {
-        $response = prepareHttp()->patch($this->getUrl(), [
+        $response = Http::prepareHttp()->patch($this->getUrl(), [
             $this->type => $this->contentBody()
         ])->onError(
                 fn($response) => NotionException::matchException($response->json())
@@ -71,7 +72,7 @@ class NotionBlock extends NotionObject
 
     public function delete(): static
     {
-        $response = prepareHttp()->delete($this->getUrl())->onError(
+        $response = Http::prepareHttp()->delete($this->getUrl())->onError(
             fn($response) => NotionException::matchException($response->json())
         );
         return $this->build($response->json());
