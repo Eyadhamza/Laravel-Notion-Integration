@@ -5,14 +5,13 @@ namespace Pi\Notion\Core;
 
 
 use Illuminate\Support\Collection;
-use PhpParser\Builder\Property;
+use Pi\Notion\Exceptions\NotionException;
 use Pi\Notion\Traits\HandleFilters;
 use Pi\Notion\Traits\HandleProperties;
-use Pi\Notion\Traits\ThrowsExceptions;
 
 class NotionDatabase extends NotionObject
 {
-    use ThrowsExceptions, HandleFilters, HandleProperties;
+    use HandleFilters, HandleProperties;
 
     private string $link;
     protected string $title;
@@ -38,11 +37,14 @@ class NotionDatabase extends NotionObject
         return (new NotionDatabase($id))->get();
     }
 
+
     public function get(): self
     {
 
-        $response = prepareHttp()->get($this->url());
-        $this->throwExceptions($response);
+        $response = prepareHttp()->get($this->url())
+            ->onError(
+                fn($response) => NotionException::matchException($response->json())
+            );
         return $this->build($response->json());
 
     }
@@ -60,9 +62,10 @@ class NotionDatabase extends NotionObject
                     'title' => $this->mapTitle($this),
                     'properties' => NotionProperty::mapsProperties($this)
                 ]
+            )
+            ->onError(
+                fn($response) => NotionException::matchException($response->json())
             );
-
-        $this->throwExceptions($response);
 
         return $this->build($response->json());
     }
@@ -76,9 +79,10 @@ class NotionDatabase extends NotionObject
 
         if (isset($this->properties)) $requestBody['properties'] = NotionProperty::mapsProperties($this);
 
-        $response = prepareHttp()->patch($this->url(), $requestBody);
-
-        $this->throwExceptions($response);
+        $response = prepareHttp()->patch($this->url(), $requestBody)
+            ->onError(
+                fn($response) => NotionException::matchException($response->json())
+            );
 
         return $this->build($response->json());
 
@@ -90,8 +94,10 @@ class NotionDatabase extends NotionObject
         if (isset($this->filters)) $requestBody['filter'] = $this->getFilterResults();
         if (isset($this->sorts)) $requestBody['sorts'] = $this->getSortResults();
 
-        $response = prepareHttp()->post($this->queryUrl(), $requestBody);
-        $this->throwExceptions($response);
+        $response = prepareHttp()->post($this->queryUrl(), $requestBody)
+            ->onError(
+                fn($response) => NotionException::matchException($response->json())
+            );
 
         return (new NotionPage)->buildList($response->json());
     }

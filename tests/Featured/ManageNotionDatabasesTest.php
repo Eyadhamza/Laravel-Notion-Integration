@@ -7,7 +7,8 @@ use Pi\Notion\Core\NotionDatabase;
 use Pi\Notion\Core\NotionFilter;
 use Pi\Notion\Core\NotionProperty;
 use Pi\Notion\Core\NotionSort;
-use Pi\Notion\Exceptions\NotionDatabaseException;
+use Pi\Notion\Exceptions\InvalidRequestUrlException;
+use Pi\Notion\Exceptions\NotionValidationException;
 use Pi\Notion\Tests\TestCase;
 
 class ManageNotionDatabasesTest extends TestCase
@@ -69,7 +70,7 @@ class ManageNotionDatabasesTest extends TestCase
     {
         $id = '632b5fb7e06c4404ae12asdasd065c48280e4asdc';
 
-        $this->expectException(NotionDatabaseException::class);
+        $this->expectException(NotionValidationException::class);
 
         (new NotionDatabase($id))->get();
 
@@ -80,7 +81,7 @@ class ManageNotionDatabasesTest extends TestCase
     public function throw_exception_database_not_authorized()
     {
         $id = '632b5fb7e06c4404ae12065c48280e4asdc';
-        $this->expectException(NotionDatabaseException::class);
+        $this->expectException(InvalidRequestUrlException::class);
         (new NotionDatabase($id))->get();
 
 

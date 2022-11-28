@@ -6,6 +6,7 @@ namespace Pi\Notion\Core;
 
 use Illuminate\Support\Collection;
 use PhpParser\Builder\Property;
+use Pi\Notion\Exceptions\NotionException;
 use Pi\Notion\Traits\HandleBlocks;
 use Pi\Notion\Traits\HandleProperties;
 use Pi\Notion\Traits\ThrowsExceptions;
@@ -47,7 +48,7 @@ class NotionPage extends NotionObject
     {
         $response = prepareHttp()->get($this->getUrl());
 
-        $this->throwExceptions($response);
+        NotionException::matchException($response->json());($response);
         return $this->build($response->json());
     }
     public function getProperty(string $name)
@@ -58,15 +59,15 @@ class NotionPage extends NotionObject
             ->ofName($name)
             ->firstOrFail();
 
-        $response = prepareHttp()->get($this->getUrl() . '/properties/' . $property->getId());
+        $response = prepareHttp()->get($this->getUrl() . '/properties/' . $property->getId())->onError(
+            fn($response) => NotionException::matchException($response->json())
+        );
 
         $property->setValues($response->json()[$property->getType()] ?? []);
 
         if ($property->isPaginated()) {
             NotionProperty::buildList($response->json());
         }
-
-        $this->throwExceptions($response);
 
         return $property;
     }
@@ -90,9 +91,9 @@ class NotionPage extends NotionObject
                 'parent' => array('database_id' => $this->getDatabaseId()),
                 'properties' => NotionProperty::mapsProperties($this),
                 'children' => NotionBlock::mapsBlocksToPage($this)
-            ]);
-        $this->throwExceptions($response);
-
+            ])->onError(
+                fn($response) => NotionException::matchException($response->json())
+            );
         return $this->build($response->json());
     }
 
@@ -101,8 +102,9 @@ class NotionPage extends NotionObject
         $response = prepareHttp()
             ->patch($this->getUrl(), [
                 'properties' => NotionProperty::mapsProperties($this),
-            ]);
-        $this->throwExceptions($response);
+            ])->onError(
+                fn($response) => NotionException::matchException($response->json())
+            );
         return $this->build($response->json());
     }
 
@@ -117,8 +119,9 @@ class NotionPage extends NotionObject
     {
 
         $response = prepareHttp()
-            ->post(NotionWorkspace::SEARCH_PAGE_URL, ['query' => $pageTitle]);
-        $this->throwExceptions($response);
+            ->post(NotionWorkspace::SEARCH_PAGE_URL, ['query' => $pageTitle])->onError(
+                fn($response) => NotionException::matchException($response->json())
+            );
         return $this->buildList($response->json());
 
     }
