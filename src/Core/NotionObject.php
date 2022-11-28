@@ -43,12 +43,8 @@ abstract class NotionObject
         return $this;
     }
 
-    public function buildList($response): Collection
+    public function buildList($response): NotionPagination
     {
-        $this->list = new Collection();
-        collect($response['results'])->each(function ($item) {
-            $this->list->add(self::build($item));
-        });
-        return $this->list;
+        return NotionPagination::make($response, $this);
     }
 }

@@ -49,7 +49,7 @@ class NotionBlock extends NotionObject
         return $this->buildList($response->json());
     }
 
-    public function create(): Collection
+    public function create(): NotionPagination
     {
         $response = Http::prepareHttp()->patch($this->getUrl() . '/children', [
             'children' => $this->mapChildren()

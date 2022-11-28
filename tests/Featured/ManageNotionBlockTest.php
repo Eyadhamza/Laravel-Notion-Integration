@@ -30,7 +30,7 @@ class ManageNotionBlockTest extends TestCase
 
         $block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
 
-        $children = $block->addChildren([
+        $paginatedObject = $block->addChildren([
             NotionBlock::headingTwo(NotionRichText::make('Eyad Hamza')
                 ->bold()
                 ->setLink('https://www.google.com')
@@ -39,7 +39,8 @@ class ManageNotionBlockTest extends TestCase
             NotionBlock::numberedList('Numbered List'),
             NotionBlock::bulletedList('Bullet List'),
         ])->create();
-        $this->assertCount(4, $children);
+        dd($paginatedObject);
+        $this->assertCount(4, $paginatedObject->getResults());
     }
 
     /** @test */
