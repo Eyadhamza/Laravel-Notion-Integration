@@ -24,6 +24,7 @@ class NotionBlock extends NotionObject
         $this->type = $type;
         $this->blockContent = $blockContent;
         $this->children = new Collection();
+
     }
     public static function find($id): self
     {
@@ -40,12 +41,15 @@ class NotionBlock extends NotionObject
         return $this->build($response->json());
     }
 
-    public function getChildren(): Collection
+    public function getChildren($pageSize = 100): NotionPagination
     {
-        $response = Http::prepareHttp()->get(NotionWorkspace::BLOCK_URL . $this->id . '/children')
-            ->onError(
-                fn($response) => NotionException::matchException($response->json())
-            );
+        $this->pagination = new NotionPagination();
+        $response = $this->pagination
+            ->setUrl($this->childrenUrl())
+            ->setMethod('get')
+            ->setPageSize($pageSize)
+            ->get();
+
         return $this->buildList($response->json());
     }
 
@@ -143,5 +147,10 @@ class NotionBlock extends NotionObject
     {
         $this->id = $id;
         return $this;
+    }
+
+    private function childrenUrl(): string
+    {
+        return NotionWorkspace::BLOCK_URL . $this->id . '/children';
     }
 }

@@ -38,7 +38,8 @@ class ManageNotionBlockTest extends TestCase
             NotionBlock::headingThree('Heading 3'),
             NotionBlock::numberedList('Numbered List'),
             NotionBlock::bulletedList('Bullet List'),
-        ])->create();
+        ])->getChildren(50);
+//        $paginatedObject->next(); Problem here!
         dd($paginatedObject);
         $this->assertCount(4, $paginatedObject->getResults());
     }

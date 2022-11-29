@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Pi\Notion\Commands\NotionCommand;
 use Pi\Notion\Core\NotionPage;
 use Pi\Notion\Core\NotionWorkspace;
+use Pi\Notion\Exceptions\NotionException;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 

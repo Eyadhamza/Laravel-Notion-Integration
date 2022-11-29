@@ -18,8 +18,7 @@ abstract class NotionObject
     protected ?string $icon;
     protected ?string $cover;
     private Collection $list;
-
-
+    protected NotionPagination $pagination;
     public static function build($response): static
     {
         $object = new static();
@@ -45,6 +44,8 @@ abstract class NotionObject
 
     public function buildList($response): NotionPagination
     {
-        return NotionPagination::make($response, $this);
+        return $this
+            ->pagination
+            ->make($response, $this);
     }
 }
