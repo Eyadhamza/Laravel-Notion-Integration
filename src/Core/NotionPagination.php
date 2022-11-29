@@ -109,4 +109,9 @@ class NotionPagination
         $this->nextCursor = $nextCursor;
         $this->hasMore = $hasMore;
     }
+
+    public function getResults(): Collection
+    {
+        return $this->results;
+    }
 }

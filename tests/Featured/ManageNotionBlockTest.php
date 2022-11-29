@@ -39,9 +39,7 @@ class ManageNotionBlockTest extends TestCase
             NotionBlock::numberedList('Numbered List'),
             NotionBlock::bulletedList('Bullet List'),
         ])->getChildren(50);
-       $paginatedObject->next()->next();
-        dd($paginatedObject);
-        $this->assertCount(4, $paginatedObject->getResults());
+        $this->assertCount(50, $paginatedObject->getResults());
     }
 
     /** @test */
