@@ -36,13 +36,14 @@ class NotionPagination
     public function get()
     {
         $method = $this->getMethod();
-
-        return Http::prepareHttp()
+        $response = Http::prepareHttp()
             ->$method($this->getUrl(),
                 $this->getPaginationParameters()
             )->onError(
                 fn($response) => NotionException::matchException($response->json())
             );
+        $this->updateNextCursor($response->json()['next_cursor'], $response->json()['has_more']);
+        return $response;
     }
     public function setPageSize(int $pageSize): static
     {
@@ -101,5 +102,11 @@ class NotionPagination
     public function getMethod(): string
     {
         return $this->method;
+    }
+
+    private function updateNextCursor(string $nextCursor = null,bool $hasMore = false): void
+    {
+        $this->nextCursor = $nextCursor;
+        $this->hasMore = $hasMore;
     }
 }
