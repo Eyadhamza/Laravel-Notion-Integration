@@ -1,6 +1,6 @@
 {
     "name": "eyadhamza/notion-api-wrapper",
-    "description": "This is my package Notion",
+    "description": "A Laravel API Wrapper for the restful Api provided by Notion.so",
     "keywords": [
         "laravel",
         "notion-api-wrapper"
