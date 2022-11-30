@@ -1,12 +1,11 @@
 {
-    "name": "pi/notion-api-wrapper",
+    "name": "eyadhamza/notion-api-wrapper",
     "description": "This is my package Notion",
     "keywords": [
-        "PI",
         "laravel",
         "notion-api-wrapper"
     ],
-    "homepage": "https://github.com/pi/notion-wrapper",
+    "homepage": "https://github.com/eyadhamza/notion-api-wrapper",
     "license": "MIT",
     "authors": [
         {
