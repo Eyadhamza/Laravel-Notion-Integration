@@ -19,7 +19,7 @@ The package provides easy and fluent interface to manipulate pages, databases, u
 You can install the package via composer:
 
 ```bash
-composer require pi/notion-wrapper
+composer require eyadhamza/notion-api-wrapper
 ```
 
 ## Usage
