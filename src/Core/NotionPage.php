@@ -7,6 +7,7 @@ namespace Pi\Notion\Core;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Pi\Notion\Exceptions\NotionException;
+use Pi\Notion\NotionClient;
 use Pi\Notion\Traits\HandleBlocks;
 use Pi\Notion\Traits\HandleProperties;
 
@@ -41,13 +42,13 @@ class NotionPage extends NotionObject
         return $page;
     }
 
-    public function get()
+    public function get(): self
     {
-        $response = Http::prepareHttp()->get($this->getUrl())->onError(
-            fn($response) => NotionException::matchException($response->json())
-        );
-        return $this->build($response->json());
+        $response = NotionClient::request('get', $this->getUrl());
+
+        return $this->build($response);
     }
+
     public function getProperty(string $name)
     {
         $property = $this
@@ -55,20 +56,19 @@ class NotionPage extends NotionObject
             ->filter
             ->ofName($name)
             ->firstOrFail();
+        $response = NotionClient::request('get', $this->propertyUrl($property->getId()));
 
-        $response = Http::prepareHttp()->get($this->getUrl() . '/properties/' . $property->getId())->onError(
-            fn($response) => NotionException::matchException($response->json())
-        );
 
-        $property->setValues($response->json()[$property->getType()] ?? []);
+        $property->setValues($response[$property->getType()] ?? []);
 
         if ($property->isPaginated()) {
-            NotionProperty::buildList($response->json());
+            NotionProperty::buildList($response);
         }
 
         return $property;
     }
-    public function getWithContent(): Collection
+
+    public function getWithContent(): NotionPagination
     {
         return (new NotionBlock)->getChildren($this->id);
     }
@@ -77,32 +77,28 @@ class NotionPage extends NotionObject
     {
         return (new NotionPage($id))->get();
     }
-    public static function findContent($id): Collection
+
+    public static function findContent($id): NotionPagination
     {
         return (new NotionPage($id))->getWithContent();
     }
+
     public function create(): self
     {
-        $response = Http::prepareHttp()
-            ->post(NotionWorkspace::PAGE_URL, [
-                'parent' => array('database_id' => $this->getDatabaseId()),
-                'properties' => NotionProperty::mapsProperties($this),
-                'children' => NotionBlock::mapsBlocksToPage($this)
-            ])->onError(
-                fn($response) => NotionException::matchException($response->json())
-            );
-        return $this->build($response->json());
+        $response = NotionClient::request('post', NotionWorkspace::PAGE_URL, [
+            'parent' => array('database_id' => $this->getDatabaseId()),
+            'properties' => NotionProperty::mapsProperties($this),
+            'children' => NotionBlock::mapsBlocksToPage($this)
+        ]);
+        return $this->build($response);
     }
 
     public function update(): self
     {
-        $response = Http::prepareHttp()
-            ->patch($this->getUrl(), [
-                'properties' => NotionProperty::mapsProperties($this),
-            ])->onError(
-                fn($response) => NotionException::matchException($response->json())
-            );
-        return $this->build($response->json());
+        $response = NotionClient::request('patch', $this->getUrl(), [
+            'properties' => NotionProperty::mapsProperties($this),
+        ]);
+        return $this->build($response);
     }
 
     public function delete(): NotionBlock
@@ -111,18 +107,6 @@ class NotionPage extends NotionObject
             ->setId($this->id)
             ->delete();
     }
-
-    public function search(string $pageTitle): Collection
-    {
-
-        $response = Http::prepareHttp()
-            ->post(NotionWorkspace::SEARCH_PAGE_URL, ['query' => $pageTitle])->onError(
-                fn($response) => NotionException::matchException($response->json())
-            );
-        return $this->buildList($response->json());
-
-    }
-
 
     public function setDatabaseId(string $notionDatabaseId): void
     {
@@ -138,6 +122,11 @@ class NotionPage extends NotionObject
     private function getDatabaseId()
     {
         return $this->notionDatabaseId;
+    }
+
+    private function propertyUrl($id)
+    {
+        return $this->getUrl() . '/properties/' . $id;
     }
 
 }

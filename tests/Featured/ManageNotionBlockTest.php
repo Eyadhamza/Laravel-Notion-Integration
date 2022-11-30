@@ -40,6 +40,12 @@ class ManageNotionBlockTest extends TestCase
             NotionBlock::bulletedList('Bullet List'),
         ])->getChildren(50);
         $this->assertCount(50, $paginatedObject->getResults());
+        $paginatedObject->next();
+
+        $this->assertCount(50, $paginatedObject->getResults());
+        $paginatedObject->next();
+
+        $this->assertFalse($paginatedObject->hasMore());
     }
 
     /** @test */
@@ -69,9 +75,8 @@ class ManageNotionBlockTest extends TestCase
             NotionBlock::headingThree('Heading 3'),
             NotionBlock::numberedList('Numbered List'),
             NotionBlock::bulletedList('Bullet List'),
-        ]);
-
-        $this->assertObjectHasAttribute('objectType', $block);
+        ])->createChildren();
+        $this->assertCount(4, $block->getResults());
     }
 
     /** @test */

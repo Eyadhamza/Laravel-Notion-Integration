@@ -94,11 +94,11 @@ class ManageNotionDatabasesTest extends TestCase
 
         $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
 
-        $pages = $database->filter(
-            NotionFilter::title('Name')->contains('MMMM'))
+        $paginated = $database->filter(
+            NotionFilter::title('Name')
+                ->contains('MMMM'))
             ->query();
-
-        $this->assertInstanceOf(Collection::class, $pages);
+        $this->assertCount(4, $paginated->getResults());
 
 
     }
@@ -109,7 +109,7 @@ class ManageNotionDatabasesTest extends TestCase
 
         $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
 
-        $response = $database->filters([
+        $paginated = $database->filters([
             NotionFilter::groupWithAnd([
                 NotionFilter::select('Status')
                     ->equals('Reading'),
@@ -119,9 +119,9 @@ class ManageNotionDatabasesTest extends TestCase
                     ->contains('MMMM')
             ])
         ])->query();
-        $this->assertInstanceOf(Collection::class, $response);
+        $this->assertCount(1, $paginated->getResults());
 
-        $response = $database->filters([
+        $paginated = $database->filters([
             NotionFilter::groupWithOr([
                 NotionFilter::select('Status')
                     ->equals('Reading'),
@@ -131,7 +131,7 @@ class ManageNotionDatabasesTest extends TestCase
                     ->contains('MMMM')
             ])
         ])->query();
-        $this->assertCount(4, $response);
+        $this->assertCount(4, $paginated->getResults());
     }
 
     public function test_database_can_be_filtered_with_nested_filters()
@@ -139,7 +139,7 @@ class ManageNotionDatabasesTest extends TestCase
 
         $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
 
-        $response = $database->filters([
+        $paginated = $database->filters([
             NotionFilter::select('Status')
                 ->equals('Reading')
                 ->compoundOrGroup([
@@ -149,8 +149,7 @@ class ManageNotionDatabasesTest extends TestCase
                         ->contains('MMMM')
                 ], 'and')
         ])->query();
-
-        $this->assertCount(2, $response);
+        $this->assertCount(2, $paginated->getResults());
 
     }
 
@@ -160,13 +159,16 @@ class ManageNotionDatabasesTest extends TestCase
     {
 
         $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
-        $response = $database->sorts([
+        $paginated = $database->sorts([
             NotionSort::property('Name')->ascending(),
         ])->filter(
             NotionFilter::title('Name')
                 ->contains('A'),
-        )->query();
-
-        $this->assertInstanceOf(Collection::class, $response);
+        )->query(50);
+        $this->assertCount(50, $paginated->getResults());
+        $this->assertTrue($paginated->hasMore());
+        $paginated->next();
+        $this->assertCount(50, $paginated->getResults());
+        $this->assertIsString($paginated->getNextCursor());
     }
 }

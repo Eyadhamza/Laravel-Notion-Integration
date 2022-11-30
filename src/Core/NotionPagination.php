@@ -5,6 +5,7 @@ namespace Pi\Notion\Core;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Pi\Notion\Exceptions\NotionException;
+use Pi\Notion\NotionClient;
 
 class NotionPagination
 {
@@ -18,13 +19,13 @@ class NotionPagination
     private string $objectType;
     private string $url;
     private string $method;
+    private array $requestBody;
 
 
     public function make($response, NotionObject $notionObject): static
     {
         $this->hasMore = $response['has_more'];
         $this->nextCursor = $response['next_cursor'];
-
         $this->resultsType = $response['type'];
         $this->objectType = $response['object'];
         $this->results = new Collection();
@@ -33,34 +34,55 @@ class NotionPagination
         }
         return $this;
     }
-    public function get()
+    public function paginate()
     {
-        $method = $this->getMethod();
-        $response = Http::prepareHttp()
-            ->$method($this->getUrl(),
-                $this->getPaginationParameters()
-            )->onError(
-                fn($response) => NotionException::matchException($response->json())
-            );
-        $this->updateNextCursor($response->json()['next_cursor'], $response->json()['has_more']);
+        $body = [];
+        if ($this->getPaginationParameters()) {
+            $body = array_merge($body, $this->getPaginationParameters());
+        }
+        if (isset($this->requestBody)) {
+            $body = array_merge($body, $this->requestBody);
+        }
+        $response = NotionClient::request($this->getMethod(), $this->getUrl(), $body);
+
+        $this->updateNextCursor($response['next_cursor'], $response['has_more']);
         return $response;
-    }
-    public function setPageSize(int $pageSize): static
-    {
-        $this->pageSize = $pageSize;
-        return $this;
     }
     public function next(): static
     {
         $this->startCursor = $this->getNextCursor();
-        $this->get();
+        $this->paginate();
+        return $this;
+    }
+    public function getPaginationParameters(): array|null
+    {
+        $parameters = [];
+        if ($this->getStartCursor()) {
+            $parameters['start_cursor'] = $this->getStartCursor();
+        }
+        if ($this->getPageSize()) {
+            $parameters['page_size'] = $this->getPageSize();
+        }
+        return $this->pageSize == 100 && is_null($this->getStartCursor()) ? null : $parameters;
+
+    }
+
+    private function updateNextCursor(string $nextCursor = null,bool $hasMore = false): void
+    {
+        $this->nextCursor = $nextCursor;
+        $this->hasMore = $hasMore;
+    }
+
+    public function setPageSize(int $pageSize): static
+    {
+        $this->pageSize = $pageSize;
         return $this;
     }
     public function getNextCursor(): ?string
     {
         return $this->nextCursor;
     }
-    public function getHasMore(): bool
+    public function hasMore(): bool
     {
         return $this->hasMore;
     }
@@ -73,15 +95,6 @@ class NotionPagination
     {
         return $this->pageSize;
     }
-    public function getPaginationParameters(): array
-    {
-
-        return [
-            'page_size' => $this->getPageSize(),
-            'start_cursor' => $this->getStartCursor(),
-        ];
-    }
-
     public function setUrl(string $url): static
     {
         $this->url = $url;
@@ -104,14 +117,23 @@ class NotionPagination
         return $this->method;
     }
 
-    private function updateNextCursor(string $nextCursor = null,bool $hasMore = false): void
-    {
-        $this->nextCursor = $nextCursor;
-        $this->hasMore = $hasMore;
-    }
-
     public function getResults(): Collection
     {
         return $this->results;
+    }
+
+    public function setRequestBody(array $array): static
+    {
+        $this->requestBody = $array;
+        return $this;
+    }
+    public function getResultsType(): string
+    {
+        return $this->resultsType;
+    }
+
+    public function getObjectType(): string
+    {
+        return $this->objectType;
     }
 }

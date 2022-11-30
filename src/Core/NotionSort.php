@@ -50,4 +50,12 @@ class NotionSort
     {
         return $this->direction;
     }
+
+    public function getUsingTimestamp(): array
+    {
+        return [
+            'timestamp' => $this->property,
+            'direction' => $this->direction
+        ];
+    }
 }

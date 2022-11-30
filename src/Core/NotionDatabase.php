@@ -7,12 +7,14 @@ namespace Pi\Notion\Core;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Pi\Notion\Exceptions\NotionException;
+use Pi\Notion\NotionClient;
 use Pi\Notion\Traits\HandleFilters;
 use Pi\Notion\Traits\HandleProperties;
+use Pi\Notion\Traits\HandleSorts;
 
 class NotionDatabase extends NotionObject
 {
-    use HandleFilters, HandleProperties;
+    use HandleFilters, HandleProperties, HandleSorts;
 
     private string $link;
     protected string $title;
@@ -21,7 +23,6 @@ class NotionDatabase extends NotionObject
     protected Collection $properties;
     protected Collection $pages;
     protected Collection $filters;
-    protected Collection $sorts;
 
     public function __construct($id = '')
     {
@@ -42,33 +43,27 @@ class NotionDatabase extends NotionObject
     public function get(): self
     {
 
-        $response = Http::prepareHttp()->get($this->url())
-            ->onError(
-                fn($response) => NotionException::matchException($response->json())
-            );
-        return $this->build($response->json());
+        $response = NotionClient::request('get', $this->url());
+
+        return $this->build($response);
 
     }
 
     public function create(): self
     {
 
-        $response = Http::prepareHttp()
-            ->post(
-                NotionWorkspace::DATABASE_URL, [
-                    'parent' => [
-                        'type' => 'page_id',
-                        'page_id' => $this->getParentPageId()
-                    ],
-                    'title' => $this->mapTitle($this),
-                    'properties' => NotionProperty::mapsProperties($this)
-                ]
-            )
-            ->onError(
-                fn($response) => NotionException::matchException($response->json())
-            );
+        $response = NotionClient::request('post',
+            NotionWorkspace::DATABASE_URL, [
+            'parent' => [
+                'type' => 'page_id',
+                'page_id' => $this->getParentPageId()
+            ],
+            'title' => $this->mapTitle($this),
+            'properties' => NotionProperty::mapsProperties($this)
+        ]);
 
-        return $this->build($response->json());
+
+        return $this->build($response);
     }
 
 
@@ -80,33 +75,29 @@ class NotionDatabase extends NotionObject
 
         if (isset($this->properties)) $requestBody['properties'] = NotionProperty::mapsProperties($this);
 
-        $response = Http::prepareHttp()->patch($this->url(), $requestBody)
-            ->onError(
-                fn($response) => NotionException::matchException($response->json())
-            );
+        $response = NotionClient::request('patch', $this->url(), $requestBody);
 
-        return $this->build($response->json());
+        return $this->build($response);
 
     }
 
-    public function query(): Collection
+    public function query(int $pageSize = 100): NotionPagination
     {
         $requestBody = [];
         if (isset($this->filters)) $requestBody['filter'] = $this->getFilterResults();
         if (isset($this->sorts)) $requestBody['sorts'] = $this->getSortResults();
 
-        $response = Http::prepareHttp()->post($this->queryUrl(), $requestBody)
-            ->onError(
-                fn($response) => NotionException::matchException($response->json())
-            );
+        $this->pagination = new NotionPagination();
+        $response = $this->pagination
+            ->setUrl($this->queryUrl())
+            ->setMethod('post')
+            ->setRequestBody($requestBody)
+            ->setPageSize($pageSize)
+            ->paginate();
 
-        return (new NotionPage)->buildList($response->json());
+        return $this->pagination->make($response, new NotionPage);
     }
 
-    private function getSortResults(): array
-    {
-        return $this->sorts->map->get()->toArray();
-    }
 
     public static function build($response): static
     {
@@ -121,15 +112,6 @@ class NotionDatabase extends NotionObject
         return $database;
     }
 
-
-    public function sorts(array|NotionSort $sorts): self
-    {
-        $sorts = is_array($sorts) ? collect($sorts) : $sorts;
-
-        $this->sorts = $sorts;
-
-        return $this;
-    }
 
     public function setDatabaseId(string $id): self
     {

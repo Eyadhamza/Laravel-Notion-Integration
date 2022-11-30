@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Pi\Notion\Common\BlockContent;
 use Pi\Notion\Exceptions\NotionException;
+use Pi\Notion\NotionClient;
 use Pi\Notion\Traits\CreateBlockTypes;
 
 class NotionBlock extends NotionObject
@@ -32,54 +33,48 @@ class NotionBlock extends NotionObject
     }
     public function get():self
     {
-        $response = Http::prepareHttp()
-            ->get($this->getUrl())
-            ->onError(
-                fn($response) => NotionException::matchException($response->json())
-            );
+        $response = NotionClient::request('get', $this->getUrl());
 
-        return $this->build($response->json());
+        return $this->build($response);
     }
 
-    public function getChildren($pageSize = 100): NotionPagination
+    public function getChildren(int $pageSize = 100): NotionPagination
     {
         $this->pagination = new NotionPagination();
         $response = $this->pagination
             ->setUrl($this->childrenUrl())
             ->setMethod('get')
             ->setPageSize($pageSize)
-            ->get();
+            ->paginate();
 
-        return $this->buildList($response->json());
+        return $this->pagination->make($response, $this);
     }
 
-    public function create(): NotionPagination
+    public function createChildren(int $pageSize = 100): NotionPagination
     {
-        $response = Http::prepareHttp()->patch($this->getUrl() . '/children', [
-            'children' => $this->mapChildren()
-        ])->onError(
-                fn($response) => NotionException::matchException($response->json())
-            );
-        return (new NotionBlock())->buildList($response->json());
+        $this->pagination = new NotionPagination();
+        $response = $this->pagination
+            ->setUrl($this->childrenUrl())
+            ->setMethod('patch')
+            ->setRequestBody(['children' => $this->mapChildren()])
+            ->paginate();
+
+        return $this->pagination->make($response, $this);
     }
 
     public function update():self
     {
-        $response = Http::prepareHttp()->patch($this->getUrl(), [
+        $response = NotionClient::request('patch', $this->getUrl(), [
             $this->type => $this->contentBody()
-        ])->onError(
-                fn($response) => NotionException::matchException($response->json())
-            );
-
-        return $this->build($response->json());
+        ]);
+        return $this->build($response);
     }
 
     public function delete(): static
     {
-        $response = Http::prepareHttp()->delete($this->getUrl())->onError(
-            fn($response) => NotionException::matchException($response->json())
-        );
-        return $this->build($response->json());
+        $response = NotionClient::request('delete', $this->getUrl());
+
+        return $this->build($response);
     }
 
     public static function mapsBlocksToPage(NotionPage $page): Collection

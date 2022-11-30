@@ -27,10 +27,6 @@ class NotionServiceProvider extends PackageServiceProvider
     public function boot()
     {
         parent::boot();
-        Http::macro('prepareHttp', function () {
-            return Http::withToken(config('notion-wrapper.info.token'))
-                ->withHeaders(['Notion-Version' => NotionWorkspace::NOTION_VERSION]);
-        });
         Collection::macro('toAssoc', function () {
             return $this->reduce(function ($assoc, $keyValuePair) {
                 list($key, $value) = $keyValuePair;

@@ -195,13 +195,7 @@ class ManageNotionPageTest extends TestCase
 
 
     }
-    /** @test */
-    public function it_returns_search_result()
-    {
-        $response = (new NotionPage)
-            ->search('Eyad');
-        $this->assertInstanceOf(Collection::class, $response);
-    }
+
     /** @test */
     public function it_returns_a_property_by_id()
     {

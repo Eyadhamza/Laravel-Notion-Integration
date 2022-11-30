@@ -42,10 +42,4 @@ abstract class NotionObject
         return $this;
     }
 
-    public function buildList($response): NotionPagination
-    {
-        return $this
-            ->pagination
-            ->make($response, $this);
-    }
 }
