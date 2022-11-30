@@ -1,4 +1,4 @@
-# Laravel & Notion Integration
+# Notion API Wrapper Laravel
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/eyadhamza/notion-api-wrapper.svg?style=flat-square)](https://packagist.org/packages/eyadhamza/notion-api-wrapper)
 [![Total Downloads](https://img.shields.io/packagist/dt/eyadhamza/notion-api-wrapper.svg?style=flat-square)](https://packagist.org/packages/eyadhamza/notion-api-wrapper)
