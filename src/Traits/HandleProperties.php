@@ -7,7 +7,6 @@ use Pi\Notion\Core\NotionProperty;
 
 trait HandleProperties
 {
-
     public function setProperties(array $properties): self
     {
         collect($properties)->map(function ($property) {

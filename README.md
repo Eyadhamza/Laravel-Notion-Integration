@@ -358,6 +358,42 @@ $response = NotionSearch::inPages('Eyad')
 ```php
 $response = NotionSearch::inDatabases('Eyad')->apply(50);
 ```
+
+### Users
+#### Retrieve all users
+```php
+$users = NotionUser::index();
+```
+#### Retrieve a User by ID
+```php
+$user = NotionUser::find('2c4d6a4a-12fe-4ce8-a7e4-e3019cc4765f');
+```
+#### Retrieve Current Bot Info
+```php
+$bot = NotionUser::getBot();
+```
+### Comments
+#### Retrieve all comments by page ID / Discussion ID
+```php
+$comments = NotionComment::findAll('0b036890391f417cbac775e8b0bba680');
+```
+#### Create a new comment
+- Note that you can either pass a string to setContent Method or a RichText Object for more styling options.
+```php
+// Create a new comment on a page
+$comment = new NotionComment();
+ $comment->setParentId('a270ab4fa945449f9284b180234b00c3')
+         ->setContent('This is a comment')
+         ->create();
+// Create a new comment on any discussion
+ $comment->setDiscussionId('ac803deb7b064cca83067c67914b02b4')
+         ->setContent(
+         NotionRichText::make('This is a comment')
+                ->color('red')
+                ->bold()
+                ->italic()
+            )->create();
+```
 ### Pagination
 - Notion will return a paginated response in the following endpoints:
   - Query a database
@@ -376,6 +412,12 @@ $response->hasMore(); // will return true if there are more results
 $response->next() // will return the next 50 results (if hasMore is true)
 $response->getObjectType(); // get the type of the object ( always list )
 $response->getResultsType() // get the type of the results (Block/Database/Page)
+```
+### Handling Errors
+- In case of an error, an exception will be thrown with the error message.
+- To know more about the exceptions you can check the exceptions folder or in NotionException.php class.
+- You can also check the Notion API documentation for more information about the errors.
+
 ```
 ## Testing
 
