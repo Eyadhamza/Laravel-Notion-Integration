@@ -28,7 +28,7 @@ class NotionFilter
         return new self($type, $property);
     }
 
-    public static function group(array $filters, $connective)
+    public static function group(array $filters, $connective): NotionFilter
     {
         $filter = new self('group', 'group');
 
@@ -67,11 +67,10 @@ class NotionFilter
 
     public function compoundOrGroup(array $filters, $nestedConnective): self
     {
-
         $this->filterGroup->add([
             'or' => [
                 $this->get(),
-                [$nestedConnective => collect($filters)->map->get()]
+                $this->setNestedConnective($filters, $nestedConnective)
             ]
         ]);
         return $this;
@@ -82,10 +81,9 @@ class NotionFilter
         $this->filterGroup->add([
             'and' => [
                 $this->get(),
-                [$nestedConnective => collect($filters)->map->get()->toArray()]
+                $this->setNestedConnective($filters, $nestedConnective)
             ]
         ]);
-
         return $this;
     }
 
@@ -129,5 +127,14 @@ class NotionFilter
     public function getProperty(): string
     {
         return $this->property;
+    }
+
+    private function setNestedConnective(array $filters, $nestedConnective): array
+    {
+        return [
+            $nestedConnective => collect($filters)->map(function (NotionFilter $filter) {
+                return $filter->get();
+            })->toArray()
+        ];
     }
 }
