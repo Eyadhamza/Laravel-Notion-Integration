@@ -132,7 +132,7 @@ class NotionBlock extends NotionObject
     }
     private function getUrl(): string
     {
-        return NotionWorkspace::BLOCK_URL . $this->id;
+        return NotionClient::BLOCK_URL . $this->id;
     }
     public function getId(): string
     {
@@ -146,6 +146,6 @@ class NotionBlock extends NotionObject
 
     private function childrenUrl(): string
     {
-        return NotionWorkspace::BLOCK_URL . $this->id . '/children';
+        return NotionClient::BLOCK_URL . $this->id . '/children';
     }
 }

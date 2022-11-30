@@ -2,7 +2,7 @@
 
 namespace Pi\Notion\Tests\Unit;
 
-use Pi\Notion\Core\NotionWorkspace;
+use Pi\Notion\NotionClient;
 use Pi\Notion\Tests\TestCase;
 
 class NotionTest extends TestCase
@@ -10,9 +10,9 @@ class NotionTest extends TestCase
     /** @test */
     public function it_returns_new_workspace_instance()
     {
-        $workspace = new NotionWorkspace;
+        $workspace = new NotionClient;
 
-        $this->assertInstanceOf(NotionWorkspace::class, $workspace);
+        $this->assertInstanceOf(NotionClient::class, $workspace);
     }
 
 

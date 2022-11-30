@@ -53,7 +53,7 @@ class NotionDatabase extends NotionObject
     {
 
         $response = NotionClient::request('post',
-            NotionWorkspace::DATABASE_URL, [
+            NotionClient::DATABASE_URL, [
             'parent' => [
                 'type' => 'page_id',
                 'page_id' => $this->getParentPageId()
@@ -128,7 +128,7 @@ class NotionDatabase extends NotionObject
 
     private function url(): string
     {
-        return NotionWorkspace::DATABASE_URL . $this->id;
+        return NotionClient::DATABASE_URL . $this->id;
     }
 
     private function queryUrl(): string

@@ -2,6 +2,7 @@
 
 namespace Pi\Notion\Core;
 
+use Pi\Notion\NotionClient;
 use Pi\Notion\Traits\HandleSorts;
 
 class NotionSearch extends NotionObject
@@ -35,7 +36,7 @@ class NotionSearch extends NotionObject
 
         $this->pagination = new NotionPaginator();
         $response = $this->pagination
-            ->setUrl(NotionWorkspace::SEARCH_PAGE_URL)
+            ->setUrl(NotionClient::SEARCH_PAGE_URL)
             ->setMethod('post')
             ->setRequestBody([
                 'query' => $this->query,

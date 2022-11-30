@@ -2,9 +2,7 @@
 
 namespace Pi\Notion;
 
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
-use Pi\Notion\Core\NotionWorkspace;
 use Pi\Notion\Exceptions\ConflictErrorException;
 use Pi\Notion\Exceptions\InternalServerErrorException;
 use Pi\Notion\Exceptions\InvalidJsonException;
@@ -21,6 +19,24 @@ use Pi\Notion\Exceptions\UnauthorizedException;
 
 class NotionClient
 {
+    const BASE_URL= 'https://api.notion.com/v1';
+    const PAGE_URL = NotionClient::BASE_URL.'/pages/';
+    const BLOCK_URL = NotionClient::BASE_URL.'/blocks/';
+    const SEARCH_PAGE_URL =  NotionClient::BASE_URL.'/search';
+    const DATABASE_URL = NotionClient::BASE_URL.'/databases/';
+    const NOTION_VERSION = '2022-02-22';
+
+    private string $token;
+
+    public function __construct()
+    {
+        $token = \config('notion-wrapper.info.token');
+        $this->token = $token;
+    }
+    public static function client(): self
+    {
+        return new self();
+    }
     /**
      * @throws ObjectNotFoundException
      * @throws InvalidRequestException
@@ -38,7 +54,7 @@ class NotionClient
     public static function request(string $method, string $url, array $requestBody = []): array
     {
         return Http::withToken(config('notion-wrapper.info.token'))
-            ->withHeaders(['Notion-Version' => NotionWorkspace::NOTION_VERSION])
+            ->withHeaders(['Notion-Version' => \Pi\Notion\NotionClient::NOTION_VERSION])
             ->$method($url, $requestBody)
             ->onError(fn($response) => NotionException::matchException($response->json()))
             ->json();

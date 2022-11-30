@@ -85,7 +85,7 @@ class NotionPage extends NotionObject
 
     public function create(): self
     {
-        $response = NotionClient::request('post', NotionWorkspace::PAGE_URL, [
+        $response = NotionClient::request('post', NotionClient::PAGE_URL, [
             'parent' => array('database_id' => $this->getDatabaseId()),
             'properties' => NotionProperty::mapsProperties($this),
             'children' => NotionBlock::mapsBlocksToPage($this)
@@ -115,7 +115,7 @@ class NotionPage extends NotionObject
 
     private function getUrl(): string
     {
-        return NotionWorkspace::PAGE_URL . $this->id;
+        return NotionClient::PAGE_URL . $this->id;
     }
 
 
