@@ -1,9 +1,7 @@
 # Laravel & Notion Integration
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/pi/notion-wrapper.svg?style=flat-square)](https://packagist.org/packages/pi/notion-wrapper)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/pi/notion-wrapper/run-tests?label=tests)](https://github.com/pi/notion-wrapper/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/pi/notion-wrapper/Check%20&%20fix%20styling?label=code%20style)](https://github.com/pi/notion-wrapper/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/pi/notion-wrapper.svg?style=flat-square)](https://packagist.org/packages/pi/notion-wrapper)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/eyadhamza/notion-api-wrapper.svg?style=flat-square)](https://packagist.org/packages/eyadhamza/notion-api-wrapper)
+[![Total Downloads](https://img.shields.io/packagist/dt/eyadhamza/notion-api-wrapper.svg?style=flat-square)](https://packagist.org/packages/eyadhamza/notion-api-wrapper)
 
 ---
 
