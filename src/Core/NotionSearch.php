@@ -21,10 +21,19 @@ class NotionSearch extends NotionObject
     {
         return new NotionSearch($query, $filterObject);
     }
-    public function apply(int $pageSize = 100): NotionPagination
+
+    public static function inPages(string $query): self
+    {
+        return new self($query, 'page');
+    }
+    public static function inDatabases(string $query): self
+    {
+        return new self($query, 'database');
+    }
+    public function apply(int $pageSize = 100): NotionPaginator
     {
 
-        $this->pagination = new NotionPagination();
+        $this->pagination = new NotionPaginator();
         $response = $this->pagination
             ->setUrl(NotionWorkspace::SEARCH_PAGE_URL)
             ->setMethod('post')
@@ -34,7 +43,7 @@ class NotionSearch extends NotionObject
                     'value' => $this->filterObject,
                     'property' => 'object'
                 ],
-                'sort' => $this->getSortUsingTimestamp()[0]
+                'sort' => $this->getSortUsingTimestamp()
             ])
             ->setPageSize($pageSize)
             ->paginate();

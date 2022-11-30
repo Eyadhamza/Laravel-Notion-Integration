@@ -68,7 +68,7 @@ class NotionPage extends NotionObject
         return $property;
     }
 
-    public function getWithContent(): NotionPagination
+    public function getWithContent(): NotionPaginator
     {
         return (new NotionBlock)->getChildren($this->id);
     }
@@ -78,7 +78,7 @@ class NotionPage extends NotionObject
         return (new NotionPage($id))->get();
     }
 
-    public static function findContent($id): NotionPagination
+    public static function findContent($id): NotionPaginator
     {
         return (new NotionPage($id))->getWithContent();
     }

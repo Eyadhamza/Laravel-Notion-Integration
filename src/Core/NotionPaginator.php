@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Pi\Notion\Exceptions\NotionException;
 use Pi\Notion\NotionClient;
 
-class NotionPagination
+class NotionPaginator
 {
     private ?string $startCursor;
     private ?int $pageSize = 100;

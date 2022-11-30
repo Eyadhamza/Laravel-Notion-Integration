@@ -38,9 +38,9 @@ class NotionBlock extends NotionObject
         return $this->build($response);
     }
 
-    public function getChildren(int $pageSize = 100): NotionPagination
+    public function getChildren(int $pageSize = 100): NotionPaginator
     {
-        $this->pagination = new NotionPagination();
+        $this->pagination = new NotionPaginator();
         $response = $this->pagination
             ->setUrl($this->childrenUrl())
             ->setMethod('get')
@@ -50,9 +50,9 @@ class NotionBlock extends NotionObject
         return $this->pagination->make($response, $this);
     }
 
-    public function createChildren(int $pageSize = 100): NotionPagination
+    public function createChildren(int $pageSize = 100): NotionPaginator
     {
-        $this->pagination = new NotionPagination();
+        $this->pagination = new NotionPaginator();
         $response = $this->pagination
             ->setUrl($this->childrenUrl())
             ->setMethod('patch')

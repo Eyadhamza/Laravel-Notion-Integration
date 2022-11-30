@@ -297,11 +297,6 @@ $page->delete();
 $page = NotionPage::find('b4f8e429038744ca9c8d5afa93ea2edd');
 
 $property = $page->getProperty('Status');
-
-```
-#### Search Pages
-```php
-$pages = (new NotionPage)->search('Eyad Hamza');
 ```
 
 ### Handling Notion Blocks
@@ -348,7 +343,40 @@ $block = $block->addChildren([
 $block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
 $block->delete();
 ```
-
+### Search
+- Notion currently support search in pages or databases.
+- You can search in pages/databases using NotionSearch class.
+#### Search in Pages
+- Notice that Notion only support sorting search by last_edited_time
+```php
+$response = NotionSearch::inPages('Eyad')
+      ->sorts([
+            NotionSort::make('last_edited_time',  'descending')
+        ])->apply(50);
+```
+#### Search in Databases
+```php
+$response = NotionSearch::inDatabases('Eyad')->apply(50);
+```
+### Pagination
+- Notion will return a paginated response in the following endpoints:
+  - Query a database
+  - List databases 
+  - Retrieve a page property item 
+  - Retrieve block children 
+  - List all users 
+  - Search
+- In this package we have a Pagination class called "NotionPaginator" that will handle the pagination for you.
+- You can use it as follows in the search example above ( You can use it in the previously mentioned endpoints as well:
+```php
+// We pass the number of items per page to the apply method (Default is 100| Notion supports maximum of 100 items per page)
+$response = NotionSearch::inPages('Eyad')->apply(50);
+$pages = $response->getResults(); // will return the first 50 results
+$response->hasMore(); // will return true if there are more results
+$response->next() // will return the next 50 results (if hasMore is true)
+$response->getObjectType(); // get the type of the object ( always list )
+$response->getResultsType() // get the type of the results (Block/Database/Page)
+```
 ## Testing
 
 ```bash
