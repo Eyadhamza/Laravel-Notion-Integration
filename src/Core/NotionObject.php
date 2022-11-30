@@ -19,6 +19,7 @@ abstract class NotionObject
     protected ?string $cover;
     private Collection $list;
     protected NotionPaginator $pagination;
+
     public static function build($response): static
     {
         $object = new static();
@@ -26,7 +27,7 @@ abstract class NotionObject
         $object->objectType = $response['object'];
         $object->parentType = $response['parent']['type'];
         $object->parentId = $response['parent'][$object->parentType];
-        $object->archived = $response['archived'];
+        $object->archived = $response['archived'] ?? null;
         $object->createdTime = $response['created_time'];
         $object->lastEditedTime = $response['last_edited_time'];
 

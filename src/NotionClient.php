@@ -25,6 +25,7 @@ class NotionClient
     const SEARCH_PAGE_URL =  NotionClient::BASE_URL.'/search';
     const DATABASE_URL = NotionClient::BASE_URL.'/databases/';
     const NOTION_VERSION = '2022-02-22';
+    const COMMENTS_URL =  NotionClient::BASE_URL.'/comments/';
 
     private string $token;
 
@@ -53,6 +54,7 @@ class NotionClient
      */
     public static function request(string $method, string $url, array $requestBody = []): array
     {
+
         return Http::withToken(config('notion-wrapper.info.token'))
             ->withHeaders(['Notion-Version' => \Pi\Notion\NotionClient::NOTION_VERSION])
             ->$method($url, $requestBody)

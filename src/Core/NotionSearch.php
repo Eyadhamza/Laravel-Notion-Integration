@@ -33,7 +33,6 @@ class NotionSearch extends NotionObject
     }
     public function apply(int $pageSize = 100): NotionPaginator
     {
-
         $this->pagination = new NotionPaginator();
         $response = $this->pagination
             ->setUrl(NotionClient::SEARCH_PAGE_URL)
@@ -65,7 +64,7 @@ class NotionSearch extends NotionObject
         return $this;
     }
 
-    private function getFilterObject($objectName)
+    private function getFilterObject($objectName): NotionObject
     {
         return match ($objectName){
             'page' => new NotionPage,

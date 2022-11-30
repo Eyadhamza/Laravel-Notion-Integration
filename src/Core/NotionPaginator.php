@@ -34,7 +34,7 @@ class NotionPaginator
         }
         return $this;
     }
-    public function paginate()
+    public function paginate(): array
     {
         $body = [];
         if ($this->getPaginationParameters()) {

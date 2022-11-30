@@ -63,6 +63,7 @@ class NotionUser extends NotionObject
         if (array_key_exists('person', $response)) {
             $user->email = $response['person']['email'] ?? null;
         }
+
         if (array_key_exists('bot', $response)) {
             $user->owner = new NotionUser();
             $user->owner->type = $response['bot']['owner']['type'] ?? null;
@@ -82,7 +83,6 @@ class NotionUser extends NotionObject
 
     private function getOwner($response)
     {
-
        return match ($response['owner']['type']) {
             'user' => $this->build($response['owner']),
             'workspace' => $this->name = $response['workspace_name']

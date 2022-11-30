@@ -7,11 +7,11 @@ use Illuminate\Support\Collection;
 class NotionRichText extends BlockContent
 {
     private Collection $annotations;
-    private array $link;
+    private ?array $link;
     private array $values;
-    private string $href;
-
-    public function __construct(string $value)
+    private ?string $href;
+    private string $plainText;
+    public function __construct(string $value = '')
     {
         parent::__construct($value, 'rich_text');
         $this->annotations = new Collection();
@@ -20,6 +20,25 @@ class NotionRichText extends BlockContent
     public static function make(string $value): NotionRichText
     {
         return new self($value);
+    }
+    public static function build(array $response): static
+    {
+        $richText = parent::build($response);
+
+        $richText->link = $response[0]['text']['link'];
+        $richText->buildAnnotations($response[0]['annotations']);
+        $richText->plainText = $response[0]['plain_text'];
+        $richText->href = $response[0]['href'];
+        return $richText;
+    }
+
+    private function buildAnnotations(array $annotations)
+    {
+        foreach ($annotations as $key => $value) {
+           if ($value) {
+               $this->annotations->add([$key => $value]);
+           }
+        }
     }
 
     public function setAnnotations(Collection $annotations): self

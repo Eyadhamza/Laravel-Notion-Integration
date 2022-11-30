@@ -30,9 +30,9 @@ class NotionProperty
         return new self($type, $name);
     }
 
-    public static function mapsProperties($page)
+    public static function mapsProperties(NotionDatabase|NotionPage $object)
     {
-        return $page->getProperties()->mapToAssoc(function (NotionProperty $property) {
+        return $object->getProperties()->mapToAssoc(function (NotionProperty $property) {
             return
                 array(
                     $property->name, array($property->getType() => empty($property->getValues()) ? $property->getOptions() : $property->getValues())
@@ -78,13 +78,6 @@ class NotionProperty
         }
         return $this->values;
     }
-
-
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
     private function isNested(): bool
     {
         return in_array($this->type, [
@@ -92,7 +85,6 @@ class NotionProperty
             PropertyType::RICH_TEXT
         ]);
     }
-
     public function isPaginated(): bool
     {
         return in_array($this->type, [
@@ -102,8 +94,7 @@ class NotionProperty
             PropertyType::PEOPLE,
         ]);
     }
-
-    public function getOptions()
+    public function getOptions(): array|stdClass
     {
         if (!isset($this->options)) {
             return new stdClass();
@@ -124,15 +115,16 @@ class NotionProperty
     {
         return $this->id;
     }
-
+    public function getType(): string
+    {
+        return $this->type;
+    }
     public function ofName(string $name): bool
     {
         return $this->name == $name;
     }
-
     public function getName(): string
     {
         return $this->name;
     }
-
 }
