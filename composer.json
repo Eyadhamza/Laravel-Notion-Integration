@@ -1,24 +1,23 @@
 {
-    "name": "pi/notion-wrapper",
+    "name": "pi/notion-api-wrapper",
     "description": "This is my package Notion",
     "keywords": [
-        "Pi",
+        "PI",
         "laravel",
-        "notion-wrapper"
+        "notion-api-wrapper"
     ],
     "homepage": "https://github.com/pi/notion-wrapper",
     "license": "MIT",
     "authors": [
         {
             "name": "EyadHamza",
-            "email": "EyadHamza0@outlook.com",
+            "email": "EyadHamza000@gmail.com",
             "role": "Developer"
         }
     ],
     "require": {
         "php": "^8.0",
         "guzzlehttp/guzzle": "^7.3",
-        "illuminate/contracts": "^8.37",
         "spatie/laravel-package-tools": "^1.4.3"
     },
     "require-dev": {
@@ -50,11 +49,7 @@
         "laravel": {
             "providers": [
                 "Pi\\Notion\\NotionServiceProvider"
-            ],
-            "aliases": {
-                "Notion": "Pi\\Notion\\Facades",
-                "NotionPage": "Pi\\Notion\\Facades\\NotionPage"
-            }
+            ]
         }
     },
     "minimum-stability": "dev",

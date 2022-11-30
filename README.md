@@ -418,7 +418,6 @@ $response->getResultsType() // get the type of the results (Block/Database/Page)
 - To know more about the exceptions you can check the exceptions folder or in NotionException.php class.
 - You can also check the Notion API documentation for more information about the errors.
 
-```
 ## Testing
 
 ```bash

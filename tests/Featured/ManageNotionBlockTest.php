@@ -41,10 +41,10 @@ class ManageNotionBlockTest extends TestCase
         ])->getChildren(50);
         $this->assertCount(50, $paginatedObject->getResults());
         $paginatedObject->next();
-
         $this->assertCount(50, $paginatedObject->getResults());
         $paginatedObject->next();
-
+        $this->assertCount(50, $paginatedObject->getResults());
+        $paginatedObject->next();
         $this->assertFalse($paginatedObject->hasMore());
     }
 
