@@ -39,6 +39,7 @@ class NotionProperty
                 );
         });
     }
+
     public static function buildProperty(string $name, array $body): NotionProperty
     {
         $property = NotionProperty::make($body['type'], $name);
@@ -47,6 +48,7 @@ class NotionProperty
         $property->options = $body[$body['type']]['options'] ?? [];
         return $property;
     }
+
     public static function buildList(mixed $response): Collection
     {
         $list = new Collection();
@@ -55,6 +57,7 @@ class NotionProperty
         });
         return $list;
     }
+
     public function setValues(array|string $values): self
     {
         $this->values = $values;
@@ -68,6 +71,7 @@ class NotionProperty
         })->toArray();
         return $this;
     }
+
     public function getValues(): array|string
     {
         if (!isset($this->values)) {
@@ -78,6 +82,7 @@ class NotionProperty
         }
         return $this->values;
     }
+
     private function isNested(): bool
     {
         return in_array($this->type, [
@@ -85,6 +90,7 @@ class NotionProperty
             PropertyType::RICH_TEXT
         ]);
     }
+
     public function isPaginated(): bool
     {
         return in_array($this->type, [
@@ -94,6 +100,7 @@ class NotionProperty
             PropertyType::PEOPLE,
         ]);
     }
+
     public function getOptions(): array|stdClass
     {
         if (!isset($this->options)) {
@@ -106,23 +113,28 @@ class NotionProperty
         }
         return array($this->options);
     }
+
     public function setOptions(array|string $options): self
     {
         $this->options = $options;
         return $this;
     }
+
     public function getId(): ?string
     {
         return $this->id;
     }
+
     public function getType(): string
     {
         return $this->type;
     }
+
     public function ofName(string $name): bool
     {
         return $this->name == $name;
     }
+
     public function getName(): string
     {
         return $this->name;

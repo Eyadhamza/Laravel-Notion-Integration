@@ -2,10 +2,6 @@
 
 namespace Pi\Notion\Traits;
 
-use BadMethodCallException;
-use Closure;
-use Illuminate\Support\Str;
-
 trait CreateFilterTypes
 {
     public static function select(string $propertyName): self

@@ -17,6 +17,7 @@ class NotionComment extends NotionObject
         $comment->content = NotionRichText::build($response['rich_text']);
         return $comment;
     }
+
     public function create(): self
     {
         $body = [];
@@ -35,6 +36,7 @@ class NotionComment extends NotionObject
 
         return $this->build($response);
     }
+
     public static function findAll(string $blockId, int $pageSize = 100): NotionPaginator
     {
         $comment = new static();
@@ -51,7 +53,7 @@ class NotionComment extends NotionObject
         return $comment->pagination->make($response, new NotionComment);
     }
 
-    private function getUrl()
+    private function getUrl(): string
     {
         return NotionClient::COMMENTS_URL;
     }
@@ -71,7 +73,6 @@ class NotionComment extends NotionObject
     public function setContent(string|NotionRichText $text): static
     {
         $this->content = is_string($text) ? NotionRichText::make($text) : $text;
-
         return $this;
     }
 }

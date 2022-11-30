@@ -21,11 +21,8 @@ class BlockContent
     {
         return $this->value;
     }
-
-
     public function getType(): string
     {
         return $this->type;
     }
-
 }

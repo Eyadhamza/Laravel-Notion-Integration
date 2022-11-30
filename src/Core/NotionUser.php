@@ -37,20 +37,20 @@ class NotionUser extends NotionObject
     {
         return (new self($id))->get();
     }
+
     public function get(): self
     {
         $response = NotionClient::request('get', $this->getUrl());
-
         return $this->build($response);
     }
+
     public static function getBot(): self
     {
         $user = new static();
-
         $response = NotionClient::request('get', $user->botUrl());
-
         return $user->build($response);
     }
+
     public static function build($response): static
     {
         $user = new static();
@@ -67,7 +67,9 @@ class NotionUser extends NotionObject
         if (array_key_exists('bot', $response)) {
             $user->owner = new NotionUser();
             $user->owner->type = $response['bot']['owner']['type'] ?? null;
-            if ($user->owner->type) $user->owner->getOwner($response['bot']);
+            if ($user->owner->type) {
+                $user->owner->setOwner($response['bot']);
+            }
         }
         return $user;
     }
@@ -76,14 +78,15 @@ class NotionUser extends NotionObject
     {
         return NotionClient::BASE_URL . '/users/' . $this->id;
     }
+
     private function botUrl(): string
     {
         return NotionClient::BASE_URL . '/users/' . 'me';
     }
 
-    private function getOwner($response)
+    private function setOwner($response): void
     {
-       return match ($response['owner']['type']) {
+        match ($response['owner']['type']) {
             'user' => $this->build($response['owner']),
             'workspace' => $this->name = $response['workspace_name']
         };
@@ -98,12 +101,19 @@ class NotionUser extends NotionObject
     {
         return $this->object;
     }
+
     public function getType(): string
     {
         return $this->type;
     }
+
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
     }
 }

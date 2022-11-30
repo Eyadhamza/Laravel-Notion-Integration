@@ -34,6 +34,7 @@ class NotionPaginator
         }
         return $this;
     }
+
     public function paginate(): array
     {
         $body = [];
@@ -48,12 +49,14 @@ class NotionPaginator
         $this->updateNextCursor($response['next_cursor'], $response['has_more']);
         return $response;
     }
+
     public function next(): static
     {
         $this->startCursor = $this->getNextCursor();
         $this->paginate();
         return $this;
     }
+
     public function getPaginationParameters(): array|null
     {
         $parameters = [];
@@ -67,7 +70,7 @@ class NotionPaginator
 
     }
 
-    private function updateNextCursor(string $nextCursor = null,bool $hasMore = false): void
+    private function updateNextCursor(string $nextCursor = null, bool $hasMore = false): void
     {
         $this->nextCursor = $nextCursor;
         $this->hasMore = $hasMore;
@@ -78,14 +81,17 @@ class NotionPaginator
         $this->pageSize = $pageSize;
         return $this;
     }
+
     public function getNextCursor(): ?string
     {
         return $this->nextCursor;
     }
+
     public function hasMore(): bool
     {
         return $this->hasMore;
     }
+
     public function getStartCursor(): ?string
     {
         return $this->startCursor ?? null;
@@ -95,6 +101,7 @@ class NotionPaginator
     {
         return $this->pageSize;
     }
+
     public function setUrl(string $url): static
     {
         $this->url = $url;
@@ -127,6 +134,7 @@ class NotionPaginator
         $this->requestBody = $array;
         return $this;
     }
+
     public function getResultsType(): string
     {
         return $this->resultsType;

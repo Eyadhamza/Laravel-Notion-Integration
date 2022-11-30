@@ -10,13 +10,12 @@ class NotionRichText extends BlockContent
     private ?array $link;
     private array $values;
     private ?string $href;
-    private string $plainText;
+
     public function __construct(string $value = '')
     {
         parent::__construct($value, 'rich_text');
         $this->annotations = new Collection();
     }
-
     public static function make(string $value): NotionRichText
     {
         return new self($value);
@@ -24,65 +23,44 @@ class NotionRichText extends BlockContent
     public static function build(array $response): static
     {
         $richText = parent::build($response);
-
         $richText->link = $response[0]['text']['link'];
         $richText->buildAnnotations($response[0]['annotations']);
-        $richText->plainText = $response[0]['plain_text'];
         $richText->href = $response[0]['href'];
         return $richText;
     }
-
     private function buildAnnotations(array $annotations)
     {
         foreach ($annotations as $key => $value) {
-           if ($value) {
-               $this->annotations->add([$key => $value]);
-           }
+            if ($value) {
+                $this->annotations->add([$key => $value]);
+            }
         }
     }
-
-    public function setAnnotations(Collection $annotations): self
-    {
-        $this->annotations = $annotations;
-        return $this;
-    }
-
     public function bold(): self
     {
         $this->annotations->push('bold');
         return $this;
     }
-
     public function italic(): self
     {
         $this->annotations->push('italic');
         return $this;
     }
-
     public function strikethrough(): self
     {
         $this->annotations->push('strikethrough');
         return $this;
     }
-
     public function underline(): self
     {
         $this->annotations->push('underline');
         return $this;
     }
-
     public function code(): self
     {
         $this->annotations->push('code');
         return $this;
     }
-
-    public function setPlainText(array $plainText): self
-    {
-        $this->plainText = $plainText;
-        return $this;
-    }
-
     public function setLink(string $link): self
     {
         $this->link = [
@@ -90,7 +68,6 @@ class NotionRichText extends BlockContent
         ];
         return $this;
     }
-
     public function text(string $text, string $link): self
     {
         $this->values = [
@@ -101,7 +78,6 @@ class NotionRichText extends BlockContent
         ];
         return $this;
     }
-
     public function mention(string $type): self
     {
         $this->values = [
@@ -111,7 +87,6 @@ class NotionRichText extends BlockContent
         ];
         return $this;
     }
-
     public function equation(): self
     {
         $this->values = [
@@ -119,7 +94,6 @@ class NotionRichText extends BlockContent
         ];
         return $this;
     }
-
     public function linkPreview($value): self
     {
         $this->values = [
@@ -127,40 +101,37 @@ class NotionRichText extends BlockContent
         ];
         return $this;
     }
-
     public function getValues(): array
     {
         return $this->values;
     }
-
-    public function color(string $color)
+    public function color(string $color): self
     {
         $this->values = [
             'color' => $color
         ];
         return $this;
     }
-
     public function getValue(): array
     {
         return [
-                [
-                    'type' => 'text',
-                    'text' => [
-                        'content' => $this->value,
-                        'link' => $this->link ?? null
-                    ],
-                    'annotations' => [
-                        'bold' => $this->annotations->contains('bold'),
-                        'italic' => $this->annotations->contains('italic'),
-                        'strikethrough' => $this->annotations->contains('strikethrough'),
-                        'underline' => $this->annotations->contains('underline'),
-                        'code' => $this->annotations->contains('code'),
-                        'color' => $this->values['color'] ?? 'default'
-                    ],
-                    'plain_text' => $this->value ?? null,
-                    'href' => $this->href ?? null
+            [
+                'type' => 'text',
+                'text' => [
+                    'content' => $this->value,
+                    'link' => $this->link ?? null
                 ],
+                'annotations' => [
+                    'bold' => $this->annotations->contains('bold'),
+                    'italic' => $this->annotations->contains('italic'),
+                    'strikethrough' => $this->annotations->contains('strikethrough'),
+                    'underline' => $this->annotations->contains('underline'),
+                    'code' => $this->annotations->contains('code'),
+                    'color' => $this->values['color'] ?? 'default'
+                ],
+                'plain_text' => $this->value ?? null,
+                'href' => $this->href ?? null
+            ],
 
         ];
 

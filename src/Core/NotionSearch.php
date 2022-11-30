@@ -27,10 +27,12 @@ class NotionSearch extends NotionObject
     {
         return new self($query, 'page');
     }
+
     public static function inDatabases(string $query): self
     {
         return new self($query, 'database');
     }
+
     public function apply(int $pageSize = 100): NotionPaginator
     {
         $this->pagination = new NotionPaginator();
@@ -66,7 +68,7 @@ class NotionSearch extends NotionObject
 
     private function getFilterObject($objectName): NotionObject
     {
-        return match ($objectName){
+        return match ($objectName) {
             'page' => new NotionPage,
             'database' => new NotionDatabase
         };

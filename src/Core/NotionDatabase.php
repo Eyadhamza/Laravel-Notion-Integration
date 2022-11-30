@@ -5,8 +5,6 @@ namespace Pi\Notion\Core;
 
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
-use Pi\Notion\Exceptions\NotionException;
 use Pi\Notion\NotionClient;
 use Pi\Notion\Traits\HandleFilters;
 use Pi\Notion\Traits\HandleProperties;
@@ -54,13 +52,13 @@ class NotionDatabase extends NotionObject
 
         $response = NotionClient::request('post',
             NotionClient::DATABASE_URL, [
-            'parent' => [
-                'type' => 'page_id',
-                'page_id' => $this->getParentPageId()
-            ],
-            'title' => $this->mapTitle($this),
-            'properties' => NotionProperty::mapsProperties($this)
-        ]);
+                'parent' => [
+                    'type' => 'page_id',
+                    'page_id' => $this->getParentPageId()
+                ],
+                'title' => $this->mapTitle(),
+                'properties' => NotionProperty::mapsProperties($this)
+            ]);
 
 
         return $this->build($response);
@@ -71,7 +69,7 @@ class NotionDatabase extends NotionObject
     {
         $requestBody = [];
 
-        if (isset($this->title)) $requestBody['title'] = $this->mapTitle($this);
+        if (isset($this->title)) $requestBody['title'] = $this->mapTitle();
 
         if (isset($this->properties)) $requestBody['properties'] = NotionProperty::mapsProperties($this);
 
