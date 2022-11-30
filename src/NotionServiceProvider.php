@@ -13,10 +13,10 @@ class NotionServiceProvider extends PackageServiceProvider
     {
 
         $package
-            ->name('notion-wrapper')
-            ->hasConfigFile()
+            ->name('notion-api-wrapper')
+            ->hasConfigFile('notion-api-wrapper')
             ->hasViews()
-            ->hasMigration('create_notion-wrapper_table')
+            ->hasMigration('create_notion-api-wrapper_table')
             ->hasCommand(NotionCommand::class);
     }
 
