@@ -40,17 +40,17 @@ class NotionComment extends NotionObject
     public static function findAll(string $blockId, int $pageSize = 100): NotionPaginator
     {
         $comment = new static();
-        $comment->pagination = new NotionPaginator();
+        $comment->paginator = new NotionPaginator();
 
         $response = $comment
-            ->pagination
+            ->paginator
             ->setUrl($comment->getUrl())
             ->setMethod('get')
             ->setRequestBody(['block_id' => $blockId])
             ->setPageSize($pageSize)
             ->paginate();
 
-        return $comment->pagination->make($response, new NotionComment);
+        return $comment->paginator->make($response, new NotionComment);
     }
 
     private function getUrl(): string

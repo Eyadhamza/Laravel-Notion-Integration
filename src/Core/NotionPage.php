@@ -47,18 +47,28 @@ class NotionPage extends NotionObject
         return $this->build($response);
     }
 
-    public function getProperty(string $name)
+    public function getProperty(string $name, int $pageSize = 100)
     {
         $property = $this
             ->properties
             ->filter
             ->ofName($name)
             ->firstOrFail();
-        $response = NotionClient::request('get', $this->propertyUrl($property->getId()));
-        $property->setValues($response[$property->getType()] ?? []);
         if ($property->isPaginated()) {
-            NotionProperty::buildList($response);
+            $this->paginator = new NotionPaginator();
+            $response = $this->paginator
+                ->setUrl($this->propertyUrl($property->getId()))
+                ->setMethod('get')
+                ->setPageSize($pageSize)
+                ->paginate();
+
+            return $this->paginator->make($response, new NotionProperty);
+        } else {
+            $response = NotionClient::request('get', $this->propertyUrl($property->getId()));
         }
+
+        $property->setValues($response[$property->getType()] ?? []);
+
         return $property;
     }
 

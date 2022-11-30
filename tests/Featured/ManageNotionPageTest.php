@@ -7,6 +7,7 @@ use Pi\Notion\Common\NotionRichText;
 use Pi\Notion\Core\NotionBlock;
 use Pi\Notion\Core\NotionDatabase;
 use Pi\Notion\Core\NotionPage;
+use Pi\Notion\Core\NotionPaginator;
 use Pi\Notion\Core\NotionProperty;
 use Pi\Notion\Tests\TestCase;
 
@@ -200,10 +201,12 @@ class ManageNotionPageTest extends TestCase
     public function it_returns_a_property_by_id()
     {
 
-        $page = NotionPage::find('687e13b1b8bb4eb9957d5843404b6d5d');
+        $page = NotionPage::find('e20014185b654e08a6285872b0b622f9');
+
+        $property = $page->getProperty('Text');
+        $this->assertInstanceOf(NotionPaginator::class, $property);
 
         $property = $page->getProperty('Status');
-
         $this->assertInstanceOf(NotionProperty::class, $property);
     }
 

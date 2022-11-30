@@ -9,23 +9,22 @@ use Pi\Notion\PropertyType;
 use Pi\Notion\Traits\CreatePropertyTypes;
 use stdClass;
 
-class NotionProperty
+class NotionProperty extends NotionObject
 {
     use CreatePropertyTypes;
 
     private string $type;
-    private string $name;
-    private ?string $id;
+    private ?string $name;
     private array|string|null $values;
     private array|string|null $options;
 
-    public function __construct(string $type, string $name)
+    public function __construct(string $type = '', string $name = null)
     {
         $this->type = $type;
         $this->name = $name;
     }
 
-    public static function make(string $type, string $name): NotionProperty
+    public static function make(string $type, string $name = null): NotionProperty
     {
         return new self($type, $name);
     }
@@ -40,22 +39,13 @@ class NotionProperty
         });
     }
 
-    public static function buildProperty(string $name, array $body): NotionProperty
+    public static function build($response, $name = null): static
     {
-        $property = NotionProperty::make($body['type'], $name);
-        $property->id = $body['id'];
-
-        $property->options = $body[$body['type']]['options'] ?? [];
+        $property = NotionProperty::make($response['type'],$name);
+        $property->id = $response['id'];
+        $property->options = $response[$response['type']]['options'] ?? [];
+        $property->values = $response[$response['type']];
         return $property;
-    }
-
-    public static function buildList(mixed $response): Collection
-    {
-        $list = new Collection();
-        collect($response['results'])->each(function ($item) use ($list) {
-            $list->add(self::buildProperty($item['type'], $item));
-        });
-        return $list;
     }
 
     public function setValues(array|string $values): self

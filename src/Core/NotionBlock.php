@@ -40,26 +40,26 @@ class NotionBlock extends NotionObject
 
     public function getChildren(int $pageSize = 100): NotionPaginator
     {
-        $this->pagination = new NotionPaginator();
-        $response = $this->pagination
+        $this->paginator = new NotionPaginator();
+        $response = $this->paginator
             ->setUrl($this->childrenUrl())
             ->setMethod('get')
             ->setPageSize($pageSize)
             ->paginate();
 
-        return $this->pagination->make($response, $this);
+        return $this->paginator->make($response, $this);
     }
 
     public function createChildren(int $pageSize = 100): NotionPaginator
     {
-        $this->pagination = new NotionPaginator();
-        $response = $this->pagination
+        $this->paginator = new NotionPaginator();
+        $response = $this->paginator
             ->setUrl($this->childrenUrl())
             ->setMethod('patch')
             ->setRequestBody(['children' => $this->mapChildren()])
             ->paginate();
 
-        return $this->pagination->make($response, $this);
+        return $this->paginator->make($response, $this);
     }
 
     public function update():self

@@ -2,7 +2,6 @@
 
 namespace Pi\Notion\Core;
 
-use Illuminate\Support\Collection;
 
 abstract class NotionObject
 {
@@ -17,8 +16,7 @@ abstract class NotionObject
     protected ?string $url;
     protected ?string $icon;
     protected ?string $cover;
-    private Collection $list;
-    protected NotionPaginator $pagination;
+    protected NotionPaginator $paginator;
 
     public static function build($response): static
     {
@@ -36,8 +34,8 @@ abstract class NotionObject
 
     protected function buildProperties($response): static
     {
-        foreach ($response['properties'] as $name => $body) {
-            $this->properties->add(NotionProperty::buildProperty($name, $body));
+        foreach ($response['properties'] as $name => $property) {
+            $this->properties->add(NotionProperty::build($property, $name));
         }
 
         return $this;

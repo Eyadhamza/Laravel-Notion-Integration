@@ -85,15 +85,15 @@ class NotionDatabase extends NotionObject
         if (isset($this->filters)) $requestBody['filter'] = $this->getFilterResults();
         if (isset($this->sorts)) $requestBody['sorts'] = $this->getSortResults();
 
-        $this->pagination = new NotionPaginator();
-        $response = $this->pagination
+        $this->paginator = new NotionPaginator();
+        $response = $this->paginator
             ->setUrl($this->queryUrl())
             ->setMethod('post')
             ->setRequestBody($requestBody)
             ->setPageSize($pageSize)
             ->paginate();
 
-        return $this->pagination->make($response, new NotionPage);
+        return $this->paginator->make($response, new NotionPage);
     }
 
 

@@ -22,15 +22,15 @@ class NotionUser extends NotionObject
     {
         $user = new static();
 
-        $user->pagination = new NotionPaginator();
+        $user->paginator = new NotionPaginator();
 
         $response = $user
-            ->pagination
+            ->paginator
             ->setUrl($user->getUrl())
             ->setMethod('get')
             ->setPageSize($pageSize)
             ->paginate();
-        return $user->pagination->make($response, new NotionUser);
+        return $user->paginator->make($response, new NotionUser);
     }
 
     public static function find($id): self
