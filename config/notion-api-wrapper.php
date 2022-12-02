@@ -1,7 +1,5 @@
 <?php
 
 return [
-    'info' => [
-        'token' => env('NOTION_TOKEN')
-    ]
+    'token' => env('NOTION_TOKEN'),
 ];

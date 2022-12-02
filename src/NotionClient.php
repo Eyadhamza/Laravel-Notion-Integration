@@ -31,8 +31,7 @@ class NotionClient
 
     public function __construct()
     {
-        $token = config('notion-wrapper.info.token');
-        $this->token = $token;
+        $this->token = config('notion-api-wrapper.token');
     }
     public static function client(): self
     {
@@ -54,8 +53,8 @@ class NotionClient
      */
     public static function request(string $method, string $url, array $requestBody = []): array
     {
-
-        return Http::withToken(config('notion-wrapper.info.token'))
+        $client = new self();
+        return Http::withToken($client->token)
             ->withHeaders(['Notion-Version' => self::NOTION_VERSION])
             ->$method($url, $requestBody)
             ->onError(fn($response) => NotionException::matchException($response->json()))

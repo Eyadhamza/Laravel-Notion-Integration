@@ -136,4 +136,9 @@ class NotionRichText extends BlockContent
         ];
 
     }
+
+    public function toArray(): array
+    {
+        return $this->getValue()[0];
+    }
 }

@@ -112,9 +112,10 @@ class NotionPage extends NotionObject
             ->delete();
     }
 
-    public function setDatabaseId(string $notionDatabaseId): void
+    public function setDatabaseId(string $notionDatabaseId): self
     {
         $this->notionDatabaseId = $notionDatabaseId;
+        return $this;
     }
 
     private function getUrl(): string

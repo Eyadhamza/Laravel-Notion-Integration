@@ -28,7 +28,7 @@ trait CreatePropertyTypes
     {
         $property = NotionProperty::make(PropertyType::TITLE, $name);
 
-        return $values ? $property->setValues(['text' => ['content' => $values]]) : $property;
+        return $values ? $property->setValues($values) : $property;
 
     }
 

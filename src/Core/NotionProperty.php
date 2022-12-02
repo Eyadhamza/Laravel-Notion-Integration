@@ -5,6 +5,7 @@ namespace Pi\Notion\Core;
 
 
 use Illuminate\Support\Collection;
+use Pi\Notion\Common\NotionRichText;
 use Pi\Notion\PropertyType;
 use Pi\Notion\Traits\CreatePropertyTypes;
 use stdClass;
@@ -41,7 +42,7 @@ class NotionProperty extends NotionObject
 
     public static function build($response, $name = null): static
     {
-        $property = NotionProperty::make($response['type'],$name);
+        $property = NotionProperty::make($response['type'], $name);
         $property->id = $response['id'];
         $property->options = $response[$response['type']]['options'] ?? [];
         $property->values = $response[$response['type']];
@@ -50,7 +51,11 @@ class NotionProperty extends NotionObject
 
     public function setValues(array|string $values): self
     {
-        $this->values = $values;
+        match ($this->type) {
+            'title' => $this->setTitleValue($values),
+            'rich_text' => $this->setRichTextValue($values),
+            default => $this->values = $values,
+        };
         return $this;
     }
 
@@ -128,5 +133,18 @@ class NotionProperty extends NotionObject
     public function getName(): string
     {
         return $this->name;
+    }
+
+    private function setTitleValue(array|string $values): static
+    {
+        $this->values = ['text' => ['content' => $values]];
+        return $this;
+    }
+
+    private function setRichTextValue(array|string $values): static
+    {
+        $this->values = NotionRichText::make($values)
+            ->toArray();
+        return $this;
     }
 }
