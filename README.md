@@ -221,7 +221,8 @@ $page->title('Name','Eyad Hamza')
 
 - Note that the previous example you are only creating a page with properties values
 - You can also add Content to the page using setBlocks method
-- You pass an array of Blocks, if your block is just a single value with no special styling or information just pass the string.
+- You pass an array of Blocks, if your block is just a single value with no special styling or information just pass the
+  string.
 - If not you can use NotionRichText for example, to define the content styling/links and so on.
 
 ```php
@@ -244,9 +245,12 @@ $page->setBlocks([
             NotionBlock::bulletedList('Bullet List'),
         ]);
 ```
+
 #### Create a new Notion Page / new Notion Database Item With Content and With Children
+
 - You can also add children blocks using addChildren() method.
 - Note that Notion only allows two levels of nested elements.
+
 ```php
 
 $page = (new NotionPage);
@@ -275,7 +279,10 @@ $page->setBlocks([
 ```
 
 #### Update a Page Properties
-- We create a new instance then we define the properties with it's new value then we call update method to apply changes.
+
+- We create a new instance then we define the properties with it's new value then we call update method to apply
+  changes.
+
 ```php
 $page = new NotionPage('b4f8e429038744ca9c8d5afa93ea2edd');
 $response = $page
@@ -283,7 +290,9 @@ $response = $page
             ->update();
 
 ```
+
 #### Delete a Page
+
 ```php
 $page = new NotionPage('ec9df16fa65f4eef96776ee41ee3d4d4');
 
@@ -291,6 +300,7 @@ $page->delete();
 ```
 
 #### Retrieve a page property item
+
 ```php
 $page = NotionPage::find('b4f8e429038744ca9c8d5afa93ea2edd');
 
@@ -304,6 +314,7 @@ $property = $page->getProperty('Status');
 ```php
 $block = NotionBlock::find('b4f8e429038744ca9c8d5afa93ea2edd');
 ```
+
 #### Retrieve a block children
 
 ```php
@@ -312,13 +323,16 @@ $children = $block->getChildren();
 ```
 
 #### Update a new Notion Block
+
 ```php
 $block = NotionBlock::headingOne('This is a paragraph')
             ->setId($this->notionBlockId)
             ->update();
 
 ```
+
 #### Append Block Children
+
 ```php
  $block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
 
@@ -337,46 +351,66 @@ $block = $block->addChildren([
 ```
 
 #### Delete a Block
+
 ```php
 $block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
 $block->delete();
 ```
+
 ### Search
+
 - Notion currently support search in pages or databases.
 - You can search in pages/databases using NotionSearch class.
+
 #### Search in Pages
+
 - Notice that Notion only support sorting search by last_edited_time
+
 ```php
 $response = NotionSearch::inPages('Eyad')
       ->sorts([
             NotionSort::make('last_edited_time',  'descending')
         ])->apply(50);
 ```
+
 #### Search in Databases
+
 ```php
 $response = NotionSearch::inDatabases('Eyad')->apply(50);
 ```
 
 ### Users
+
 #### Retrieve all users
+
 ```php
 $users = NotionUser::index();
 ```
+
 #### Retrieve a User by ID
+
 ```php
 $user = NotionUser::find('2c4d6a4a-12fe-4ce8-a7e4-e3019cc4765f');
 ```
+
 #### Retrieve Current Bot Info
+
 ```php
 $bot = NotionUser::getBot();
 ```
+
 ### Comments
+
 #### Retrieve all comments by page ID / Discussion ID
+
 ```php
 $comments = NotionComment::findAll('0b036890391f417cbac775e8b0bba680');
 ```
+
 #### Create a new comment
+
 - Note that you can either pass a string to setContent Method or a RichText Object for more styling options.
+
 ```php
 // Create a new comment on a page
 $comment = new NotionComment();
@@ -392,16 +426,19 @@ $comment = new NotionComment();
                 ->italic()
             )->create();
 ```
+
 ### Pagination
+
 - Notion will return a paginated response in the following endpoints:
-  - Query a database
-  - List databases 
-  - Retrieve a page property item 
-  - Retrieve block children 
-  - List all users 
-  - Search
+    - Query a database
+    - List databases
+    - Retrieve a page property item
+    - Retrieve block children
+    - List all users
+    - Search
 - In this package we have a Pagination class called "NotionPaginator" that will handle the pagination for you.
 - You can use it as follows in the search example above ( You can use it in the previously mentioned endpoints as well:
+
 ```php
 // We pass the number of items per page to the apply method (Default is 100| Notion supports maximum of 100 items per page)
 $response = NotionSearch::inPages('Eyad')->apply(50);
@@ -411,7 +448,49 @@ $response->next() // will return the next 50 results (if hasMore is true)
 $response->getObjectType(); // get the type of the object ( always list )
 $response->getResultsType() // get the type of the results (Block/Database/Page)
 ```
+
+### Mapping Eloquent Models to Notion Database Item
+
+- Perhaps the most common use case for this package is to map your eloquent models to Notion Database Items.
+- You can do that by implementing Notionable Trait in your eloquent model.
+- For Example, let's say we have a User model, and you want to map it to a Notion Database Item.
+
+```php
+class User extends Model
+{
+    // use Notionable Trait, and implement the abstract method mapToNotion
+    use Notionable;
+    
+    // You have to define an attribute called $notionDatabaseId that contains the associated Notion Database ID.
+    protected string $notionDatabaseId = '74dc9419bec24f10bb2e65c1259fc65a';
+
+    protected $guarded = [];
+
+    // Implement the abstract method mapToNotion
+    // You simply return an associative array of the model attributes and how you want to map it to Notion properties.
+    // Don't forget that you have to have the exact structure (name and type) of the Notion Database Item.
+    public function mapToNotion(): array
+    {
+        return [
+            'name' => NotionProperty::title(),
+            'email' => NotionProperty::email(),
+            'password' => NotionProperty::richText('Password'),
+        ];
+    }
+}
+
+// after that you can simply create a new user, and call saveToNotion() method.
+$user = User::create([
+            'name' => 'John Doe',
+            'email' => 'JohnDoe@gmail.com',
+            'password' => 'password'
+        ]);
+// only the mapped attributes will be saved to Notion
+$user->saveToNotion();
+```
+
 ### Handling Errors
+
 - In case of an error, an exception will be thrown with the error message.
 - To know more about the exceptions you can check the exceptions folder or in NotionException.php class.
 - You can also check the Notion API documentation for more information about the errors.

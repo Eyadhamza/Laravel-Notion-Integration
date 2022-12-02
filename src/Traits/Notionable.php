@@ -13,20 +13,19 @@ trait Notionable
 
     public function saveToNotion(): NotionPage
     {
-        $notionMap = $this->mapToNotion();
+        $this->notionMap = $this->mapToNotion();
         if(!isset($this->notionDatabaseId)){
             throw new LogicException(get_class($this) . ' must have a Notion Database ID Property');
         }
         foreach ($this->getAttributes() as $key => $value) {
-            if (array_key_exists($key, $notionMap)) {
-                $notionMap[$key]->setValues($value);
+            if (array_key_exists($key, $this->notionMap)) {
+                $this->notionMap[$key]->setValues($value);
             }
         }
         $page = new NotionPage();
-        $page->setDatabaseId($this->notionDatabaseId)
-            ->setProperties($notionMap)
+        return $page->setDatabaseId($this->notionDatabaseId)
+            ->setProperties($this->notionMap)
             ->create();
-        return $page;
     }
 
 }
