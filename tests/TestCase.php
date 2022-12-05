@@ -17,13 +17,13 @@ class TestCase extends Orchestra
         }
         parent::setUp();
 
-        $this->loadMigrationsFrom(__DIR__ . '/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
 
         $this->artisan('migrate', ['--database' => 'testbench'])
             ->run();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Pi\\Notion\\NotionDatabase\\Factories\\'.class_basename($modelName).'Factory'
+            fn (string $modelName) => 'Pi\\Notion\\Tests\\database\\factories\\' . class_basename($modelName) . 'Factory'
         );
     }
 

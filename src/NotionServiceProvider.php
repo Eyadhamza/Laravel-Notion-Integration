@@ -3,7 +3,7 @@
 namespace Pi\Notion;
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Commands\NotionCommand;
+use Pi\Notion\Commands\SyncToNotionCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -16,7 +16,7 @@ class NotionServiceProvider extends PackageServiceProvider
             ->name('notion-api-wrapper')
             ->hasConfigFile('notion-api-wrapper')
             ->hasMigration('create_notion-api-wrapper_table')
-            ->hasCommand(NotionCommand::class);
+            ->hasCommand(SyncToNotionCommand::class);
     }
 
     public function boot()

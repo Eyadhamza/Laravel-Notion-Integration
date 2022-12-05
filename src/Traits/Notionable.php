@@ -27,5 +27,8 @@ trait Notionable
             ->setProperties($this->notionMap)
             ->create();
     }
-
+    function getNotionDatabaseId(): string
+    {
+        return $this->notionDatabaseId;
+    }
 }

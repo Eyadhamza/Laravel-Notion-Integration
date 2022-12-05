@@ -488,6 +488,11 @@ $user = User::create([
 // only the mapped attributes will be saved to Notion
 $user->saveToNotion();
 ```
+### Syncing Data from Eloquent Models to Notion Database
+- Note that Notion only allows adding one page at a time that's why the command might take sometime.
+```bash
+php artisan notion:sync User
+```
 
 ### Handling Errors
 
