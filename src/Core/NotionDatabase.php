@@ -82,8 +82,9 @@ class NotionDatabase extends NotionObject
     public function query(int $pageSize = 100): NotionPaginator
     {
         $requestBody = [];
-        if (isset($this->filters)) $requestBody['filter'] = $this->getFilterResults();
-        if (isset($this->sorts)) $requestBody['sorts'] = $this->getSortResults();
+
+        if (isset($this->filters) && $this->filters->isNotEmpty()) $requestBody['filter'] = $this->getFilterResults();
+        if (isset($this->sorts) && $this->sorts->isNotEmpty()) $requestBody['sorts'] = $this->getSortResults();
 
         $this->paginator = new NotionPaginator();
         $response = $this->paginator

@@ -20,10 +20,11 @@ class NotionPaginator
     private string $url;
     private string $method;
     private array $requestBody;
-
+    private NotionObject $notionObject;
 
     public function make($response, NotionObject $notionObject): static
     {
+        $this->notionObject = $notionObject;
         $this->hasMore = $response['has_more'];
         $this->nextCursor = $response['next_cursor'];
         $this->resultsType = $response['type'];
@@ -53,7 +54,7 @@ class NotionPaginator
     public function next(): static
     {
         $this->startCursor = $this->getNextCursor();
-        $this->paginate();
+        $this->make($this->paginate(), $this->notionObject);
         return $this;
     }
 
@@ -143,5 +144,13 @@ class NotionPaginator
     public function getObjectType(): string
     {
         return $this->objectType;
+    }
+
+    public function getAllResults(): Collection
+    {
+        while ($this->hasMore()) {
+            $this->results = $this->results->merge($this->next()->getResults());
+        }
+        return $this->results;
     }
 }
