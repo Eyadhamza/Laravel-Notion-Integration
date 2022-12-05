@@ -1,9 +1,15 @@
 {
-    "name": "eyadhamza/notion-api-wrapper",
-    "description": "A Laravel API Wrapper for the restful Api provided by Notion.so",
+    "name": "eyadhamza/notion-api-integration",
+    "description": "Easy to use and simple Integration to Notion API.",
     "keywords": [
         "laravel",
-        "notion-api-wrapper"
+        "notion-api",
+        "notion",
+        "notion-api-laravel",
+        "notion-api-wrapper-laravel",
+        "notion-api-integration-laravel",
+        "notion-api-laravel-wrapper",
+
     ],
     "homepage": "https://github.com/eyadhamza/notion-api-wrapper",
     "license": "MIT",
