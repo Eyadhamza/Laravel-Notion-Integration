@@ -3,7 +3,9 @@
 namespace Pi\Notion\Traits;
 
 use LogicException;
+use Pi\Notion\Core\NotionDatabase;
 use Pi\Notion\Core\NotionPage;
+use Pi\Notion\Core\NotionProperty;
 
 trait Notionable
 {
@@ -26,6 +28,15 @@ trait Notionable
         return $page->setDatabaseId($this->notionDatabaseId)
             ->setProperties($this->notionMap)
             ->create();
+    }
+    public function mapFromNotion(NotionPage $page): array
+    {
+        $attributes = [];
+
+        foreach ($this->mapToNotion() as $key => $value) {
+            $attributes[$key] = $page->ofPropertyName($value->getName())->getValue();
+        }
+        return $attributes;
     }
     function getNotionDatabaseId(): string
     {

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SyncToNotionCommand extends Command
 {
-    public $signature = 'to-notion:sync {model}';
+    public $signature = 'sync:to-notion {model}';
 
     public $description = 'sync your database to notion';
 

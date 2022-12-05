@@ -4,6 +4,7 @@ namespace Pi\Notion\Tests\Featured;
 
 use Illuminate\Support\Facades\Artisan;
 use Pi\Notion\Core\NotionDatabase;
+use Pi\Notion\Core\NotionFilter;
 use Pi\Notion\Core\NotionUser;
 use Pi\Notion\Tests\Models\User;
 use Pi\Notion\Tests\TestCase;
@@ -27,7 +28,7 @@ class ManageMappingTest extends TestCase
     {
         $users = User::factory()->count(5)->create();
 
-        Artisan::call('to-notion:sync', [
+        Artisan::call('sync:to-notion', [
             'model' => User::class
         ]);
         // test artisan command
@@ -36,14 +37,21 @@ class ManageMappingTest extends TestCase
     }
     public function test_map_notion_database_to_app_database_using_database_id()
     {
-//        $paginator = NotionDatabase::find('74dc9419bec24f10bb2e65c1259fc65a')
-//            ->query(50);
-//
-//        $this->assertCount(50, $paginator->getResults());
-        Artisan::call('from-notion:sync',[
+        Artisan::call('sync:from-notion',[
             'model' => User::class,
             'databaseId' => '74dc9419bec24f10bb2e65c1259fc65a'
         ]);
+        $this->assertGreaterThan(80, User::count());
+    }
+    public function test_map_notion_database_to_app_database_using_specified_pages()
+    {
 
+        Artisan::call('sync:from-notion',[
+            'model' => User::class,
+            'pages' => NotionDatabase::find('74dc9419bec24f10bb2e65c1259fc65a')->filters([
+                NotionFilter::title('Name')->contains('John')
+            ])->query()->getAllResults()
+        ]);
+        $this->assertGreaterThan(10, User::count());
     }
 }

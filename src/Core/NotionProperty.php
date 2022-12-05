@@ -77,7 +77,16 @@ class NotionProperty extends NotionObject
         }
         return $this->values;
     }
-
+    public function getValue(): string
+    {
+        if (!isset($this->values)) {
+            return '';
+        }
+        if ($this->isNested()) {
+            return $this->values[0]['plain_text'] ?? '';
+        }
+        return $this->values;
+    }
     private function isNested(): bool
     {
         return in_array($this->type, [

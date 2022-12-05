@@ -132,4 +132,10 @@ class NotionPage extends NotionObject
     {
         return $this->getUrl() . '/properties/' . $id;
     }
+    public function ofPropertyName(string $name)
+    {
+        return $this->properties->filter(function (NotionProperty $property) use ($name) {
+            return $property->getName() == $name;
+        })->first();
+    }
 }

@@ -488,10 +488,31 @@ $user = User::create([
 // only the mapped attributes will be saved to Notion
 $user->saveToNotion();
 ```
-### Syncing Data from Eloquent Models to Notion Database
+### Syncing Data between Notion and Eloquent Models
+- Note that you have to have the same preparation as before ( using Notionable Trait and implementing mapToNotion method and defining $notionDatabaseId attribute)
+#### Syncing Data from Eloquent Models to Notion Database
 - Note that Notion only allows adding one page at a time that's why the command might take sometime.
+
 ```bash
-php artisan notion:sync User
+php artisan sync:to-notion User
+```
+
+### Syncing Data from Notion Database to Eloquent Models
+
+- Note that you can pass an argument for pages if you want specific pages to be synced, if you want the whole database just pass the model without the pages argument.
+
+```bash
+#Sync all pages in the database
+php artisan sync:from-notion User
+```
+```php
+// Sync specific pages in the database
+Artisan::call('sync:from-notion',[
+            'model' => User::class,
+            'pages' => NotionDatabase::find('74dc9419bec24f10bb2e65c1259fc65a')->filters([
+                NotionFilter::title('Name')->contains('John')
+            ])->query()->getAllResults()
+        ]);
 ```
 
 ### Handling Errors

@@ -153,4 +153,9 @@ class NotionPaginator
         }
         return $this->results;
     }
+
+    public function getValues()
+    {
+        return $this->results->first()->getValues()[0]['text']['content'];
+    }
 }
