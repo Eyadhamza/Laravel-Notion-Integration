@@ -30,7 +30,7 @@ class SyncFromNotionCommand extends Command
         $chunks = array_chunk($paginator->getAllResults()->toArray(), 50);
         foreach ($chunks as $chunk) {
             // we have chunk of data, now we need to map it to our model
-
+            // we need to reverse map to notion method!
             $model::insert($chunk);
             $this->info('Synced ' . $model->count() . ' records');
         }
