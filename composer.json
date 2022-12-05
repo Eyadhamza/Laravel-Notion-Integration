@@ -8,7 +8,7 @@
         "notion-api-laravel",
         "notion-api-wrapper-laravel",
         "notion-api-integration-laravel",
-        "notion-api-laravel-wrapper",
+        "notion-api-laravel-wrapper"
 
     ],
     "homepage": "https://github.com/eyadhamza/notion-api-wrapper",
