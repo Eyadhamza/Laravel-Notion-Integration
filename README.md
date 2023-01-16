@@ -132,7 +132,7 @@ $pages = $database->filters([
 - compoundAndGroup/compoundOrGroup takes an array of filters as the first argument and an operator in the second
   argument
 - The operator in the second argument tells the API how to combine the filters in the first argument
-- So, iin the following case will be something like this: Status = 'Reading' OR (Name contains 'MMMM' AND Publisher
+- So, in the following case will be something like this: Status = 'Reading' OR (Name contains 'MMMM' AND Publisher
   contains 'A')
 - To understand compound filters better please
   visit [Notion Compound Filters](https://www.notion.so/help/views-filters-and-sorts)
