@@ -1,6 +1,6 @@
 <?php
 
-namespace Pi\Notion\Tests\Featured;
+namespace Pi\Notion\Tests\Feature;
 
 use Pi\Notion\Core\NotionSearch;
 use Pi\Notion\Core\NotionSort;

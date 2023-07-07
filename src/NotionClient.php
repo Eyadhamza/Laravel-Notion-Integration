@@ -4,6 +4,7 @@ namespace Pi\Notion;
 
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
+use Pi\Notion\Core\RequestBuilders\BaseNotionRequestBuilder;
 use Pi\Notion\Core\RequestBuilders\NotionDatabaseRequestBuilder;
 use Pi\Notion\Exceptions\ConflictErrorException;
 use Pi\Notion\Exceptions\InternalServerErrorException;
@@ -30,8 +31,7 @@ class NotionClient
 
     private string $token;
     private PendingRequest $client;
-    private NotionDatabaseRequestBuilder $requestBuilder;
-    private Response $response;
+    private BaseNotionRequestBuilder $requestBuilder;
 
     public function __construct()
     {
@@ -48,19 +48,19 @@ class NotionClient
         return new self();
     }
 
-    public function createDatabase(): Response
+    public function post(string $url): Response
     {
-        $this->post(NotionClient::BASE_URL.'/databases/');
-
-        return $this->response;
-    }
-    public function post(string $url): self
-    {
-        $this->response = $this->client
-            ->post($url, $this->requestBuilder->toArray())
+        return $this
+            ->client
+            ->post($url, $this->requestBuilder->build())
             ->onError(fn($response) => NotionException::matchException($response->json()));
+    }
 
-        return $this;
+    public function get(string $url, string $param, array $queryParams = null): Response
+    {
+        return $this->client
+            ->get($url . $param, $queryParams)
+            ->onError(fn($response) => NotionException::matchException($response->json()));
 
     }
 
@@ -79,10 +79,28 @@ class NotionClient
         return $this;
     }
 
-    public function setRequest(NotionDatabaseRequestBuilder $requestBuilder): static
+    public function setRequest(BaseNotionRequestBuilder $requestBuilder): static
     {
         $this->requestBuilder = $requestBuilder;
         return $this;
     }
+
+    public function matchMethod(string $getMethod, string $url, ?array $body = null): Response
+    {
+        return match ($getMethod) {
+            'get' => $this->get($url, $body),
+            'post' => $this->post($url),
+        };
+    }
+
+    public function patch(string $url): Response
+    {
+        return $this
+            ->client
+            ->post($url, $this->requestBuilder->build())
+            ->onError(fn($response) => NotionException::matchException($response->json()));
+
+    }
+
 
 }

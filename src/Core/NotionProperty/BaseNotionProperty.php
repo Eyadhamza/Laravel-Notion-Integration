@@ -17,10 +17,8 @@ use stdClass;
 abstract class BaseNotionProperty extends NotionObject
 {
     protected mixed $value;
-
     protected NotionPropertyTypeEnum $type;
     protected ?string $name;
-    protected array $attributes = [];
 
     public function __construct(string $name)
     {
@@ -34,23 +32,14 @@ abstract class BaseNotionProperty extends NotionObject
 
     public static function build(array $response): static
     {
-        $property = new static($response['name']);
+        $property = new static($response['name'] ?? '');
         $property->id = $response['id'];
         $property->type = NotionPropertyTypeEnum::tryFrom($response['type']);
-        $property->attributes = $response[$response['type']];
+        $property->value = $response[$response['type']];
 
         return $property;
     }
     abstract public function setAttributes(): self;
-    public function setValues(array|string $values): self
-    {
-        match ($this->type) {
-            'title' => $this->setTitleValue($values),
-            'rich_text' => $this->setRichTextValue($values),
-            default => $this->values = $values,
-        };
-        return $this;
-    }
 
     public function setMultipleValues(array $values): self
     {
@@ -58,17 +47,6 @@ abstract class BaseNotionProperty extends NotionObject
             return ['name' => $optionName];
         })->toArray();
         return $this;
-    }
-
-    public function getValues(): array|string
-    {
-        if (!isset($this->values)) {
-            return [];
-        }
-        if (is_array($this->values)) {
-            return $this->isNested() ? array($this->values) : array($this->values)[0];
-        }
-        return $this->values;
     }
 
     public function getValue(): mixed
@@ -93,18 +71,6 @@ abstract class BaseNotionProperty extends NotionObject
         ]);
     }
 
-//    public function getOptions(): array|stdClass
-//    {
-//        if (!isset($this->options)) {
-//            return new stdClass();
-//        }
-//        if (is_array($this->options)) {
-//            return [
-//                'options' => $this->options
-//            ];
-//        }
-//        return array($this->options);
-//    }
 
     public function getId(): ?string
     {

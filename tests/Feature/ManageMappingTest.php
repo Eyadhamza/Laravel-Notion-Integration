@@ -1,6 +1,6 @@
 <?php
 
-namespace Pi\Notion\Tests\Featured;
+namespace Pi\Notion\Tests\Feature;
 
 use Illuminate\Support\Facades\Artisan;
 use Pi\Notion\Core\NotionDatabase;

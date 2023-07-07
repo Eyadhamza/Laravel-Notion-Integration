@@ -1,6 +1,6 @@
 <?php
 
-namespace Pi\Notion\Tests\Featured;
+namespace Pi\Notion\Tests\Feature;
 
 use Pi\Notion\Core\Builders\NotionPropertyBuilder;
 use Pi\Notion\Core\NotionDatabase;
@@ -52,12 +52,13 @@ class ManageNotionDatabasesTest extends TestCase
 
         $database = (new NotionDatabase)
             ->setDatabaseId('a5f8af6484334c09b69d5dd5f54b378f')
+            ->setTitle(NotionPropertyBuilder::databaseTitle('Test Database'))
             ->setProperties([
-                BaseNotionProperty::select('Status2')->setOptions([
+                NotionPropertyBuilder::select('Status2')->setOptions([
                     ['name' => 'A', 'color' => 'red'],
                     ['name' => 'B', 'color' => 'green']
                 ]),
-                BaseNotionProperty::date('Created')
+                NotionPropertyBuilder::date('Created')
             ])
             ->update();
 

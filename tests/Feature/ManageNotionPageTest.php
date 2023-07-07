@@ -1,6 +1,6 @@
 <?php
 
-namespace Pi\Notion\Tests\Featured;
+namespace Pi\Notion\Tests\Feature;
 
 use Pi\Notion\Common\NotionRichText;
 use Pi\Notion\Core\NotionBlock;

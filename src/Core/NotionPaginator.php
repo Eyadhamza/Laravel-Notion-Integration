@@ -4,6 +4,7 @@ namespace Pi\Notion\Core;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Pi\Notion\Core\RequestBuilders\PaginatorRequestBuilder;
 use Pi\Notion\Exceptions\NotionException;
 use Pi\Notion\NotionClient;
 
@@ -11,7 +12,6 @@ class NotionPaginator
 {
     private ?string $startCursor;
     private ?int $pageSize = 100;
-
     private bool $hasMore;
     private ?string $nextCursor;
     private Collection $results;
@@ -20,55 +20,42 @@ class NotionPaginator
     private string $url;
     private string $method;
     private array $requestBody;
+
     private NotionObject $notionObject;
 
-    public function make($response, NotionObject $notionObject): static
+    public function make(array $response): static
     {
-        $this->notionObject = $notionObject;
         $this->hasMore = $response['has_more'];
         $this->nextCursor = $response['next_cursor'];
         $this->resultsType = $response['type'];
         $this->objectType = $response['object'];
         $this->results = new Collection();
         foreach ($response['results'] as $result) {
-            $this->results->add($notionObject::build($result));
+            $this->results->add($this->notionObject::build($result));
         }
         return $this;
     }
 
     public function paginate(): array
     {
-        $body = [];
-        if ($this->getPaginationParameters()) {
-            $body = array_merge($body, $this->getPaginationParameters());
-        }
-        if (isset($this->requestBody)) {
-            $body = array_merge($body, $this->requestBody);
-        }
-        $response = NotionClient::request($this->getMethod(), $this->getUrl(), $body);
+        $paginatorRequestBuilder = PaginatorRequestBuilder::make($this->notionObject)
+            ->setStartCursor($this->startCursor)
+            ->setPageSize($this->pageSize);
+
+        $response = NotionClient::make()
+            ->setRequest($paginatorRequestBuilder)
+            ->matchMethod($this->getMethod(), $this->getUrl(), $this->requestBody);
 
         $this->updateNextCursor($response['next_cursor'], $response['has_more']);
-        return $response;
+
+        return $response->json();
     }
 
     public function next(): static
     {
         $this->startCursor = $this->getNextCursor();
-        $this->make($this->paginate(), $this->notionObject);
+        $this->make($this->paginate());
         return $this;
-    }
-
-    public function getPaginationParameters(): array|null
-    {
-        $parameters = [];
-        if ($this->getStartCursor()) {
-            $parameters['start_cursor'] = $this->getStartCursor();
-        }
-        if ($this->getPageSize()) {
-            $parameters['page_size'] = $this->getPageSize();
-        }
-        return $this->pageSize == 100 && is_null($this->getStartCursor()) ? null : $parameters;
-
     }
 
     private function updateNextCursor(string $nextCursor = null, bool $hasMore = false): void
@@ -91,16 +78,6 @@ class NotionPaginator
     public function hasMore(): bool
     {
         return $this->hasMore;
-    }
-
-    public function getStartCursor(): ?string
-    {
-        return $this->startCursor ?? null;
-    }
-
-    public function getPageSize(): ?int
-    {
-        return $this->pageSize;
     }
 
     public function setUrl(string $url): static
@@ -130,12 +107,6 @@ class NotionPaginator
         return $this->results;
     }
 
-    public function setRequestBody(array $array): static
-    {
-        $this->requestBody = $array;
-        return $this;
-    }
-
     public function getResultsType(): string
     {
         return $this->resultsType;
@@ -157,5 +128,23 @@ class NotionPaginator
     public function getValues()
     {
         return $this->results->first()->getValues()[0]['text']['content'];
+    }
+
+    public function setBody(array $requestBody)
+    {
+        $this->requestBody = $requestBody;
+        return $this;
+    }
+
+    public function setPaginatedObject(NotionPage $paginatedObject): static
+    {
+        $this->notionObject = $paginatedObject;
+        return $this;
+    }
+
+    public function setStartCursor(?string $startCursor): static
+    {
+        $this->startCursor = $startCursor;
+        return $this;
     }
 }
