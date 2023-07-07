@@ -2,12 +2,11 @@
 
 namespace Pi\Notion\Tests\Featured;
 
-use Illuminate\Support\Collection;
+use Pi\Notion\Core\Builders\NotionPropertyBuilder;
 use Pi\Notion\Core\NotionDatabase;
 use Pi\Notion\Core\NotionFilter;
-use Pi\Notion\Core\NotionProperty;
+use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 use Pi\Notion\Core\NotionSort;
-use Pi\Notion\Exceptions\InvalidRequestUrlException;
 use Pi\Notion\Exceptions\NotionValidationException;
 use Pi\Notion\Tests\TestCase;
 
@@ -33,14 +32,14 @@ class ManageNotionDatabasesTest extends TestCase
 
         $database = (new NotionDatabase)
             ->setParentPageId('fa4379661ed948d7af52df923177028e')
-            ->setTitle('Test Database2')
+            ->setTitle(NotionPropertyBuilder::databaseTitle('Test Database'))
             ->setProperties([
-                NotionProperty::title(),
-                NotionProperty::select('Status')->setOptions([
+                NotionPropertyBuilder::title('Name'),
+                NotionPropertyBuilder::select('Status')->setOptions([
                     ['name' => 'A', 'color' => 'red'],
                     ['name' => 'B', 'color' => 'green']
                 ]),
-                NotionProperty::date()
+                NotionPropertyBuilder::date()
             ])
             ->create();
 
@@ -54,11 +53,11 @@ class ManageNotionDatabasesTest extends TestCase
         $database = (new NotionDatabase)
             ->setDatabaseId('a5f8af6484334c09b69d5dd5f54b378f')
             ->setProperties([
-                NotionProperty::select('Status2')->setOptions([
+                BaseNotionProperty::select('Status2')->setOptions([
                     ['name' => 'A', 'color' => 'red'],
                     ['name' => 'B', 'color' => 'green']
                 ]),
-                NotionProperty::date('Created')
+                BaseNotionProperty::date('Created')
             ])
             ->update();
 

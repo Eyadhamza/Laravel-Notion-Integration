@@ -1,54 +1,55 @@
 <?php
 
 
-namespace Pi\Notion\Core;
+namespace Pi\Notion\Core\NotionProperty;
 
 
 use Illuminate\Support\Collection;
 use Pi\Notion\Common\NotionRichText;
+use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Core\NotionDatabase;
+use Pi\Notion\Core\NotionObject;
+use Pi\Notion\Core\NotionPage;
 use Pi\Notion\PropertyType;
 use Pi\Notion\Traits\CreatePropertyTypes;
 use stdClass;
 
-class NotionProperty extends NotionObject
+abstract class BaseNotionProperty extends NotionObject
 {
-    use CreatePropertyTypes;
+    protected mixed $value;
 
-    private string $type;
-    private ?string $name;
-    private array|string|null $values;
-    private array|string|null $options;
+    protected NotionPropertyTypeEnum $type;
+    protected ?string $name;
+    protected array $attributes = [];
 
-    public function __construct(string $type = '', string $name = null)
+    public function __construct(string $name)
     {
-        $this->type = $type;
         $this->name = $name;
     }
 
-    public static function make(string $type, string $name = null): NotionProperty
+    public static function make(string $name): BaseNotionProperty
     {
-        return new self($type, $name);
+        return new static($name);
     }
-
-    public static function mapsProperties(NotionDatabase|NotionPage $object)
+    public static function mapsProperties(NotionDatabase|NotionPage $object): Collection
     {
-        return $object->getProperties()->mapToAssoc(function (NotionProperty $property) {
-            return
-                array(
-                    $property->name, array($property->getType() => empty($property->getValues()) ? $property->getOptions() : $property->getValues())
-                );
+        return $object->getProperties()->mapWithKeys(function (BaseNotionProperty $property) {
+            return [
+                $property->name => $property->getAttributes()
+            ];
         });
     }
 
-    public static function build($response, $name = null): static
+    public static function build(array $response): static
     {
-        $property = NotionProperty::make($response['type'], $name);
+        $property = new static($response['name']);
         $property->id = $response['id'];
-        $property->options = $response[$response['type']]['options'] ?? [];
-        $property->values = $response[$response['type']];
+        $property->type = NotionPropertyTypeEnum::tryFrom($response['type']);
+        $property->attributes = $response[$response['type']];
+
         return $property;
     }
-
+    abstract public function setAttributes(): self;
     public function setValues(array|string $values): self
     {
         match ($this->type) {
@@ -77,15 +78,10 @@ class NotionProperty extends NotionObject
         }
         return $this->values;
     }
-    public function getValue(): string
+
+    public function getValue(): mixed
     {
-        if (!isset($this->values)) {
-            return '';
-        }
-        if ($this->isNested()) {
-            return $this->values[0]['plain_text'] ?? '';
-        }
-        return $this->values;
+        return $this->value ?? null;
     }
     private function isNested(): bool
     {
@@ -105,31 +101,25 @@ class NotionProperty extends NotionObject
         ]);
     }
 
-    public function getOptions(): array|stdClass
-    {
-        if (!isset($this->options)) {
-            return new stdClass();
-        }
-        if (is_array($this->options)) {
-            return [
-                'options' => $this->options
-            ];
-        }
-        return array($this->options);
-    }
-
-    public function setOptions(array|string $options): self
-    {
-        $this->options = $options;
-        return $this;
-    }
+//    public function getOptions(): array|stdClass
+//    {
+//        if (!isset($this->options)) {
+//            return new stdClass();
+//        }
+//        if (is_array($this->options)) {
+//            return [
+//                'options' => $this->options
+//            ];
+//        }
+//        return array($this->options);
+//    }
 
     public function getId(): ?string
     {
         return $this->id;
     }
 
-    public function getType(): string
+    public function getType(): NotionPropertyTypeEnum
     {
         return $this->type;
     }
@@ -154,6 +144,17 @@ class NotionProperty extends NotionObject
     {
         $this->values = NotionRichText::make($values)
             ->toArray();
+        return $this;
+    }
+
+    public function getAttributes(): array
+    {
+        return $this->attributes ?? [];
+    }
+
+    public function setValue(mixed $value): BaseNotionProperty
+    {
+        $this->value = $value;
         return $this;
     }
 }

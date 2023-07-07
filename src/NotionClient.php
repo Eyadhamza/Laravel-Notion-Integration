@@ -24,7 +24,7 @@ class NotionClient
     const BLOCK_URL = NotionClient::BASE_URL.'/blocks/';
     const SEARCH_PAGE_URL =  NotionClient::BASE_URL.'/search';
     const DATABASE_URL = NotionClient::BASE_URL.'/databases/';
-    const NOTION_VERSION = '2022-02-22';
+    const NOTION_VERSION = '2022-06-28';
     const COMMENTS_URL =  NotionClient::BASE_URL.'/comments/';
 
     private string $token;

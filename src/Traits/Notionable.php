@@ -3,9 +3,7 @@
 namespace Pi\Notion\Traits;
 
 use LogicException;
-use Pi\Notion\Core\NotionDatabase;
 use Pi\Notion\Core\NotionPage;
-use Pi\Notion\Core\NotionProperty;
 
 trait Notionable
 {

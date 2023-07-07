@@ -3,6 +3,10 @@
 namespace Pi\Notion\Core;
 
 
+use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
+use Pi\Notion\Core\NotionProperty\NotionPropertyFactory;
+
 abstract class NotionObject
 {
     protected ?string $objectType;
@@ -18,7 +22,7 @@ abstract class NotionObject
     protected ?string $cover;
     protected NotionPaginator $paginator;
 
-    public static function build($response): static
+    public static function build(array $response): static
     {
         $object = new static();
         $object->id = $response['id'] ?? null;
@@ -34,8 +38,10 @@ abstract class NotionObject
 
     protected function buildProperties($response): static
     {
-        foreach ($response['properties'] as $name => $property) {
-            $this->properties->add(NotionProperty::build($property, $name));
+        foreach ($response['properties'] as $propertyDate) {
+            $property = NotionPropertyFactory::make(NotionPropertyTypeEnum::from($propertyDate['type']), $propertyDate);
+
+            $this->properties->add($property);
         }
 
         return $this;

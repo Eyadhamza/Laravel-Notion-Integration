@@ -5,6 +5,9 @@ namespace Pi\Notion\Core;
 
 
 use Illuminate\Support\Collection;
+use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
+use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
+use Pi\Notion\Core\NotionProperty\NotionTitle;
 use Pi\Notion\NotionClient;
 use Pi\Notion\Traits\HandleFilters;
 use Pi\Notion\Traits\HandleProperties;
@@ -15,7 +18,7 @@ class NotionDatabase extends NotionObject
     use HandleFilters, HandleProperties, HandleSorts;
 
     private string $link;
-    protected string $title;
+    protected NotionDatabaseTitle $title;
     protected ?string $description;
 
     protected Collection $properties;
@@ -51,14 +54,13 @@ class NotionDatabase extends NotionObject
     {
 
         $response = NotionClient::request('post',
-            NotionClient::DATABASE_URL, [
+            NotionClient::DATABASE_URL, array_merge($this->title->getAttributes(), [
                 'parent' => [
                     'type' => 'page_id',
                     'page_id' => $this->getParentPageId()
                 ],
-                'title' => $this->mapTitle(),
-                'properties' => NotionProperty::mapsProperties($this)
-            ]);
+                'properties' => BaseNotionProperty::mapsProperties($this)
+            ]));
 
 
         return $this->build($response);
@@ -71,7 +73,7 @@ class NotionDatabase extends NotionObject
 
         if (isset($this->title)) $requestBody['title'] = $this->mapTitle();
 
-        if (isset($this->properties)) $requestBody['properties'] = NotionProperty::mapsProperties($this);
+        if (isset($this->properties)) $requestBody['properties'] = BaseNotionProperty::mapsProperties($this);
 
         $response = NotionClient::request('patch', $this->url(), $requestBody);
 
@@ -101,7 +103,7 @@ class NotionDatabase extends NotionObject
     public static function build($response): static
     {
         $database = parent::build($response);
-        $database->title = $response['title'][0]['plain_text'] ?? null;
+        $database->title = NotionDatabaseTitle::make($response['title'][0]['plain_text']) ?? null;
         $database->description = $response['description'][0]['plain_text'] ?? null;
         $database->url = $response['url'] ?? null;
         $database->icon = $response['icon'] ?? null;
@@ -147,21 +149,7 @@ class NotionDatabase extends NotionObject
         return $this;
     }
 
-    private function mapTitle(): array
-    {
-        return
-            array(
-                array(
-                    'type' => 'text',
-                    'text' => array(
-                        'content' => $this->title ?? 'Untitled Database',
-                        'link' => $this->link ?? null
-                    )
-                )
-            );
-    }
-
-    public function setTitle(string $title): self
+    public function setTitle(NotionDatabaseTitle $title): self
     {
         $this->title = $title;
 
@@ -174,4 +162,17 @@ class NotionDatabase extends NotionObject
 
         return $this;
     }
+    public function setProperties(array $properties): self
+    {
+        collect($properties)->map(function ($property) {
+            $this->properties->add($property);
+        });
+        return $this;
+    }
+
+    public function getProperties(): Collection
+    {
+        return $this->properties;
+    }
+
 }

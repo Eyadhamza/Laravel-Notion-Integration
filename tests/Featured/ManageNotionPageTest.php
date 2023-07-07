@@ -2,13 +2,11 @@
 
 namespace Pi\Notion\Tests\Featured;
 
-use Illuminate\Support\Collection;
 use Pi\Notion\Common\NotionRichText;
 use Pi\Notion\Core\NotionBlock;
-use Pi\Notion\Core\NotionDatabase;
 use Pi\Notion\Core\NotionPage;
 use Pi\Notion\Core\NotionPaginator;
-use Pi\Notion\Core\NotionProperty;
+use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 use Pi\Notion\Tests\TestCase;
 
 class ManageNotionPageTest extends TestCase
@@ -98,16 +96,16 @@ class ManageNotionPageTest extends TestCase
         $page->setDatabaseId($this->notionDatabaseId);
 
          $page->setProperties([
-            NotionProperty::title('Name', 'Eyad Hamza'),
-            NotionProperty::multiSelect('Status1', ['A', 'B']),
-            NotionProperty::select('Status', 'A'),
-            NotionProperty::date('Date', [
+            BaseNotionProperty::title('Name', 'Eyad Hamza'),
+            BaseNotionProperty::multiSelect('Status1', ['A', 'B']),
+            BaseNotionProperty::select('Status', 'A'),
+            BaseNotionProperty::date('Date', [
                 'start' => "2020-12-08T12:00:00Z",
                 'end' => "2020-12-08T12:00:00Z",
             ]),
-            NotionProperty::url(values: 'https://developers.notion.com'),
-            NotionProperty::email('Email','Eyadhamza0@outlook.com'),
-            NotionProperty::phone()->setValues('0123456789')
+            BaseNotionProperty::url(values: 'https://developers.notion.com'),
+            BaseNotionProperty::email('Email','Eyadhamza0@outlook.com'),
+            BaseNotionProperty::phone()->setValues('0123456789')
         ])->create();
         $this->assertCount(7, $page->getProperties());
         $this->assertObjectHasAttribute('properties', $page);
@@ -207,7 +205,7 @@ class ManageNotionPageTest extends TestCase
         $this->assertInstanceOf(NotionPaginator::class, $property);
 
         $property = $page->getProperty('Status');
-        $this->assertInstanceOf(NotionProperty::class, $property);
+        $this->assertInstanceOf(BaseNotionProperty::class, $property);
     }
 
 }

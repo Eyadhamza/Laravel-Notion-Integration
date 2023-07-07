@@ -23,6 +23,7 @@ class NotionRichText extends BlockContent
     public static function build(array $response): static
     {
         $richText = parent::build($response);
+        dd($response);
         $richText->link = $response[0]['text']['link'];
         $richText->buildAnnotations($response[0]['annotations']);
         $richText->href = $response[0]['href'];

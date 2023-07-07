@@ -5,8 +5,7 @@ namespace Pi\Notion\Core;
 
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
-use Pi\Notion\Exceptions\NotionException;
+use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 use Pi\Notion\NotionClient;
 use Pi\Notion\Traits\HandleBlocks;
 use Pi\Notion\Traits\HandleProperties;
@@ -62,7 +61,7 @@ class NotionPage extends NotionObject
                 ->setPageSize($pageSize)
                 ->paginate();
 
-            return $this->paginator->make($response, new NotionProperty);
+            return $this->paginator->make($response, new BaseNotionProperty);
         } else {
             $response = NotionClient::request('get', $this->propertyUrl($property->getId()));
         }
@@ -91,7 +90,7 @@ class NotionPage extends NotionObject
     {
         $response = NotionClient::request('post', NotionClient::PAGE_URL, [
             'parent' => array('database_id' => $this->getDatabaseId()),
-            'properties' => NotionProperty::mapsProperties($this),
+            'properties' => BaseNotionProperty::mapsProperties($this),
             'children' => NotionBlock::mapsBlocksToPage($this)
         ]);
         return $this->build($response);
@@ -100,7 +99,7 @@ class NotionPage extends NotionObject
     public function update(): self
     {
         $response = NotionClient::request('patch', $this->getUrl(), [
-            'properties' => NotionProperty::mapsProperties($this),
+            'properties' => BaseNotionProperty::mapsProperties($this),
         ]);
         return $this->build($response);
     }
@@ -134,7 +133,7 @@ class NotionPage extends NotionObject
     }
     public function ofPropertyName(string $name)
     {
-        return $this->properties->filter(function (NotionProperty $property) use ($name) {
+        return $this->properties->filter(function (BaseNotionProperty $property) use ($name) {
             return $property->getName() == $name;
         })->first();
     }
