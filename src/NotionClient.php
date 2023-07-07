@@ -2,7 +2,9 @@
 
 namespace Pi\Notion;
 
-use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\Response;
+use Pi\Notion\Core\RequestBuilders\NotionDatabaseRequestBuilder;
 use Pi\Notion\Exceptions\ConflictErrorException;
 use Pi\Notion\Exceptions\InternalServerErrorException;
 use Pi\Notion\Exceptions\InvalidJsonException;
@@ -23,46 +25,64 @@ class NotionClient
     const PAGE_URL = NotionClient::BASE_URL.'/pages/';
     const BLOCK_URL = NotionClient::BASE_URL.'/blocks/';
     const SEARCH_PAGE_URL =  NotionClient::BASE_URL.'/search';
-    const DATABASE_URL = NotionClient::BASE_URL.'/databases/';
     const NOTION_VERSION = '2022-06-28';
     const COMMENTS_URL =  NotionClient::BASE_URL.'/comments/';
 
     private string $token;
+    private PendingRequest $client;
+    private NotionDatabaseRequestBuilder $requestBuilder;
+    private Response $response;
 
     public function __construct()
     {
         $this->token = config('notion-api-wrapper.token');
+        $this->client = new PendingRequest();
+
+        $this
+            ->setToken()
+            ->setHeaders();
     }
-    public static function client(): self
+
+    public static function make(): NotionClient
     {
         return new self();
     }
-    /**
-     * @throws ObjectNotFoundException
-     * @throws InvalidRequestException
-     * @throws InternalServerErrorException
-     * @throws InvalidRequestUrlException
-     * @throws MissingVersionException
-     * @throws RateLimitedException
-     * @throws ServiceUnavailableException
-     * @throws UnauthorizedException
-     * @throws InvalidJsonException
-     * @throws RestrictedResourceException
-     * @throws NotionValidationException
-     * @throws ConflictErrorException
-     */
-    public static function request(string $method, string $url, array $requestBody = []): array
+
+    public function createDatabase(): Response
     {
-        $client = new self();
-        return Http::withToken($client->token)
-            ->withHeaders(['Notion-Version' => self::NOTION_VERSION])
-            ->$method($url, $requestBody)
-            ->onError(fn($response) => NotionException::matchException($response->json()))
-            ->json();
+        $this->post(NotionClient::BASE_URL.'/databases/');
+
+        return $this->response;
+    }
+    public function post(string $url): self
+    {
+        $this->response = $this->client
+            ->post($url, $this->requestBuilder->toArray())
+            ->onError(fn($response) => NotionException::matchException($response->json()));
+
+        return $this;
+
     }
 
-    public function getToken(): string
+    private function setHeaders(): self
     {
-        return $this->token;
+        $this->client->withHeaders([
+            'Notion-Version' => self::NOTION_VERSION
+        ]);
+
+        return $this;
     }
+
+    private function setToken(): self
+    {
+        $this->client->withToken($this->token);
+        return $this;
+    }
+
+    public function setRequest(NotionDatabaseRequestBuilder $requestBuilder): static
+    {
+        $this->requestBuilder = $requestBuilder;
+        return $this;
+    }
+
 }

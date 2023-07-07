@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
 use Pi\Notion\Core\NotionProperty\NotionTitle;
+use Pi\Notion\Core\RequestBuilders\NotionDatabaseRequestBuilder;
 use Pi\Notion\NotionClient;
 use Pi\Notion\Traits\HandleFilters;
 use Pi\Notion\Traits\HandleProperties;
@@ -52,18 +53,14 @@ class NotionDatabase extends NotionObject
 
     public function create(): self
     {
+        $requestBuilder = NotionDatabaseRequestBuilder::make($this->title, $this->getParentPageId(), $this->getProperties());
 
-        $response = NotionClient::request('post',
-            NotionClient::DATABASE_URL, array_merge($this->title->getAttributes(), [
-                'parent' => [
-                    'type' => 'page_id',
-                    'page_id' => $this->getParentPageId()
-                ],
-                'properties' => BaseNotionProperty::mapsProperties($this)
-            ]));
+        $response = NotionClient::make()
+            ->setRequest($requestBuilder)
+            ->createDatabase();
 
 
-        return $this->build($response);
+        return $this->build($response->json());
     }
 
 

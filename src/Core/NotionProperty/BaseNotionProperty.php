@@ -31,14 +31,6 @@ abstract class BaseNotionProperty extends NotionObject
     {
         return new static($name);
     }
-    public static function mapsProperties(NotionDatabase|NotionPage $object): Collection
-    {
-        return $object->getProperties()->mapWithKeys(function (BaseNotionProperty $property) {
-            return [
-                $property->name => $property->getAttributes()
-            ];
-        });
-    }
 
     public static function build(array $response): static
     {
