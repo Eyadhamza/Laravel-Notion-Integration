@@ -2,9 +2,8 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Common\NotionFile;
-use Pi\Notion\Common\NotionRichText;
 use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Core\NotionValue\NotionFile;
 
 class NotionPropertyFactory
 {

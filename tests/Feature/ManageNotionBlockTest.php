@@ -2,9 +2,8 @@
 
 namespace Pi\Notion\Tests\Feature;
 
-use Dotenv\Dotenv;
-use Pi\Notion\Common\NotionRichText;
-use Pi\Notion\Core\NotionBlock;
+use Pi\Notion\Core\Models\NotionBlock;
+use Pi\Notion\Core\NotionValue\NotionRichText;
 use Pi\Notion\Tests\TestCase;
 
 class ManageNotionBlockTest extends TestCase

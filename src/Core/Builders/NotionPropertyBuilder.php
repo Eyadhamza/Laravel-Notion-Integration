@@ -12,21 +12,21 @@ class NotionPropertyBuilder
 
     public static function title(string $name = 'Title')
     {
-        return NotionTitle::make($name)->setAttributes();
+        return NotionTitle::make($name);
     }
 
     public static function select(string $name = 'Select')
     {
-        return NotionSelect::make($name)->setAttributes();
+        return NotionSelect::make($name);
     }
 
     public static function date(string $name = 'Date')
     {
-        return NotionDate::make($name)->setAttributes();
+        return NotionDate::make($name);
     }
 
-    public static function databaseTitle(string $value)
+    public static function databaseTitle(string $value = 'Untitled Database')
     {
-        return NotionDatabaseTitle::make($value)->setAttributes();
+        return NotionDatabaseTitle::make($value, $value);
     }
 }

@@ -47,7 +47,7 @@ NOTION_TOKEN  = 'secret_{token}'
 
 ```php
 
-use Pi\Notion\Core\NotionDatabase;
+use Pi\Notion\Core\Models\NotionDatabase;
 
 $database = NotionDatabase::find('632b5fb7e06c4404ae12065c48280e4c');
 
@@ -185,13 +185,13 @@ $pages = $database->sorts([
 #### Fetch a page by id (without the page contents)
 
 ```php
-$page = \Pi\Notion\Core\NotionPage::find('b4f8e429038744ca9c8d5afa93ea2edd');
+$page = \Pi\Notion\Core\Models\NotionPage::find('b4f8e429038744ca9c8d5afa93ea2edd');
 ```
 
 #### Fetch a page by id and return the blocks
 
 ```php
-$page = \Pi\Notion\Core\NotionPage::findContent('b4f8e429038744ca9c8d5afa93ea2edd');
+$page = \Pi\Notion\Core\Models\NotionPage::findContent('b4f8e429038744ca9c8d5afa93ea2edd');
 ```
 
 #### Create a new Notion Page / new Notion Database Item

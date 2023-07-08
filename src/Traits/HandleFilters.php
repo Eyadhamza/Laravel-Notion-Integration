@@ -3,7 +3,7 @@
 namespace Pi\Notion\Traits;
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\NotionFilter;
+use Pi\Notion\Core\Query\NotionFilter;
 
 trait HandleFilters
 {

@@ -2,7 +2,7 @@
 
 namespace Pi\Notion\Tests\Unit;
 
-use Pi\Notion\Core\NotionDatabase;
+use Pi\Notion\Core\Models\NotionDatabase;
 use Pi\Notion\Tests\TestCase;
 
 class NotionDatabaseTest extends TestCase

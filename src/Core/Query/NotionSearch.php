@@ -1,7 +1,10 @@
 <?php
 
-namespace Pi\Notion\Core;
+namespace Pi\Notion\Core\Query;
 
+use Pi\Notion\Core\Models\NotionDatabase;
+use Pi\Notion\Core\Models\NotionObject;
+use Pi\Notion\Core\Models\NotionPage;
 use Pi\Notion\NotionClient;
 use Pi\Notion\Traits\HandleSorts;
 

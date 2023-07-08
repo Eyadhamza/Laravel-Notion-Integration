@@ -1,13 +1,12 @@
 <?php
 
 
-namespace Pi\Notion\Core;
+namespace Pi\Notion\Core\Models;
 
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
-use Pi\Notion\Common\BlockContent;
-use Pi\Notion\Exceptions\NotionException;
+use Pi\Notion\Core\NotionValue\BlockContent;
+use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\NotionClient;
 use Pi\Notion\Traits\CreateBlockTypes;
 

@@ -2,8 +2,8 @@
 
 namespace Pi\Notion\Tests\Feature;
 
-use Pi\Notion\Core\NotionSearch;
-use Pi\Notion\Core\NotionSort;
+use Pi\Notion\Core\Query\NotionSearch;
+use Pi\Notion\Core\Query\NotionSort;
 use Pi\Notion\Tests\TestCase;
 
 class ManageSearchTest extends TestCase

@@ -7,7 +7,7 @@ use stdClass;
 class NotionText extends BaseNotionProperty
 {
 
-    public function setAttributes(): BaseNotionProperty
+    public function setValue(): BaseNotionProperty
     {
         $this->attributes = [
             'rich_text' => $this->value ?? new stdClass(),

@@ -2,9 +2,8 @@
 
 namespace Pi\Notion\Tests\Feature;
 
-use Pi\Notion\Common\NotionRichText;
-use Pi\Notion\Core\NotionComment;
-use Pi\Notion\Core\NotionUser;
+use Pi\Notion\Core\Models\NotionComment;
+use Pi\Notion\Core\NotionValue\NotionRichText;
 use Pi\Notion\Tests\TestCase;
 
 class ManageCommentTest extends TestCase

@@ -1,11 +1,12 @@
 <?php
 
 
-namespace Pi\Notion\Core;
+namespace Pi\Notion\Core\Models;
 
 
 use Illuminate\Support\Collection;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
+use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\NotionClient;
 use Pi\Notion\Traits\HandleBlocks;
 use Pi\Notion\Traits\HandleProperties;

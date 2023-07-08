@@ -1,15 +1,14 @@
 <?php
 
 
-namespace Pi\Notion\Core;
+namespace Pi\Notion\Core\Models;
 
 
-use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
-use Pi\Notion\Core\NotionProperty\NotionTitle;
+use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\Core\RequestBuilders\NotionDatabaseRequestBuilder;
+use Pi\Notion\Core\RequestBuilders\NotionUpdateDatabaseRequestBuilder;
 use Pi\Notion\NotionClient;
 use Pi\Notion\Traits\HandleFilters;
 use Pi\Notion\Traits\HandleProperties;
@@ -53,7 +52,7 @@ class NotionDatabase extends NotionObject
 
     public function create(): self
     {
-        $requestBuilder = NotionDatabaseRequestBuilder::make($this->title, $this->getParentPageId(), $this->getProperties());
+        $requestBuilder = NotionDatabaseRequestBuilder::make($this->title, $this->getParentPageId(), $this->properties);
 
         $response = NotionClient::make()
             ->setRequest($requestBuilder)
@@ -66,7 +65,7 @@ class NotionDatabase extends NotionObject
 
     public function update(): self
     {
-        $requestBuilder = NotionDatabaseRequestBuilder::make($this->title, $this->getParentPageId(), $this->getProperties());
+        $requestBuilder = NotionUpdateDatabaseRequestBuilder::make($this->title, $this->getParentPageId(), $this->getProperties());
 
         $response = NotionClient::make()
             ->setRequest($requestBuilder)

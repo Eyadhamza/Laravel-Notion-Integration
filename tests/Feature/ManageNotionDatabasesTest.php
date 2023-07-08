@@ -3,10 +3,9 @@
 namespace Pi\Notion\Tests\Feature;
 
 use Pi\Notion\Core\Builders\NotionPropertyBuilder;
-use Pi\Notion\Core\NotionDatabase;
-use Pi\Notion\Core\NotionFilter;
-use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
-use Pi\Notion\Core\NotionSort;
+use Pi\Notion\Core\Models\NotionDatabase;
+use Pi\Notion\Core\Query\NotionFilter;
+use Pi\Notion\Core\Query\NotionSort;
 use Pi\Notion\Exceptions\NotionValidationException;
 use Pi\Notion\Tests\TestCase;
 
@@ -49,7 +48,6 @@ class ManageNotionDatabasesTest extends TestCase
     /** @test */
     public function test_it_can_update_a_database_object()
     {
-
         $database = (new NotionDatabase)
             ->setDatabaseId('a5f8af6484334c09b69d5dd5f54b378f')
             ->setTitle(NotionPropertyBuilder::databaseTitle('Test Database'))

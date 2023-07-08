@@ -3,30 +3,20 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Core\NotionValue\NotionRichText;
 
 class NotionDatabaseTitle extends BaseNotionProperty
 {
-    public function __construct(string $name)
+    protected function buildValue(): NotionRichText
     {
-        parent::__construct($name);
-        $this->type = NotionPropertyTypeEnum::TITLE;
+        return NotionRichText::make('text', $this->name);
     }
 
-    public function setAttributes(): self
+
+    public function setType(): BaseNotionProperty
     {
-        $this->attributes = [
-            'title' => [
-                [
-                    'type' => 'text',
-                    'text' => [
-                        'content' => $this->name,
-                        'link' => null
-                    ],
-                ]
-            ]
-        ];
+        $this->type = NotionPropertyTypeEnum::TITLE;
 
         return $this;
     }
-
 }

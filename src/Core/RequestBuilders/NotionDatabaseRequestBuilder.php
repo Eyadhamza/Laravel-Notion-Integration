@@ -3,8 +3,6 @@
 namespace Pi\Notion\Core\RequestBuilders;
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\NotionDatabase;
-use Pi\Notion\Core\NotionPage;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
 
@@ -28,13 +26,22 @@ class NotionDatabaseRequestBuilder extends BaseNotionRequestBuilder
 
     public function toArray(): array
     {
-        return array_merge($this->title->getAttributes(), [
+//        dd(array_merge($this->title->toArray(), [
+//            'parent' => [
+//                'type' => 'page_id',
+//                'page_id' => $this->parentPageId
+//            ],
+//            'properties' => $this->properties->mapWithKeys(fn(BaseNotionProperty $property) => [
+//                $property->getName() => $property->toArray()
+//            ])->all()
+//        ]));
+        return array_merge($this->title->toArray(), [
             'parent' => [
                 'type' => 'page_id',
                 'page_id' => $this->parentPageId
             ],
             'properties' => $this->properties->mapWithKeys(fn(BaseNotionProperty $property) => [
-                $property->getName() => $property->getAttributes()
+                $property->getName() => $property->toArray()
             ])->all()
         ]);
     }

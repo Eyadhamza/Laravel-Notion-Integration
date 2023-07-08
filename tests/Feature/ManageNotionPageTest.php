@@ -2,11 +2,11 @@
 
 namespace Pi\Notion\Tests\Feature;
 
-use Pi\Notion\Common\NotionRichText;
-use Pi\Notion\Core\NotionBlock;
-use Pi\Notion\Core\NotionPage;
-use Pi\Notion\Core\NotionPaginator;
+use Pi\Notion\Core\Models\NotionBlock;
+use Pi\Notion\Core\Models\NotionPage;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
+use Pi\Notion\Core\NotionValue\NotionRichText;
+use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\Tests\TestCase;
 
 class ManageNotionPageTest extends TestCase

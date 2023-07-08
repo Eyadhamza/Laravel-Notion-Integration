@@ -3,7 +3,7 @@
 namespace Pi\Notion\Traits;
 
 use Pi\Notion\BlockType;
-use Pi\Notion\Common\NotionRichText;
+use Pi\Notion\Core\NotionValue\NotionRichText;
 
 trait CreateBlockTypes
 {

@@ -3,9 +3,8 @@
 namespace Pi\Notion\Tests\Feature;
 
 use Illuminate\Support\Facades\Artisan;
-use Pi\Notion\Core\NotionDatabase;
-use Pi\Notion\Core\NotionFilter;
-use Pi\Notion\Core\NotionUser;
+use Pi\Notion\Core\Models\NotionDatabase;
+use Pi\Notion\Core\Query\NotionFilter;
 use Pi\Notion\Tests\Models\User;
 use Pi\Notion\Tests\TestCase;
 

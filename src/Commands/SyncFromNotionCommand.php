@@ -5,7 +5,7 @@ namespace Pi\Notion\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Pi\Notion\Core\NotionDatabase;
+use Pi\Notion\Core\Models\NotionDatabase;
 
 class SyncFromNotionCommand extends Command
 {

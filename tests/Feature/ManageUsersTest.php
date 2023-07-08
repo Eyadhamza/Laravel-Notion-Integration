@@ -2,7 +2,7 @@
 
 namespace Pi\Notion\Tests\Feature;
 
-use Pi\Notion\Core\NotionUser;
+use Pi\Notion\Core\Models\NotionUser;
 use Pi\Notion\Tests\TestCase;
 
 class ManageUsersTest extends TestCase

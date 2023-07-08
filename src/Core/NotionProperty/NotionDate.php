@@ -2,15 +2,20 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
+use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Core\NotionValue\NotionSimpleValue;
+
 class NotionDate extends BaseNotionProperty
 {
 
-
-    public function setAttributes(): BaseNotionProperty
+    protected function buildValue()
     {
-        $this->attributes = [
-            'date' => $this->value ?? new \stdClass()
-        ];
+        return NotionSimpleValue::make('start', $this->rawValue);
+    }
+
+    public function setType(): BaseNotionProperty
+    {
+        $this->type = NotionPropertyTypeEnum::DATE;
 
         return $this;
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Pi\Notion\Core;
+namespace Pi\Notion\Core\Query;
 
 use Illuminate\Support\Collection;
 use Pi\Notion\Traits\CreateFilterTypes;

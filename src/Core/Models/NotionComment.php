@@ -1,8 +1,9 @@
 <?php
 
-namespace Pi\Notion\Core;
+namespace Pi\Notion\Core\Models;
 
-use Pi\Notion\Common\NotionRichText;
+use Pi\Notion\Core\NotionValue\NotionRichText;
+use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\NotionClient;
 
 class NotionComment extends NotionObject

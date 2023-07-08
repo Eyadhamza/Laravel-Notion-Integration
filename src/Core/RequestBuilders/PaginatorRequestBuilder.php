@@ -3,7 +3,7 @@
 namespace Pi\Notion\Core\RequestBuilders;
 
 use Illuminate\Http\Resources\MissingValue;
-use Pi\Notion\Core\NotionObject;
+use Pi\Notion\Core\Models\NotionObject;
 
 class PaginatorRequestBuilder extends BaseNotionRequestBuilder
 {

@@ -4,73 +4,66 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 
-use Illuminate\Support\Collection;
-use Pi\Notion\Common\NotionRichText;
 use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
-use Pi\Notion\Core\NotionDatabase;
-use Pi\Notion\Core\NotionObject;
-use Pi\Notion\Core\NotionPage;
-use Pi\Notion\PropertyType;
-use Pi\Notion\Traits\CreatePropertyTypes;
-use stdClass;
+use Pi\Notion\Core\Models\NotionObject;
+use Pi\Notion\Core\NotionValue\NotionBlockContent;
+use Pi\Notion\Core\NotionValue\NotionEmptyValue;
 
 abstract class BaseNotionProperty extends NotionObject
 {
-    protected mixed $value;
+    protected mixed $rawValue;
+    protected ?NotionBlockContent $value;
     protected NotionPropertyTypeEnum $type;
     protected ?string $name;
 
-    public function __construct(string $name)
+    public function __construct(string $name, mixed $rawValue = null)
     {
         $this->name = $name;
+        $this->rawValue = $rawValue;
+        $this->setType()->setValue();
     }
 
-    public static function make(string $name): BaseNotionProperty
+    public static function make(string $name, mixed $rawValue = null): BaseNotionProperty
     {
-        return new static($name);
+        return new static($name, $rawValue);
     }
+
+
+    public function toArray(): array
+    {
+        if (!$this->rawValue) {
+            return $this->returnEmptyObject();
+        }
+
+        return [
+            $this->type->value => [
+                $this->value->resource()
+            ]
+        ];
+    }
+
+    abstract protected function buildValue();
 
     public static function build(array $response): static
     {
         $property = new static($response['name'] ?? '');
         $property->id = $response['id'];
         $property->type = NotionPropertyTypeEnum::tryFrom($response['type']);
-        $property->value = $response[$response['type']];
-
+        $property->buildValue($response[$response['type']]);
         return $property;
     }
-    abstract public function setAttributes(): self;
 
-    public function setMultipleValues(array $values): self
+    public function setValue(): self
     {
-        $this->values = collect($values)->map(function ($optionName) {
-            return ['name' => $optionName];
-        })->toArray();
+        $this->value = $this->buildValue();
+
         return $this;
     }
 
-    public function getValue(): mixed
+    public function getValue(): NotionBlockContent
     {
-        return $this->value ?? null;
+        return $this->value;
     }
-    private function isNested(): bool
-    {
-        return in_array($this->type, [
-            PropertyType::TITLE,
-            PropertyType::RICH_TEXT
-        ]);
-    }
-
-    public function isPaginated(): bool
-    {
-        return in_array($this->type, [
-            PropertyType::TITLE,
-            PropertyType::RICH_TEXT,
-            PropertyType::RELATION,
-            PropertyType::PEOPLE,
-        ]);
-    }
-
 
     public function getId(): ?string
     {
@@ -92,27 +85,14 @@ abstract class BaseNotionProperty extends NotionObject
         return $this->name;
     }
 
-    private function setTitleValue(array|string $values): static
+    abstract public function setType(): BaseNotionProperty;
+
+    private function returnEmptyObject(): array
     {
-        $this->values = ['text' => ['content' => $values]];
-        return $this;
+        $this->value = new NotionEmptyValue($this->type->value);
+
+        return $this->value->resource();
     }
 
-    private function setRichTextValue(array|string $values): static
-    {
-        $this->values = NotionRichText::make($values)
-            ->toArray();
-        return $this;
-    }
 
-    public function getAttributes(): array
-    {
-        return $this->attributes ?? [];
-    }
-
-    public function setValue(mixed $value): BaseNotionProperty
-    {
-        $this->value = $value;
-        return $this;
-    }
 }

@@ -1,11 +1,11 @@
 <?php
 
-namespace Pi\Notion\Core;
+namespace Pi\Notion\Core\Query;
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
+use Pi\Notion\Core\Models\NotionObject;
+use Pi\Notion\Core\Models\NotionPage;
 use Pi\Notion\Core\RequestBuilders\PaginatorRequestBuilder;
-use Pi\Notion\Exceptions\NotionException;
 use Pi\Notion\NotionClient;
 
 class NotionPaginator
@@ -15,8 +15,6 @@ class NotionPaginator
     private bool $hasMore;
     private ?string $nextCursor;
     private Collection $results;
-    private string $resultsType;
-    private string $objectType;
     private string $url;
     private string $method;
     private array $requestBody;
@@ -27,8 +25,6 @@ class NotionPaginator
     {
         $this->hasMore = $response['has_more'];
         $this->nextCursor = $response['next_cursor'];
-        $this->resultsType = $response['type'];
-        $this->objectType = $response['object'];
         $this->results = new Collection();
         foreach ($response['results'] as $result) {
             $this->results->add($this->notionObject::build($result));
@@ -44,7 +40,7 @@ class NotionPaginator
 
         $response = NotionClient::make()
             ->setRequest($paginatorRequestBuilder)
-            ->matchMethod($this->getMethod(), $this->getUrl(), $this->requestBody);
+            ->matchMethod($this->method, $this->url, $this->requestBody);
 
         $this->updateNextCursor($response['next_cursor'], $response['has_more']);
 
@@ -92,29 +88,9 @@ class NotionPaginator
         return $this;
     }
 
-    public function getUrl(): string
-    {
-        return $this->url;
-    }
-
-    public function getMethod(): string
-    {
-        return $this->method;
-    }
-
     public function getResults(): Collection
     {
         return $this->results;
-    }
-
-    public function getResultsType(): string
-    {
-        return $this->resultsType;
-    }
-
-    public function getObjectType(): string
-    {
-        return $this->objectType;
     }
 
     public function getAllResults(): Collection
@@ -125,12 +101,7 @@ class NotionPaginator
         return $this->results;
     }
 
-    public function getValues()
-    {
-        return $this->results->first()->getValues()[0]['text']['content'];
-    }
-
-    public function setBody(array $requestBody)
+    public function setBody(array $requestBody): static
     {
         $this->requestBody = $requestBody;
         return $this;

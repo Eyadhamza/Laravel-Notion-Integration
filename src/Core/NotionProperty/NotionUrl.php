@@ -2,17 +2,21 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
+use Pi\Notion\Core\NotionValue\NotionSimpleValue;
 use stdClass;
 
 class NotionUrl extends BaseNotionProperty
 {
 
-    public function setAttributes(): BaseNotionProperty
+    public function toArray(): array
     {
-        $this->attributes = [
-            'url' => $this->value ?? new stdClass(),
+        return [
+            'url' => $this->value->toArray()
         ];
+    }
 
-        return $this;
+    protected function buildValue()
+    {
+        return NotionSimpleValue::make('url', $this->rawValue);
     }
 }
