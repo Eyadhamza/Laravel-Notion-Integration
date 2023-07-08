@@ -112,34 +112,17 @@ it('should add properties to the created page using the page class', function ()
 });
 
 it('can update properties of the created page using the page class', function () {
-    $page = new NotionPage('687e13b1b8bb4eb9957d5843404b6d5d');
-    $response = $page
-        ->select('Status', 'In Progress')
-        ->update();
+    $page = new NotionPage('894dbb5e59ce40efac3ce60a4bb65d27');
+    $page = $page
+        ->setProperties([
+            NotionTitle::make('Name')
+                ->setTitle('Tes111111t')
+                ->build(),
+        ])->update();
 
     expect($page)->toHaveProperty('properties');
 });
 
-it('should add properties to the created page', function () {
-    $page = new NotionPage();
-    $page->setDatabaseId('632b5fb7e06c4404ae12065c48280e4c');
-
-    $page->setProperties([
-        BaseNotionProperty::title('Name', 'Eyad Hamza'),
-        BaseNotionProperty::multiSelect('Status1', ['A', 'B']),
-        BaseNotionProperty::select('Status', 'A'),
-        BaseNotionProperty::date('Date', [
-            'start' => '2020-12-08T12:00:00Z',
-            'end' => '2020-12-08T12:00:00Z',
-        ]),
-        BaseNotionProperty::url('https://developers.notion.com'),
-        BaseNotionProperty::email('Email', 'Eyadhamza0@outlook.com'),
-        BaseNotionProperty::phone()->setValues('0123456789'),
-    ])->create();
-
-    expect($page->getProperties())->toHaveCount(7)
-        ->and($page)->toHaveProperty('properties');
-});
 
 it('can add content blocks to the created pages', function () {
     $page = new NotionPage();
@@ -177,10 +160,6 @@ it('can add content blocks to the created pages', function () {
 it('can add nested content blocks to created pages', function () {
     $page = new NotionPage();
     $page->setDatabaseId('632b5fb7e06c4404ae12065c48280e4c');
-
-    $page
-        ->title('Name', '322323')
-        ->multiSelect('Status1', ['A', 'B']);
 
     $page->setBlocks([
         NotionBlock::paragraph('Hello There im a parent of the following blocks!')

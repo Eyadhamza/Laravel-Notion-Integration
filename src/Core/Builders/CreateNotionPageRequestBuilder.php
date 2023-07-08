@@ -39,13 +39,21 @@ class CreateNotionPageRequestBuilder
 
     public function build(): array
     {
+        $properties = $this->properties->mapWithKeys(fn(BaseNotionProperty $property) => [
+            $property->getName() => $property->resource()
+        ])->all();
+
+        if (! isset($this->databaseId)) {
+            return [
+                'properties' => $properties,
+            ];
+        }
+
         return [
             'parent' => [
                 'database_id' => $this->databaseId,
             ],
-            'properties' => $this->properties->mapWithKeys(fn(BaseNotionProperty $property) => [
-                $property->getName() => $property->resource()
-            ])->all(),
+            'properties' => $properties,
             'children' => $this->blocks,
         ];
     }

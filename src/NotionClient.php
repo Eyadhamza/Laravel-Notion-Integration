@@ -31,7 +31,6 @@ class NotionClient
 
     private string $token;
     private PendingRequest $client;
-    private BaseNotionRequestBuilder $requestBuilder;
 
     public function __construct()
     {
@@ -93,11 +92,11 @@ class NotionClient
         };
     }
 
-    public function patch(string $url): Response
+    public function patch(string $url, array $body = []): Response
     {
         return $this
             ->client
-            ->patch($url, $this->requestBuilder->build())
+            ->patch($url, $body)
             ->onError(fn($response) => NotionException::matchException($response->json()));
 
     }

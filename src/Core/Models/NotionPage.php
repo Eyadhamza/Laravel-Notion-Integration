@@ -96,7 +96,6 @@ class NotionPage extends NotionObject
             ->setProperties($this->properties)
             ->setBlocks($this->blocks);
 
-//                dd($requestBuilder->build());
         $response = NotionClient::make()
             ->post(NotionClient::PAGE_URL, $requestBuilder->build());
 
@@ -105,10 +104,14 @@ class NotionPage extends NotionObject
 
     public function update(): self
     {
-        $response = NotionClient::request('patch', $this->getUrl(), [
-            'properties' => BaseNotionProperty::mapsProperties($this),
-        ]);
-        return $this->fromResponse($response);
+
+        $requestBuilder = CreateNotionPageRequestBuilder::make()
+            ->setProperties($this->properties);
+
+        $response = NotionClient::make()
+            ->patch($this->getUrl(), $requestBuilder->build());
+
+        return $this->fromResponse($response->json());
     }
 
     public function delete(): NotionBlock
