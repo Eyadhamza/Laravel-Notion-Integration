@@ -46,7 +46,7 @@ class NotionDatabase extends NotionObject
     {
         $response = NotionClient::make()->get(NotionClient::BASE_URL . '/databases/', $this->id);
 
-        return $this->build($response->json());
+        return $this->fromResponse($response->json());
 
     }
 
@@ -58,8 +58,7 @@ class NotionDatabase extends NotionObject
             ->setRequest($requestBuilder)
             ->post(NotionClient::BASE_URL . '/databases/');
 
-
-        return $this->build($response->json());
+        return $this->fromResponse($response->json());
     }
 
 
@@ -71,7 +70,7 @@ class NotionDatabase extends NotionObject
             ->setRequest($requestBuilder)
             ->patch(NotionClient::BASE_URL . '/databases/' . $this->id);
 
-        return $this->build($response);
+        return $this->fromResponse($response);
 
     }
 
@@ -96,9 +95,9 @@ class NotionDatabase extends NotionObject
     }
 
 
-    public static function build($response): static
+    public static function fromResponse($response): static
     {
-        $database = parent::build($response);
+        $database = parent::fromResponse($response);
         $database->title = NotionDatabaseTitle::make($response['title'][0]['plain_text']) ?? null;
         $database->description = $response['description'][0]['plain_text'] ?? null;
         $database->url = $response['url'] ?? null;

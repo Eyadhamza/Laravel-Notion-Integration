@@ -10,27 +10,30 @@ abstract class NotionBlockContent
     protected mixed $type;
     protected mixed $value;
 
-    public function __construct(string $type, mixed $value = null)
+    public function __construct(mixed $value = null)
     {
         $this->value = $value;
-        $this->type = $type;
+
     }
 
-    public static function make(string $type, mixed $value = null): self
+    public static function make(mixed $value = null): self|NotionEmptyValue
     {
-        return new static($type, $value);
+        if (! $value){
+            return new NotionEmptyValue();
+        }
+        return new static($value);
     }
 
     abstract public static function build(array $response): static;
 
     public function resource(): array
     {
-        return $this->filter($this->toArray());
+        return $this->filter($this->toResource());
     }
 
-    abstract protected function toArray(): array;
+    abstract protected function toResource();
 
-    public function getValue(): string
+    public function getValue(): mixed
     {
         return $this->value;
     }
@@ -38,5 +41,11 @@ abstract class NotionBlockContent
     public function getType(): string
     {
         return $this->type;
+    }
+
+    public function type(mixed $type): static
+    {
+        $this->type = $type;
+        return $this;
     }
 }

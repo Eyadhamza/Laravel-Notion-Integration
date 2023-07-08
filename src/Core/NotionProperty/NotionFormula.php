@@ -2,16 +2,37 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
+use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Core\NotionValue\NotionFormulaValue;
+
 class NotionFormula extends BaseNotionProperty
 {
+    private string $expression;
+
     protected function buildValue()
     {
-        // TODO: Implement buildValue() method.
+        return NotionFormulaValue::make($this->expression)->type('formula');
     }
 
     public function setType(): BaseNotionProperty
     {
-        // TODO: Implement setType() method.
+        $this->type = NotionPropertyTypeEnum::FORMULA;
+
+        return $this;
     }
+
+    protected function buildFromResponse(array $response): BaseNotionProperty
+    {
+        $this->rawValue = $response['formula']['expression'];
+
+        return $this;
+    }
+
+    public function setExpression(string $expression): NotionFormula
+    {
+        $this->expression = $expression;
+        return $this;
+    }
+
 }
 

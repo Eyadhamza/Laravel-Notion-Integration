@@ -3,7 +3,16 @@
 namespace Pi\Notion\Tests\Feature;
 
 use Pi\Notion\Core\Builders\NotionPropertyBuilder;
+use Pi\Notion\Core\Enums\NotionFormulaTypeEnum;
 use Pi\Notion\Core\Models\NotionDatabase;
+use Pi\Notion\Core\NotionProperty\NotionCheckbox;
+use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
+use Pi\Notion\Core\NotionProperty\NotionDate;
+use Pi\Notion\Core\NotionProperty\NotionFormula;
+use Pi\Notion\Core\NotionProperty\NotionRelation;
+use Pi\Notion\Core\NotionProperty\NotionSelect;
+use Pi\Notion\Core\NotionProperty\NotionTitle;
+use Pi\Notion\Core\NotionValue\NotionFormulaValue;
 use Pi\Notion\Core\Query\NotionFilter;
 use Pi\Notion\Core\Query\NotionSort;
 use Pi\Notion\Exceptions\NotionValidationException;
@@ -18,7 +27,6 @@ class ManageNotionDatabasesTest extends TestCase
     /** @test */
     public function return_database_info()
     {
-
         $database = NotionDatabase::find('632b5fb7e06c4404ae12065c48280e4c');
 
         $this->assertObjectHasAttribute('objectType', $database);
@@ -31,20 +39,26 @@ class ManageNotionDatabasesTest extends TestCase
 
         $database = (new NotionDatabase)
             ->setParentPageId('fa4379661ed948d7af52df923177028e')
-            ->setTitle(NotionPropertyBuilder::databaseTitle('Test Database'))
+            ->setTitle(NotionDatabaseTitle::make('Test Database')->build())
             ->setProperties([
-                NotionPropertyBuilder::title('Name'),
-                NotionPropertyBuilder::select('Status', [
+                NotionTitle::make('Name')
+                    ->setTitle('Name')
+                    ->build(),
+                NotionSelect::make('Status')->setOptions([
                     ['name' => 'A', 'color' => 'red'],
                     ['name' => 'B', 'color' => 'green']
-                ]),
-                NotionPropertyBuilder::date(),
-//                NotionPropertyBuilder::formula('Something'),
-//                NotionPropertyBuilder::relation('Something'),
+                ])->build(),
+                NotionDate::make('Date')->build(),
+                NotionCheckbox::make('Checkbox')->build(),
+                NotionFormula::make('Formula')
+                    ->setExpression('prop("Name")')
+                    ->build(),
+                NotionRelation::make('Relation')
+                    ->setDatabaseId('9019ee1d30c8438f9ec807be1a13f7f1')
+                    ->build(),
 //                NotionPropertyBuilder::rollup('Something'),
 //                NotionPropertyBuilder::people('Something'),
 //                NotionPropertyBuilder::media('Something'),
-//                NotionPropertyBuilder::checkbox('Something'),
 //                NotionPropertyBuilder::email('Something'),
 //                NotionPropertyBuilder::number('Something'),
 //                NotionPropertyBuilder::phone('Something'),
@@ -60,6 +74,7 @@ class ManageNotionDatabasesTest extends TestCase
         $this->assertObjectHasAttribute('objectType', $database);
 
     }
+
     /** @test */
     public function test_it_can_update_a_database_object()
     {
@@ -78,6 +93,7 @@ class ManageNotionDatabasesTest extends TestCase
         $this->assertObjectHasAttribute('objectType', $database);
 
     }
+
     /** @test */
     public function throw_exception_database_not_found()
     {

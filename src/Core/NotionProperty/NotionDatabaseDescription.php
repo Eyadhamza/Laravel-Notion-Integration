@@ -16,7 +16,7 @@ class NotionDatabaseDescription extends BaseNotionProperty
 
     public function setValue(): self
     {
-        $this->value = NotionRichText::make($this->name, 'text')->toArray();
+        $this->value = NotionRichText::make($this->name, 'text')->toResource();
 
         return $this;
     }
@@ -30,5 +30,20 @@ class NotionDatabaseDescription extends BaseNotionProperty
                 ]
             ]
         ];
+    }
+
+    protected function buildValue()
+    {
+        // TODO: Implement buildValue() method.
+    }
+
+    protected function buildFromResponse(array $response): BaseNotionProperty
+    {
+        // TODO: Implement buildFromResponse() method.
+    }
+
+    public function setType(): BaseNotionProperty
+    {
+        // TODO: Implement setType() method.
     }
 }

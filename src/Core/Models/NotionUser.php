@@ -42,17 +42,17 @@ class NotionUser extends NotionObject
     public function get(): self
     {
         $response = NotionClient::request('get', $this->getUrl());
-        return $this->build($response);
+        return $this->fromResponse($response);
     }
 
     public static function getBot(): self
     {
         $user = new static();
         $response = NotionClient::request('get', $user->botUrl());
-        return $user->build($response);
+        return $user->fromResponse($response);
     }
 
-    public static function build($response): static
+    public static function fromResponse($response): static
     {
         $user = new static();
         $user->object = $response['object'] ?? null;
@@ -88,7 +88,7 @@ class NotionUser extends NotionObject
     private function setOwner($response): void
     {
         match ($response['owner']['type']) {
-            'user' => $this->build($response['owner']),
+            'user' => $this->fromResponse($response['owner']),
             'workspace' => $this->name = $response['workspace_name']
         };
     }

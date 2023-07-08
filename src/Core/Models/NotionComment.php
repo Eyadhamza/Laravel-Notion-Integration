@@ -11,9 +11,9 @@ class NotionComment extends NotionObject
     private string $discussionId;
     private NotionRichText $content;
 
-    public static function build($response): static
+    public static function fromResponse($response): static
     {
-        $comment = parent::build($response);
+        $comment = parent::fromResponse($response);
         $comment->discussionId = $response['discussion_id'];
         $comment->content = NotionRichText::build($response['rich_text']);
         return $comment;
@@ -35,7 +35,7 @@ class NotionComment extends NotionObject
             $body
         );
 
-        return $this->build($response);
+        return $this->fromResponse($response);
     }
 
     public static function findAll(string $blockId, int $pageSize = 100): NotionPaginator

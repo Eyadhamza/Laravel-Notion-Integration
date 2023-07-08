@@ -27,7 +27,7 @@ class NotionPaginator
         $this->nextCursor = $response['next_cursor'];
         $this->results = new Collection();
         foreach ($response['results'] as $result) {
-            $this->results->add($this->notionObject::build($result));
+            $this->results->add($this->notionObject::fromResponse($result));
         }
         return $this;
     }

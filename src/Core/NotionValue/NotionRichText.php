@@ -11,10 +11,11 @@ class NotionRichText extends NotionBlockContent
     private ?array $link;
     private array $attributeValues;
     private ?string $href;
+    private string $key;
 
-    public function __construct(string $type, mixed $value = null)
+    public function __construct(mixed $value = null)
     {
-        parent::__construct($type, $value);
+        parent::__construct($value);
         $this->annotations = new Collection();
         $this->link = null;
         $this->attributeValues = [];
@@ -127,24 +128,27 @@ class NotionRichText extends NotionBlockContent
         return $this;
     }
 
-    public function toArray(): array
+    public function toResource(): array
     {
         return [
-            [
-                'type' => 'text',
-                'text' => [
+                $this->type => [
                     'content' => $this->value,
                     'link' => $this->link ?? null
                 ],
                 'annotations' => $this->getAnnotations(),
                 'plain_text' => $this->value ?? new MissingValue(),
                 'href' => $this->href ?? new MissingValue()
-            ]
         ];
     }
 
     public function getAnnotations(): array|MissingValue
     {
         return $this->annotations->isNotEmpty() ? $this->annotations->all() : new MissingValue();
+    }
+
+    public function setKey(string $key): NotionRichText
+    {
+        $this->key = $key;
+        return $this;
     }
 }

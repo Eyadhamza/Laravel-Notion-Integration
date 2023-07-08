@@ -2,6 +2,7 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
+use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Core\NotionValue\NotionArrayValue;
 use stdClass;
 
@@ -12,7 +13,7 @@ class NotionMultiSelect extends BaseNotionProperty
 
     protected function buildValue()
     {
-        return NotionArrayValue::make('options', $this->options);
+        return NotionArrayValue::make($this->options)->type('multi_select');
     }
 
     public function setOptions(array $options): void
@@ -22,6 +23,17 @@ class NotionMultiSelect extends BaseNotionProperty
 
     public function setType(): BaseNotionProperty
     {
-        // TODO: Implement setType() method.
+        $this->type = NotionPropertyTypeEnum::from('multi_select');
+
+        return $this;
+    }
+
+    protected function buildFromResponse(array $response): BaseNotionProperty
+    {
+        if (empty($response['multi_select'])) {
+            return $this;
+        }
+        $this->options = $response['multi_select'];
+        return $this;
     }
 }

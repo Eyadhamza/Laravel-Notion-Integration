@@ -4,9 +4,9 @@ namespace Pi\Notion\Core\NotionValue;
 
 class NotionSimpleValue extends NotionBlockContent
 {
-    public function __construct(string $type, string $value = null)
+    public function __construct(string $value = null)
     {
-        parent::__construct($type, $value);
+        parent::__construct($value);
     }
 
     public static function build(array $response): static
@@ -14,11 +14,8 @@ class NotionSimpleValue extends NotionBlockContent
         return new static($response['plain_text'], $response['type']);
     }
 
-    public function toArray(): array
+    protected function toResource(): ?string
     {
-        return [
-            'type' => $this->type,
-            'plain_text' => $this->value
-        ];
+        return $this->value;
     }
 }

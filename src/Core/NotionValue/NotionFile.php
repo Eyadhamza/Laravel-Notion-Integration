@@ -10,7 +10,7 @@ class NotionFile extends NotionBlockContent
         // TODO: Implement build() method.
     }
 
-    public function toArray(): array
+    public function toResource(): array
     {
         // TODO: Implement toArray() method.
     }

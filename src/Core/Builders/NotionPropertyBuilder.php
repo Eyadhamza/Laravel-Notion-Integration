@@ -2,6 +2,7 @@
 
 namespace Pi\Notion\Core\Builders;
 
+use Pi\Notion\Core\Enums\NotionFormulaTypeEnum;
 use Pi\Notion\Core\NotionProperty\NotionCheckbox;
 use Pi\Notion\Core\NotionProperty\NotionCreatedBy;
 use Pi\Notion\Core\NotionProperty\NotionCreatedTime;
@@ -20,6 +21,7 @@ use Pi\Notion\Core\NotionProperty\NotionRollup;
 use Pi\Notion\Core\NotionProperty\NotionSelect;
 use Pi\Notion\Core\NotionProperty\NotionTitle;
 use Pi\Notion\Core\NotionProperty\NotionUrl;
+use Pi\Notion\Core\NotionValue\NotionFormulaValue;
 
 class NotionPropertyBuilder
 {
@@ -44,73 +46,83 @@ class NotionPropertyBuilder
         return NotionDatabaseTitle::make($value, $value);
     }
 
-    public static function formula(string $name)
+    public static function formula(string $name, NotionFormulaValue $formulaValue = null)
     {
-        return NotionFormula::make($name);
+        return NotionFormula::make($name, $formulaValue);
     }
 
-    public static function relation(string $string)
+    public static function buildFormula(string $name, string $expression = null)
     {
-        return NotionRelation::make($string);
+        return NotionFormula::make($name, $expression);
     }
 
-    public static function rollup(string $string)
+    public static function relation(string $name,)
     {
-        return NotionRollup::make($string);
+        return NotionRelation::make($name,);
     }
 
-    public static function people(string $string)
+    public static function buildRelation(string $name)
     {
-        return NotionPeople::make($string);
+        return NotionRelation::make($name);
+    }
+    public static function rollup(string $name,)
+    {
+        return NotionRollup::make($name,);
     }
 
-    public static function media(string $string)
+    public static function people(string $name,)
     {
-        return NotionMedia::make($string);
+        return NotionPeople::make($name,);
     }
 
-    public static function checkbox(string $string)
+    public static function media(string $name,)
     {
-        return NotionCheckbox::make($string);
+        return NotionMedia::make($name,);
     }
 
-    public static function email(string $string)
+    public static function checkbox(string $name, bool $checked = false)
     {
-        return NotionEmail::make($string);
+        return NotionCheckbox::make($name, $checked);
     }
 
-    public static function number(string $string)
+    public static function email(string $name,)
     {
-        return NotionNumber::make($string);
+        return NotionEmail::make($name,);
     }
 
-    public static function phone(string $string)
+    public static function number(string $name,)
     {
-        return NotionPhoneNumber::make($string);
+        return NotionNumber::make($name,);
     }
 
-    public static function url(string $string)
+    public static function phone(string $name,)
     {
-        return NotionUrl::make($string);
+        return NotionPhoneNumber::make($name,);
     }
 
-    public static function createdTime(string $string)
+    public static function url(string $name,)
     {
-        return NotionCreatedTime::make($string);
+        return NotionUrl::make($name,);
     }
 
-    public static function createdBy(string $string)
+    public static function createdTime(string $name,)
     {
-        return NotionCreatedBy::make($string);
+        return NotionCreatedTime::make($name,);
     }
 
-    public static function lastEditedTime(string $string)
+    public static function createdBy(string $name,)
     {
-        return NotionLastEditedTime::make($string);
+        return NotionCreatedBy::make($name,);
     }
 
-    public static function lastEditedBy(string $string)
+    public static function lastEditedTime(string $name,)
     {
-        return NotionLastEditedBy::make($string);
+        return NotionLastEditedTime::make($name,);
     }
+
+    public static function lastEditedBy(string $name,)
+    {
+        return NotionLastEditedBy::make($name,);
+    }
+
 }

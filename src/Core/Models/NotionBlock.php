@@ -34,7 +34,7 @@ class NotionBlock extends NotionObject
     {
         $response = NotionClient::request('get', $this->getUrl());
 
-        return $this->build($response);
+        return $this->fromResponse($response);
     }
 
     public function getChildren(int $pageSize = 100): NotionPaginator
@@ -66,14 +66,14 @@ class NotionBlock extends NotionObject
         $response = NotionClient::request('patch', $this->getUrl(), [
             $this->type => $this->contentBody()
         ]);
-        return $this->build($response);
+        return $this->fromResponse($response);
     }
 
     public function delete(): static
     {
         $response = NotionClient::request('delete', $this->getUrl());
 
-        return $this->build($response);
+        return $this->fromResponse($response);
     }
 
     public static function mapsBlocksToPage(NotionPage $page): Collection
@@ -117,9 +117,9 @@ class NotionBlock extends NotionObject
         });
     }
 
-    public static function build($response): static
+    public static function fromResponse($response): static
     {
-        $block = parent::build($response);
+        $block = parent::fromResponse($response);
         $block->type = $response['type'] ?? null;
         $block->blockContent = new BlockContent($response[$block->type]);
         return $block;

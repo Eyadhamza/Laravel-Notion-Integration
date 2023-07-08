@@ -4,19 +4,45 @@ namespace Pi\Notion\Core\NotionValue;
 
 class NotionArrayValue extends NotionBlockContent
 {
-    public function __construct(string $type, array $value = null)
-    {
-        parent::__construct($type, $value);
-    }
+    private string $key;
+    private bool $isNested = false;
+
     public static function build(array $response): static
     {
         return new static($response['plain_text'], $response['type']);
     }
 
-    public function toArray(): array
+    public function toResource(): array
     {
+        if ($this->isNested) {
+            return [
+                $this->type => [
+                    $this->value
+                ]
+            ];
+        }
+        if (isset($this->key)) {
+            return [
+                $this->type => [
+                    $this->key => $this->value
+                ]
+            ];
+        }
+
         return [
             $this->type => $this->value
         ];
+    }
+
+    public function setKey(string $key): NotionArrayValue
+    {
+        $this->key = $key;
+        return $this;
+    }
+
+    public function isNested(): NotionArrayValue
+    {
+        $this->isNested = true;
+        return $this;
     }
 }

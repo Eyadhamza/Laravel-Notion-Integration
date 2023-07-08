@@ -26,10 +26,10 @@ class NotionPage extends NotionObject
         $this->properties = new Collection();
     }
 
-    public static function build($response): static
+    public static function fromResponse($response): static
     {
 
-        $page = parent::build($response);
+        $page = parent::fromResponse($response);
         $page->lastEditedBy = new NotionUser($response['last_edited_by']['id'] ?? '') ?? null;
         $page->url = $response['url'] ?? null;
         $page->icon = $response['icon'] ?? null;
@@ -44,7 +44,7 @@ class NotionPage extends NotionObject
     {
         $response = NotionClient::request('get', $this->getUrl());
 
-        return $this->build($response);
+        return $this->fromResponse($response);
     }
 
     public function getProperty(string $name, int $pageSize = 100)
@@ -94,7 +94,7 @@ class NotionPage extends NotionObject
             'properties' => BaseNotionProperty::mapsProperties($this),
             'children' => NotionBlock::mapsBlocksToPage($this)
         ]);
-        return $this->build($response);
+        return $this->fromResponse($response);
     }
 
     public function update(): self
@@ -102,7 +102,7 @@ class NotionPage extends NotionObject
         $response = NotionClient::request('patch', $this->getUrl(), [
             'properties' => BaseNotionProperty::mapsProperties($this),
         ]);
-        return $this->build($response);
+        return $this->fromResponse($response);
     }
 
     public function delete(): NotionBlock
