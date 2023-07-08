@@ -68,7 +68,7 @@ class NotionDatabase extends NotionObject
         $requestBuilder = NotionUpdateDatabaseRequestBuilder::make(
             $this->title,
             $this->description,
-            $this->getProperties()
+            $this->properties
         );
 
         $response = NotionClient::make()
@@ -149,18 +149,7 @@ class NotionDatabase extends NotionObject
 
         return $this;
     }
-    public function setProperties(array $properties): self
-    {
-        collect($properties)->map(function ($property) {
-            $this->properties->add($property);
-        });
-        return $this;
-    }
 
-    public function getProperties(): Collection
-    {
-        return $this->properties;
-    }
 
     public function setDatabaseDescription(NotionDatabaseDescription $description): static
     {

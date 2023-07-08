@@ -10,6 +10,8 @@ use Pi\Notion\Core\NotionValue\NotionEmptyValue;
 
 class NotionRollup extends BaseNotionProperty
 {
+    public string $rollupType;
+    public ?int $rollupNumber = null;
     private ?string $relationPropertyName = null;
     private ?string $relationPropertyId = null;
     private ?string $rollupPropertyName = null;
@@ -39,11 +41,8 @@ class NotionRollup extends BaseNotionProperty
         if (empty($response['rollup'])) {
             return $this;
         }
-
-        $this->relationPropertyName = $response['rollup']['relation_property_name'];
-        $this->relationPropertyId = $response['rollup']['relation_property_id'];
-        $this->rollupPropertyName = $response['rollup']['rollup_property_name'];
-        $this->rollupPropertyId = $response['rollup']['rollup_property_id'];
+        $this->rollupType = $response['rollup']['type'];
+        $this->rollupNumber = $response['rollup']['number'];
         $this->rollupFunction = $response['rollup']['function'];
 
         return $this;

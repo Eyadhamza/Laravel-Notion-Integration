@@ -5,8 +5,10 @@ namespace Pi\Notion\Core\Models;
 
 
 use Illuminate\Support\Collection;
+use Pi\Notion\Core\Builders\CreateNotionPageRequestBuilder;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 use Pi\Notion\Core\Query\NotionPaginator;
+use Pi\Notion\Core\RequestBuilders\NotionDatabaseRequestBuilder;
 use Pi\Notion\NotionClient;
 use Pi\Notion\Traits\HandleBlocks;
 use Pi\Notion\Traits\HandleProperties;
@@ -89,12 +91,15 @@ class NotionPage extends NotionObject
 
     public function create(): self
     {
-        $response = NotionClient::request('post', NotionClient::PAGE_URL, [
-            'parent' => array('database_id' => $this->getDatabaseId()),
-            'properties' => BaseNotionProperty::mapsProperties($this),
-            'children' => NotionBlock::mapsBlocksToPage($this)
-        ]);
-        return $this->fromResponse($response);
+        $requestBuilder = CreateNotionPageRequestBuilder::make()
+            ->setParent($this->getDatabaseId())
+            ->setProperties($this->properties)
+            ->setBlocks($this->blocks);
+
+        $response = NotionClient::make()
+            ->post(NotionClient::PAGE_URL, $requestBuilder->build());
+
+        return $this->fromResponse($response->json());
     }
 
     public function update(): self

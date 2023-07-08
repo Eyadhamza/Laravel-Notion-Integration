@@ -10,8 +10,15 @@ class NotionSelect extends BaseNotionProperty
 {
     private array $options;
 
+    private string $selected;
+
     protected function buildValue(): NotionBlockContent
     {
+        if (isset($this->selected)) {
+            return NotionArrayValue::make(['name' => $this->selected])
+                ->type('select');
+        }
+
         return NotionArrayValue::make($this->options)
             ->type('select')
             ->setKey('options');
@@ -38,6 +45,13 @@ class NotionSelect extends BaseNotionProperty
             return $this;
         }
         $this->options = $response['select']['options'];
+
+        return $this;
+    }
+
+    public function setSelected(string $option): self
+    {
+        $this->selected = $option;
 
         return $this;
     }

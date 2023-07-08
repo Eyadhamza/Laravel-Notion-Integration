@@ -3,6 +3,7 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Core\Models\NotionUser;
 use Pi\Notion\Core\NotionValue\NotionBlockContent;
 use Pi\Notion\Core\NotionValue\NotionEmptyValue;
 
@@ -18,7 +19,7 @@ class NotionLastEditedBy extends BaseNotionProperty
         if (empty($response['last_edited_by'])) {
             return $this;
         }
-        $this->createdTime = $response['last_edited_by'];
+        $this->lastEditedBy = NotionUser::fromResponse($response['last_edited_by']);
         return $this;
     }
 

@@ -32,6 +32,9 @@ class NotionRelation extends BaseNotionProperty
 
     protected function buildFromResponse(array $response): BaseNotionProperty
     {
+        if (empty($response['relation'])) {
+            return $this;
+        }
         $this->databaseId = $response['relation']['database_id'];
 
         return $this;

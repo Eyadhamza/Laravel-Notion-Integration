@@ -52,7 +52,7 @@ class NotionClient
     {
         return $this
             ->client
-            ->post($url, array_merge($this->requestBuilder->build(), $body))
+            ->post($url, $body)
             ->onError(fn($response) => NotionException::matchException($response->json()));
     }
 

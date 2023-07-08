@@ -3,11 +3,14 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Core\Models\NotionUser;
 use Pi\Notion\Core\NotionValue\NotionBlockContent;
 use Pi\Notion\Core\NotionValue\NotionEmptyValue;
 
 class NotionCreatedBy extends BaseNotionProperty
 {
+    public NotionUser $createdBy;
+
     protected function buildValue(): NotionBlockContent
     {
         return NotionEmptyValue::make()->type('created_by');
@@ -18,7 +21,8 @@ class NotionCreatedBy extends BaseNotionProperty
         if (empty($response['created_by'])) {
             return $this;
         }
-        $this->createdTime = $response['created_by'];
+        $this->createdBy = NotionUser::fromResponse($response['created_by']);
+
         return $this;
     }
 

@@ -10,6 +10,8 @@ class NotionFormula extends BaseNotionProperty
 {
     private string $expression;
 
+    private string $result;
+
     protected function buildValue(): NotionBlockContent
     {
         return NotionFormulaValue::make($this->expression)->type('formula');
@@ -24,8 +26,8 @@ class NotionFormula extends BaseNotionProperty
 
     protected function buildFromResponse(array $response): BaseNotionProperty
     {
-        $this->rawValue = $response['formula']['expression'];
-
+        $this->expression = $response['formula']['type'];
+        $this->result = $response['formula'][$this->expression];
         return $this;
     }
 

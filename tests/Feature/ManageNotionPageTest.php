@@ -3,8 +3,15 @@
 use Pi\Notion\Core\Models\NotionBlock;
 use Pi\Notion\Core\Models\NotionPage;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
+use Pi\Notion\Core\NotionProperty\NotionSelect;
+use Pi\Notion\Core\NotionProperty\NotionTitle;
 use Pi\Notion\Core\NotionValue\NotionRichText;
 use Pi\Notion\Core\Query\NotionPaginator;
+
+
+beforeEach(function () {
+    \Pest\Laravel\withoutExceptionHandling();
+});
 
 it('should return page info', function () {
     $page = new NotionPage('b4f8e429038744ca9c8d5afa93ea2edd');
@@ -20,7 +27,7 @@ it('should return page info with blocks', function () {
 
 it('can create a page object', function () {
     $page = new NotionPage();
-    $page->setDatabaseId('632b5fb7e06c4404ae12065c48280e4c');
+    $page->setDatabaseId('cd156262c1d2475c9df34b41a1d3110e');
     $page->create();
 
     expect($page)->toHaveProperty('objectType');
@@ -85,11 +92,17 @@ it('should add properties to the created page', function () {
 
 it('can add content blocks to the created pages', function () {
     $page = new NotionPage();
-    $page->setDatabaseId('632b5fb7e06c4404ae12065c48280e4c');
+    $page->setDatabaseId('cd156262c1d2475c9df34b41a1d3110e');
 
     $page
-        ->title('Name', '1111')
-        ->multiSelect('Status1', ['A', 'B']);
+        ->setProperties([
+            NotionTitle::make('Name')
+                ->setTitle('Eyad Hamza')
+                ->build(),
+            NotionSelect::make('Status')
+                ->setSelected('A')
+                ->build(),
+        ]);
 
     $page->setBlocks([
         NotionBlock::headingOne(NotionRichText::make('Eyad Hamza')

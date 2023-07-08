@@ -5,7 +5,7 @@ namespace Pi\Notion\Core\Models;
 
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\NotionValue\BlockContent;
+use Pi\Notion\Core\NotionValue\NotionBlockContent;
 use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\NotionClient;
 use Pi\Notion\Traits\CreateBlockTypes;
@@ -15,7 +15,7 @@ class NotionBlock extends NotionObject
     use CreateBlockTypes;
 
     private string $type;
-    private BlockContent|null|string $blockContent;
+    private NotionBlockContent|null|string $blockContent;
     private string $color;
     private Collection $children;
 
@@ -121,12 +121,12 @@ class NotionBlock extends NotionObject
     {
         $block = parent::fromResponse($response);
         $block->type = $response['type'] ?? null;
-        $block->blockContent = new BlockContent($response[$block->type]);
+        $block->blockContent = new NotionBlockContent($response[$block->type]);
         return $block;
     }
-    public static function make(string $type, BlockContent|string $blockContent = null): self
+    public static function make(string $type, NotionBlockContent|string $blockContent = null): self
     {
-        $blockContent = is_string($blockContent) ? new BlockContent($blockContent) : $blockContent;
+        $blockContent = is_string($blockContent) ? new NotionBlockContent($blockContent) : $blockContent;
         return new self($type, $blockContent);
     }
     private function getUrl(): string
