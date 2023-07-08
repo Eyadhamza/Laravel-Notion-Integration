@@ -1,6 +1,17 @@
 <?php
 
 use Pi\Notion\Core\Models\NotionDatabase;
+use Pi\Notion\Core\NotionProperty\NotionRollup;
+use Pi\Notion\Core\NotionProperty\NotionPeople;
+use Pi\Notion\Core\NotionProperty\NotionMedia;
+use Pi\Notion\Core\NotionProperty\NotionEmail;
+use Pi\Notion\Core\NotionProperty\NotionNumber;
+use Pi\Notion\Core\NotionProperty\NotionPhoneNumber;
+use Pi\Notion\Core\NotionProperty\NotionUrl;
+use Pi\Notion\Core\NotionProperty\NotionCreatedTime;
+use Pi\Notion\Core\NotionProperty\NotionCreatedBy;
+use Pi\Notion\Core\NotionProperty\NotionLastEditedTime;
+use Pi\Notion\Core\NotionProperty\NotionLastEditedBy;
 use Pi\Notion\Core\NotionProperty\NotionCheckbox;
 use Pi\Notion\Core\NotionProperty\NotionDatabaseDescription;
 use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
@@ -37,8 +48,18 @@ it('can create a database object', function () {
             NotionRelation::make('Relation')
                 ->setDatabaseId('9019ee1d30c8438f9ec807be1a13f7f1')
                 ->build(),
-        ])
-        ->create();
+            NotionRollup::make('Rollup'),
+            NotionPeople::make('People'),
+            NotionMedia::make('Media'),
+            NotionEmail::make('Email'),
+            NotionNumber::make('Number'),
+            NotionPhoneNumber::make('Phone'),
+            NotionUrl::make('Url'),
+            NotionCreatedTime::make('CreatedTime'),
+            NotionCreatedBy::make('CreatedBy'),
+            NotionLastEditedTime::make('LastEditedTime'),
+            NotionLastEditedBy::make('LastEditedBy'),
+        ])->create();
 
     assertObjectHasProperty('objectType', $database);
 });

@@ -13,9 +13,9 @@ test('user creation', function () {
     ]);
     $user->saveToNotion();
 
-    expect($user)->not()->toBeNull();
-    expect(User::count())->toBe(1);
-    expect($user->saveToNotion()->getProperties())->toHaveCount(3);
+    expect($user)->not()->toBeNull()
+        ->and(User::count())->toBe(1)
+        ->and($user->saveToNotion()->getProperties())->toHaveCount(3);
 });
 
 test('mapping existing database to Notion', function () {

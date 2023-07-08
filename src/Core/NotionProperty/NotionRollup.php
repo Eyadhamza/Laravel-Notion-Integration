@@ -13,5 +13,10 @@ class NotionRollup extends BaseNotionProperty
     {
         // TODO: Implement setType() method.
     }
+
+    protected function buildFromResponse(array $response): BaseNotionProperty
+    {
+        // TODO: Implement buildFromResponse() method.
+    }
 }
 
