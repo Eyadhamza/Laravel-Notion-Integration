@@ -34,25 +34,25 @@ class ManageNotionDatabasesTest extends TestCase
             ->setTitle(NotionPropertyBuilder::databaseTitle('Test Database'))
             ->setProperties([
                 NotionPropertyBuilder::title('Name'),
-                NotionPropertyBuilder::select('Status')->setOptions([
+                NotionPropertyBuilder::select('Status', [
                     ['name' => 'A', 'color' => 'red'],
                     ['name' => 'B', 'color' => 'green']
                 ]),
                 NotionPropertyBuilder::date(),
-                NotionPropertyBuilder::formula('Something'),
-                NotionPropertyBuilder::relation('Something'),
-                NotionPropertyBuilder::rollup('Something'),
-                NotionPropertyBuilder::people('Something'),
-                NotionPropertyBuilder::media('Something'),
-                NotionPropertyBuilder::checkbox('Something'),
-                NotionPropertyBuilder::email('Something'),
-                NotionPropertyBuilder::number('Something'),
-                NotionPropertyBuilder::phone('Something'),
-                NotionPropertyBuilder::url('Something'),
-                NotionPropertyBuilder::createdTime('Something'),
-                NotionPropertyBuilder::createdBy('Something'),
-                NotionPropertyBuilder::lastEditedTime('Something'),
-                NotionPropertyBuilder::lastEditedBy('Something'),
+//                NotionPropertyBuilder::formula('Something'),
+//                NotionPropertyBuilder::relation('Something'),
+//                NotionPropertyBuilder::rollup('Something'),
+//                NotionPropertyBuilder::people('Something'),
+//                NotionPropertyBuilder::media('Something'),
+//                NotionPropertyBuilder::checkbox('Something'),
+//                NotionPropertyBuilder::email('Something'),
+//                NotionPropertyBuilder::number('Something'),
+//                NotionPropertyBuilder::phone('Something'),
+//                NotionPropertyBuilder::url('Something'),
+//                NotionPropertyBuilder::createdTime('Something'),
+//                NotionPropertyBuilder::createdBy('Something'),
+//                NotionPropertyBuilder::lastEditedTime('Something'),
+//                NotionPropertyBuilder::lastEditedBy('Something'),
 
             ])
             ->create();

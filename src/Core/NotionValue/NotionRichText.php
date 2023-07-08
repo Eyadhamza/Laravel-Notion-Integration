@@ -130,14 +130,16 @@ class NotionRichText extends NotionBlockContent
     public function toArray(): array
     {
         return [
-            'type' => 'text',
-            'text' => [
-                'content' => $this->value,
-                'link' => $this->link ?? null
-            ],
-            'annotations' => $this->getAnnotations(),
-            'plain_text' => $this->value ?? new MissingValue(),
-            'href' => $this->href ?? new MissingValue()
+            [
+                'type' => 'text',
+                'text' => [
+                    'content' => $this->value,
+                    'link' => $this->link ?? null
+                ],
+                'annotations' => $this->getAnnotations(),
+                'plain_text' => $this->value ?? new MissingValue(),
+                'href' => $this->href ?? new MissingValue()
+            ]
         ];
     }
 

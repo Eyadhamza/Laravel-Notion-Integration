@@ -23,7 +23,7 @@ abstract class BaseNotionProperty extends NotionObject
         $this->setType()->setValue();
     }
 
-    public static function make(string $name, mixed $rawValue = null): BaseNotionProperty
+    public static function make(string $name, mixed $rawValue = null): self
     {
         return new static($name, $rawValue);
     }
@@ -36,9 +36,7 @@ abstract class BaseNotionProperty extends NotionObject
         }
 
         return [
-            $this->type->value => [
-                $this->value->resource()
-            ]
+            $this->type->value => $this->value->resource()
         ];
     }
 

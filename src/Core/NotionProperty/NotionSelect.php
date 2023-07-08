@@ -7,21 +7,10 @@ use Pi\Notion\Core\NotionValue\NotionArrayValue;
 
 class NotionSelect extends BaseNotionProperty
 {
-    private ?array $options = null;
 
     protected function buildValue()
     {
-        return NotionArrayValue::make('options', $this->options);
-    }
-    public function setOptions(array|string $options): self
-    {
-        $this->options = $options;
-        return $this;
-    }
-
-    public function getOptions(): array|string
-    {
-        return $this->options;
+        return NotionArrayValue::make('options', $this->rawValue);
     }
 
     public function setType(): BaseNotionProperty

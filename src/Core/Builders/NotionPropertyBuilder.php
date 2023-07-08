@@ -29,9 +29,9 @@ class NotionPropertyBuilder
         return NotionTitle::make($name);
     }
 
-    public static function select(string $name = 'Select')
+    public static function select(string $name = 'Select', array $options = []): NotionSelect
     {
-        return NotionSelect::make($name);
+        return NotionSelect::make($name, $options);
     }
 
     public static function date(string $name = 'Date')

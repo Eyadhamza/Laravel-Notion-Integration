@@ -6,7 +6,7 @@ class NotionCheckbox extends BaseNotionProperty
 {
     protected function buildValue()
     {
-        // TODO: Implement buildValue() method.
+
     }
 
     public function setType(): BaseNotionProperty
