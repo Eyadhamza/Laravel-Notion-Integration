@@ -12,7 +12,7 @@ use Pi\Notion\Core\NotionProperty\NotionEmail;
 use Pi\Notion\Core\NotionProperty\NotionFormula;
 use Pi\Notion\Core\NotionProperty\NotionLastEditedBy;
 use Pi\Notion\Core\NotionProperty\NotionLastEditedTime;
-use Pi\Notion\Core\NotionProperty\NotionMedia;
+use Pi\Notion\Core\NotionProperty\NotionFiles;
 use Pi\Notion\Core\NotionProperty\NotionNumber;
 use Pi\Notion\Core\NotionProperty\NotionPeople;
 use Pi\Notion\Core\NotionProperty\NotionPhoneNumber;
@@ -77,7 +77,7 @@ class NotionPropertyBuilder
 
     public static function media(string $name,)
     {
-        return NotionMedia::make($name,);
+        return NotionFiles::make($name,);
     }
 
     public static function checkbox(string $name, bool $checked = false)

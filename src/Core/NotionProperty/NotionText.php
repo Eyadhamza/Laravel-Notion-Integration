@@ -3,6 +3,8 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Core\NotionValue\NotionBlockContent;
+use Pi\Notion\Core\NotionValue\NotionEmptyValue;
 use Pi\Notion\Core\NotionValue\NotionRichText;
 use stdClass;
 
@@ -10,9 +12,10 @@ class NotionText extends BaseNotionProperty
 {
     private NotionRichText $text;
 
-    protected function buildValue()
+
+    protected function buildValue(): NotionBlockContent
     {
-        return $this->text;
+        return $this->text ?? new NotionEmptyValue();
     }
 
     public function setType(): BaseNotionProperty
@@ -28,8 +31,12 @@ class NotionText extends BaseNotionProperty
             return $this;
         }
 
+        return $this;
+    }
 
-
+    public function setText(NotionRichText $text): NotionText
+    {
+        $this->text = $text;
         return $this;
     }
 }

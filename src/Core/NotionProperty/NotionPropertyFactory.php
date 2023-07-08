@@ -30,6 +30,8 @@ class NotionPropertyFactory
             NotionPropertyTypeEnum::LAST_EDITED_TIME => NotionLastEditedTime::fromResponse($data),
             NotionPropertyTypeEnum::CREATED_BY => NotionCreatedBy::fromResponse($data),
             NotionPropertyTypeEnum::LAST_EDITED_BY => NotionLastEditedBy::fromResponse($data),
+            NotionPropertyTypeEnum::FILES => NotionFiles::fromResponse($data),
+
         };
     }
 }

@@ -3,13 +3,14 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Core\NotionValue\NotionBlockContent;
 use Pi\Notion\Core\NotionValue\NotionFormulaValue;
 
 class NotionFormula extends BaseNotionProperty
 {
     private string $expression;
 
-    protected function buildValue()
+    protected function buildValue(): NotionBlockContent
     {
         return NotionFormulaValue::make($this->expression)->type('formula');
     }

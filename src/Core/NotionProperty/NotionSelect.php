@@ -4,12 +4,13 @@ namespace Pi\Notion\Core\NotionProperty;
 
 use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Core\NotionValue\NotionArrayValue;
+use Pi\Notion\Core\NotionValue\NotionBlockContent;
 
 class NotionSelect extends BaseNotionProperty
 {
     private array $options;
 
-    protected function buildValue()
+    protected function buildValue(): NotionBlockContent
     {
         return NotionArrayValue::make($this->options)
             ->type('select')

@@ -3,14 +3,15 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Core\NotionValue\NotionBlockContent;
 use Pi\Notion\Core\NotionValue\NotionObjectValue;
 use stdClass;
 
 class NotionPhoneNumber extends BaseNotionProperty
 {
-    private string $phone;
+    private ?string $phone = null;
 
-    protected function buildValue()
+    protected function buildValue(): NotionBlockContent
     {
         return NotionObjectValue::make($this->phone)->type('phone_number');
     }

@@ -2,16 +2,31 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
+use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Core\NotionValue\NotionBlockContent;
+use Pi\Notion\Core\NotionValue\NotionEmptyValue;
+
 class NotionLastEditedBy extends BaseNotionProperty
 {
-    protected function buildValue()
+    protected function buildValue(): NotionBlockContent
     {
-        // TODO: Implement buildValue() method.
+        return NotionEmptyValue::make()->type('last_edited_by');
+    }
+
+    protected function buildFromResponse(array $response): BaseNotionProperty
+    {
+        if (empty($response['last_edited_by'])) {
+            return $this;
+        }
+        $this->createdTime = $response['last_edited_by'];
+        return $this;
     }
 
     public function setType(): BaseNotionProperty
     {
-        // TODO: Implement setType() method.
+        $this->type = NotionPropertyTypeEnum::LAST_EDITED_BY;
+
+        return $this;
     }
 }
 

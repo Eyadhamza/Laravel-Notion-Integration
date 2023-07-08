@@ -3,7 +3,7 @@
 use Pi\Notion\Core\Models\NotionDatabase;
 use Pi\Notion\Core\NotionProperty\NotionRollup;
 use Pi\Notion\Core\NotionProperty\NotionPeople;
-use Pi\Notion\Core\NotionProperty\NotionMedia;
+use Pi\Notion\Core\NotionProperty\NotionFiles;
 use Pi\Notion\Core\NotionProperty\NotionEmail;
 use Pi\Notion\Core\NotionProperty\NotionNumber;
 use Pi\Notion\Core\NotionProperty\NotionPhoneNumber;
@@ -48,17 +48,21 @@ it('can create a database object', function () {
             NotionRelation::make('Relation')
                 ->setDatabaseId('9019ee1d30c8438f9ec807be1a13f7f1')
                 ->build(),
-            NotionRollup::make('Rollup'),
-            NotionPeople::make('People'),
-            NotionMedia::make('Media'),
-            NotionEmail::make('Email'),
-            NotionNumber::make('Number'),
-            NotionPhoneNumber::make('Phone'),
-            NotionUrl::make('Url'),
-            NotionCreatedTime::make('CreatedTime'),
-            NotionCreatedBy::make('CreatedBy'),
-            NotionLastEditedTime::make('LastEditedTime'),
-            NotionLastEditedBy::make('LastEditedBy'),
+            NotionRollup::make('Rollup')
+                ->setRollupPropertyName('Name')
+                ->setRelationPropertyName('Relation')
+                ->setFunction('count')
+                ->build(),
+            NotionPeople::make('People')->build(),
+            NotionFiles::make('Media')->build(),
+            NotionEmail::make('Email')->build(),
+            NotionNumber::make('Number')->build(),
+            NotionPhoneNumber::make('Phone')->build(),
+            NotionUrl::make('Url')->build(),
+            NotionCreatedTime::make('CreatedTime')->build(),
+            NotionCreatedBy::make('CreatedBy')->build(),
+            NotionLastEditedTime::make('LastEditedTime')->build(),
+            NotionLastEditedBy::make('LastEditedBy')->build(),
         ])->create();
 
     assertObjectHasProperty('objectType', $database);

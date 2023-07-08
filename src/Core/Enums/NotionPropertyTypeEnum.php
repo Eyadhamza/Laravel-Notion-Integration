@@ -24,4 +24,5 @@ enum NotionPropertyTypeEnum: string
     case LAST_EDITED_TIME = 'last_edited_time';
     case CREATED_BY = 'created_by';
     case LAST_EDITED_BY = 'last_edited_by';
+    case FILES = 'files';
 }

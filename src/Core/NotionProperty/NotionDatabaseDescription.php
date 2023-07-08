@@ -13,7 +13,7 @@ class NotionDatabaseDescription extends BaseNotionProperty
 
     private NotionBlockContent|NotionEmptyValue $content;
 
-    protected function buildValue(): NotionArrayValue|NotionEmptyValue
+    protected function buildValue(): NotionBlockContent
     {
         $this->content = NotionRichText::make($this->name)
             ->type('text')

@@ -40,7 +40,7 @@ abstract class BaseNotionProperty extends NotionObject
         return $this->blockContent->resource();
     }
 
-    abstract protected function buildValue();
+    abstract protected function buildValue(): NotionBlockContent;
     public static function fromResponse(array $response): static
     {
         $property = new static($response['name'] ?? '');

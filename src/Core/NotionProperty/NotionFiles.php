@@ -7,39 +7,39 @@ use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Core\NotionValue\NotionArrayValue;
 use Pi\Notion\Core\NotionValue\NotionBlockContent;
 
-class NotionPeople extends BaseNotionProperty
+class NotionFiles extends BaseNotionProperty
 {
-    private ?array $people = null;
+    private ?array $files = null;
+
 
     protected function buildValue(): NotionBlockContent
     {
-        return NotionArrayValue::make([$this->people ?? new MissingValue()])
-            ->type('people');
+        return NotionArrayValue::make([$this->files ?? new MissingValue()])
+            ->type('files');
     }
 
     protected function buildFromResponse(array $response): BaseNotionProperty
     {
-        if (empty($response['people'])) {
+        if (empty($response['files'])) {
             return $this;
         }
 
-        $this->people = $response['people'];
+        $this->files = $response['files'];
 
         return $this;
     }
 
-    public function setType(): BaseNotionProperty
+    public function setType(): self
     {
-        $this->type = NotionPropertyTypeEnum::PEOPLE;
+        $this->type = NotionPropertyTypeEnum::FILES;
 
         return $this;
     }
 
-    public function setPeople(?array $people): NotionPeople
+    public function setFiles(?array $files): NotionFiles
     {
-        $this->people = $people;
+        $this->files = $files;
         return $this;
     }
 
 }
-

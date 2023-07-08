@@ -4,12 +4,13 @@ namespace Pi\Notion\Core\NotionProperty;
 
 use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Core\NotionValue\NotionArrayValue;
+use Pi\Notion\Core\NotionValue\NotionBlockContent;
 
 class NotionRelation extends BaseNotionProperty
 {
     private string $databaseId;
 
-    protected function buildValue(): NotionArrayValue
+    protected function buildValue(): NotionBlockContent
     {
         return NotionArrayValue::make([
             'database_id' => $this->databaseId,

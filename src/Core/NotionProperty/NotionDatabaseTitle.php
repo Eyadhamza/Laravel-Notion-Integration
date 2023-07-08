@@ -4,13 +4,14 @@ namespace Pi\Notion\Core\NotionProperty;
 
 use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Core\NotionValue\NotionArrayValue;
+use Pi\Notion\Core\NotionValue\NotionBlockContent;
 use Pi\Notion\Core\NotionValue\NotionRichText;
 
 class NotionDatabaseTitle extends BaseNotionProperty
 {
     private NotionRichText $content;
 
-    protected function buildValue(): NotionArrayValue
+    protected function buildValue(): NotionBlockContent
     {
         $this->content = NotionRichText::make($this->name)
             ->type('text')
