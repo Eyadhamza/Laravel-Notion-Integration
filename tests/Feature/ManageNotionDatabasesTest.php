@@ -38,7 +38,22 @@ class ManageNotionDatabasesTest extends TestCase
                     ['name' => 'A', 'color' => 'red'],
                     ['name' => 'B', 'color' => 'green']
                 ]),
-                NotionPropertyBuilder::date()
+                NotionPropertyBuilder::date(),
+                NotionPropertyBuilder::formula('Something'),
+                NotionPropertyBuilder::relation('Something'),
+                NotionPropertyBuilder::rollup('Something'),
+                NotionPropertyBuilder::people('Something'),
+                NotionPropertyBuilder::media('Something'),
+                NotionPropertyBuilder::checkbox('Something'),
+                NotionPropertyBuilder::email('Something'),
+                NotionPropertyBuilder::number('Something'),
+                NotionPropertyBuilder::phone('Something'),
+                NotionPropertyBuilder::url('Something'),
+                NotionPropertyBuilder::createdTime('Something'),
+                NotionPropertyBuilder::createdBy('Something'),
+                NotionPropertyBuilder::lastEditedTime('Something'),
+                NotionPropertyBuilder::lastEditedBy('Something'),
+
             ])
             ->create();
 

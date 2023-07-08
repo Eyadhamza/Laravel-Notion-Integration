@@ -30,7 +30,6 @@ class NotionPropertyFactory
             NotionPropertyTypeEnum::LAST_EDITED_TIME => NotionLastEditedTime::build($data),
             NotionPropertyTypeEnum::CREATED_BY => NotionCreatedBy::build($data),
             NotionPropertyTypeEnum::LAST_EDITED_BY => NotionLastEditedBy::build($data),
-
         };
     }
 }

@@ -10,11 +10,6 @@ class NotionMultiSelect extends BaseNotionProperty
     private ?array $options = null;
 
 
-    public function toArray(): array
-    {
-        // TODO: Implement toArray() method.
-    }
-
     protected function buildValue()
     {
         return NotionArrayValue::make('options', $this->options);
@@ -25,4 +20,8 @@ class NotionMultiSelect extends BaseNotionProperty
         $this->options = $options;
     }
 
+    public function setType(): BaseNotionProperty
+    {
+        // TODO: Implement setType() method.
+    }
 }

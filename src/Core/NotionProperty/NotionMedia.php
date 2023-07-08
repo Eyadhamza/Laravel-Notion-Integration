@@ -2,8 +2,9 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-class NotionLastEditedBy extends BaseNotionProperty
+class NotionMedia extends BaseNotionProperty
 {
+
     protected function buildValue()
     {
         // TODO: Implement buildValue() method.
@@ -14,4 +15,3 @@ class NotionLastEditedBy extends BaseNotionProperty
         // TODO: Implement setType() method.
     }
 }
-

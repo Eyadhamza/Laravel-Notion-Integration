@@ -8,15 +8,13 @@ use stdClass;
 class NotionUrl extends BaseNotionProperty
 {
 
-    public function toArray(): array
-    {
-        return [
-            'url' => $this->value->toArray()
-        ];
-    }
-
     protected function buildValue()
     {
-        return NotionSimpleValue::make('url', $this->rawValue);
+        // TODO: Implement buildValue() method.
+    }
+
+    public function setType(): BaseNotionProperty
+    {
+        // TODO: Implement setType() method.
     }
 }

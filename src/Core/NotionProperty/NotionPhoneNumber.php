@@ -8,17 +8,14 @@ use stdClass;
 class NotionPhoneNumber extends BaseNotionProperty
 {
 
-    public function toArray(): array
+
+    protected function buildValue()
     {
-        return [
-            'phone_number' => $this->value->toArray()
-        ];
+        return NotionSimpleValue::make('phone_number', $this->rawValue);
     }
 
-    protected function buildValue(mixed $value)
+    public function setType(): BaseNotionProperty
     {
-        $this->value = NotionSimpleValue::make('phone_number', $value);
 
-        return $this->value;
     }
 }
