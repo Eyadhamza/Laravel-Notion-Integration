@@ -29,7 +29,7 @@ class PaginatorRequestBuilder extends BaseNotionRequestBuilder
         ];
     }
 
-    public function setStartCursor(?string $startCursor): static
+    public function setStartCursor(?string $startCursor = null): static
     {
         $this->startCursor = $startCursor;
         return $this;

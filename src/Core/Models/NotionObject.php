@@ -7,7 +7,7 @@ use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Core\NotionProperty\NotionPropertyFactory;
 use Pi\Notion\Core\Query\NotionPaginator;
 
-abstract class NotionObject
+class NotionObject
 {
     protected ?string $objectType;
     protected ?string $id;

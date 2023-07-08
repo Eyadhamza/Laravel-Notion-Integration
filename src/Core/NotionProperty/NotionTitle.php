@@ -3,20 +3,39 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Core\NotionValue\NotionArrayValue;
 use Pi\Notion\Core\NotionValue\NotionBlockContent;
 use Pi\Notion\Core\NotionValue\NotionEmptyValue;
 use Pi\Notion\Core\NotionValue\NotionRichText;
-use stdClass;
 
 class NotionTitle extends BaseNotionProperty
 {
-    private ?string $title = null;
+    private NotionRichText|NotionEmptyValue $content;
 
+    public function __construct(string $name)
+    {
+        parent::__construct($name);
+
+        $this->content = NotionRichText::make($this->name)
+            ->type('text');
+    }
+
+    public function setTitle(string $string): static
+    {
+        $this->content->text($string);
+
+        return $this;
+    }
 
     protected function buildValue(): NotionBlockContent
     {
-        return NotionRichText::make($this->title)->type('title');
+        $this->content->toResource();
+
+        return NotionArrayValue::make($this->content->resource)
+            ->type('title')
+            ->isNested();
     }
+
 
     public function setType(): BaseNotionProperty
     {
@@ -31,14 +50,8 @@ class NotionTitle extends BaseNotionProperty
             return $this;
         }
 
-        $this->title = $response['title'][0]['plain_text'];
-
-        return $this;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
+        $this->content = NotionRichText::make($response['title'][0]['plain_text'])
+            ->type('text');
 
         return $this;
     }

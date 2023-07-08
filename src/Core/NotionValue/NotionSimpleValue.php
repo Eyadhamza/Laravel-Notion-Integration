@@ -4,10 +4,6 @@ namespace Pi\Notion\Core\NotionValue;
 
 class NotionSimpleValue extends NotionBlockContent
 {
-    public function __construct(string $value = null)
-    {
-        parent::__construct($value);
-    }
 
     public static function build(array $response): static
     {
@@ -16,7 +12,9 @@ class NotionSimpleValue extends NotionBlockContent
 
     protected function toResource(): self
     {
-        $this->resource = $this->value;
+        $this->resource = [
+            $this->type => $this->value,
+        ];
 
         return $this;
     }

@@ -80,12 +80,12 @@ class NotionRichText extends NotionBlockContent
 
     public function text(string $text, string $link = null): self
     {
-        $this->attributeValues = [
-            'text' => [
-                'content' => $text,
-                'link' => $link ?? null
-            ]
-        ];
+        $this->value = $text;
+
+        if ($link) {
+            $this->setLink($link);
+        }
+
         return $this;
     }
 

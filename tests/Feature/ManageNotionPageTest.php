@@ -2,15 +2,31 @@
 
 use Pi\Notion\Core\Models\NotionBlock;
 use Pi\Notion\Core\Models\NotionPage;
+use Pi\Notion\Core\Models\NotionUser;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
-use Pi\Notion\Core\NotionProperty\NotionSelect;
 use Pi\Notion\Core\NotionProperty\NotionTitle;
+use Pi\Notion\Core\NotionProperty\NotionSelect;
 use Pi\Notion\Core\NotionValue\NotionRichText;
 use Pi\Notion\Core\Query\NotionPaginator;
-
+use Pi\Notion\Core\NotionProperty\NotionRollup;
+use Pi\Notion\Core\NotionProperty\NotionPeople;
+use Pi\Notion\Core\NotionProperty\NotionFiles;
+use Pi\Notion\Core\NotionProperty\NotionEmail;
+use Pi\Notion\Core\NotionProperty\NotionNumber;
+use Pi\Notion\Core\NotionProperty\NotionPhoneNumber;
+use Pi\Notion\Core\NotionProperty\NotionUrl;
+use Pi\Notion\Core\NotionProperty\NotionCreatedTime;
+use Pi\Notion\Core\NotionProperty\NotionCreatedBy;
+use Pi\Notion\Core\NotionProperty\NotionLastEditedTime;
+use Pi\Notion\Core\NotionProperty\NotionLastEditedBy;
+use Pi\Notion\Core\NotionProperty\NotionCheckbox;
+use Pi\Notion\Core\NotionProperty\NotionDate;
+use Pi\Notion\Core\NotionProperty\NotionFormula;
+use Pi\Notion\Core\NotionProperty\NotionRelation;
+use function Pest\Laravel\withoutExceptionHandling;
 
 beforeEach(function () {
-    \Pest\Laravel\withoutExceptionHandling();
+    withoutExceptionHandling();
 });
 
 it('should return page info', function () {
@@ -41,21 +57,46 @@ it('can delete a page object', function () {
 
 it('should add properties to the created page using the page class', function () {
     $page = new NotionPage();
-    $page->setDatabaseId('632b5fb7e06c4404ae12065c48280e4c');
+    $page->setDatabaseId('cd156262c1d2475c9df34b41a1d3110e');
 
-    $page
-        ->title('Name', 'Eyad Hamza')
-        ->select('Status', 'A')
-        ->multiSelect('Status1', ['A', 'B'])
-        ->date('Date', [
-            'start' => '2020-12-08T12:00:00Z',
-            'end' => '2020-12-08T12:00:00Z',
-        ])
-        ->email('Email', 'eyad@outlook.com')
-        ->phone('Phone', '123456789')
-        ->url('Url', 'https://www.google.com')
-        ->create();
+    $page = $page
+        ->setProperties([
+            NotionTitle::make('Name')
+                ->setTitle('Test')
+                ->build(),
+            NotionSelect::make('Status')
+                ->setSelected('A')
+                ->build(),
+            NotionDate::make('Date')
+                ->setStart('2021-01-01')
+                ->build(),
+            NotionCheckbox::make('Checkbox')
+                ->setChecked(true)
+                ->build(),
+            NotionRelation::make('Relation')
+                ->setPageIds(['633fc9822c794e3682186491c50210e6'])
+                ->build(),
 
+            NotionPeople::make('People')
+                ->setPeople([
+                    new NotionUser('2c4d6a4a-12fe-4ce8-a7e4-e3019cc4765f')
+                ])
+                ->build(),
+            NotionFiles::make('Media')
+                ->setFiles([
+                    new \Pi\Notion\Core\NotionValue\NotionFile(),
+                    new \Pi\Notion\Core\NotionValue\NotionFile()
+                ])
+                ->build(),
+//            NotionEmail::make('Email')->build(),
+//            NotionNumber::make('Number')->build(),
+//            NotionPhoneNumber::make('Phone')->build(),
+//            NotionUrl::make('Url')->build(),
+//            NotionCreatedTime::make('CreatedTime')->build(),
+//            NotionCreatedBy::make('CreatedBy')->build(),
+//            NotionLastEditedTime::make('LastEditedTime')->build(),
+//            NotionLastEditedBy::make('LastEditedBy')->build(),
+        ])->create();
     expect($page->getProperties())->toHaveCount(7)
         ->and($page)->toHaveProperty('properties');
 });

@@ -15,14 +15,14 @@ class NotionBlock extends NotionObject
     use CreateBlockTypes;
 
     private string $type;
-    private NotionBlockContent|null|string $blockContent;
+    private ?NotionBlockContent $blockContent = null;
     private string $color;
     private Collection $children;
 
-    public function __construct($type = '', $blockContent = null)
+    public function __construct($type = '', $block = null)
     {
         $this->type = $type;
-        $this->blockContent = $blockContent;
+        $this->block = $block;
         $this->children = new Collection();
 
     }
@@ -71,9 +71,9 @@ class NotionBlock extends NotionObject
 
     public function delete(): static
     {
-        $response = NotionClient::request('delete', $this->getUrl());
+        $response = NotionClient::make()->delete($this->getUrl());
 
-        return $this->fromResponse($response);
+        return $this->fromResponse($response->json());
     }
 
     public static function mapsBlocksToPage(NotionPage $page): Collection
@@ -90,7 +90,7 @@ class NotionBlock extends NotionObject
     private function contentBody(): array
     {
         $body = [];
-        $body[$this->blockContent->getType()] = $this->blockContent->getValue();
+        $body[$this->block->getType()] = $this->block->getValue();
         $body['color'] = $this->color ?? 'default';
         if ($this->children->isNotEmpty()) {
             $body['children'] = $this->mapChildren();
@@ -121,12 +121,12 @@ class NotionBlock extends NotionObject
     {
         $block = parent::fromResponse($response);
         $block->type = $response['type'] ?? null;
-        $block->blockContent = new NotionBlockContent($response[$block->type]);
+
         return $block;
     }
-    public static function make(string $type, NotionBlockContent|string $blockContent = null): self
+    public static function make(string $type, NotionBlock|string $blockContent = null): self
     {
-        $blockContent = is_string($blockContent) ? new NotionBlockContent($blockContent) : $blockContent;
+        $blockContent = is_string($blockContent) ? new NotionBlock($blockContent) : $blockContent;
         return new self($type, $blockContent);
     }
     private function getUrl(): string

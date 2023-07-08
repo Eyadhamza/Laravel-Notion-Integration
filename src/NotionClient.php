@@ -56,7 +56,7 @@ class NotionClient
             ->onError(fn($response) => NotionException::matchException($response->json()));
     }
 
-    public function get(string $url, string $param, array $queryParams = null): Response
+    public function get(string $url, string $param = null, array $queryParams = null): Response
     {
         return $this->client
             ->get($url . $param, $queryParams)
@@ -88,7 +88,7 @@ class NotionClient
     public function matchMethod(string $getMethod, string $url, ?array $body = null): Response
     {
         return match ($getMethod) {
-            'get' => $this->get($url, $body),
+            'get' => $this->get(url: $url, queryParams: $body),
             'post' => $this->post($url, $body),
         };
     }
@@ -100,6 +100,14 @@ class NotionClient
             ->patch($url, $this->requestBuilder->build())
             ->onError(fn($response) => NotionException::matchException($response->json()));
 
+    }
+
+    public function delete(string $url): Response
+    {
+        return $this
+            ->client
+            ->delete($url)
+            ->onError(fn($response) => NotionException::matchException($response->json()));
     }
 
 

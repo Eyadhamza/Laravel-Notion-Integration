@@ -31,7 +31,7 @@ abstract class BaseNotionProperty extends NotionObject
     {
         return $this->setBlockContent();
     }
-    public function toArray(): array
+    public function resource(): mixed
     {
         if ($this->blockContent->getValue() instanceof NotionEmptyValue) {
             return $this->blockContent->resource();

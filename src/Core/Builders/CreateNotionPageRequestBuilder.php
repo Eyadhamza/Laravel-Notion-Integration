@@ -4,6 +4,7 @@ namespace Pi\Notion\Core\Builders;
 
 
 use Illuminate\Support\Collection;
+use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 
 class CreateNotionPageRequestBuilder
 {
@@ -42,7 +43,9 @@ class CreateNotionPageRequestBuilder
             'parent' => [
                 'database_id' => $this->databaseId,
             ],
-            'properties' => $this->properties,
+            'properties' => $this->properties->mapWithKeys(fn(BaseNotionProperty $property) => [
+                $property->getName() => $property->resource()
+            ])->all(),
             'children' => $this->blocks,
         ];
     }

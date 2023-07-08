@@ -2,20 +2,28 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
+use Illuminate\Http\Resources\MissingValue;
 use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Core\NotionValue\NotionArrayValue;
 use Pi\Notion\Core\NotionValue\NotionBlockContent;
 
 class NotionRelation extends BaseNotionProperty
 {
-    private string $databaseId;
+    private ?array $pageIds = null;
+    private ?string $databaseId = null;
+
+    public function setPageIds(array $pageIds): static
+    {
+        $this->pageIds = $pageIds;
+        return $this;
+    }
 
     protected function buildValue(): NotionBlockContent
     {
-        return NotionArrayValue::make([
-            'database_id' => $this->databaseId,
-            'single_property' => new \stdClass()
-        ])->type('relation');
+        return NotionArrayValue::make(array_merge($this->getIds(),[
+            'database_id' => $this->databaseId ?? new MissingValue(),
+            'single_property' => $this->singleProperty ?? new MissingValue(),
+        ]))->type('relation');
     }
     public function setType(): BaseNotionProperty
     {
@@ -35,9 +43,20 @@ class NotionRelation extends BaseNotionProperty
         if (empty($response['relation'])) {
             return $this;
         }
-        $this->databaseId = $response['relation']['database_id'];
-
+        $this->databaseId = $response['relation']['database_id'] ?? null;
+        $this->pageIds = collect($response['relation'])->map(fn ($page) => $page['id'])->all();
         return $this;
+    }
+
+    private function getIds(): array|MissingValue
+    {
+        if (!$this->pageIds) {
+            return new MissingValue();
+        }
+
+        return collect($this->pageIds)
+            ->map(fn ($id) => ['id' => $id])
+            ->all();
     }
 }
 

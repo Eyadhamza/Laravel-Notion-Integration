@@ -6,7 +6,7 @@ use Pi\Notion\Core\Enums\NotionFormulaTypeEnum;
 use Pi\Notion\Core\NotionProperty\NotionCheckbox;
 use Pi\Notion\Core\NotionProperty\NotionCreatedBy;
 use Pi\Notion\Core\NotionProperty\NotionCreatedTime;
-use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
+use Pi\Notion\Core\NotionProperty\NotionTitle;
 use Pi\Notion\Core\NotionProperty\NotionDate;
 use Pi\Notion\Core\NotionProperty\NotionEmail;
 use Pi\Notion\Core\NotionProperty\NotionFormula;
@@ -43,7 +43,7 @@ class NotionPropertyBuilder
 
     public static function databaseTitle(string $value = 'Untitled Database')
     {
-        return NotionDatabaseTitle::make($value, $value);
+        return NotionTitle::make($value, $value);
     }
 
     public static function formula(string $name, NotionFormulaValue $formulaValue = null)

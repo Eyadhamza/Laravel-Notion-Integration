@@ -58,4 +58,23 @@ class NotionDate extends BaseNotionProperty
         return $this->timeZone;
     }
 
+    public function setStart(?string $start): NotionDate
+    {
+        $this->start = $start;
+        return $this;
+    }
+
+    public function setEnd(?string $end): NotionDate
+    {
+        $this->end = $end;
+        return $this;
+    }
+
+    public function setTimeZone(?string $timeZone): NotionDate
+    {
+        $this->timeZone = $timeZone;
+        return $this;
+    }
+
+
 }

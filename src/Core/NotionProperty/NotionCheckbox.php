@@ -38,4 +38,13 @@ class NotionCheckbox extends BaseNotionProperty
 
         return $this;
     }
+
+    public function setChecked(bool $checked): self
+    {
+        $this->isChecked = $checked;
+
+        return $this;
+    }
+
+
 }

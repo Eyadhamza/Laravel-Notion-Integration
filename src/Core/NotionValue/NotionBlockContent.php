@@ -44,9 +44,13 @@ abstract class NotionBlockContent
         return true;
     }
 
-    public function resource(): array
+    public function resource(): mixed
     {
         $this->toResource();
+
+        if (is_string($this->resource) || is_numeric($this->resource) || is_bool($this->resource)) {
+            return $this->resource;
+        }
 
         return $this->filter($this->resource);
     }

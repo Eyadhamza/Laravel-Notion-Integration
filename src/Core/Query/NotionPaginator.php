@@ -13,7 +13,7 @@ class NotionPaginator
     private ?string $startCursor;
     private ?int $pageSize = 100;
     private bool $hasMore;
-    private ?string $nextCursor;
+    private ?string $nextCursor = null;
     private Collection $results;
     private string $url;
     private string $method;
@@ -35,12 +35,12 @@ class NotionPaginator
     public function paginate(): array
     {
         $paginatorRequestBuilder = PaginatorRequestBuilder::make($this->notionObject)
-            ->setStartCursor($this->startCursor)
+            ->setStartCursor($this->startCursor ?? null)
             ->setPageSize($this->pageSize);
 
         $response = NotionClient::make()
             ->setRequest($paginatorRequestBuilder)
-            ->matchMethod($this->method, $this->url, $this->requestBody);
+            ->matchMethod($this->method, $this->url, $this->requestBody ?? []);
 
         $this->updateNextCursor($response['next_cursor'], $response['has_more']);
 
@@ -107,7 +107,7 @@ class NotionPaginator
         return $this;
     }
 
-    public function setPaginatedObject(NotionPage $paginatedObject): static
+    public function setPaginatedObject(NotionObject $paginatedObject): static
     {
         $this->notionObject = $paginatedObject;
         return $this;

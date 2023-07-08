@@ -6,7 +6,7 @@ namespace Pi\Notion\Core\Models;
 
 use Illuminate\Support\Collection;
 use Pi\Notion\Core\NotionProperty\NotionDatabaseDescription;
-use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
+use Pi\Notion\Core\NotionProperty\NotionTitle;
 use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\Core\RequestBuilders\NotionDatabaseRequestBuilder;
 use Pi\Notion\Core\RequestBuilders\NotionUpdateDatabaseRequestBuilder;
@@ -20,7 +20,7 @@ class NotionDatabase extends NotionObject
     use HandleFilters, HandleProperties, HandleSorts;
 
     private string $link;
-    protected NotionDatabaseTitle $title;
+    protected NotionTitle $title;
     protected ?NotionDatabaseDescription $description;
 
     protected Collection $properties;
@@ -104,7 +104,7 @@ class NotionDatabase extends NotionObject
     public static function fromResponse($response): static
     {
         $database = parent::fromResponse($response);
-        $database->title = NotionDatabaseTitle::make($response['title'][0]['plain_text']) ?? null;
+        $database->title = NotionTitle::make($response['title'][0]['plain_text']) ?? null;
         if (! empty($response['description'])){
             $database->description = NotionDatabaseDescription::make($response['description'][0]['plain_text']) ?? null;
         }
@@ -136,7 +136,7 @@ class NotionDatabase extends NotionObject
         return $this;
     }
 
-    public function setTitle(NotionDatabaseTitle $title): self
+    public function setTitle(NotionTitle $title): self
     {
         $this->title = $title;
 
