@@ -6,6 +6,7 @@ use Illuminate\Http\Resources\MissingValue;
 use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Core\NotionValue\NotionArrayValue;
 use Pi\Notion\Core\NotionValue\NotionBlockContent;
+use Pi\Notion\Core\NotionValue\NotionFile;
 
 class NotionFiles extends BaseNotionProperty
 {
@@ -14,8 +15,8 @@ class NotionFiles extends BaseNotionProperty
 
     protected function buildValue(): NotionBlockContent
     {
-        return NotionArrayValue::make([$this->files ?? new MissingValue()])
-            ->type('files');
+        return NotionArrayValue::make($this->files ?? new MissingValue())
+            ->setType('files');
     }
 
     protected function buildFromResponse(array $response): BaseNotionProperty
@@ -38,7 +39,9 @@ class NotionFiles extends BaseNotionProperty
 
     public function setFiles(?array $files): NotionFiles
     {
-        $this->files = $files;
+        $this->files = collect($files)
+            ->map(fn(NotionFile $file) => $file->resource())
+            ->all();
         return $this;
     }
 

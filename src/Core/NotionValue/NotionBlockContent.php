@@ -17,7 +17,7 @@ abstract class NotionBlockContent
         $this->value = $value;
     }
 
-    public static function make(mixed $value = null): self|NotionEmptyValue
+    public static function make(mixed $value = null): static|NotionEmptyValue
     {
 
         if (! $value){
@@ -67,7 +67,7 @@ abstract class NotionBlockContent
         return $this->type;
     }
 
-    public function type(mixed $type): static
+    public function setType(mixed $type): static
     {
         $this->type = $type;
         return $this;

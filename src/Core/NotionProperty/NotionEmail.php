@@ -13,7 +13,7 @@ class NotionEmail extends BaseNotionProperty
 
     protected function buildValue(): NotionBlockContent
     {
-        $this->blockContent = NotionObjectValue::make($this->email)->type('email');
+        $this->blockContent = NotionObjectValue::make($this->email)->setType('email');
 
         return $this->blockContent;
     }

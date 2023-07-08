@@ -16,11 +16,11 @@ class NotionDatabaseDescription extends BaseNotionProperty
     protected function buildValue(): NotionBlockContent
     {
         $this->content = NotionRichText::make($this->name)
-            ->type('text')
+            ->setType('text')
             ->toResource();
 
         return NotionArrayValue::make($this->content->resource)
-            ->type('description')
+            ->setType('description')
             ->isNested();
     }
 

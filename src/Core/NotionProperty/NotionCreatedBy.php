@@ -13,7 +13,7 @@ class NotionCreatedBy extends BaseNotionProperty
 
     protected function buildValue(): NotionBlockContent
     {
-        return NotionEmptyValue::make()->type('created_by');
+        return NotionEmptyValue::make()->setType('created_by');
     }
 
     protected function buildFromResponse(array $response): BaseNotionProperty

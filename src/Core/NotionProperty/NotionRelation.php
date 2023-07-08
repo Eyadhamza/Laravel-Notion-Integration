@@ -23,7 +23,7 @@ class NotionRelation extends BaseNotionProperty
         return NotionArrayValue::make(array_merge($this->getIds(),[
             'database_id' => $this->databaseId ?? new MissingValue(),
             'single_property' => $this->singleProperty ?? new MissingValue(),
-        ]))->type('relation');
+        ]))->setType('relation');
     }
     public function setType(): BaseNotionProperty
     {
@@ -44,14 +44,18 @@ class NotionRelation extends BaseNotionProperty
             return $this;
         }
         $this->databaseId = $response['relation']['database_id'] ?? null;
-        $this->pageIds = collect($response['relation'])->map(fn ($page) => $page['id'])->all();
+
+        $this->pageIds = collect($response['relation'])
+            ->filter(fn ($value, $key) => is_string($key))
+            ->map(fn ($page) => $page['id'])->all();
+
         return $this;
     }
 
-    private function getIds(): array|MissingValue
+    private function getIds(): array
     {
         if (!$this->pageIds) {
-            return new MissingValue();
+            return [];
         }
 
         return collect($this->pageIds)

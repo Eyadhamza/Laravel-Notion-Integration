@@ -17,7 +17,7 @@ class NotionTitle extends BaseNotionProperty
         parent::__construct($name);
 
         $this->content = NotionRichText::make($this->name)
-            ->type('text');
+            ->setType('text');
     }
 
     public function setTitle(string $string): static
@@ -32,7 +32,7 @@ class NotionTitle extends BaseNotionProperty
         $this->content->toResource();
 
         return NotionArrayValue::make($this->content->resource)
-            ->type('title')
+            ->setType('title')
             ->isNested();
     }
 
@@ -51,7 +51,7 @@ class NotionTitle extends BaseNotionProperty
         }
 
         $this->content = NotionRichText::make($response['title'][0]['plain_text'])
-            ->type('text');
+            ->setType('text');
 
         return $this;
     }

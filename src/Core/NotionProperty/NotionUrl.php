@@ -10,9 +10,10 @@ class NotionUrl extends BaseNotionProperty
 {
     private ?string $link = null;
 
+
     protected function buildValue():NotionBlockContent
     {
-        return NotionSimpleValue::make($this->link)->type('url');
+        return NotionSimpleValue::make($this->link)->setType('url');
     }
 
     public function setType(): BaseNotionProperty
@@ -29,6 +30,13 @@ class NotionUrl extends BaseNotionProperty
         }
 
         $this->link = $response['url'];
+
+        return $this;
+    }
+
+    public function setUrl(string $url): self
+    {
+        $this->link = $url;
 
         return $this;
     }

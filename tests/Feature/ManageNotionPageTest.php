@@ -6,6 +6,7 @@ use Pi\Notion\Core\Models\NotionUser;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 use Pi\Notion\Core\NotionProperty\NotionTitle;
 use Pi\Notion\Core\NotionProperty\NotionSelect;
+use Pi\Notion\Core\NotionValue\NotionFile;
 use Pi\Notion\Core\NotionValue\NotionRichText;
 use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\Core\NotionProperty\NotionRollup;
@@ -84,20 +85,29 @@ it('should add properties to the created page using the page class', function ()
                 ->build(),
             NotionFiles::make('Media')
                 ->setFiles([
-                    new \Pi\Notion\Core\NotionValue\NotionFile(),
-                    new \Pi\Notion\Core\NotionValue\NotionFile()
+                    NotionFile::make('Google')
+                        ->setFileType('external')
+                        ->setFileUrl('https://www.google.com'),
+                    NotionFile::make('Notion')
+                        ->setFileType('file')
+                        ->setFileUrl('https://s3.us-west-2.amazonaws.com/secure.notion-static.com/7b8b0713-dbd4-4962-b38b-955b6c49a573/My_test_image.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221024%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221024T205211Z&X-Amz-Expires=3600&X-Amz-Signature=208aa971577ff05e75e68354e8a9488697288ff3fb3879c2d599433a7625bf90&X-Amz-SignedHeaders=host&x-id=GetObject')
+                        ->setExpiryTime('2022-10-24T22:49:22.765Z'),
                 ])
                 ->build(),
-//            NotionEmail::make('Email')->build(),
-//            NotionNumber::make('Number')->build(),
-//            NotionPhoneNumber::make('Phone')->build(),
-//            NotionUrl::make('Url')->build(),
-//            NotionCreatedTime::make('CreatedTime')->build(),
-//            NotionCreatedBy::make('CreatedBy')->build(),
-//            NotionLastEditedTime::make('LastEditedTime')->build(),
-//            NotionLastEditedBy::make('LastEditedBy')->build(),
+            NotionEmail::make('Email')
+                ->setEmail('eyadhamza0@gmail.com')
+                ->build(),
+            NotionNumber::make('Number')
+                ->setNumber(10)
+                ->build(),
+            NotionPhoneNumber::make('Phone')
+                ->setPhoneNumber('+201010101010')
+                ->build(),
+            NotionUrl::make('Url')
+                ->setUrl('https://www.google.com')
+                ->build(),
         ])->create();
-    expect($page->getProperties())->toHaveCount(7)
+    expect($page->getProperties())->toHaveCount(17)
         ->and($page)->toHaveProperty('properties');
 });
 

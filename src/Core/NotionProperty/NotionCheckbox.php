@@ -18,7 +18,7 @@ class NotionCheckbox extends BaseNotionProperty
 
     protected function buildValue(): NotionBlockContent
     {
-        return NotionSimpleValue::make($this->isChecked)->type('checkbox');
+        return NotionSimpleValue::make($this->isChecked)->setType('checkbox');
     }
 
     public function setType(): self

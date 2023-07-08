@@ -16,11 +16,11 @@ class NotionSelect extends BaseNotionProperty
     {
         if (isset($this->selected)) {
             return NotionArrayValue::make(['name' => $this->selected])
-                ->type('select');
+                ->setType('select');
         }
 
         return NotionArrayValue::make($this->options)
-            ->type('select')
+            ->setType('select')
             ->setKey('options');
     }
 

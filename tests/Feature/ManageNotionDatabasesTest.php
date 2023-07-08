@@ -19,7 +19,6 @@ use Pi\Notion\Core\NotionProperty\NotionDate;
 use Pi\Notion\Core\NotionProperty\NotionFormula;
 use Pi\Notion\Core\NotionProperty\NotionRelation;
 use Pi\Notion\Core\NotionProperty\NotionSelect;
-use Pi\Notion\Core\NotionProperty\NotionTitle;
 use Pi\Notion\Core\Query\NotionFilter;
 use Pi\Notion\Core\Query\NotionSort;
 use Pi\Notion\Exceptions\NotionValidationException;

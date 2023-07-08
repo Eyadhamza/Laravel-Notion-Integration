@@ -14,7 +14,7 @@ class NotionFormula extends BaseNotionProperty
 
     protected function buildValue(): NotionBlockContent
     {
-        return NotionFormulaValue::make($this->expression)->type('formula');
+        return NotionFormulaValue::make($this->expression)->setType('formula');
     }
 
     public function setType(): BaseNotionProperty

@@ -10,7 +10,7 @@ class NotionLastEditedTime extends BaseNotionProperty
 {
     protected function buildValue(): NotionBlockContent
     {
-        return NotionEmptyValue::make()->type('last_edited_time');
+        return NotionEmptyValue::make()->setType('last_edited_time');
     }
 
     protected function buildFromResponse(array $response): BaseNotionProperty

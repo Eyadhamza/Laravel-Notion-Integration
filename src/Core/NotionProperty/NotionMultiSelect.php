@@ -14,7 +14,7 @@ class NotionMultiSelect extends BaseNotionProperty
 
     protected function buildValue(): NotionBlockContent
     {
-        return NotionArrayValue::make($this->options)->type('multi_select');
+        return NotionArrayValue::make($this->options)->setType('multi_select');
     }
 
     public function setOptions(array $options): void

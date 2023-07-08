@@ -20,7 +20,7 @@ class NotionDate extends BaseNotionProperty
             'start' => $this->start ?? new MissingValue(),
             'end' => $this->end ?? new MissingValue(),
             'time_zone' => $this->timeZone ?? new MissingValue(),
-        ])->type('date');
+        ])->setType('date');
     }
 
     public function setType(): BaseNotionProperty

@@ -7,6 +7,7 @@ use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Core\Enums\NumberFormatEnum;
 use Pi\Notion\Core\NotionValue\NotionArrayValue;
 use Pi\Notion\Core\NotionValue\NotionBlockContent;
+use Pi\Notion\Core\NotionValue\NotionSimpleValue;
 
 class NotionNumber extends BaseNotionProperty
 {
@@ -15,10 +16,16 @@ class NotionNumber extends BaseNotionProperty
 
     protected function buildValue(): NotionBlockContent
     {
-        return NotionArrayValue::make([
-            'number' => $this->number ?? new MissingValue(),
-            'format' => $this->format ?? new MissingValue(),
-        ])->type('number');
+        if (!$this->number) {
+            return NotionArrayValue::make([
+                'number' => new MissingValue(),
+                'format' => new MissingValue(),
+            ])
+                ->setType($this->type->value);
+        }
+
+        return NotionSimpleValue::make($this->number)
+            ->setType($this->type->value);
     }
 
     public function setType(): BaseNotionProperty
