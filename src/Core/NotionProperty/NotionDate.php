@@ -2,7 +2,9 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
+use Illuminate\Http\Resources\MissingValue;
 use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Core\NotionValue\NotionArrayValue;
 use Pi\Notion\Core\NotionValue\NotionObjectValue;
 
 class NotionDate extends BaseNotionProperty
@@ -14,10 +16,10 @@ class NotionDate extends BaseNotionProperty
 
     protected function buildValue()
     {
-        return NotionObjectValue::make((object)[
-            'start' => $this->start,
-            'end' => $this->end,
-            'time_zone' => $this->timeZone,
+        return NotionArrayValue::make([
+            'start' => $this->start ?? new MissingValue(),
+            'end' => $this->end ?? new MissingValue(),
+            'time_zone' => $this->timeZone ?? new MissingValue(),
         ])->type('date');
     }
 
@@ -30,7 +32,7 @@ class NotionDate extends BaseNotionProperty
 
     protected function buildFromResponse(array $response): BaseNotionProperty
     {
-        if (empty($response['date'])){
+        if (empty($response['date'])) {
             return $this;
         }
 

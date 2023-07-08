@@ -3,35 +3,55 @@
 namespace Pi\Notion\Core\NotionValue;
 
 use Illuminate\Http\Resources\ConditionallyLoadsAttributes;
+use Illuminate\Http\Resources\MissingValue;
 
 abstract class NotionBlockContent
 {
     use ConditionallyLoadsAttributes;
+    public mixed $resource;
     protected mixed $type;
     protected mixed $value;
 
     public function __construct(mixed $value = null)
     {
         $this->value = $value;
-
     }
 
     public static function make(mixed $value = null): self|NotionEmptyValue
     {
+
         if (! $value){
             return new NotionEmptyValue();
         }
+
+        if (is_array($value) && self::areAllMissingValues($value)) {
+            return new NotionEmptyValue();
+        }
+
         return new static($value);
     }
 
     abstract public static function build(array $response): static;
 
-    public function resource(): array
+    private static function areAllMissingValues(array $value): bool
     {
-        return $this->filter($this->toResource());
+        foreach ($value as $item) {
+            if (! $item instanceof MissingValue) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
-    abstract protected function toResource();
+    public function resource(): array
+    {
+        $this->toResource();
+
+        return $this->filter($this->resource);
+    }
+
+    abstract protected function toResource(): self;
 
     public function getValue(): mixed
     {

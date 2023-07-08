@@ -15,28 +15,16 @@ class NotionFormulaValue extends NotionBlockContent
         return new static($response['plain_text']);
     }
 
-    public function toResource(): array
+    public function toResource(): self
     {
-        //"Updated price": {
-        //  "id": "YU%7C%40",
-        //  "name": "Updated price",
-        //  "type": "formula",
-        //  "formula": {
-        //    "expression": "prop(\"Price\") * 2"
-        //  }
-        //}
-//        dd(array_merge($this->getExpressionTypeIfSet(), [
-//            'type' => NotionPropertyTypeEnum::FORMULA->value,
-//            'formula' => [
-//                'expression' => $this->value ?? new MissingValue(),
-//            ]
-//        ]));
-        return array_merge($this->getExpressionTypeIfSet(), [
+        $this->resource =  array_merge($this->getExpressionTypeIfSet(), [
             'type' => NotionPropertyTypeEnum::FORMULA->value,
             'formula' => [
                 'expression' => $this->value ?? new MissingValue(),
             ]
         ]);
+
+        return $this;
     }
 
     public function expression(string $expression): NotionFormulaValue

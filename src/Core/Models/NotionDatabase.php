@@ -5,6 +5,7 @@ namespace Pi\Notion\Core\Models;
 
 
 use Illuminate\Support\Collection;
+use Pi\Notion\Core\NotionProperty\NotionDatabaseDescription;
 use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
 use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\Core\RequestBuilders\NotionDatabaseRequestBuilder;
@@ -20,7 +21,7 @@ class NotionDatabase extends NotionObject
 
     private string $link;
     protected NotionDatabaseTitle $title;
-    protected ?string $description;
+    protected ?NotionDatabaseDescription $description;
 
     protected Collection $properties;
     protected Collection $pages;
@@ -64,13 +65,17 @@ class NotionDatabase extends NotionObject
 
     public function update(): self
     {
-        $requestBuilder = NotionUpdateDatabaseRequestBuilder::make($this->title, $this->getParentPageId(), $this->getProperties());
+        $requestBuilder = NotionUpdateDatabaseRequestBuilder::make(
+            $this->title,
+            $this->description,
+            $this->getProperties()
+        );
 
         $response = NotionClient::make()
             ->setRequest($requestBuilder)
             ->patch(NotionClient::BASE_URL . '/databases/' . $this->id);
 
-        return $this->fromResponse($response);
+        return $this->fromResponse($response->json());
 
     }
 
@@ -100,7 +105,9 @@ class NotionDatabase extends NotionObject
     {
         $database = parent::fromResponse($response);
         $database->title = NotionDatabaseTitle::make($response['title'][0]['plain_text']) ?? null;
-        $database->description = $response['description'][0]['plain_text'] ?? null;
+        if (! empty($response['description'])){
+            $database->description = NotionDatabaseDescription::make($response['description'][0]['plain_text']) ?? null;
+        }
         $database->url = $response['url'] ?? null;
         $database->icon = $response['icon'] ?? null;
         $database->cover = $response['cover'] ?? null;
@@ -153,6 +160,13 @@ class NotionDatabase extends NotionObject
     public function getProperties(): Collection
     {
         return $this->properties;
+    }
+
+    public function setDatabaseDescription(NotionDatabaseDescription $description): static
+    {
+        $this->description = $description;
+
+        return $this;
     }
 
 }

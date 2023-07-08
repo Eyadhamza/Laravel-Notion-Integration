@@ -4,13 +4,14 @@ namespace Pi\Notion\Tests;
 
 use Dotenv\Dotenv;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\App;
-use Orchestra\Testbench\TestCase as Orchestra;
+use Orchestra\Testbench\Concerns\CreatesApplication;
 use Pi\Notion\NotionServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
-    public function setUp(): void
+
+    protected function setUp(): void
     {
         if (file_exists(dirname(__DIR__) . '/.env.test')) {
             (Dotenv::createImmutable(dirname(__DIR__), '.env.test'))->load();
@@ -23,7 +24,7 @@ class TestCase extends Orchestra
             ->run();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Pi\\Notion\\Tests\\database\\factories\\' . class_basename($modelName) . 'Factory'
+            fn(string $modelName) => 'Pi\\Notion\\Tests\\database\\factories\\' . class_basename($modelName) . 'Factory'
         );
     }
 
@@ -38,9 +39,9 @@ class TestCase extends Orchestra
     {
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('database.connections.testbench', [
-            'driver'   => 'sqlite',
+            'driver' => 'sqlite',
             'database' => ':memory:',
-            'prefix'   => '',
+            'prefix' => '',
         ]);
     }
 }

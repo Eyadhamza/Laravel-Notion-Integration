@@ -2,6 +2,8 @@
 
 namespace Pi\Notion\Core\NotionValue;
 
+use Illuminate\Http\Resources\MissingValue;
+
 class NotionObjectValue extends NotionBlockContent
 {
 
@@ -10,11 +12,13 @@ class NotionObjectValue extends NotionBlockContent
         return new static($response['plain_text'], $response['type']);
     }
 
-    public function toResource(): array
+    public function toResource(): self
     {
-        return [
+         $this->resource = [
             'type' => $this->type,
-            'plain_text' => $this->value
+            $this->type => $this->value ?? new MissingValue()
         ];
+
+        return $this;
     }
 }

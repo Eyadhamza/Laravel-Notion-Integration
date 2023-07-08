@@ -12,7 +12,7 @@ use Pi\Notion\Core\NotionValue\NotionEmptyValue;
 abstract class BaseNotionProperty extends NotionObject
 {
     protected mixed $rawValue;
-    protected NotionBlockContent|NotionEmptyValue $value;
+    protected NotionBlockContent|NotionEmptyValue $blockContent;
     protected NotionPropertyTypeEnum $type;
     protected ?string $name;
 
@@ -29,15 +29,15 @@ abstract class BaseNotionProperty extends NotionObject
 
     public function build(): static
     {
-        return $this->setValue();
+        return $this->setBlockContent();
     }
     public function toArray(): array
     {
-        if ($this->value->getValue() instanceof NotionEmptyValue) {
-            return $this->value->resource();
+        if ($this->blockContent->getValue() instanceof NotionEmptyValue) {
+            return $this->blockContent->resource();
         }
 
-        return $this->value->resource();
+        return $this->blockContent->resource();
     }
 
     abstract protected function buildValue();
@@ -51,16 +51,16 @@ abstract class BaseNotionProperty extends NotionObject
     }
     abstract protected function buildFromResponse(array $response): self;
 
-    public function setValue(): self
+    public function setBlockContent(): self
     {
-        $this->value = $this->buildValue();
+        $this->blockContent = $this->buildValue();
 
         return $this;
     }
 
-    public function getValue(): NotionBlockContent
+    public function getBlockContent(): NotionBlockContent
     {
-        return $this->value;
+        return $this->blockContent;
     }
 
     public function getId(): ?string

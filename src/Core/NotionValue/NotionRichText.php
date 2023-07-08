@@ -128,17 +128,19 @@ class NotionRichText extends NotionBlockContent
         return $this;
     }
 
-    public function toResource(): array
+    public function toResource(): self
     {
-        return [
-                $this->type => [
-                    'content' => $this->value,
-                    'link' => $this->link ?? null
-                ],
-                'annotations' => $this->getAnnotations(),
-                'plain_text' => $this->value ?? new MissingValue(),
-                'href' => $this->href ?? new MissingValue()
+        $this->resource = [
+            $this->type => [
+                'content' => $this->value,
+                'link' => $this->link ?? null
+            ],
+            'annotations' => $this->getAnnotations(),
+            'plain_text' => $this->value ?? new MissingValue(),
+            'href' => $this->href ?? new MissingValue()
         ];
+
+        return $this;
     }
 
     public function getAnnotations(): array|MissingValue

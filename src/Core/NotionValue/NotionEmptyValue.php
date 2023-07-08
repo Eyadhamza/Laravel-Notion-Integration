@@ -9,10 +9,12 @@ class NotionEmptyValue extends NotionBlockContent
         return new static("");
     }
 
-    public function toResource(): array
+    public function toResource(): self
     {
-        return [
+        $this->resource = [
             $this->type => new \stdClass()
         ];
+
+        return $this;
     }
 }

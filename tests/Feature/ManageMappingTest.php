@@ -1,56 +1,52 @@
 <?php
 
-namespace Pi\Notion\Tests\Feature;
-
 use Illuminate\Support\Facades\Artisan;
 use Pi\Notion\Core\Models\NotionDatabase;
 use Pi\Notion\Core\Query\NotionFilter;
 use Pi\Notion\Tests\Models\User;
-use Pi\Notion\Tests\TestCase;
 
-class ManageMappingTest extends TestCase
-{
-    public function test_user_creation()
-    {
-        $user = User::query()->create([
-            'name' => 'John Doe',
-            'email' => 'JohnDoe@gmail.com',
-            'password' => 'password'
-        ]);
-        $user->saveToNotion();
-        $this->assertNotNull($user);
-        $this->assertEquals(1, User::count());
-        $this->assertCount(3, $user->saveToNotion()->getProperties());
-    }
+test('user creation', function () {
+    $user = User::query()->create([
+        'name' => 'John Doe',
+        'email' => 'JohnDoe@gmail.com',
+        'password' => 'password'
+    ]);
+    $user->saveToNotion();
 
-    public function test_mapping_existing_database_to_notion()
-    {
-        $users = User::factory()->count(5)->create();
+    expect($user)->not()->toBeNull();
+    expect(User::count())->toBe(1);
+    expect($user->saveToNotion()->getProperties())->toHaveCount(3);
+});
 
-        Artisan::call('sync:to-notion', [
-            'model' => User::class
-        ]);
-        // test artisan command
-        $this->assertEquals(5, User::count());
+test('mapping existing database to Notion', function () {
+    $users = User::factory()->count(5)->create();
 
-    }
-    public function test_map_notion_database_to_app_database_using_database_id()
-    {
-        Artisan::call('sync:from-notion',[
-            'model' => User::class,
-            'databaseId' => '74dc9419bec24f10bb2e65c1259fc65a'
-        ]);
-        $this->assertGreaterThan(80, User::count());
-    }
-    public function test_map_notion_database_to_app_database_using_specified_pages()
-    {
+    Artisan::call('sync:to-notion', [
+        'model' => User::class
+    ]);
 
-        Artisan::call('sync:from-notion',[
-            'model' => User::class,
-            'pages' => NotionDatabase::find('74dc9419bec24f10bb2e65c1259fc65a')->filters([
-                NotionFilter::title('Name')->contains('John')
-            ])->query()->getAllResults()
-        ]);
-        $this->assertGreaterThan(10, User::count());
-    }
-}
+    expect(User::count())->toBe(5);
+});
+
+test('map Notion database to app database using database id', function () {
+    Artisan::call('sync:from-notion', [
+        'model' => User::class,
+        'databaseId' => '74dc9419bec24f10bb2e65c1259fc65a'
+    ]);
+
+    expect(User::count())->toBeGreaterThan(80);
+});
+
+test('map Notion database to app database using specified pages', function () {
+    $database = NotionDatabase::find('74dc9419bec24f10bb2e65c1259fc65a');
+    $pages = $database->filters([
+        NotionFilter::title('Name')->contains('John')
+    ])->query()->getAllResults();
+
+    Artisan::call('sync:from-notion', [
+        'model' => User::class,
+        'pages' => $pages
+    ]);
+
+    expect(User::count())->toBeGreaterThan(10);
+});

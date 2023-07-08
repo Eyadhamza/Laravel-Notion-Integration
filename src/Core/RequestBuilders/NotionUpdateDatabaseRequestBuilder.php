@@ -11,10 +11,12 @@ class NotionUpdateDatabaseRequestBuilder extends BaseNotionRequestBuilder
 {
     private NotionDatabaseTitle $title;
     private Collection $properties;
+    private NotionDatabaseDescription $description;
 
     public function __construct(NotionDatabaseTitle $title, NotionDatabaseDescription $description, Collection $properties)
     {
         $this->title = $title;
+        $this->description = $description;
         $this->properties = $properties;
     }
 
@@ -25,13 +27,11 @@ class NotionUpdateDatabaseRequestBuilder extends BaseNotionRequestBuilder
 
     public function toArray(): array
     {
-        return array_merge($this->title->getAttributes(), [
-            'parent' => [
-                'type' => 'page_id',
-                'page_id' => $this->parentPageId
-            ],
+        return array_merge(
+            $this->title->toArray(),
+            $this->description->toArray(), [
             'properties' => $this->properties->mapWithKeys(fn(BaseNotionProperty $property) => [
-                $property->getName() => $property->getAttributes()
+                $property->getName() => $property->toArray()
             ])->all()
         ]);
     }

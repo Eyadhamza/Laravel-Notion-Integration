@@ -12,26 +12,32 @@ class NotionArrayValue extends NotionBlockContent
         return new static($response['plain_text'], $response['type']);
     }
 
-    public function toResource(): array
+    public function toResource(): self
     {
         if ($this->isNested) {
-            return [
+            $this->resource = [
                 $this->type => [
                     $this->value
                 ]
             ];
+
+            return $this;
         }
         if (isset($this->key)) {
-            return [
+            $this->resource = [
                 $this->type => [
                     $this->key => $this->value
                 ]
             ];
+
+            return $this;
         }
 
-        return [
+        $this->resource = [
             $this->type => $this->value
         ];
+
+        return $this;
     }
 
     public function setKey(string $key): NotionArrayValue

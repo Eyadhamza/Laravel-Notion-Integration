@@ -1,32 +1,21 @@
 <?php
 
-namespace Pi\Notion\Tests\Feature;
-
 use Pi\Notion\Core\Models\NotionUser;
-use Pi\Notion\Tests\TestCase;
 
-class ManageUsersTest extends TestCase
-{
-    /** @test */
-    public function it_returns_all_users()
-    {
-        $users = NotionUser::index();
-        $this->assertCount(3, $users->getResults());
-    }
+it('returns all users', function () {
+    $users = NotionUser::index();
 
-    /** @test */
-    public function it_returns_a_user()
-    {
+    expect($users->getResults())->toHaveCount(3);
+});
 
-       $user = NotionUser::find('2c4d6a4a-12fe-4ce8-a7e4-e3019cc4765f');
-       $this->assertObjectHasAttribute('id', $user);
-    }
-    /** @test */
-    public function it_returns_a_bot()
-    {
-        $bot = NotionUser::getBot();
-        $this->assertObjectHasAttribute('name', $bot);
-    }
+it('returns a user', function () {
+    $user = NotionUser::find('2c4d6a4a-12fe-4ce8-a7e4-e3019cc4765f');
 
+    expect($user)->toHaveProperty('id');
+});
 
-}
+it('returns a bot', function () {
+    $bot = NotionUser::getBot();
+
+    expect($bot)->toHaveProperty('name');
+});

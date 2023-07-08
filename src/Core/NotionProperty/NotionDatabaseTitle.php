@@ -13,9 +13,10 @@ class NotionDatabaseTitle extends BaseNotionProperty
     protected function buildValue(): NotionArrayValue
     {
         $this->content = NotionRichText::make($this->name)
-            ->type('text');
+            ->type('text')
+            ->toResource();
 
-        return NotionArrayValue::make($this->content->resource())
+        return NotionArrayValue::make($this->content->resource)
             ->type('title')
             ->isNested();
     }

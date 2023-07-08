@@ -97,7 +97,7 @@ class NotionClient
     {
         return $this
             ->client
-            ->post($url, $this->requestBuilder->build())
+            ->patch($url, $this->requestBuilder->build())
             ->onError(fn($response) => NotionException::matchException($response->json()));
 
     }

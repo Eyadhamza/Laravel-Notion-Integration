@@ -14,8 +14,10 @@ class NotionSimpleValue extends NotionBlockContent
         return new static($response['plain_text'], $response['type']);
     }
 
-    protected function toResource(): ?string
+    protected function toResource(): self
     {
-        return $this->value;
+        $this->resource = $this->value;
+
+        return $this;
     }
 }

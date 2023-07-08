@@ -1,211 +1,172 @@
 <?php
 
-namespace Pi\Notion\Tests\Feature;
-
 use Pi\Notion\Core\Models\NotionBlock;
 use Pi\Notion\Core\Models\NotionPage;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 use Pi\Notion\Core\NotionValue\NotionRichText;
 use Pi\Notion\Core\Query\NotionPaginator;
-use Pi\Notion\Tests\TestCase;
 
-class ManageNotionPageTest extends TestCase
-{
-    private string $notionPageId = 'b4f8e429038744ca9c8d5afa93ea2edd';
-    private string $notionDatabaseId = '632b5fb7e06c4404ae12065c48280e4c';
+it('should return page info', function () {
+    $page = new NotionPage('b4f8e429038744ca9c8d5afa93ea2edd');
 
-    /** @test */
-    public function it_should_return_page_info()
-    {
-        $this->withoutExceptionHandling();
+    expect($page)->toHaveProperty('objectType');
+});
 
-        $page = new NotionPage('b4f8e429038744ca9c8d5afa93ea2edd');
+it('should return page info with blocks', function () {
+    $page = new NotionPage('b4f8e429038744ca9c8d5afa93ea2edd');
 
-        $this->assertObjectHasAttribute('objectType', $page);
+    expect($page)->toHaveProperty('objectType');
+});
 
+it('can create a page object', function () {
+    $page = new NotionPage();
+    $page->setDatabaseId('632b5fb7e06c4404ae12065c48280e4c');
+    $page->create();
 
-    }
-    /** @test */
-    public function it_should_return_page_info_with_blocks()
-    {
-        $this->withoutExceptionHandling();
+    expect($page)->toHaveProperty('objectType');
+});
 
-        $page = new NotionPage('b4f8e429038744ca9c8d5afa93ea2edd');
+it('can delete a page object', function () {
+    $page = (new NotionPage('ec9df16fa65f4eef96776ee41ee3d4d4'))->delete();
 
-        $this->assertObjectHasAttribute('objectType', $page);
+    expect($page)->toHaveProperty('objectType');
+});
 
+it('should add properties to the created page using the page class', function () {
+    $page = new NotionPage();
+    $page->setDatabaseId('632b5fb7e06c4404ae12065c48280e4c');
 
-    }
-    /** @test */
-    public function i_can_create_a_page_object()
-    {
-        $page = new NotionPage();
-        $page->setDatabaseId($this->notionDatabaseId);
-        $page->create();
+    $page
+        ->title('Name', 'Eyad Hamza')
+        ->select('Status', 'A')
+        ->multiSelect('Status1', ['A', 'B'])
+        ->date('Date', [
+            'start' => '2020-12-08T12:00:00Z',
+            'end' => '2020-12-08T12:00:00Z',
+        ])
+        ->email('Email', 'eyad@outlook.com')
+        ->phone('Phone', '123456789')
+        ->url('Url', 'https://www.google.com')
+        ->create();
 
-        $this->assertObjectHasAttribute('objectType', $page);
+    expect($page->getProperties())->toHaveCount(7)
+        ->and($page)->toHaveProperty('properties');
+});
 
-    }
-    /** @test */
-    public function it_can_delete_a_page_object()
-    {
-        $page = (new NotionPage('ec9df16fa65f4eef96776ee41ee3d4d4'))
-            ->delete();
-        $this->assertObjectHasAttribute('objectType', $page);
+it('can update properties of the created page using the page class', function () {
+    $page = new NotionPage('687e13b1b8bb4eb9957d5843404b6d5d');
+    $response = $page
+        ->select('Status', 'In Progress')
+        ->update();
 
-    }
-    /** @test */
-    public function it_should_add_properties_to_created_page_using_page_class()
-    {
+    expect($page)->toHaveProperty('properties');
+});
 
-        $page = new NotionPage();
-        $page->setDatabaseId($this->notionDatabaseId);
+it('should add properties to the created page', function () {
+    $page = new NotionPage();
+    $page->setDatabaseId('632b5fb7e06c4404ae12065c48280e4c');
 
-        $page
-            ->title('Name','Eyad Hamza')
-            ->select('Status', 'A')
-            ->multiSelect('Status1', ['A', 'B'])
-            ->date('Date', [
-                'start' => "2020-12-08T12:00:00Z",
-                'end' => "2020-12-08T12:00:00Z",
-            ])->email('Email', 'eyad@outlook.com')
-            ->phone('Phone', '123456789')
-            ->url('Url', 'https://www.google.com')
-            ->create();
+    $page->setProperties([
+        BaseNotionProperty::title('Name', 'Eyad Hamza'),
+        BaseNotionProperty::multiSelect('Status1', ['A', 'B']),
+        BaseNotionProperty::select('Status', 'A'),
+        BaseNotionProperty::date('Date', [
+            'start' => '2020-12-08T12:00:00Z',
+            'end' => '2020-12-08T12:00:00Z',
+        ]),
+        BaseNotionProperty::url('https://developers.notion.com'),
+        BaseNotionProperty::email('Email', 'Eyadhamza0@outlook.com'),
+        BaseNotionProperty::phone()->setValues('0123456789'),
+    ])->create();
 
+    expect($page->getProperties())->toHaveCount(7)
+        ->and($page)->toHaveProperty('properties');
+});
 
-        $this->assertCount(7, $page->getProperties());
+it('can add content blocks to the created pages', function () {
+    $page = new NotionPage();
+    $page->setDatabaseId('632b5fb7e06c4404ae12065c48280e4c');
 
-        $this->assertObjectHasAttribute('properties', $page);
-    }
+    $page
+        ->title('Name', '1111')
+        ->multiSelect('Status1', ['A', 'B']);
 
-    /** @test */
-    public function it_should_update_properties_to_created_page_using_page_class()
-    {
-        $page = new NotionPage('687e13b1b8bb4eb9957d5843404b6d5d');
-        $response = $page
-            ->select('Status', 'In Progress')
-            ->update();
+    $page->setBlocks([
+        NotionBlock::headingOne(NotionRichText::make('Eyad Hamza')
+            ->bold()
+            ->italic()
+            ->strikethrough()
+            ->underline()
+            ->code()
+            ->color('red')),
+        NotionBlock::headingTwo('Heading 2'),
+        NotionBlock::headingThree('Heading 3'),
+        NotionBlock::numberedList('Numbered List'),
+        NotionBlock::bulletedList('Bullet List'),
+    ]);
 
-        $this->assertObjectHasAttribute('properties', $page);
-    }
-    /** @test */
-    public function it_should_add_properties_to_created_page()
-    {
-        $page = new NotionPage();
-        $page->setDatabaseId($this->notionDatabaseId);
+    expect($page->getProperties())->toHaveCount(2)
+        ->and($page->getBlocks())->toHaveCount(5)
+        ->and($page)->toHaveProperty('properties');
+});
 
-         $page->setProperties([
-            BaseNotionProperty::title('Name', 'Eyad Hamza'),
-            BaseNotionProperty::multiSelect('Status1', ['A', 'B']),
-            BaseNotionProperty::select('Status', 'A'),
-            BaseNotionProperty::date('Date', [
-                'start' => "2020-12-08T12:00:00Z",
-                'end' => "2020-12-08T12:00:00Z",
+it('can add nested content blocks to created pages', function () {
+    $page = new NotionPage();
+    $page->setDatabaseId('632b5fb7e06c4404ae12065c48280e4c');
+
+    $page
+        ->title('Name', '322323')
+        ->multiSelect('Status1', ['A', 'B']);
+
+    $page->setBlocks([
+        NotionBlock::paragraph('Hello There im a parent of the following blocks!')
+            ->addChildren([
+                NotionBlock::headingTwo(NotionRichText::make('Eyad Hamza')
+                    ->bold()
+                    ->setLink('https://www.google.com')
+                    ->color('red')),
+                NotionBlock::headingThree('Heading 3'),
+                NotionBlock::numberedList('Numbered List'),
+                NotionBlock::bulletedList('Bullet List'),
             ]),
-            BaseNotionProperty::url(values: 'https://developers.notion.com'),
-            BaseNotionProperty::email('Email','Eyadhamza0@outlook.com'),
-            BaseNotionProperty::phone()->setValues('0123456789')
-        ])->create();
-        $this->assertCount(7, $page->getProperties());
-        $this->assertObjectHasAttribute('properties', $page);
-    }
+        NotionBlock::headingTwo('Heading 2'),
+        NotionBlock::headingThree('Heading 3'),
+        NotionBlock::numberedList('Numbered List'),
+        NotionBlock::bulletedList('Bullet List'),
+    ]);
 
-    /** @test */
-    public function it_can_add_content_blocks_to_created_pages()
-    {
-        $page = (new NotionPage);
-        $page->setDatabaseId($this->notionDatabaseId);
+    $page->create();
 
-        $page
-            ->title('Name','1111')
-            ->multiSelect('Status1', ['A', 'B']);
+    expect($page->getProperties())->toHaveCount(2)
+        ->and($page->getBlocks())->toHaveCount(5)
+        ->and($page)->toHaveProperty('properties');
+});
 
-        $page->setBlocks([
-            NotionBlock::headingOne(NotionRichText::make('Eyad Hamza')
-                ->bold()
-                ->italic()
-                ->strikethrough()
-                ->underline()
-                ->code()
-                ->color('red')),
-            NotionBlock::headingTwo('Heading 2'),
-            NotionBlock::headingThree('Heading 3'),
-            NotionBlock::numberedList('Numbered List'),
-            NotionBlock::bulletedList('Bullet List'),
-        ]);
-        $this->assertCount(2, $page->getProperties());
-        $this->assertCount(5, $page->getBlocks());
-        $this->assertObjectHasAttribute('properties', $page);
+it('can add content blocks to created pages using the page class', function () {
+    $page = new NotionPage();
+    $page->setDatabaseId('632b5fb7e06c4404ae12065c48280e4c');
 
+    $page
+        ->title('Name', 'Eyad Hamza')
+        ->multiSelect('Status1', ['A', 'B'])
+        ->headingOne('Heading 1')
+        ->headingTwo('Heading 2')
+        ->headingThree('Heading 3')
+        ->numberedList('Numbered List')
+        ->bulletedList('Bullet List')
+        ->create();
 
-    }
-    /** @test */
-    public function it_can_add_nested_content_blocks_to_created_pages()
-    {
-        $page = (new NotionPage);
-        $page->setDatabaseId($this->notionDatabaseId);
+    expect($page->getProperties())->toHaveCount(2)
+        ->and($page->getBlocks())->toHaveCount(5)
+        ->and($page)->toHaveProperty('properties');
+});
 
-        $page
-            ->title('Name','322323')
-            ->multiSelect('Status1', ['A', 'B']);
+it('returns a property by ID', function () {
+    $page = NotionPage::find('e20014185b654e08a6285872b0b622f9');
 
-        $page->setBlocks([
-            NotionBlock::paragraph('Hello There im a parent of the following blocks!')
-                ->addChildren([
-                    NotionBlock::headingTwo(NotionRichText::make('Eyad Hamza')
-                        ->bold()
-                        ->setLink('https://www.google.com')
-                        ->color('red')),
-                    NotionBlock::headingThree('Heading 3'),
-                    NotionBlock::numberedList('Numbered List'),
-                    NotionBlock::bulletedList('Bullet List'),
-                ]),
-            NotionBlock::headingTwo('Heading 2'),
-            NotionBlock::headingThree('Heading 3'),
-            NotionBlock::numberedList('Numbered List'),
-            NotionBlock::bulletedList('Bullet List'),
-        ]);
-        $page->create();
-        $this->assertCount(2, $page->getProperties());
-        $this->assertCount(5, $page->getBlocks());
-        $this->assertObjectHasAttribute('properties', $page);
+    $property = $page->getProperty('Text');
+    expect($property)->toBeInstanceOf(NotionPaginator::class);
 
-
-    }
-    /** @test */
-    public function it_can_add_content_blocks_to_created_pages_using_page_class()
-    {
-        $page = new NotionPage;
-        $page->setDatabaseId($this->notionDatabaseId);
-
-        $page
-            ->title('Name','Eyad Hamza')
-            ->multiSelect('Status1', ['A', 'B'])
-            ->headingOne('Heading 1')
-            ->headingTwo('Heading 2')
-            ->headingThree('Heading 3')
-            ->numberedList('Numbered List')
-            ->bulletedList('Bullet List')
-            ->create();
-        $this->assertCount(2, $page->getProperties());
-        $this->assertCount(5, $page->getBlocks());
-        $this->assertObjectHasAttribute('properties', $page);
-
-
-    }
-
-    /** @test */
-    public function it_returns_a_property_by_id()
-    {
-
-        $page = NotionPage::find('e20014185b654e08a6285872b0b622f9');
-
-        $property = $page->getProperty('Text');
-        $this->assertInstanceOf(NotionPaginator::class, $property);
-
-        $property = $page->getProperty('Status');
-        $this->assertInstanceOf(BaseNotionProperty::class, $property);
-    }
-
-}
+    $property = $page->getProperty('Status');
+    expect($property)->toBeInstanceOf(BaseNotionProperty::class);
+});

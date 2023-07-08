@@ -1,87 +1,65 @@
 <?php
 
-namespace Pi\Notion\Tests\Feature;
-
 use Pi\Notion\Core\Models\NotionBlock;
 use Pi\Notion\Core\NotionValue\NotionRichText;
-use Pi\Notion\Tests\TestCase;
 
-class ManageNotionBlockTest extends TestCase
-{
-    private string $notionBlockId = 'b1cfe8df181543039b2f9e3f2c87516c';
+it('returns block info', function () {
+    $block = NotionBlock::find('b1cfe8df181543039b2f9e3f2c87516c');
 
-    /** @test */
-    public function it_should_return_block_info()
-    {
-        $this->withoutExceptionHandling();
+    expect($block)->toHaveProperty('objectType');
+});
 
-        $block = NotionBlock::find('b1cfe8df181543039b2f9e3f2c87516c');
+it('returns block children', function () {
+    $block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
 
-        $this->assertObjectHasAttribute('objectType', $block);
-    }
-    /** @test */
-    public function it_should_return_block_children()
-    {
-        $this->withoutExceptionHandling();
+    $paginatedObject = $block->addChildren([
+        NotionBlock::headingTwo(NotionRichText::make('Eyad Hamza')
+            ->bold()
+            ->setLink('https://www.google.com')
+            ->color('red')),
+        NotionBlock::headingThree('Heading 3'),
+        NotionBlock::numberedList('Numbered List'),
+        NotionBlock::bulletedList('Bullet List'),
+    ])->getChildren(50);
 
-        $block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
+    expect($paginatedObject->getResults())->toHaveCount(50);
 
-        $paginatedObject = $block->addChildren([
-            NotionBlock::headingTwo(NotionRichText::make('Eyad Hamza')
-                ->bold()
-                ->setLink('https://www.google.com')
-                ->color('red')),
-            NotionBlock::headingThree('Heading 3'),
-            NotionBlock::numberedList('Numbered List'),
-            NotionBlock::bulletedList('Bullet List'),
-        ])->getChildren(50);
-        $this->assertCount(50, $paginatedObject->getResults());
-        $paginatedObject->next();
-        $this->assertCount(50, $paginatedObject->getResults());
-        $paginatedObject->next();
-        $this->assertCount(50, $paginatedObject->getResults());
-        $paginatedObject->next();
-        $this->assertFalse($paginatedObject->hasMore());
-    }
+    $paginatedObject->next();
+    expect($paginatedObject->getResults())->toHaveCount(50);
 
-    /** @test */
-    public function it_should_update_block()
-    {
-        $this->withoutExceptionHandling();
+    $paginatedObject->next();
+    expect($paginatedObject->getResults())->toHaveCount(50);
 
-        $block = NotionBlock::headingOne('This is a paragraph')
-            ->setId($this->notionBlockId)
-            ->update();
+    $paginatedObject->next();
+    expect($paginatedObject->hasMore())->toBeFalse();
+});
 
-        $this->assertObjectHasAttribute('objectType', $block);
-    }
+it('updates the block', function () {
+    $block = NotionBlock::headingOne('This is a paragraph')
+        ->setId('b1cfe8df181543039b2f9e3f2c87516c')
+        ->update();
 
-    /** @test */
-    public function it_should_append_block_children()
-    {
-        $this->withoutExceptionHandling();
+    expect($block)->toHaveProperty('objectType');
+});
 
-        $block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
+it('appends block children', function () {
+    $block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
 
-        $block = $block->addChildren([
-            NotionBlock::headingTwo(NotionRichText::make('Eyad Hamza')
-                ->bold()
-                ->setLink('https://www.google.com')
-                ->color('red')),
-            NotionBlock::headingThree('Heading 3'),
-            NotionBlock::numberedList('Numbered List'),
-            NotionBlock::bulletedList('Bullet List'),
-        ])->createChildren();
-        $this->assertCount(4, $block->getResults());
-    }
+    $block = $block->addChildren([
+        NotionBlock::headingTwo(NotionRichText::make('Eyad Hamza')
+            ->bold()
+            ->setLink('https://www.google.com')
+            ->color('red')),
+        NotionBlock::headingThree('Heading 3'),
+        NotionBlock::numberedList('Numbered List'),
+        NotionBlock::bulletedList('Bullet List'),
+    ])->createChildren();
 
-    /** @test */
-    public function it_should_delete_block()
-    {
-        $this->withoutExceptionHandling();
+    expect($block->getResults())->toHaveCount(4);
+});
 
-        $block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
+it('deletes the block', function () {
+    $block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
 
-        $this->assertObjectHasAttribute('objectType', $block);
-    }
-}
+    expect($block)->toHaveProperty('objectType');
+});

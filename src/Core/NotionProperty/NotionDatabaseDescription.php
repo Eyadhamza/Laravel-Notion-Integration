@@ -3,47 +3,40 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Core\NotionValue\NotionArrayValue;
+use Pi\Notion\Core\NotionValue\NotionBlockContent;
+use Pi\Notion\Core\NotionValue\NotionEmptyValue;
 use Pi\Notion\Core\NotionValue\NotionRichText;
 
 class NotionDatabaseDescription extends BaseNotionProperty
 {
 
-    public function __construct(string $name)
+    private NotionBlockContent|NotionEmptyValue $content;
+
+    protected function buildValue(): NotionArrayValue|NotionEmptyValue
     {
-        parent::__construct($name);
-        $this->type = NotionPropertyTypeEnum::TITLE;
+        $this->content = NotionRichText::make($this->name)
+            ->type('text')
+            ->toResource();
+
+        return NotionArrayValue::make($this->content->resource)
+            ->type('description')
+            ->isNested();
     }
 
-    public function setValue(): self
+    protected function buildFromResponse(array $response): self
     {
-        $this->value = NotionRichText::make($this->name, 'text')->toResource();
+        if (isset($response['description'])) {
+            $this->blockContent = $response['description'][0][0];
+        }
 
         return $this;
     }
 
-    public function toArray(): array
+    public function setType(): self
     {
-        return [
-            'description' => [
-                [
-                    $this->value
-                ]
-            ]
-        ];
-    }
+        $this->type = NotionPropertyTypeEnum::TITLE;
 
-    protected function buildValue()
-    {
-        // TODO: Implement buildValue() method.
-    }
-
-    protected function buildFromResponse(array $response): BaseNotionProperty
-    {
-        // TODO: Implement buildFromResponse() method.
-    }
-
-    public function setType(): BaseNotionProperty
-    {
-        // TODO: Implement setType() method.
+        return $this;
     }
 }
