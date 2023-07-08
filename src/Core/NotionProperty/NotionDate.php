@@ -14,7 +14,11 @@ class NotionDate extends BaseNotionProperty
 
     protected function buildValue()
     {
-        return NotionObjectValue::make($this->date)->type('date');
+        return NotionObjectValue::make((object)[
+            'start' => $this->start,
+            'end' => $this->end,
+            'time_zone' => $this->timeZone,
+        ])->type('date');
     }
 
     public function setType(): BaseNotionProperty

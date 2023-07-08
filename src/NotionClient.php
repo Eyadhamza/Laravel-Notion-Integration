@@ -48,11 +48,11 @@ class NotionClient
         return new self();
     }
 
-    public function post(string $url): Response
+    public function post(string $url, array $body = []): Response
     {
         return $this
             ->client
-            ->post($url, $this->requestBuilder->build())
+            ->post($url, array_merge($this->requestBuilder->build(), $body))
             ->onError(fn($response) => NotionException::matchException($response->json()));
     }
 
@@ -89,7 +89,7 @@ class NotionClient
     {
         return match ($getMethod) {
             'get' => $this->get($url, $body),
-            'post' => $this->post($url),
+            'post' => $this->post($url, $body),
         };
     }
 

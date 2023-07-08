@@ -82,6 +82,7 @@ class NotionDatabase extends NotionObject
         if (isset($this->sorts) && $this->sorts->isNotEmpty()) $requestBody['sorts'] = $this->getSortResults();
 
         $this->paginator = new NotionPaginator();
+
         $response = $this->paginator
             ->setUrl(NotionClient::BASE_URL . '/databases/' . $this->id . '/query')
             ->setMethod('post')
