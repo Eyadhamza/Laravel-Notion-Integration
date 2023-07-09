@@ -25,4 +25,5 @@ enum NotionPropertyTypeEnum: string
     case CREATED_BY = 'created_by';
     case LAST_EDITED_BY = 'last_edited_by';
     case FILES = 'files';
+    case DESCRIPTION = 'description';
 }

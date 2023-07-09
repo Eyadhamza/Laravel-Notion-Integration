@@ -1,6 +1,7 @@
 <?php
 
 use Pi\Notion\Core\Models\NotionDatabase;
+use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
 use Pi\Notion\Core\NotionProperty\NotionRollup;
 use Pi\Notion\Core\NotionProperty\NotionPeople;
 use Pi\Notion\Core\NotionProperty\NotionFiles;
@@ -32,7 +33,7 @@ it('returns database info', function () {
 it('can create a database object', function () {
     $database = (new NotionDatabase)
         ->setParentPageId('fa4379661ed948d7af52df923177028e')
-        ->setTitle(NotionTitle::make('Test Database')->build())
+        ->setTitle(NotionDatabaseTitle::make('Test Database')->build())
         ->setProperties([
             NotionTitle::make('Name')->build(),
             NotionSelect::make('Status')->setOptions([
@@ -146,6 +147,6 @@ it('can sort database results', function () {
     expect($paginated->getResults())->toHaveCount(50)
         ->and($paginated->hasMore())->toBeTrue();
     $paginated->next();
-    expect($paginated->getResults())->toHaveCount(50)
+    expect($paginated->getResults())->toHaveCount(10)
         ->and($paginated->getNextCursor())->toBeString();
 });

@@ -5,8 +5,10 @@ namespace Pi\Notion\Core\Models;
 
 
 use Illuminate\Support\Collection;
+use Pi\Notion\Core\BlockContent\NotionRichText;
 use Pi\Notion\Core\NotionClient;
 use Pi\Notion\Core\NotionProperty\NotionDatabaseDescription;
+use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
 use Pi\Notion\Core\NotionProperty\NotionTitle;
 use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\Core\RequestBuilders\NotionDatabaseRequestBuilder;
@@ -20,7 +22,7 @@ class NotionDatabase extends NotionObject
     use HandleFilters, HandleProperties, HandleSorts;
 
     private string $link;
-    protected NotionTitle $title;
+    protected NotionTitle|NotionDatabaseTitle $title;
     protected ?NotionDatabaseDescription $description;
 
     protected Collection $properties;
@@ -54,10 +56,11 @@ class NotionDatabase extends NotionObject
     public function create(): self
     {
         $requestBuilder = NotionDatabaseRequestBuilder::make($this->title, $this->getParentPageId(), $this->properties);
-
+        dd(
+            $requestBuilder->toArray()
+        );
         $response = NotionClient::make()
-            ->setRequest($requestBuilder)
-            ->post(NotionClient::BASE_URL . '/databases/');
+            ->post(NotionClient::BASE_URL . '/databases/', $requestBuilder->build());
 
         return $this->fromResponse($response->json());
     }
@@ -72,8 +75,7 @@ class NotionDatabase extends NotionObject
         );
 
         $response = NotionClient::make()
-            ->setRequest($requestBuilder)
-            ->patch(NotionClient::BASE_URL . '/databases/' . $this->id);
+            ->patch(NotionClient::BASE_URL . '/databases/' . $this->id, $requestBuilder->build());
 
         return $this->fromResponse($response->json());
 
@@ -86,18 +88,12 @@ class NotionDatabase extends NotionObject
         if (isset($this->filters) && $this->filters->isNotEmpty()) $requestBody['filter'] = $this->getFilterResults();
         if (isset($this->sorts) && $this->sorts->isNotEmpty()) $requestBody['sorts'] = $this->getSortResults();
 
-        $this->paginator = new NotionPaginator();
-
-        $response = $this->paginator
+        return NotionPaginator::make(NotionPage::class)
             ->setUrl(NotionClient::BASE_URL . '/databases/' . $this->id . '/query')
             ->setMethod('post')
             ->setBody($requestBody)
-            ->setPageSize($pageSize)
-            ->setPaginatedClass(new NotionPage)
             ->setStartCursor($startCursor)
-            ->paginate();
-
-        return $this->paginator->make($response);
+            ->paginate($pageSize);
     }
 
 
@@ -136,7 +132,7 @@ class NotionDatabase extends NotionObject
         return $this;
     }
 
-    public function setTitle(NotionTitle $title): self
+    public function setTitle(NotionTitle|NotionDatabaseTitle $title): self
     {
         $this->title = $title;
 

@@ -11,16 +11,14 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 class NotionDatabaseDescription extends BaseNotionProperty
 {
 
-    private NotionContent|NotionEmptyValue $content;
-
     protected function buildValue(): NotionContent
     {
-        $this->content = NotionRichText::make($this->name)
-            ->setValueType('text')
+        $content = NotionRichText::make($this->name)
+            ->setValueType($this->type)
             ->toArray();
 
-        return NotionArrayValue::make($this->content->resource)
-            ->setValueType('description')
+        return NotionArrayValue::make($content->resource)
+            ->setValueType( NotionPropertyTypeEnum::DESCRIPTION)
             ->isNested();
     }
 

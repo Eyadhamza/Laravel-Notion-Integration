@@ -11,7 +11,7 @@ class NotionLastEditedBy extends BaseNotionProperty
 {
     protected function buildValue(): NotionContent
     {
-        return NotionEmptyValue::make()->setValueType('last_edited_by');
+        return NotionEmptyValue::make()->setValueType($this->type);
     }
 
     protected function buildFromResponse(array $response): BaseNotionProperty

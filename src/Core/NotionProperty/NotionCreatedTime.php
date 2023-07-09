@@ -11,7 +11,7 @@ class NotionCreatedTime extends BaseNotionProperty
 
     protected function buildValue(): NotionContent
     {
-        return NotionEmptyValue::make()->setValueType('created_time');
+        return NotionEmptyValue::make()->setValueType($this->type);
     }
 
     protected function buildFromResponse(array $response): BaseNotionProperty

@@ -25,7 +25,7 @@ class NotionRollup extends BaseNotionProperty
             'rollup_property_name' => $this->rollupPropertyName ?? new MissingValue(),
             'rollup_property_id' => $this->rollupPropertyId ?? new MissingValue(),
             'function' => $this->rollupFunction ?? new MissingValue(),
-        ])->setValueType('rollup');
+        ])->setValueType($this->type);
     }
 
     public function setType(): BaseNotionProperty

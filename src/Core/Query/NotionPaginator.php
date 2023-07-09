@@ -22,8 +22,6 @@ class NotionPaginator
     private string $method;
     private array $requestBody;
 
-    private NotionObject $notionObject;
-
     public function __construct(string $paginatedClass)
     {
         $this->paginatedClass = $paginatedClass;
@@ -43,8 +41,7 @@ class NotionPaginator
             ->setPageSize($pageSize);
 
         $response = NotionClient::make()
-            ->setRequest($paginatorRequestBuilder)
-            ->matchMethod($this->method, $this->url, $this->requestBody ?? []);
+            ->matchMethod($this->method, $this->url, array_merge($this->requestBody ?? [], $paginatorRequestBuilder->build()));
 
         $this->updateNextCursor($response['next_cursor'], $response['has_more']);
 
@@ -64,7 +61,9 @@ class NotionPaginator
     public function next(): static
     {
         $this->startCursor = $this->getNextCursor();
-        $this->make($this->paginate());
+
+        $this->paginate();
+
         return $this;
     }
 
@@ -155,8 +154,11 @@ class NotionPaginator
 
     private function setPaginatedObjects(array $data): self
     {
+        /** @var NotionObject $notionObject */
+        $notionObject = new $this->paginatedClass;
+
         $this->results = collect($data['results'])
-            ->map(fn($object) => $this->paginatedClass::fromResponse($object));
+            ->map(fn($object) => $notionObject->fromResponse($object));
 
         return $this;
     }

@@ -64,13 +64,6 @@ class NotionClient
         $this->client->withToken($this->token);
         return $this;
     }
-
-    public function setRequest(BaseNotionRequestBuilder $requestBuilder): static
-    {
-        $this->requestBuilder = $requestBuilder;
-        return $this;
-    }
-
     public function matchMethod(string $getMethod, string $url, ?array $body = null): Response
     {
         return match ($getMethod) {
