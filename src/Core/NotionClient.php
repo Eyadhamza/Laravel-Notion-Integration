@@ -69,6 +69,7 @@ class NotionClient
         return match ($getMethod) {
             'get' => $this->get(url: $url, queryParams: $body),
             'post' => $this->post($url, $body),
+            'patch' => $this->patch($url, $body),
         };
     }
 

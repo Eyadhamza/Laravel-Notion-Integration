@@ -9,7 +9,7 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionRollup extends BaseNotionProperty
 {
-    public string $rollupType;
+    public ?string $rollupType;
     public ?int $rollupNumber = null;
     private ?string $relationPropertyName = null;
     private ?string $relationPropertyId = null;
@@ -40,9 +40,9 @@ class NotionRollup extends BaseNotionProperty
         if (empty($response['rollup'])) {
             return $this;
         }
-        $this->rollupType = $response['rollup']['type'];
-        $this->rollupNumber = $response['rollup']['number'];
-        $this->rollupFunction = $response['rollup']['function'];
+        $this->rollupType = $response['rollup']['type'] ?? null;
+        $this->rollupNumber = $response['rollup']['number'] ?? null;
+        $this->rollupFunction = $response['rollup']['function'] ?? null;
 
         return $this;
     }

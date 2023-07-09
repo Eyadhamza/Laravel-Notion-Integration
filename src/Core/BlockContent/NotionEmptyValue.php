@@ -14,7 +14,7 @@ class NotionEmptyValue extends NotionContent
     public function toArray(): array
     {
         return [
-            $this->contentType->value => new \stdClass()
+            $this->valueType->value => new \stdClass()
         ];
     }
 

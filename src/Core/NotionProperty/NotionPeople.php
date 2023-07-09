@@ -14,7 +14,7 @@ class NotionPeople extends BaseNotionProperty
 
     protected function buildValue(): NotionContent
     {
-        return NotionArrayValue::make($this->people ?? new MissingValue())
+        return NotionArrayValue::make($this->people)
             ->setValueType($this->type);
     }
 

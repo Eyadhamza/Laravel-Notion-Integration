@@ -2,6 +2,7 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
+use Illuminate\Http\Resources\MissingValue;
 use Pi\Notion\Core\BlockContent\NotionArrayValue;
 use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionEmptyValue;
@@ -12,28 +13,39 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionTitle extends BaseNotionProperty
 {
+    private string $value;
     private NotionTextValue|NotionEmptyValue $content;
 
-    public function __construct(string $name)
+    public function __construct(string $name, ?string $value = null)
     {
         parent::__construct($name);
 
-        $this->content = NotionTextValue::make($this->name)
+        $this->setTitle($name);
+
+        $this->content = NotionTextValue::make($value)
             ->setValueType($this->type)
             ->setContentType()
             ->buildResource();
 
     }
-
-    public function setTitle(string $string): static
+    public static function make(?string $name = null, ?string $value = null): static
     {
-        $this->content->text($string);
+        return new self($name, $value);
+    }
+
+    public function setTitle(string $title): static
+    {
+        $this->name = $title;
 
         return $this;
     }
 
     protected function buildValue(): NotionContent
     {
+        if ($this->content instanceof NotionEmptyValue) {
+            return $this->content;
+        }
+
         return NotionArrayValue::make($this->content->resource)
             ->setValueType($this->type)
             ->isNested();
@@ -49,7 +61,7 @@ class NotionTitle extends BaseNotionProperty
 
     protected function buildFromResponse(array $response): BaseNotionProperty
     {
-        if (empty($response['title'])){
+        if (empty($response['title'])) {
             return $this;
         }
 

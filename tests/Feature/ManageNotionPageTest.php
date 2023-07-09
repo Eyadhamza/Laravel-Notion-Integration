@@ -56,8 +56,7 @@ it('should add properties to the created page using the page class', function ()
 
     $page = $page
         ->setProperties([
-            NotionTitle::make('Name')
-                ->setTitle('Test')
+            NotionTitle::make('Name', 'Test')
                 ->build(),
             NotionSelect::make('Status')
                 ->setSelected('A')
@@ -109,8 +108,7 @@ it('can update properties of the created page using the page class', function ()
     $page = new NotionPage('894dbb5e59ce40efac3ce60a4bb65d27');
     $page = $page
         ->setProperties([
-            NotionTitle::make('Name')
-                ->setTitle('Tes111111t')
+            NotionTitle::make('Name', 'Test')
                 ->build(),
         ])->update();
 

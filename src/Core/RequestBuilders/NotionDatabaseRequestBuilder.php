@@ -27,7 +27,7 @@ class NotionDatabaseRequestBuilder extends BaseNotionRequestBuilder
 
     public function toArray(): array
     {
-        return array_merge($this->title->resource->resolve(), [
+        return array_merge($this->title->resource(), [
             'parent' => [
                 'type' => 'page_id',
                 'page_id' => $this->parentPageId

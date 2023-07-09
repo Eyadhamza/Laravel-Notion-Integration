@@ -35,7 +35,8 @@ it('can create a database object', function () {
         ->setParentPageId('fa4379661ed948d7af52df923177028e')
         ->setTitle(NotionDatabaseTitle::make('Test Database')->build())
         ->setProperties([
-            NotionTitle::make('Name')->build(),
+            NotionTitle::make('Name')
+                ->build(),
             NotionSelect::make('Status')->setOptions([
                 ['name' => 'A', 'color' => 'red'],
                 ['name' => 'B', 'color' => 'green']
@@ -47,6 +48,7 @@ it('can create a database object', function () {
                 ->build(),
             NotionRelation::make('Relation')
                 ->setDatabaseId('9019ee1d30c8438f9ec807be1a13f7f1')
+                ->setRelationSingleProperty('Name')
                 ->build(),
             NotionRollup::make('Rollup')
                 ->setRollupPropertyName('Name')
@@ -71,7 +73,7 @@ it('can create a database object', function () {
 it('can update a database object', function () {
     $database = (new NotionDatabase)
         ->setDatabaseId('d930f6b04bbe42fcbfc2bf19c39f6225')
-        ->setTitle(NotionTitle::make('Test Database')->build())
+        ->setTitle(NotionDatabaseTitle::make('Test Database')->build())
         ->setDatabaseDescription(NotionDatabaseDescription::make('Test Description')->build())
         ->setProperties([
             NotionDate::make('Date')->build(),

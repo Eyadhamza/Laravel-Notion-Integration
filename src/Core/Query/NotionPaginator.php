@@ -34,11 +34,11 @@ class NotionPaginator
         return new static($paginatedClass);
     }
 
-    public function paginate(int $pageSize = 10): self
+    public function paginate(): self
     {
         $paginatorRequestBuilder = PaginatorRequestBuilder::make()
             ->setStartCursor($this->startCursor ?? null)
-            ->setPageSize($pageSize);
+            ->setPageSize($this->pageSize);
 
         $response = NotionClient::make()
             ->matchMethod($this->method, $this->url, array_merge($this->requestBody ?? [], $paginatorRequestBuilder->build()));

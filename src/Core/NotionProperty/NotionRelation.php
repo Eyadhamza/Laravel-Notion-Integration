@@ -9,6 +9,8 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionRelation extends BaseNotionProperty
 {
+    public $singleProperty;
+    public $dualProperty;
     private ?array $pageIds = null;
     private ?string $databaseId = null;
 
@@ -18,11 +20,23 @@ class NotionRelation extends BaseNotionProperty
         return $this;
     }
 
+    public function setRelationSingleProperty(string $singleProperty): self
+    {
+        $this->singleProperty = new \stdClass();
+        return $this;
+    }
+    public function setRelationDualProperty(string $dualProperty): self
+    {
+        $this->dualProperty = $dualProperty;
+        return $this;
+    }
+
     protected function buildValue(): NotionContent
     {
         return NotionArrayValue::make(array_merge($this->getIds(),[
             'database_id' => $this->databaseId ?? new MissingValue(),
             'single_property' => $this->singleProperty ?? new MissingValue(),
+            'dual_property' => $this->dualProperty ?? new MissingValue(),
         ]))->setValueType($this->type);
     }
     public function setType(): BaseNotionProperty
@@ -46,7 +60,7 @@ class NotionRelation extends BaseNotionProperty
         $this->databaseId = $response['relation']['database_id'] ?? null;
 
         $this->pageIds = collect($response['relation'])
-            ->filter(fn ($value, $key) => is_string($key))
+            ->filter(fn ($value, $key) => is_int($key))
             ->map(fn ($page) => $page['id'])->all();
 
         return $this;

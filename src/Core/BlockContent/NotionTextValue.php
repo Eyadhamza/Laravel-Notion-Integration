@@ -49,10 +49,6 @@ class NotionTextValue extends NotionContent
     {
         $this->value = $text;
 
-        if ($link) {
-            $this->setLink($link);
-        }
-
         return $this;
     }
 

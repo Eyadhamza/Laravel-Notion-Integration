@@ -56,9 +56,7 @@ class NotionDatabase extends NotionObject
     public function create(): self
     {
         $requestBuilder = NotionDatabaseRequestBuilder::make($this->title, $this->getParentPageId(), $this->properties);
-        dd(
-            $requestBuilder->toArray()
-        );
+
         $response = NotionClient::make()
             ->post(NotionClient::BASE_URL . '/databases/', $requestBuilder->build());
 

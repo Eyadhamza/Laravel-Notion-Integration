@@ -16,13 +16,13 @@ abstract class BaseNotionProperty extends NotionObject
     protected NotionPropertyTypeEnum $type;
     protected ?string $name;
 
-    public function __construct(string $name)
+    public function __construct(?string $name = null)
     {
         $this->name = $name;
         $this->setType();
     }
 
-    public static function make(string $name): static
+    public static function make(?string $name = null): static
     {
         return new static($name);
     }
@@ -79,7 +79,7 @@ abstract class BaseNotionProperty extends NotionObject
         return $this->type;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }

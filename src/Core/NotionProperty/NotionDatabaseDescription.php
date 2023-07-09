@@ -6,6 +6,9 @@ use Pi\Notion\Core\BlockContent\NotionArrayValue;
 use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionEmptyValue;
 use Pi\Notion\Core\BlockContent\NotionRichText;
+use Pi\Notion\Core\BlockContent\NotionTextValue;
+use Pi\Notion\Enums\NotionBlockContentTypeEnum;
+use Pi\Notion\Enums\NotionBlockTypeEnum;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionDatabaseDescription extends BaseNotionProperty
@@ -13,9 +16,8 @@ class NotionDatabaseDescription extends BaseNotionProperty
 
     protected function buildValue(): NotionContent
     {
-        $content = NotionRichText::make($this->name)
-            ->setValueType($this->type)
-            ->toArray();
+        $content = NotionTextValue::make($this->name)
+            ->buildResource();
 
         return NotionArrayValue::make($content->resource)
             ->setValueType( NotionPropertyTypeEnum::DESCRIPTION)

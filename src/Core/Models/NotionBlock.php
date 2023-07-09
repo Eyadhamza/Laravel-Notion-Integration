@@ -17,25 +17,25 @@ class NotionBlock extends NotionObject
 {
     use CreateBlockTypes, HasResource;
 
-    private NotionBlockTypeEnum $type;
+    private ?NotionBlockTypeEnum $type;
     private ?NotionContent $blockContent;
     private string $color;
     private Collection $children;
     public JsonResource $resource;
 
-    public function __construct(NotionBlockTypeEnum $type, NotionContent $blockContent = null)
+    public function __construct(NotionBlockTypeEnum $type = null, NotionContent $blockContent = null)
     {
         $this->type = $type;
         $this->blockContent = $blockContent;
         $this->children = new Collection();
     }
 
-    public static function make(NotionBlockTypeEnum $type, NotionContent $blockContent = null): self
+    public static function make(NotionBlockTypeEnum $type = null, NotionContent $blockContent = null): self
     {
         return new self($type, $blockContent);
     }
 
-    public function fromResponse($response): self
+    public function fromResponse(array $response): self
     {
         parent::fromResponse($response);
         $this->type = NotionBlockTypeEnum::tryFrom($response['type']);
@@ -45,45 +45,50 @@ class NotionBlock extends NotionObject
 
     public static function find($id): self
     {
-        return (new NotionBlock)->setId($id)->get();
+        return NotionBlock::make()
+            ->setId($id)
+            ->get();
     }
 
     public function get(): self
     {
-        $response = NotionClient::request('get', $this->getUrl());
+        $response = NotionClient::make()
+            ->get($this->getUrl());
 
-        return $this->fromResponse($response);
+        return $this->fromResponse($response->json());
     }
 
     public function getChildren(int $pageSize = 100): NotionPaginator
     {
-        $this->paginator = new NotionPaginator();
-        $response = $this->paginator
+        return NotionPaginator::make(NotionBlock::class)
             ->setUrl($this->childrenUrl())
             ->setMethod('get')
             ->setPageSize($pageSize)
             ->paginate();
-
-        return $this->paginator->make($response, $this);
     }
 
     public function createChildren(int $pageSize = 100): NotionPaginator
     {
-        $this->paginator = new NotionPaginator();
-        $response = $this->paginator
+        return NotionPaginator::make(NotionBlock::class)
             ->setUrl($this->childrenUrl())
             ->setMethod('patch')
-            ->setRequestBody(['children' => $this->mapChildren()])
+            ->setBody(['children' => $this->children
+                ->map(fn(NotionBlock $block) => $block
+                    ->buildResource()
+                    ->resource
+                    ->resolve()
+                )->all()
+            ])
             ->paginate();
-
-        return $this->paginator->make($response, $this);
     }
+
 
     public function update(): self
     {
-        $response = NotionClient::request('patch', $this->getUrl(), [
-            $this->type => $this->contentBody()
+        $response = NotionClient::make()->patch($this->getUrl(), [
+            $this->type->value => $this->resource->resolve()
         ]);
+
         return $this->fromResponse($response);
     }
 
@@ -94,28 +99,6 @@ class NotionBlock extends NotionObject
         return $this->fromResponse($response->json());
     }
 
-    public static function mapsBlocksToPage(NotionPage $page): Collection
-    {
-
-        return $page->getBlocks()->map(function (NotionBlock $block) {
-            return array(
-                'type' => $block->type,
-                $block->type => $block->contentBody(),
-            );
-        });
-    }
-
-    private function contentBody(): array
-    {
-        $body = [];
-        $body[$this->block->getType()] = $this->block->getValue();
-        $body['color'] = $this->color ?? 'default';
-        if ($this->children->isNotEmpty()) {
-            $body['children'] = $this->mapChildren();
-        }
-        return $body;
-
-    }
 
     public function addChildren(array $blocks): self
     {
@@ -123,17 +106,6 @@ class NotionBlock extends NotionObject
             $this->children->add($block);
         });
         return $this;
-    }
-
-    private function mapChildren(): Collection
-    {
-        return $this->children->map(function (NotionBlock $child) {
-            return array(
-                'type' => $child->type,
-                'object' => 'block',
-                $child->type => $child->contentBody()
-            );
-        });
     }
 
     private function getUrl(): string

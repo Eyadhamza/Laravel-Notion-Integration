@@ -8,9 +8,9 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionFormula extends BaseNotionProperty
 {
-    private string $expression;
+    private ?string $expression;
 
-    private string $result;
+    private ?string $result;
 
     protected function buildValue(): NotionContent
     {
@@ -27,8 +27,8 @@ class NotionFormula extends BaseNotionProperty
 
     protected function buildFromResponse(array $response): BaseNotionProperty
     {
-        $this->expression = $response['formula']['type'];
-        $this->result = $response['formula'][$this->expression];
+        $this->expression = $response['formula']['type'] ?? null;
+        $this->result = $response['formula'][$this->expression] ?? null;
         return $this;
     }
 

@@ -15,7 +15,7 @@ class NotionFiles extends BaseNotionProperty
 
     protected function buildValue(): NotionContent
     {
-        return NotionArrayValue::make($this->files ?? new MissingValue())
+        return NotionArrayValue::make($this->files)
             ->setValueType($this->type);
     }
 
