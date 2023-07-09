@@ -4,23 +4,26 @@ namespace Pi\Notion\Tests\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Pi\Notion\Core\NotionProperty;
+use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
+use Pi\Notion\Core\NotionProperty\NotionEmail;
+use Pi\Notion\Core\NotionProperty\NotionText;
+use Pi\Notion\Core\NotionProperty\NotionTitle;
 use Pi\Notion\Traits\Notionable;
 
 class User extends Model
 {
     use HasFactory;
     use Notionable;
-    protected string $notionDatabaseId = '74dc9419bec24f10bb2e65c1259fc65a';
-
+    protected string $notionDatabaseId = 'ae4c13cd00394938b2f7914cb00350f8';
     protected $guarded = [];
 
     public function mapToNotion(): array
     {
         return [
-            'name' => NotionProperty::title(),
-            'email' => NotionProperty::email(),
-            'password' => NotionProperty::richText('Password'),
+            'name' => NotionTitle::make('Name'),
+            'email' => NotionEmail::make('Email'),
+            'password' => NotionText::make('Password'),
         ];
     }
+
 }

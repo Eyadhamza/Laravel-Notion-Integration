@@ -3,9 +3,9 @@
 namespace Pi\Notion\Traits;
 
 use LogicException;
-use Pi\Notion\Core\NotionDatabase;
-use Pi\Notion\Core\NotionPage;
-use Pi\Notion\Core\NotionProperty;
+use Pi\Notion\Core\BlockContent\NotionBlockContentFactory;
+use Pi\Notion\Core\Models\NotionPage;
+use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 
 trait Notionable
 {
@@ -16,30 +16,52 @@ trait Notionable
     public function saveToNotion(): NotionPage
     {
         $this->notionMap = $this->mapToNotion();
-        if(!isset($this->notionDatabaseId)){
-            throw new LogicException(get_class($this) . ' must have a Notion Database ID Property');
-        }
-        foreach ($this->getAttributes() as $key => $value) {
+
+        $this->validateHasNotionDatabaseId();
+
+        $this->notionMap = collect($this->getAttributes())->map(function ($value, $key) {
             if (array_key_exists($key, $this->notionMap)) {
-                $this->notionMap[$key]->setValues($value);
+                /** @var BaseNotionProperty $property */
+                $property = $this->notionMap[$key];
+                dd($property);
+                return $property->setRawValue($value)->build();
             }
-        }
+        })->filter()->toArray();
+
         $page = new NotionPage();
-        return $page->setDatabaseId($this->notionDatabaseId)
+        return $page
+            ->setDatabaseId($this->notionDatabaseId)
             ->setProperties($this->notionMap)
             ->create();
     }
+
     public function mapFromNotion(NotionPage $page): array
     {
         $attributes = [];
 
         foreach ($this->mapToNotion() as $key => $value) {
-            $attributes[$key] = $page->ofPropertyName($value->getName())->getValue();
+            dd($key, $value);
+            /** @var BaseNotionProperty $property */
+            $property = $page->ofPropertyName($value->getName());
+            $attributes[$key] = $property->getBlockContent()->getValue();
+            dd($attributes);
         }
         return $attributes;
     }
-    function getNotionDatabaseId(): string
+
+    public function getNotionDatabaseId(): string
     {
         return $this->notionDatabaseId;
+    }
+
+    abstract public function getAttributes();
+
+    public function validateHasNotionDatabaseId(): self
+    {
+        if (!isset($this->notionDatabaseId)) {
+            throw new LogicException('Notionable class must have a notionDatabaseId property');
+        }
+
+        return $this;
     }
 }
