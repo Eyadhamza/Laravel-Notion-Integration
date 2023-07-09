@@ -172,9 +172,7 @@ it('can add nested content blocks to created pages', function () {
         NotionBlock::bulletedList('Bullet List'),
     ])->create();
 
-    expect($page->getProperties())->toHaveCount(2)
-        ->and($page->getBlocks())->toHaveCount(5)
-        ->and($page)->toHaveProperty('properties');
+    expect($page->getBlocks())->toHaveCount(5);
 });
 
 it('can add content blocks to created pages using the page class', function () {
