@@ -44,31 +44,31 @@ class NotionRichText extends NotionContent
 
     public function bold(): self
     {
-        $this->annotations->push('bold');
+        $this->annotations->put('bold', true);
         return $this;
     }
 
     public function italic(): self
     {
-        $this->annotations->push('italic');
+        $this->annotations->put('italic', true);
         return $this;
     }
 
     public function strikethrough(): self
     {
-        $this->annotations->push('strikethrough');
+        $this->annotations->put('strikethrough', true);
         return $this;
     }
 
     public function underline(): self
     {
-        $this->annotations->push('underline');
+        $this->annotations->put('underline', true);
         return $this;
     }
 
     public function code(): self
     {
-        $this->annotations->push('code');
+        $this->annotations->put('code', true);
         return $this;
     }
 
@@ -134,15 +134,14 @@ class NotionRichText extends NotionContent
     {
         return [
             $this->contentType->value => [
-                [
+                array_merge($this->getAnnotations(), [
                     'type' => 'text',
                     'text' => [
                         'content' => $this->value,
                     ],
-                    'annotations' => $this->getAnnotations(),
                     'plain_text' => $this->value ?? new MissingValue(),
                     'href' => $this->href ?? new MissingValue()
-                ]
+                ])
             ]
         ];
 
@@ -150,7 +149,7 @@ class NotionRichText extends NotionContent
 
     public function getAnnotations(): array|MissingValue
     {
-        return $this->annotations->isNotEmpty() ? $this->annotations->all() : new MissingValue();
+        return $this->annotations->isNotEmpty() ? ['annotations' => $this->annotations->all()] : [];
     }
 
     public function setContentType(NotionBlockContentTypeEnum $contentType = null): self

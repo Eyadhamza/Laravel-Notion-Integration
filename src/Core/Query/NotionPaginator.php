@@ -38,7 +38,7 @@ class NotionPaginator
     {
         $paginatorRequestBuilder = PaginatorRequestBuilder::make()
             ->setStartCursor($this->startCursor ?? null)
-            ->setPageSize($this->pageSize);
+            ->setPageSize($this->pageSize ?? null);
 
         $response = NotionClient::make()
             ->matchMethod($this->method, $this->url, array_merge($this->requestBody ?? [], $paginatorRequestBuilder->build()));
@@ -73,7 +73,7 @@ class NotionPaginator
         $this->hasMore = $hasMore;
     }
 
-    public function setPageSize(int $pageSize): static
+    public function setPageSize(int $pageSize = null): static
     {
         $this->pageSize = $pageSize;
         return $this;

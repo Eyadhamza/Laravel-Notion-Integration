@@ -67,10 +67,11 @@ class NotionBlock extends NotionObject
             ->paginate();
     }
 
-    public function createChildren(int $pageSize = 100): NotionPaginator
+    public function createChildren(): NotionPaginator
     {
         return NotionPaginator::make(NotionBlock::class)
             ->setUrl($this->childrenUrl())
+            ->setPageSize(null)
             ->setMethod('patch')
             ->setBody(['children' => $this->children
                 ->map(fn(NotionBlock $block) => $block
@@ -85,11 +86,9 @@ class NotionBlock extends NotionObject
 
     public function update(): self
     {
-        $response = NotionClient::make()->patch($this->getUrl(), [
-            $this->type->value => $this->resource->resolve()
-        ]);
+        $response = NotionClient::make()->patch($this->getUrl(),$this->buildResource()->resource->resolve());
 
-        return $this->fromResponse($response);
+        return $this->fromResponse($response->json());
     }
 
     public function delete(): static

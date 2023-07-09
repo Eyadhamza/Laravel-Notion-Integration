@@ -18,7 +18,7 @@ class PaginatorRequestBuilder extends BaseNotionRequestBuilder
     {
         return [
             'start_cursor' => $this->startCursor ?? new MissingValue(),
-            'page_size' => $this->pageSize,
+            'page_size' => $this->pageSize ?? new MissingValue(),
         ];
     }
 
