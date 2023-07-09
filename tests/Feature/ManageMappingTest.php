@@ -11,11 +11,11 @@ test('user creation', function () {
         'email' => 'JohnDoe@gmail.com',
         'password' => 'password'
     ]);
-    $user->saveToNotion();
+    $page = $user->saveToNotion();
 
     expect($user)->not()->toBeNull()
         ->and(User::count())->toBe(1)
-        ->and($user->saveToNotion()->getProperties())->toHaveCount(3);
+        ->and($page->getProperties())->toHaveCount(3);
 });
 
 test('mapping existing database to Notion', function () {
@@ -31,7 +31,7 @@ test('mapping existing database to Notion', function () {
 test('map Notion database to app database using database id', function () {
     Artisan::call('sync:from-notion', [
         'model' => User::class,
-        'databaseId' => '74dc9419bec24f10bb2e65c1259fc65a'
+        'databaseId' => '6c0d2aa7cfbb46c2af06e9a63301e5fa'
     ]);
 
     expect(User::count())->toBeGreaterThan(80);

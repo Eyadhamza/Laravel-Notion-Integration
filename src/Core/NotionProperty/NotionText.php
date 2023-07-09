@@ -9,12 +9,14 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionText extends BaseNotionProperty
 {
-    private NotionRichText $text;
-
-
     protected function buildValue(): NotionContent
     {
-        return $this->text ?? new NotionEmptyValue();
+        if (is_string($this->value)) {
+            return NotionRichText::make($this->value)
+                ->setValueType($this->type)
+                ->buildResource();
+        }
+        return $this->value ?? new NotionEmptyValue();
     }
 
     public function setType(): BaseNotionProperty
@@ -36,7 +38,7 @@ class NotionText extends BaseNotionProperty
 
     public function setText(NotionRichText $text): NotionText
     {
-        $this->text = $text;
+        $this->value = $text;
         return $this;
     }
 }

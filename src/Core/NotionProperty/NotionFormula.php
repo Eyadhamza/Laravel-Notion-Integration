@@ -9,7 +9,6 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 class NotionFormula extends BaseNotionProperty
 {
     private ?string $expression;
-
     private ?string $result;
 
     protected function buildValue(): NotionContent

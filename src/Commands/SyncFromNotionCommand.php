@@ -9,7 +9,7 @@ use Pi\Notion\Core\Models\NotionDatabase;
 
 class SyncFromNotionCommand extends Command
 {
-    public $signature = 'sync:from-notion {model} {pages?}';
+    public $signature = 'sync:from-notion {model} {databaseId?} {pages?}';
 
     public $description = 'sync data from notion database to your app database';
 

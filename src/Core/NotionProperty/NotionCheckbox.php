@@ -9,17 +9,10 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionCheckbox extends BaseNotionProperty
 {
-    private bool $isChecked = false;
-
-    public function isChecked(bool $isChecked): NotionCheckbox
-    {
-        $this->isChecked = $isChecked;
-        return $this;
-    }
 
     protected function buildValue(): NotionContent
     {
-        return NotionSimpleValue::make($this->isChecked)
+        return NotionSimpleValue::make($this->value)
             ->setValueType($this->type);
     }
 
@@ -36,8 +29,14 @@ class NotionCheckbox extends BaseNotionProperty
             return $this;
         }
 
-        $this->isChecked = $response['checkbox'];
+        $this->value = $response['checkbox'];
 
+        return $this;
+    }
+
+    public function isChecked(bool $isChecked): NotionCheckbox
+    {
+        $this->value = $isChecked;
         return $this;
     }
 

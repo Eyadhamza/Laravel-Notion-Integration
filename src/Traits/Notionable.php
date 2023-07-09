@@ -4,6 +4,7 @@ namespace Pi\Notion\Traits;
 
 use LogicException;
 use Pi\Notion\Core\Models\NotionPage;
+use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 
 trait Notionable
 {
@@ -14,30 +15,50 @@ trait Notionable
     public function saveToNotion(): NotionPage
     {
         $this->notionMap = $this->mapToNotion();
-        if(!isset($this->notionDatabaseId)){
-            throw new LogicException(get_class($this) . ' must have a Notion Database ID Property');
-        }
-        foreach ($this->getAttributes() as $key => $value) {
+
+        $this->validateHasNotionDatabaseId();
+
+        collect($this->getAttributes())->map(function ($value, $key) {
             if (array_key_exists($key, $this->notionMap)) {
-                $this->notionMap[$key]->setValues($value);
+
+                /** @var BaseNotionProperty $property */
+                $property = $this->notionMap[$key];
+                $property->setValue($value);
             }
-        }
+        });
+
         $page = new NotionPage();
-        return $page->setDatabaseId($this->notionDatabaseId)
+        return $page
+            ->setDatabaseId($this->notionDatabaseId)
             ->setProperties($this->notionMap)
             ->create();
     }
+
     public function mapFromNotion(NotionPage $page): array
     {
         $attributes = [];
 
         foreach ($this->mapToNotion() as $key => $value) {
-            $attributes[$key] = $page->ofPropertyName($value->getName())->getValue();
+            /** @var BaseNotionProperty $property */
+            $property = $page->ofPropertyName($value->getName());
+            $attributes[$key] = $property->getValue();
         }
         return $attributes;
     }
-    function getNotionDatabaseId(): string
+
+    public function getNotionDatabaseId(): string
     {
         return $this->notionDatabaseId;
+    }
+
+    abstract public function getAttributes();
+
+    public function validateHasNotionDatabaseId(): self
+    {
+        if (!isset($this->notionDatabaseId)) {
+            throw new LogicException('Notionable class must have a notionDatabaseId property');
+        }
+
+        return $this;
     }
 }

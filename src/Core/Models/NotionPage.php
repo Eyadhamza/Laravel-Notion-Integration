@@ -132,10 +132,11 @@ class NotionPage extends NotionObject
         return $this->getUrl() . '/properties/' . $id;
     }
 
-    public function ofPropertyName(string $name)
+    public function ofPropertyName(string $name): ?BaseNotionProperty
     {
-        return $this->properties->filter(function (BaseNotionProperty $property) use ($name) {
-            return $property->getName() == $name;
-        })->first();
+        return $this->properties
+            ->filter(fn (BaseNotionProperty $property) => $property->getName() === $name)
+            ->first() ?? throw new \Exception("Property of name $name not found");
     }
+
 }

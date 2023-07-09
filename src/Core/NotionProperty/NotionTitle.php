@@ -12,9 +12,6 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionTitle extends BaseNotionProperty
 {
-    private ?string $value = null;
-    private NotionRichText|NotionEmptyValue $content;
-
     public function __construct(string $name, ?string $value = null)
     {
         parent::__construct($name);
@@ -57,7 +54,7 @@ class NotionTitle extends BaseNotionProperty
             return $this;
         }
 
-        $this->content = NotionRichText::make($response['title'][0]['plain_text'])
+        NotionRichText::make($response['title'][0]['plain_text'])
             ->setValueType($this->type);
 
         return $this;

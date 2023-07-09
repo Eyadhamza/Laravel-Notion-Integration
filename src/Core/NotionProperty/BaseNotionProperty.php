@@ -12,6 +12,7 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 abstract class BaseNotionProperty extends NotionObject
 {
+    protected mixed $value = null;
     protected NotionContent|NotionEmptyValue $blockContent;
     protected NotionPropertyTypeEnum $type;
     protected ?string $name;
@@ -19,6 +20,7 @@ abstract class BaseNotionProperty extends NotionObject
     public function __construct(?string $name = null)
     {
         $this->name = $name;
+
         $this->setType();
     }
 
@@ -45,6 +47,8 @@ abstract class BaseNotionProperty extends NotionObject
             default => false
         };
     }
+
+
     abstract protected function buildValue(): NotionContent;
     public function fromResponse(array $response): static
     {
@@ -86,4 +90,16 @@ abstract class BaseNotionProperty extends NotionObject
 
     abstract public function setType(): BaseNotionProperty;
 
+
+    public function setValue(mixed $value): self
+    {
+        $this->value = $value;
+        $this->setBlockContent();
+        return $this;
+    }
+
+    public function getValue()
+    {
+        return $this->value;
+    }
 }
