@@ -7,10 +7,9 @@
 
 ## About
 
-This package is a laravel wrapper on the REST API provided by notion.so, It saves alot of time by providing clean and
-easy to use api for interacting with your notion workspace.
+This package is a Laravel wrapper for the REST API provided by Notion.so. It provides a clean and easy-to-use API for interacting with your Notion workspace, saving you time and effort.
 
-The package provides easy and fluent interface to manipulate pages, databases, users, blocks, and more.
+The package offers an easy and fluent interface for manipulating pages, databases, users, blocks, and more.
 
 ## Installation
 
@@ -22,358 +21,326 @@ composer require eyadhamza/notion-api-wrapper
 
 ## Usage
 
-### Setup Notion workspace
+### Setting Up Notion Workspace
 
-in you .env file you should place your token using:
+In your `.env` file, add your Notion token:
 
 ```dotenv
-
-NOTION_TOKEN  = 'secret_{token}'
-
+NOTION_TOKEN=secret_{token}
 ```
 
-> For information on how to create your first integration please
-> visit: [Notion Create an integration](https://developers.notion.com/docs/create-a-notion-integration)
->
-> To get your secret token please visit [Notion API](https://developers.notion.com/docs/authorization)
+> To create your first integration, please visit: [Notion Create an integration](https://developers.notion.com/docs/create-a-notion-integration)
+> To obtain your secret token, visit [Notion API](https://developers.notion.com/docs/authorization)
 
 ### Handling Notion Databases
 
-#### Fetch notion database by id:
+#### Fetching Notion Database by ID
 
-- This will return a NotionDatabase object with the following information:
-    - Information such as: title, description etc.
-    - All the database properties.
+To fetch a Notion database by ID, use the `find` method of the `NotionDatabase` class. It will return a `NotionDatabase` object containing information such as title, description, and all the database properties.
 
 ```php
-
 use Pi\Notion\Core\Models\NotionDatabase;
 
 $database = NotionDatabase::find('632b5fb7e06c4404ae12065c48280e4c');
-
 ```
 
-#### Create a notion database:
+#### Creating a Notion Database
 
-- Creates a database as a subpage in the specified parent page, with the specified properties schema.
+To create a Notion database, use the `NotionDatabase` class and set the required parameters such as parent page ID and properties schema.
 
 ```php
-  $database = (new NotionDatabase)
-            ->setParentPageId('fa4379661ed948d7af52df923177028e')
-            ->setTitle('Test Database2')
-            ->setProperties([
-                NotionProperty::title(),
-                NotionProperty::select('Status')->setOptions([
-                    ['name' => 'A', 'color' => 'red'],
-                    ['name' => 'B', 'color' => 'green']
-                ]),
-                NotionProperty::date()
-            ])->create();
+$database = (new NotionDatabase)
+    ->setParentPageId('fa4379661ed948d7af52df923177028e')
+    ->setTitle('Test Database2')
+    ->setProperties([
+         NotionTitle::make('Name')->build(),
+            NotionSelect::make('Status')->setOptions([
+                ['name' => 'A', 'color' => 'red'],
+                ['name' => 'B', 'color' => 'green']
+            ])->build(),
+            NotionDate::make('Date')->build(),
+            NotionCheckbox::make('Checkbox')->build(),
+            NotionFormula::make('Formula')
+                ->setExpression('prop("Name")')
+                ->build(),
+            NotionRelation::make('Relation')
+                ->setDatabaseId($this->databaseId)
+                ->build(),
+            NotionRollup::make('Rollup')
+                ->setRollupPropertyName('Name')
+                ->setRelationPropertyName('Relation')
+                ->setFunction('count')
+                ->build(),
+            NotionPeople::make('People')->build(),
+            NotionFiles::make('Media')->build(),
+            NotionEmail::make('Email')->build(),
+            NotionNumber::make('Number')->build(),
+            NotionPhoneNumber::make('Phone')->build(),
+            NotionUrl::make('Url')->build(),
+            NotionCreatedTime::make('CreatedTime')->build(),
+            NotionCreatedBy::make('CreatedBy')->build(),
+            NotionLastEditedTime::make('LastEditedTime')->build(),
+            NotionLastEditedBy::make('LastEditedBy')->build(),
+    ])
+    ->create();
 ```
 
-#### Update a notion database:
+#### Updating a Notion Database
 
-- Updates an existing database as specified by the parameters.
+To update an existing Notion database, use the `NotionDatabase` class and specify the database ID and updated properties.
 
 ```php
-  $database = (new NotionDatabase)
-            ->setDatabaseId('a5f8af6484334c09b69d5dd5f54b378f')
-            ->setProperties([
-                NotionProperty::select('Status2')->setOptions([
-                    ['name' => 'A', 'color' => 'red'],
-                    ['name' => 'B', 'color' => 'green']
-                ]),
-                NotionProperty::date('Created')
-            ])->update();
+$database = (new NotionDatabase)
+    ->setDatabaseId('a5f8af6484334c09b69d5dd5f54b378f')
+    ->setProperties([
+        // Specify the updated properties
+    ])
+    ->update();
 ```
 
-#### Query A Database
+#### Querying a Database
 
-- Gets a list of Pages contained in the database, filtered and ordered according to the filter conditions and sort
-  criteria provided
+To query a Notion database and get a list of pages contained within the database, you can apply filters and sorting criteria using the `query` method.
 
-##### 1. Using one filter only
+##### Using One Filter
 
 ```php
 $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
 
 $pages = $database->filter(NotionFilter::title('Name')->contains('MMMM'))
-            ->query();
+    ->query();
 ```
 
-##### 2. Using multiple filters with AND operator
+##### Using Multiple Filters with AND Operator
 
 ```php
 $pages = $database->filters([
-            NotionFilter::groupWithAnd([
-                NotionFilter::select('Status')
-                    ->equals('Reading'),
-                NotionFilter::title('Name')
-                    ->contains('MMMM')
-            ])
-        ])->query();
+    NotionFilter::groupWithAnd([
+        NotionFilter::select('Status')->equals('Reading'),
+        NotionFilter::title('Name')->contains('MMMM')
+    ])
+])->query();
 ```
 
-##### 3. Using multiple filters with OR operator
+##### Using Multiple Filters with OR Operator
 
 ```php
 $pages = $database->filters([
-            NotionFilter::groupWithOr([
-                NotionFilter::select('Status')
-                    ->equals('Reading'),
-                NotionFilter::title('Name')
-                    ->contains('MMMM')
-            ])
-        ])->query();
+    NotionFilter::groupWithOr([
+        NotionFilter::select('Status')->equals('Reading'),
+        NotionFilter::title('Name')->contains('MMMM')
+    ])
+])->query();
 ```
 
-##### 4. You can also use Notion compound filters
-
-- compoundAndGroup/compoundOrGroup takes an array of filters as the first argument and an operator in the second
-  argument
-- The operator in the second argument tells the API how to combine the filters in the first argument
-- So, in the following case will be something like this: Status = 'Reading' OR (Name contains 'MMMM' AND Publisher
-  contains 'A')
-- To understand compound filters better please
-  visit [Notion Compound Filters](https://www.notion.so/help/views-filters-and-sorts)
+##### Using Notion Compound Filters
 
 ```php
 $response = $database->filters([
-            NotionFilter::select('Status')
-                ->equals('Reading')
-                ->compoundOrGroup([
-                    NotionFilter::multiSelect('Publisher')
-                        ->contains('A'),
-                    NotionFilter::title('Name')
-                        ->contains('MMMM')
-                ], 'and')
-        ])->query();
+    NotionFilter::select('Status')
+        ->equals('Reading')
+        ->compoundOrGroup([
+            NotionFilter::multiSelect('Publisher')->contains('A'),
+            NotionFilter::title('Name')->contains('MMMM')
+        ], 'and')
+])->query();
 ```
 
-##### 5. Sorting database results
-
-- A sort is a condition used to order the entries returned from a database query.
+##### Sorting Database Results
 
 ```php
 $pages = $database->sorts(NotionSort::property('Name')->ascending())
-            ->query();
+    ->query();
 
-// you can sort with many properties!
+// Sort with multiple properties
 $pages = $database->sorts([
-            NotionSort::property('Name')->ascending(),
-            NotionSort::property('Status')->descending()
-        ])->query();
+    NotionSort::property('Name')->ascending(),
+    NotionSort::property('Status')->descending()
+])->query();
 
-// you can surely apply sorts and filters together!
+// Apply sorts and filters together
 $pages = $database->sorts([
-            NotionSort::property('Name')->ascending(),
-            NotionSort::property('Status')->descending()
-        ])->filters([
-            NotionFilter::select('Status')
-                ->equals('Reading')
-                ->compoundOrGroup([
-                    NotionFilter::multiSelect('Publisher')
-                        ->contains('A'),
-                    NotionFilter::title('Name')
-                        ->contains('MMMM')
-                ], 'and')
-        ])->query();
+    NotionSort::property('Name')->ascending(),
+    NotionSort::property('Status')->descending()
+])->filters([
+    NotionFilter::select('Status')
+        ->equals('Reading')
+        ->compoundOrGroup([
+            NotionFilter::multiSelect('Publisher')->contains('A'),
+            NotionFilter::title('Name')->contains('MMMM')
+        ], 'and')
+])->query();
 ```
 
 ### Handling Notion Pages
 
-#### Fetch a page by id (without the page contents)
+#### Fetching a Page by ID (without the page contents)
 
 ```php
 $page = \Pi\Notion\Core\Models\NotionPage::find('b4f8e429038744ca9c8d5afa93ea2edd');
 ```
 
-#### Fetch a page by id and return the blocks
+#### Fetching a Page by ID (with the page contents)
 
 ```php
 $page = \Pi\Notion\Core\Models\NotionPage::findContent('b4f8e429038744ca9c8d5afa93ea2edd');
 ```
 
-#### Create a new Notion Page / new Notion Database Item
+#### Creating a New Notion Page / Notion Database Item
 
-- We first create a new instance of NotionPage. then we start to define the properties and it's values - if they exist -
-- For each Property, the first argument is the Property Name, the second is the value.
-    - Note that there are default values for property names, that's why you can just pass the second argument ( Notice
-      url example )
-- You can Find all the supported properties in HandleProperties trait.
+To create a new Notion page or a new item in a Notion database, you can use the `NotionPage` class and set the required properties and their values.
 
 ```php
 $page = new NotionPage();
 $page->setDatabaseId($this->notionDatabaseId);
-$page->title('Name','Eyad Hamza')
-     ->select('Status', 'A')
-     ->multiSelect('Status1', ['A', 'B'])
-     ->date('Date', [
-                'start' => "2020-12-08T12:00:00Z",
-                'end' => "2020-12-08T12:00:00Z",
-            ])->email('Email', 'eyad@outlook.com')
-     ->phone('Phone', '123456789')
-     ->url(values: 'https://www.google.com')
-     ->create();
+$page->setProperties([
+     $page = new NotionPage();
+    $page->setDatabaseId($this->databaseId);
+
+    $page = $page
+        ->setProperties([
+            NotionTitle::make('Name')
+                ->setTitle('Test')
+                ->build(),
+            NotionSelect::make('Status')
+                ->setSelected('A')
+                ->build(),
+            NotionDate::make('Date')
+                ->setStart('2021-01-01')
+                ->build(),
+            NotionCheckbox::make('Checkbox')
+                ->setChecked(true)
+                ->build(),
+            NotionRelation::make('Relation')
+                ->setPageIds(['633fc9822c794e3682186491c50210e6'])
+                ->build(),
+
+            NotionPeople::make('People')
+                ->setPeople([
+                    new NotionUser('2c4d6a4a-12fe-4ce8-a7e4-e3019cc4765f')
+                ])
+                ->build(),
+            NotionFiles::make('Media')
+                ->setFiles([
+                    NotionFile::make('Google')
+                        ->setFileType('external')
+                        ->setFileUrl('https://www.google.com'),
+                    NotionFile::make('Notion')
+                        ->setFileType('file')
+                        ->setFileUrl('https://s3.us-west-2.amazonaws.com/secure.notion-static.com/7b8b0713-dbd4-4962-b38b-955b6c49a573/My_test_image.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221024%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221024T205211Z&X-Amz-Expires=3600&X-Amz-Signature=208aa971577ff05e75e68354e8a9488697288ff3fb3879c2d599433a7625bf90&X-Amz-SignedHeaders=host&x-id=GetObject')
+                        ->setExpiryTime('2022-10-24T22:49:22.765Z'),
+                ])
+                ->build(),
+            NotionEmail::make('Email')
+                ->setEmail('eyadhamza0@gmail.com')
+                ->build(),
+            NotionNumber::make('Number')
+                ->setNumber(10)
+                ->build(),
+            NotionPhoneNumber::make('Phone')
+                ->setPhoneNumber('+201010101010')
+                ->build(),
+            NotionUrl::make('Url')
+                ->setUrl('https://www.google.com')
+                ->build(),
+        ])
+    ->create();
 ```
 
-#### Create a new Notion Page / new Notion Database Item (With Content)
+#### Updating a Page Properties
 
-- Note that the previous example you are only creating a page with properties values
-- You can also add Content to the page using setBlocks method
-- You pass an array of Blocks, if your block is just a single value with no special styling or information just pass the
-  string.
-- If not you can use NotionRichText for example, to define the content styling/links and so on.
-
-```php
-$page = new NotionPage();
-$page->setDatabaseId($this->notionDatabaseId);
-$page->title('Name','1111')
-     ->multiSelect('Status1', ['A', 'B']);
-
-$page->setBlocks([
-      NotionBlock::headingOne(NotionRichText::make('Eyad Hamza')
-                ->bold()
-                ->italic()
-                ->strikethrough()
-                ->underline()
-                ->code()
-                ->color('red')),
-            NotionBlock::headingTwo('Heading 2'),
-            NotionBlock::headingThree('Heading 3'),
-            NotionBlock::numberedList('Numbered List'),
-            NotionBlock::bulletedList('Bullet List'),
-        ]);
-```
-
-#### Create a new Notion Page / new Notion Database Item With Content and With Children
-
-- You can also add children blocks using addChildren() method.
-- Note that Notion only allows two levels of nested elements.
-
-```php
-
-$page = (new NotionPage);
-$page->setDatabaseId($this->notionDatabaseId);
-
-$page->title('Name','322323')
-     ->multiSelect('Status1', ['A', 'B']);
-
-$page->setBlocks([
-    NotionBlock::paragraph('Hello There im a parent of the following blocks!')
-        ->addChildren([
-            NotionBlock::headingTwo(NotionRichText::make('Eyad Hamza')
-               ->bold()
-               ->setLink('https://www.google.com')
-               ->color('red')),
-           NotionBlock::headingThree('Heading 3'),
-           NotionBlock::numberedList('Numbered List'),
-           NotionBlock::bulletedList('Bullet List'),
-           ]),
-           NotionBlock::headingTwo('Heading 2'),
-           NotionBlock::headingThree('Heading 3'),
-           NotionBlock::numberedList('Numbered List'),
-           NotionBlock::bulletedList('Bullet List'),
-        ]);
-        $page->create();
-```
-
-#### Update a Page Properties
-
-- We create a new instance then we define the properties with it's new value then we call update method to apply
-  changes.
+To update the properties of an existing page, create a `NotionPage` object with the page ID, set the updated properties, and call the `update()` method.
 
 ```php
 $page = new NotionPage('b4f8e429038744ca9c8d5afa93ea2edd');
-$response = $page
-            ->select('Status', 'In Progress')
-            ->update();
-
+$page->setProperties([
+    // Specify the updated properties
+])->update();
 ```
 
-#### Delete a Page
+#### Deleting a Page
+
+To delete a page, create a `NotionPage` object with the page ID and call the `delete()` method.
 
 ```php
-$page = new NotionPage('ec9df16fa65f4eef96776ee41ee3d4d4');
-
+$page = new NotionPage('b4f8e429038744ca9c8d5afa93ea2edd');
 $page->delete();
-```
-
-#### Retrieve a page property item
-
-```php
-$page = NotionPage::find('b4f8e429038744ca9c8d5afa93ea2edd');
-
-$property = $page->getProperty('Status');
 ```
 
 ### Handling Notion Blocks
 
-#### Retrieve a block
+#### Fetching a Block by ID
+
+To
+
+fetch a Notion block by ID, use the `find` method of the `NotionBlock` class.
 
 ```php
 $block = NotionBlock::find('b4f8e429038744ca9c8d5afa93ea2edd');
 ```
 
-#### Retrieve a block children
+#### Fetching Block Children
+
+To fetch the children blocks of a Notion block, use the `getChildren` method.
 
 ```php
 $block = NotionBlock::find('b4f8e429038744ca9c8d5afa93ea2edd');
 $children = $block->getChildren();
 ```
 
-#### Update a new Notion Block
+#### Updating a Block
+
+To update a Notion block, create a new instance of the `NotionBlock` class, set the updated content, and call the `update()` method.
 
 ```php
 $block = NotionBlock::headingOne('This is a paragraph')
-            ->setId($this->notionBlockId)
-            ->update();
-
+    ->setId($this->notionBlockId)
+    ->update();
 ```
 
-#### Append Block Children
+#### Appending Block Children
+
+To append children blocks to a Notion block, use the `addChildren` method.
 
 ```php
- $block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
+$block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
 
 $block = $block->addChildren([
-    NotionBlock::headingTwo(
-        NotionRichText::make('Eyad Hamza')
-            ->bold()
-            ->setLink('https://www.google.com')
-            ->color('red')
-        ),
+    NotionBlock::headingTwo('Eyad Hamza'),
     NotionBlock::headingThree('Heading 3'),
     NotionBlock::numberedList('Numbered List'),
     NotionBlock::bulletedList('Bullet List'),
 ])->create();
-
 ```
 
-#### Delete a Block
+#### Deleting a Block
+
+To delete a Notion block, use the `delete` method.
 
 ```php
 $block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
 $block->delete();
 ```
 
-### Search
+### Searching
 
-- Notion currently support search in pages or databases.
-- You can search in pages/databases using NotionSearch class.
+You can perform searches in Notion pages or databases using the `NotionSearch` class.
 
-#### Search in Pages
+#### Searching in Pages
 
-- Notice that Notion only support sorting search by last_edited_time
+To search for a specific query in Notion pages, use the `inPages` method of the `NotionSearch` class. You can apply sorting criteria using the `sorts` method.
 
 ```php
 $response = NotionSearch::inPages('Eyad')
-      ->sorts([
-            NotionSort::make('last_edited_time',  'descending')
-        ])->apply(50);
+    ->sorts([
+        NotionSort::make('last_edited_time', 'descending')
+    ])
+    ->apply(50);
 ```
 
-#### Search in Databases
+#### Searching in Databases
+
+To search for a specific query in Notion databases, use the `inDatabases` method of the `NotionSearch` class.
 
 ```php
 $response = NotionSearch::inDatabases('Eyad')->apply(50);
@@ -381,147 +348,113 @@ $response = NotionSearch::inDatabases('Eyad')->apply(50);
 
 ### Users
 
-#### Retrieve all users
+#### Retrieving All Users
+
+To retrieve all Notion users, use the `index` method of the `NotionUser` class.
 
 ```php
-$users = NotionUser::index();
+$users = NotionUser::make()->index();
 ```
 
-#### Retrieve a User by ID
+#### Retrieving a User by ID
+
+To retrieve a specific Notion user by ID, use the `find` method of the `NotionUser` class.
 
 ```php
-$user = NotionUser::find('2c4d6a4a-12fe-4ce8-a7e4-e3019cc4765f');
+$user = NotionUser::make('2c4d6a4a-12fe-4ce8-a7e4-e3019cc4765f')->find();
 ```
 
-#### Retrieve Current Bot Info
+#### Retrieving Current Bot Info
+
+To retrieve information about the current Notion bot, use the `getBot` method of the `NotionUser` class.
 
 ```php
-$bot = NotionUser::getBot();
+$bot = NotionUser::make()->getBot();
 ```
 
 ### Comments
 
-#### Retrieve all comments by page ID / Discussion ID
+#### Retrieving All Comments by Page ID / Discussion ID
+
+To retrieve all comments associated with a page or discussion, use the `findAll` method of the `NotionComment` class.
 
 ```php
-$comments = NotionComment::findAll('0b036890391f417cbac775e8b0bba680');
+$comments = NotionComment::make('0b036890391f417cbac775e8b0bba680')->findAll();
 ```
 
-#### Create a new comment
+#### Creating a New Comment
 
-- Note that you can either pass a string to setContent Method or a RichText Object for more styling options.
+To create a new comment on a page or discussion, use the `NotionComment` class and set the parent ID and content.
 
 ```php
-// Create a new comment on a page
 $comment = new NotionComment();
- $comment->setParentId('a270ab4fa945449f9284b180234b00c3')
-         ->setContent('This is a comment')
-         ->create();
-// Create a new comment on any discussion
- $comment->setDiscussionId('ac803deb7b064cca83067c67914b02b4')
-         ->setContent(
-         NotionRichText::make('This is a comment')
-                ->color('red')
-                ->bold()
-                ->italic()
-            )->create();
+$comment->setParentId('a270ab4fa945449f9284b180234b00c3')
+    ->setContent('This is a comment')
+    ->create();
 ```
 
 ### Pagination
 
-- Notion will return a paginated response in the following endpoints:
-    - Query a database
-    - List databases
-    - Retrieve a page property item
-    - Retrieve block children
-    - List all users
-    - Search
-- In this package we have a Pagination class called "NotionPaginator" that will handle the pagination for you.
-- You can use it as follows in the search example above ( You can use it in the previously mentioned endpoints as well:
+Notion API provides paginated responses for certain endpoints. The `NotionPaginator` class handles pagination for you.
+
+#### Example with Search Results
 
 ```php
-// We pass the number of items per page to the apply method (Default is 100| Notion supports maximum of 100 items per page)
 $response = NotionSearch::inPages('Eyad')->apply(50);
-$pages = $response->getResults(); // will return the first 50 results
-$response->hasMore(); // will return true if there are more results
-$response->next() // will return the next 50 results (if hasMore is true)
-$response->getObjectType(); // get the type of the object ( always list )
-$response->getResultsType() // get the type of the results (Block/Database/Page)
+$pages = $response->getResults(); // Get the first 50 results
+$response->hasMore(); // Check if there are more results
+$response->next() // Get the next 50 results (if hasMore is true)
+$response->getObjectType(); // Get the type of the object (always "list")
+$response->getResultsType() // Get the type of the results (Block/Database/Page)
 ```
 
-### Mapping Eloquent Models to Notion Database Item
+### Mapping Eloquent Models to Notion Database Items
 
-- Perhaps the most common use case for this package is to map your eloquent models to Notion Database Items.
-- You can do that by implementing Notionable Trait in your eloquent model.
-- For Example, let's say we have a User model, and you want to map it to a Notion Database Item.
+To map your Laravel Eloquent models to Notion database items, you can use the `Notionable` trait and implement the `mapToNotion` method in your model.
 
 ```php
 class User extends Model
 {
-    // use Notionable Trait, and implement the abstract method mapToNotion
     use Notionable;
-    
-    // You have to define an attribute called $notionDatabaseId that contains the associated Notion Database ID.
+
     protected string $notionDatabaseId = '74dc9419bec24f10bb2e65c1259fc65a';
 
     protected $guarded = [];
 
-    // Implement the abstract method mapToNotion
-    // You simply return an associative array of the model attributes and how you want to map it to Notion properties.
-    // Don't forget that you have to have the exact structure (name and type) of the Notion Database Item.
     public function mapToNotion(): array
     {
         return [
-            'name' => NotionProperty::title(),
-            'email' => NotionProperty::email(),
-            'password' => NotionProperty::richText('Password'),
+            'name' => NotionTitle::make('Name'),
+            'email' => NotionEmail::make('Email'),
+            'password' => NotionText::make('Password'),
         ];
     }
 }
 
-// after that you can simply create a new user, and call saveToNotion() method.
 $user = User::create([
-            'name' => 'John Doe',
-            'email' => 'JohnDoe@gmail.com',
-            'password' => 'password'
-        ]);
-// only the mapped attributes will be saved to Notion
+    'name' => 'John Doe',
+    'email' => 'johndoe@gmail.com',
+    'password' => 'password'
+]);
+
 $user->saveToNotion();
 ```
+
 ### Syncing Data between Notion and Eloquent Models
-- Note that you have to have the same preparation as before ( using Notionable Trait and implementing mapToNotion method and defining $notionDatabaseId attribute)
-#### Syncing Data from Eloquent Models to Notion Database
-- Note that Notion only allows adding one page at a time that's why the command might take sometime.
+
+You can sync data between Notion and Eloquent models using the `sync:to-notion` Artisan command.
 
 ```bash
 php artisan sync:to-notion User
 ```
 
-### Syncing Data from Notion Database to Eloquent Models
-
-- Note that you can pass an argument for pages if you want specific pages to be synced, if you want the whole database just pass the model without the pages argument.
-
-```bash
-#Sync all pages in the database
-php artisan sync:from-notion User
-```
-```php
-// Sync specific pages in the database
-Artisan::call('sync:from-notion',[
-            'model' => User::class,
-            'pages' => NotionDatabase::find('74dc9419bec24f10bb2e65c1259fc65a')->filters([
-                NotionFilter::title('Name')->contains('John')
-            ])->query()->getAllResults()
-        ]);
-```
-
 ### Handling Errors
 
-- In case of an error, an exception will be thrown with the error message.
-- To know more about the exceptions you can check the exceptions folder or in NotionException.php class.
-- You can also check the Notion API documentation for more information about the errors.
+In case of an error, an exception will be thrown with the error message. You can check the exceptions folder or the `NotionException` class for more information about the exceptions. Please refer to the Notion API documentation for detailed information about the errors.
 
 ## Testing
+
+To run the package tests, use the following command:
 
 ```bash
 composer test
@@ -529,7 +462,7 @@ composer test
 
 ## Changelog
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+Please see the [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
 ## Contributing
 
@@ -547,5 +480,3 @@ Please review [our security policy](../../security/policy) on how to report secu
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-
