@@ -6,35 +6,17 @@ use Pi\Notion\Core\BlockContent\NotionArrayValue;
 use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionEmptyValue;
 use Pi\Notion\Core\BlockContent\NotionRichText;
+use Pi\Notion\Enums\NotionBlockContentTypeEnum;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionDatabaseTitle extends BaseNotionProperty
 {
-    private NotionRichText|NotionEmptyValue $content;
-
-    public function __construct(string $name)
-    {
-        parent::__construct($name);
-
-        $this->content = NotionRichText::make($this->name)
-            ->setValueType($this->type)
-            ->setContentType()
-            ->buildResource();
-
-    }
-
-    public function setTitle(string $string): static
-    {
-        $this->content->text($string);
-
-        return $this;
-    }
-
     protected function buildValue(): NotionContent
     {
-        return NotionArrayValue::make($this->content->resource)
+        return NotionRichText::make($this->name)
             ->setValueType($this->type)
-            ->isNested();
+            ->setContentType(NotionBlockContentTypeEnum::TITLE)
+            ->buildResource();
     }
 
 
@@ -47,7 +29,7 @@ class NotionDatabaseTitle extends BaseNotionProperty
 
     protected function buildFromResponse(array $response): BaseNotionProperty
     {
-        if (empty($response['title'])){
+        if (empty($response['title'])) {
             return $this;
         }
 

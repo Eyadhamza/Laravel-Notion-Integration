@@ -15,7 +15,6 @@ test('it can create a comment', function () {
     $comment = NotionComment::make()
         ->setDiscussionId('ac803deb7b064cca83067c67914b02b4')
         ->setContent(NotionRichText::make('This is a comment')
-            ->setContentType(NotionBlockContentTypeEnum::RICH_TEXT)
             ->color('red')
             ->bold()
             ->italic()

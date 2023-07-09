@@ -12,20 +12,16 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionTitle extends BaseNotionProperty
 {
-    private string $value;
+    private ?string $value = null;
     private NotionRichText|NotionEmptyValue $content;
 
     public function __construct(string $name, ?string $value = null)
     {
         parent::__construct($name);
-
+        $this->value = $value;
         $this->setTitle($name);
-
-        $this->content = NotionRichText::make($value)
-            ->setValueType($this->type)
-            ->setContentType(NotionBlockContentTypeEnum::TEXT)
-            ->buildResource();
     }
+
     public static function make(?string $name = null, ?string $value = null): static
     {
         return new self($name, $value);
@@ -40,12 +36,11 @@ class NotionTitle extends BaseNotionProperty
 
     protected function buildValue(): NotionContent
     {
-        if ($this->content instanceof NotionEmptyValue) {
-            return $this->content;
-        }
-        return NotionArrayValue::make($this->content->resource)
+        return NotionRichText::make($this->value)
             ->setValueType($this->type)
-            ->isNested();
+            ->setContentType(NotionBlockContentTypeEnum::TITLE)
+            ->buildResource();
+
     }
 
 

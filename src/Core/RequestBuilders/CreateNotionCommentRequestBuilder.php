@@ -19,14 +19,8 @@ class CreateNotionCommentRequestBuilder extends BaseNotionRequestBuilder
 
     public function toArray(): array
     {
-        return array_merge($this->getParentIfSet(), [
+        return array_merge($this->getParentIfSet(), $this->text->toArray(), [
             'discussion_id' => $this->discussionId ?? new MissingValue(),
-            'rich_text' => [
-                $this->text
-                    ->buildResource()
-                    ->resource
-                    ->resolve()
-            ],
         ]);
     }
 

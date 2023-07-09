@@ -102,7 +102,7 @@ class NotionPage extends NotionObject
     {
         $requestBuilder = CreateNotionPageRequestBuilder::make()
             ->setProperties($this->properties);
-
+//        dd($requestBuilder->build() );
         $response = NotionClient::make()
             ->patch($this->getUrl(), $requestBuilder->build());
 

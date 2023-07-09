@@ -11,4 +11,6 @@ enum NotionBlockContentTypeEnum: string
     case FILE = 'file';
     case FORMULA = 'formula';
     case TEXT = 'text';
+    case TITLE = 'title';
+    case DESCRIPTION = 'description';
 }

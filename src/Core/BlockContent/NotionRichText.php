@@ -130,20 +130,13 @@ class NotionRichText extends NotionContent
 
     public function toArray(): array
     {
-        if (! $this->isNested){
-            return [
-                $this->contentType->value => [
-                    'content' => $this->value,
-                ]
-            ];
-        }
-
         return [
             $this->contentType->value => [
                 array_merge($this->getAnnotations(), [
                     'type' => 'text',
                     'text' => [
                         'content' => $this->value,
+                        'link' => $this->link ?? new MissingValue(),
                     ],
                     'plain_text' => $this->value ?? new MissingValue(),
                     'href' => $this->href ?? new MissingValue()
@@ -160,11 +153,7 @@ class NotionRichText extends NotionContent
 
     public function setContentType(NotionBlockContentTypeEnum $contentType = null): self
     {
-        if (! $contentType) {
-            $contentType = NotionBlockContentTypeEnum::RICH_TEXT;
-        }
-
-        $this->contentType = $contentType;
+        $this->contentType = $contentType ?? NotionBlockContentTypeEnum::RICH_TEXT;
 
         return $this;
     }
