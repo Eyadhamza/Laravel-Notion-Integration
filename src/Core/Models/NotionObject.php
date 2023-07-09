@@ -22,7 +22,7 @@ class NotionObject
     protected ?string $cover;
     protected NotionPaginator $paginator;
 
-    public function fromResponse(array $response): static
+    public function fromResponse(array $response): self
     {
         $this->id = $response['id'] ?? null;
         $this->objectType = $response['object'];

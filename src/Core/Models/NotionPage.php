@@ -30,7 +30,7 @@ class NotionPage extends NotionObject
         $this->properties = new Collection();
     }
 
-    public function fromResponse($response): static
+    public function fromResponse($response): self
     {
         parent::fromResponse($response);
         $this->lastEditedBy = new NotionUser($response['last_edited_by']['id'] ?? '') ?? null;
@@ -66,7 +66,7 @@ class NotionPage extends NotionObject
             ->get($this->propertyUrl($property->getId()))
             ->json();
 
-        return NotionPropertyFactory::make(NotionPropertyTypeEnum::from($response['type']), $property['id'])
+        return NotionPropertyFactory::make(NotionPropertyTypeEnum::from($response['type']), $response['id'])
             ->fromResponse($response);
     }
 

@@ -117,12 +117,12 @@ class NotionBlock extends NotionObject
         });
     }
 
-    public static function fromResponse($response): static
+    public function fromResponse($response): self
     {
-        $block = parent::fromResponse($response);
-        $block->type = $response['type'] ?? null;
+        parent::fromResponse($response);
+        $this->type = $response['type'] ?? null;
 
-        return $block;
+        return $this;
     }
     public static function make(string $type, NotionBlock|string $blockContent = null): self
     {

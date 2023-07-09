@@ -12,13 +12,16 @@ class NotionUser extends NotionObject
     private ?string $email;
     private string $avatarUrl;
     private ?string $type;
-    private NotionUser $owner;
 
-    public function __construct($id = '')
+    public function __construct(string $id)
     {
         $this->id = $id;
     }
 
+    public static function make(string $id): self
+    {
+        return new static($id);
+    }
     public static function index(int $pageSize = 100): NotionPaginator
     {
         $user = new static();
@@ -53,7 +56,7 @@ class NotionUser extends NotionObject
         return $user->fromResponse($response);
     }
 
-    public function fromResponse($response): static
+    public function fromResponse($response): self
     {
         $this->object = $response['object'] ?? null;
         $this->id = $response['id'] ?? null;
@@ -66,10 +69,10 @@ class NotionUser extends NotionObject
         }
 
         if (array_key_exists('bot', $response)) {
-            $this->owner = new NotionUser();
-            $this->owner->type = $response['bot']['owner']['type'] ?? null;
-            if ($this->owner->type) {
-                $this->owner->setOwner($response['bot']);
+            $owner = new NotionUser();
+            $owner->type = $response['bot']['owner']['type'] ?? null;
+            if ($owner->type) {
+                $owner->setOwner($response['bot']);
             }
         }
         return $this;

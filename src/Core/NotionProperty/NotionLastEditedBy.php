@@ -19,7 +19,10 @@ class NotionLastEditedBy extends BaseNotionProperty
         if (empty($response['last_edited_by'])) {
             return $this;
         }
-        $this->lastEditedBy = NotionUser::fromResponse($response['last_edited_by']);
+
+        $this->lastEditedBy = NotionUser::make($response['last_edited_by']['id'])
+            ->fromResponse($response['last_edited_by']);
+
         return $this;
     }
 

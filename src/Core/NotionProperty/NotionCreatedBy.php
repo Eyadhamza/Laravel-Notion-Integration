@@ -21,7 +21,8 @@ class NotionCreatedBy extends BaseNotionProperty
         if (empty($response['created_by'])) {
             return $this;
         }
-        $this->createdBy = NotionUser::fromResponse($response['created_by']);
+        $this->createdBy = NotionUser::make()
+            ->fromResponse($response['created_by']);
 
         return $this;
     }

@@ -101,19 +101,19 @@ class NotionDatabase extends NotionObject
     }
 
 
-    public static function fromResponse($response): static
+    public function fromResponse($response): self
     {
-        $database = parent::fromResponse($response);
-        $database->title = NotionTitle::make($response['title'][0]['plain_text']) ?? null;
+        parent::fromResponse($response);
+        $this->title = NotionTitle::make($response['title'][0]['plain_text']) ?? null;
         if (! empty($response['description'])){
-            $database->description = NotionDatabaseDescription::make($response['description'][0]['plain_text']) ?? null;
+            $this->description = NotionDatabaseDescription::make($response['description'][0]['plain_text']) ?? null;
         }
-        $database->url = $response['url'] ?? null;
-        $database->icon = $response['icon'] ?? null;
-        $database->cover = $response['cover'] ?? null;
-        $database->buildProperties($response);
+        $this->url = $response['url'] ?? null;
+        $this->icon = $response['icon'] ?? null;
+        $this->cover = $response['cover'] ?? null;
+        $this->buildProperties($response);
 
-        return $database;
+        return $this;
     }
 
 

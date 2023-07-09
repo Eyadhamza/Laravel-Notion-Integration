@@ -11,12 +11,12 @@ class NotionComment extends NotionObject
     private string $discussionId;
     private NotionRichText $content;
 
-    public static function fromResponse($response): static
+    public function fromResponse($response): self
     {
-        $comment = parent::fromResponse($response);
-        $comment->discussionId = $response['discussion_id'];
-        $comment->content = NotionRichText::build($response['rich_text']);
-        return $comment;
+        parent::fromResponse($response);
+        $this->discussionId = $response['discussion_id'];
+        $this->content = NotionRichText::build($response['rich_text']);
+        return $this;
     }
 
     public function create(): self
