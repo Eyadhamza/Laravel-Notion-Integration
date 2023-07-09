@@ -2,8 +2,8 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\NotionValue\NotionArrayValue;
-use Pi\Notion\Core\NotionValue\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionArrayValue;
+use Pi\Notion\Core\BlockContent\NotionBlockContent;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionMultiSelect extends BaseNotionProperty
@@ -13,7 +13,7 @@ class NotionMultiSelect extends BaseNotionProperty
 
     protected function buildValue(): NotionBlockContent
     {
-        return NotionArrayValue::make($this->options)->setType('multi_select');
+        return NotionArrayValue::make($this->options)->setValueType('multi_select');
     }
 
     public function setOptions(array $options): void

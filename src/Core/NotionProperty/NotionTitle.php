@@ -2,22 +2,27 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\NotionValue\NotionArrayValue;
-use Pi\Notion\Core\NotionValue\NotionBlockContent;
-use Pi\Notion\Core\NotionValue\NotionEmptyValue;
-use Pi\Notion\Core\NotionValue\NotionRichText;
+use Pi\Notion\Core\BlockContent\NotionArrayValue;
+use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionEmptyValue;
+use Pi\Notion\Core\BlockContent\NotionRichText;
+use Pi\Notion\Core\BlockContent\NotionTextValue;
+use Pi\Notion\Enums\NotionBlockContentTypeEnum;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionTitle extends BaseNotionProperty
 {
-    private NotionRichText|NotionEmptyValue $content;
+    private NotionTextValue|NotionEmptyValue $content;
 
     public function __construct(string $name)
     {
         parent::__construct($name);
 
-        $this->content = NotionRichText::make($this->name)
-            ->setType('text');
+        $this->content = NotionTextValue::make($this->name)
+            ->setValueType($this->type)
+            ->setContentType()
+            ->buildResource();
+
     }
 
     public function setTitle(string $string): static
@@ -29,10 +34,8 @@ class NotionTitle extends BaseNotionProperty
 
     protected function buildValue(): NotionBlockContent
     {
-        $this->content->toResource();
-
         return NotionArrayValue::make($this->content->resource)
-            ->setType('title')
+            ->setValueType($this->type)
             ->isNested();
     }
 
@@ -51,7 +54,7 @@ class NotionTitle extends BaseNotionProperty
         }
 
         $this->content = NotionRichText::make($response['title'][0]['plain_text'])
-            ->setType('text');
+            ->setValueType($this->type);
 
         return $this;
     }

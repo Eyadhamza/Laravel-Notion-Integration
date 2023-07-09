@@ -2,8 +2,8 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\NotionValue\NotionBlockContent;
-use Pi\Notion\Core\NotionValue\NotionSimpleValue;
+use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionSimpleValue;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionUrl extends BaseNotionProperty
@@ -13,7 +13,8 @@ class NotionUrl extends BaseNotionProperty
 
     protected function buildValue():NotionBlockContent
     {
-        return NotionSimpleValue::make($this->link)->setType('url');
+        return NotionSimpleValue::make($this->link)
+            ->setValueType($this->type);
     }
 
     public function setType(): BaseNotionProperty

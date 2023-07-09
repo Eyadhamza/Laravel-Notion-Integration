@@ -4,48 +4,44 @@ namespace Pi\Notion\Core\Builders;
 
 
 use Illuminate\Support\Collection;
+use Pi\Notion\Core\Models\NotionBlock;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
+use Pi\Notion\Core\BlockContent\NotionBlockContent;
 
 class CreateNotionPageRequestBuilder
 {
     public string $databaseId;
-    private Collection $properties;
-    private Collection $blocks;
-
-    public function __construct()
-    {
-        $this->properties = new Collection();
-        $this->blocks = new Collection();
-    }
+    private array $properties = [];
+    private array $blocks = [];
 
     public static function make(): static
     {
         return new static();
     }
 
-    public function setProperties(Collection $properties): static
+    public function setProperties(Collection $properties): self
     {
-        $this->properties = $properties;
+        $this->properties = $properties->mapWithKeys(fn(BaseNotionProperty $property) => [
+            $property->getName() => $property->resource()
+        ])->all();
 
         return $this;
     }
 
-    public function setBlocks(Collection $blocks): static
+    public function setBlocks(Collection $blocks): self
     {
-        $this->blocks = $blocks;
+        $this->blocks = $blocks
+            ->map(fn(NotionBlock $block) => $block->buildResource())
+            ->all();
 
         return $this;
     }
 
     public function build(): array
     {
-        $properties = $this->properties->mapWithKeys(fn(BaseNotionProperty $property) => [
-            $property->getName() => $property->resource()
-        ])->all();
-
         if (! isset($this->databaseId)) {
             return [
-                'properties' => $properties,
+                'properties' => $this->properties,
             ];
         }
 
@@ -53,7 +49,7 @@ class CreateNotionPageRequestBuilder
             'parent' => [
                 'database_id' => $this->databaseId,
             ],
-            'properties' => $properties,
+            'properties' => $this->properties,
             'children' => $this->blocks,
         ];
     }

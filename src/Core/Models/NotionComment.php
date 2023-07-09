@@ -2,9 +2,9 @@
 
 namespace Pi\Notion\Core\Models;
 
-use Pi\Notion\Core\NotionValue\NotionRichText;
+use Pi\Notion\Core\BlockContent\NotionRichText;
+use Pi\Notion\Core\NotionClient;
 use Pi\Notion\Core\Query\NotionPaginator;
-use Pi\Notion\NotionClient;
 
 class NotionComment extends NotionObject
 {

@@ -1,25 +1,31 @@
 <?php
 
-namespace Pi\Notion\Core\NotionValue;
+namespace Pi\Notion\Core\BlockContent;
 
-use Illuminate\Http\Resources\ConditionallyLoadsAttributes;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\MissingValue;
+use Pi\Notion\Enums\NotionBlockContentTypeEnum;
+use Pi\Notion\Enums\NotionBlockTypeEnum;
+use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Traits\HasResource;
 
 abstract class NotionBlockContent
 {
-    use ConditionallyLoadsAttributes;
-    public mixed $resource;
-    protected mixed $type;
-    protected mixed $value;
+    use HasResource;
 
+    public JsonResource $resource;
+    protected NotionBlockContentTypeEnum $contentType;
+    protected mixed $value;
+    protected bool $isNested = false;
+    public NotionBlockTypeEnum|NotionPropertyTypeEnum $valueType;
     public function __construct(mixed $value = null)
     {
         $this->value = $value;
+        $this->setContentType();
     }
 
     public static function make(mixed $value = null): static|NotionEmptyValue
     {
-
         if (! $value){
             return new NotionEmptyValue();
         }
@@ -44,32 +50,26 @@ abstract class NotionBlockContent
         return true;
     }
 
-    public function resource(): mixed
-    {
-        $this->toResource();
-
-        if (is_string($this->resource) || is_numeric($this->resource) || is_bool($this->resource)) {
-            return $this->resource;
-        }
-
-        return $this->filter($this->resource);
-    }
-
-    abstract protected function toResource(): self;
-
     public function getValue(): mixed
     {
         return $this->value;
     }
 
-    public function getType(): string
+    public function getContentType(): NotionBlockContentTypeEnum
     {
-        return $this->type;
+        return $this->contentType;
     }
-
-    public function setType(mixed $type): static
+    public function setValueType(NotionBlockTypeEnum|NotionPropertyTypeEnum $valueType): self
     {
-        $this->type = $type;
+        $this->valueType = $valueType;
+        return $this;
+    }
+    abstract public function setContentType(): self;
+
+
+    public function isNested(): self
+    {
+        $this->isNested = true;
         return $this;
     }
 }

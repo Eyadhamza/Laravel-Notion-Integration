@@ -1,8 +1,9 @@
 <?php
 
-namespace Pi\Notion\Core\NotionValue;
+namespace Pi\Notion\Core\BlockContent;
 
 use Illuminate\Http\Resources\MissingValue;
+use Pi\Notion\Enums\NotionBlockContentTypeEnum;
 
 class NotionFile extends NotionBlockContent
 {
@@ -19,17 +20,15 @@ class NotionFile extends NotionBlockContent
             ->setExpiryTime($response['file']['expiry_time']);
     }
 
-    public function toResource(): self
+    public function toArray(): array
     {
-        $this->resource = [
+        return [
             'name' => $this->value,
             $this->fileType => [
                 'url' => $this->fileUrl,
                 'expiry_time' => $this->expiryTime ?? new MissingValue(),
             ]
         ];
-
-        return $this;
     }
 
     public function setFileType(string $fileType): NotionFile
@@ -56,4 +55,9 @@ class NotionFile extends NotionBlockContent
         return $this;
     }
 
+    public function setContentType(): NotionBlockContent
+    {
+        $this->contentType = NotionBlockContentTypeEnum::FILE;
+        return $this;
+    }
 }

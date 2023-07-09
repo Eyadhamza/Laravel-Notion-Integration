@@ -2,9 +2,9 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\NotionValue\NotionBlockContent;
-use Pi\Notion\Core\NotionValue\NotionEmptyValue;
-use Pi\Notion\Core\NotionValue\NotionRichText;
+use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionEmptyValue;
+use Pi\Notion\Core\BlockContent\NotionRichText;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionText extends BaseNotionProperty

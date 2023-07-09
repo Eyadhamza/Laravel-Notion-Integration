@@ -2,7 +2,7 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\NotionValue\NotionFile;
+use Pi\Notion\Core\BlockContent\NotionFile;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionPropertyFactory

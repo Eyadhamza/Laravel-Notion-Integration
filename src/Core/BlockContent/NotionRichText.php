@@ -1,9 +1,12 @@
 <?php
 
-namespace Pi\Notion\Core\NotionValue;
+namespace Pi\Notion\Core\BlockContent;
 
 use Illuminate\Http\Resources\MissingValue;
 use Illuminate\Support\Collection;
+use Pi\Notion\Enums\NotionBlockContentTypeEnum;
+use Pi\Notion\Enums\NotionBlockTypeEnum;
+use Pi\Notion\Traits\HasResource;
 
 class NotionRichText extends NotionBlockContent
 {
@@ -11,7 +14,6 @@ class NotionRichText extends NotionBlockContent
     private ?array $link;
     private array $attributeValues;
     private ?string $href;
-    private string $key;
 
     public function __construct(mixed $value = null)
     {
@@ -128,19 +130,22 @@ class NotionRichText extends NotionBlockContent
         return $this;
     }
 
-    public function toResource(): self
+    public function toArray(): array
     {
-        $this->resource = [
-            $this->type => [
-                'content' => $this->value,
-                'link' => $this->link ?? null
-            ],
-            'annotations' => $this->getAnnotations(),
-            'plain_text' => $this->value ?? new MissingValue(),
-            'href' => $this->href ?? new MissingValue()
+        return [
+            $this->contentType->value => [
+                [
+                    'type' => 'text',
+                    'text' => [
+                        'content' => $this->value,
+                    ],
+                    'annotations' => $this->getAnnotations(),
+                    'plain_text' => $this->value ?? new MissingValue(),
+                    'href' => $this->href ?? new MissingValue()
+                ]
+            ]
         ];
 
-        return $this;
     }
 
     public function getAnnotations(): array|MissingValue
@@ -148,9 +153,15 @@ class NotionRichText extends NotionBlockContent
         return $this->annotations->isNotEmpty() ? $this->annotations->all() : new MissingValue();
     }
 
-    public function setKey(string $key): NotionRichText
+    public function setContentType(NotionBlockContentTypeEnum $contentType = null): self
     {
-        $this->key = $key;
+        if (! $contentType){
+            $this->contentType = NotionBlockContentTypeEnum::RICH_TEXT;
+            return $this;
+        }
+
+        $this->contentType = $contentType;
+
         return $this;
     }
 }

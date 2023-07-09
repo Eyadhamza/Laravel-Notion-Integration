@@ -3,16 +3,16 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 use Illuminate\Http\Resources\MissingValue;
-use Pi\Notion\Core\NotionValue\NotionArrayValue;
-use Pi\Notion\Core\NotionValue\NotionBlockContent;
-use Pi\Notion\Core\NotionValue\NotionSimpleValue;
+use Pi\Notion\Core\BlockContent\NotionArrayValue;
+use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionSimpleValue;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
-use Pi\Notion\Enums\NumberFormatEnum;
+use Pi\Notion\Enums\NotionNumberFormatEnum;
 
 class NotionNumber extends BaseNotionProperty
 {
     private ?int $number = null;
-    private ?NumberFormatEnum $format = null;
+    private ?NotionNumberFormatEnum $format = null;
 
     protected function buildValue(): NotionBlockContent
     {
@@ -21,11 +21,11 @@ class NotionNumber extends BaseNotionProperty
                 'number' => new MissingValue(),
                 'format' => new MissingValue(),
             ])
-                ->setType($this->type->value);
+                ->setValueType($this->type);
         }
 
         return NotionSimpleValue::make($this->number)
-            ->setType($this->type->value);
+            ->setValueType($this->type);
     }
 
     public function setType(): BaseNotionProperty
@@ -44,7 +44,7 @@ class NotionNumber extends BaseNotionProperty
             $this->number = $response['number'];
         }
 
-        $this->format = NumberFormatEnum::tryFrom($response['number']['format'] ?? null);
+        $this->format = NotionNumberFormatEnum::tryFrom($response['number']['format'] ?? null);
 
         return $this;
     }
@@ -55,7 +55,7 @@ class NotionNumber extends BaseNotionProperty
         return $this;
     }
 
-    public function setFormat(?NumberFormatEnum $format): NotionNumber
+    public function setFormat(?NotionNumberFormatEnum $format): NotionNumber
     {
         $this->format = $format;
         return $this;

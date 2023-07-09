@@ -6,8 +6,8 @@ use Pi\Notion\Core\Models\NotionUser;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 use Pi\Notion\Core\NotionProperty\NotionTitle;
 use Pi\Notion\Core\NotionProperty\NotionSelect;
-use Pi\Notion\Core\NotionValue\NotionFile;
-use Pi\Notion\Core\NotionValue\NotionRichText;
+use Pi\Notion\Core\BlockContent\NotionFile;
+use Pi\Notion\Core\BlockContent\NotionRichText;
 use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\Core\NotionProperty\NotionRollup;
 use Pi\Notion\Core\NotionProperty\NotionPeople;
@@ -187,21 +187,26 @@ it('can add nested content blocks to created pages', function () {
 
 it('can add content blocks to created pages using the page class', function () {
     $page = new NotionPage();
-    $page->setDatabaseId('632b5fb7e06c4404ae12065c48280e4c');
+    $page->setDatabaseId('5a30faaeb526436f98b6a8e1d05f5605');
 
-    $page
-        ->title('Name', 'Eyad Hamza')
-        ->multiSelect('Status1', ['A', 'B'])
-        ->headingOne('Heading 1')
-        ->headingTwo('Heading 2')
-        ->headingThree('Heading 3')
-        ->numberedList('Numbered List')
-        ->bulletedList('Bullet List')
-        ->create();
+    $page->setBlocks([
+        NotionBlock::paragraph('Hello There im a parent of the following blocks!')
+            ->addChildren([
+                NotionBlock::headingTwo(NotionRichText::make('Eyad Hamza')
+                    ->bold()
+                    ->setLink('https://www.google.com')
+                    ->color('red')),
+                NotionBlock::headingThree('Heading 3'),
+                NotionBlock::numberedList('Numbered List'),
+                NotionBlock::bulletedList('Bullet List'),
+            ]),
+        NotionBlock::headingTwo('Heading 2'),
+        NotionBlock::headingThree('Heading 3'),
+        NotionBlock::numberedList('Numbered List'),
+        NotionBlock::bulletedList('Bullet List'),
+    ])->create();
 
-    expect($page->getProperties())->toHaveCount(2)
-        ->and($page->getBlocks())->toHaveCount(5)
-        ->and($page)->toHaveProperty('properties');
+    expect($page->getBlocks())->toHaveCount(5);
 });
 
 it('returns a property by ID', function () {

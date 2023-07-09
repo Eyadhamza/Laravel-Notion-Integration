@@ -2,7 +2,7 @@
 
 namespace Pi\Notion\Enums;
 
-enum NumberFormatEnum: string
+enum NotionNumberFormatEnum: string
 {
     case NUMBER = 'number';
     case NUMBER_WITH_COMMAS = 'number_with_commas';

@@ -2,8 +2,9 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\NotionValue\NotionArrayValue;
-use Pi\Notion\Core\NotionValue\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionArrayValue;
+use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Enums\NotionBlockTypeEnum;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionSelect extends BaseNotionProperty
@@ -16,11 +17,12 @@ class NotionSelect extends BaseNotionProperty
     {
         if (isset($this->selected)) {
             return NotionArrayValue::make(['name' => $this->selected])
-                ->setType('select');
+                ->setValueType($this->type);
+
         }
 
         return NotionArrayValue::make($this->options)
-            ->setType('select')
+            ->setValueType($this->type)
             ->setKey('options');
     }
 

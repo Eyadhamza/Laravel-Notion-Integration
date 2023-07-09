@@ -3,8 +3,8 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 use Illuminate\Http\Resources\MissingValue;
-use Pi\Notion\Core\NotionValue\NotionArrayValue;
-use Pi\Notion\Core\NotionValue\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionArrayValue;
+use Pi\Notion\Core\BlockContent\NotionBlockContent;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionDate extends BaseNotionProperty
@@ -20,7 +20,7 @@ class NotionDate extends BaseNotionProperty
             'start' => $this->start ?? new MissingValue(),
             'end' => $this->end ?? new MissingValue(),
             'time_zone' => $this->timeZone ?? new MissingValue(),
-        ])->setType('date');
+        ])->setValueType(NotionPropertyTypeEnum::DATE);
     }
 
     public function setType(): BaseNotionProperty

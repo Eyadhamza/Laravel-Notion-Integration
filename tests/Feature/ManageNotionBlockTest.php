@@ -1,7 +1,7 @@
 <?php
 
 use Pi\Notion\Core\Models\NotionBlock;
-use Pi\Notion\Core\NotionValue\NotionRichText;
+use Pi\Notion\Core\BlockContent\NotionRichText;
 
 it('returns block info', function () {
     $block = NotionBlock::find('b1cfe8df181543039b2f9e3f2c87516c');

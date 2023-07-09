@@ -3,9 +3,11 @@
 namespace Pi\Notion\Core\Models;
 
 
+use Illuminate\Http\Resources\Json\JsonResource;
 use Pi\Notion\Core\NotionProperty\NotionPropertyFactory;
 use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Traits\HasResource;
 
 class NotionObject
 {

@@ -2,8 +2,9 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\NotionValue\NotionBlockContent;
-use Pi\Notion\Core\NotionValue\NotionSimpleValue;
+use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionSimpleValue;
+use Pi\Notion\Enums\NotionBlockTypeEnum;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionCheckbox extends BaseNotionProperty
@@ -18,7 +19,8 @@ class NotionCheckbox extends BaseNotionProperty
 
     protected function buildValue(): NotionBlockContent
     {
-        return NotionSimpleValue::make($this->isChecked)->setType('checkbox');
+        return NotionSimpleValue::make($this->isChecked)
+            ->setValueType($this->type);
     }
 
     public function setType(): self

@@ -3,8 +3,8 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 use Illuminate\Http\Resources\MissingValue;
-use Pi\Notion\Core\NotionValue\NotionArrayValue;
-use Pi\Notion\Core\NotionValue\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionArrayValue;
+use Pi\Notion\Core\BlockContent\NotionBlockContent;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionRelation extends BaseNotionProperty
@@ -23,7 +23,7 @@ class NotionRelation extends BaseNotionProperty
         return NotionArrayValue::make(array_merge($this->getIds(),[
             'database_id' => $this->databaseId ?? new MissingValue(),
             'single_property' => $this->singleProperty ?? new MissingValue(),
-        ]))->setType('relation');
+        ]))->setValueType($this->type);
     }
     public function setType(): BaseNotionProperty
     {

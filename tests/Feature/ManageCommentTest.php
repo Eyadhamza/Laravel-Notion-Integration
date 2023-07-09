@@ -1,7 +1,7 @@
 <?php
 
 use Pi\Notion\Core\Models\NotionComment;
-use Pi\Notion\Core\NotionValue\NotionRichText;
+use Pi\Notion\Core\BlockContent\NotionRichText;
 
 test('it returns all comments', function () {
     $comments = NotionComment::findAll('0b036890391f417cbac775e8b0bba680');

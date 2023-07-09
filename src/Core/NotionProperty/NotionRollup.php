@@ -3,8 +3,8 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 use Illuminate\Http\Resources\MissingValue;
-use Pi\Notion\Core\NotionValue\NotionArrayValue;
-use Pi\Notion\Core\NotionValue\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionArrayValue;
+use Pi\Notion\Core\BlockContent\NotionBlockContent;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionRollup extends BaseNotionProperty
@@ -25,7 +25,7 @@ class NotionRollup extends BaseNotionProperty
             'rollup_property_name' => $this->rollupPropertyName ?? new MissingValue(),
             'rollup_property_id' => $this->rollupPropertyId ?? new MissingValue(),
             'function' => $this->rollupFunction ?? new MissingValue(),
-        ])->setType('rollup');
+        ])->setValueType('rollup');
     }
 
     public function setType(): BaseNotionProperty

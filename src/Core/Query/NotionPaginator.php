@@ -4,13 +4,11 @@ namespace Pi\Notion\Core\Query;
 
 use Illuminate\Support\Collection;
 use Pi\Notion\Core\Models\NotionObject;
-use Pi\Notion\Core\Models\NotionPage;
-use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
+use Pi\Notion\Core\NotionClient;
 use Pi\Notion\Core\NotionProperty\NotionPropertyFactory;
 use Pi\Notion\Core\RequestBuilders\PaginatorRequestBuilder;
 use Pi\Notion\Enums\NotionPaginatedObjectTypeEnum;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
-use Pi\Notion\NotionClient;
 
 class NotionPaginator
 {

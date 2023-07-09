@@ -1,43 +1,39 @@
 <?php
 
-namespace Pi\Notion\Core\NotionValue;
+namespace Pi\Notion\Core\BlockContent;
+
+use Pi\Notion\Enums\NotionBlockContentTypeEnum;
 
 class NotionArrayValue extends NotionBlockContent
 {
     private string $key;
-    private bool $isNested = false;
+
 
     public static function build(array $response): static
     {
         return new static($response['plain_text'], $response['type']);
     }
 
-    public function toResource(): self
+    public function toArray(): array
     {
         if ($this->isNested) {
-            $this->resource = [
-                $this->type => [
-                    $this->value
+            return [
+                $this->valueType->value => [
+                    $this->value->resolve()
                 ]
             ];
-
-            return $this;
         }
         if (isset($this->key)) {
-            $this->resource = [
-                $this->type => [
+            return [
+                $this->valueType->value => [
                     $this->key => $this->value
                 ]
             ];
-
-            return $this;
         }
 
-        $this->resource = [
-            $this->type => $this->value
+        return [
+            $this->valueType->value => $this->value
         ];
-
-        return $this;
     }
 
     public function setKey(string $key): NotionArrayValue
@@ -46,9 +42,10 @@ class NotionArrayValue extends NotionBlockContent
         return $this;
     }
 
-    public function isNested(): NotionArrayValue
+    public function setContentType(): NotionBlockContent
     {
-        $this->isNested = true;
+        $this->contentType = NotionBlockContentTypeEnum::ARRAY_VALUE;
+
         return $this;
     }
 }

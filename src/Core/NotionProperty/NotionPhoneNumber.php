@@ -2,8 +2,9 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\NotionValue\NotionBlockContent;
-use Pi\Notion\Core\NotionValue\NotionObjectValue;
+use Pi\Notion\Core\BlockContent\NotionArrayValue;
+use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionObjectValue;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionPhoneNumber extends BaseNotionProperty
@@ -13,7 +14,8 @@ class NotionPhoneNumber extends BaseNotionProperty
 
     protected function buildValue(): NotionBlockContent
     {
-        return NotionObjectValue::make($this->phone)->setType('phone_number');
+        return NotionArrayValue::make($this->phone)
+            ->setValueType($this->type);
     }
 
     public function setType(): BaseNotionProperty

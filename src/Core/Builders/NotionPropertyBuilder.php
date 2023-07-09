@@ -19,7 +19,7 @@ use Pi\Notion\Core\NotionProperty\NotionRollup;
 use Pi\Notion\Core\NotionProperty\NotionSelect;
 use Pi\Notion\Core\NotionProperty\NotionTitle;
 use Pi\Notion\Core\NotionProperty\NotionUrl;
-use Pi\Notion\Core\NotionValue\NotionFormulaValue;
+use Pi\Notion\Core\BlockContent\NotionFormulaValue;
 
 class NotionPropertyBuilder
 {

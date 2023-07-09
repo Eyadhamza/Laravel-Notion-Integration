@@ -5,12 +5,12 @@ namespace Pi\Notion\Core\Models;
 
 
 use Illuminate\Support\Collection;
+use Pi\Notion\Core\NotionClient;
 use Pi\Notion\Core\NotionProperty\NotionDatabaseDescription;
 use Pi\Notion\Core\NotionProperty\NotionTitle;
 use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\Core\RequestBuilders\NotionDatabaseRequestBuilder;
 use Pi\Notion\Core\RequestBuilders\NotionUpdateDatabaseRequestBuilder;
-use Pi\Notion\NotionClient;
 use Pi\Notion\Traits\HandleFilters;
 use Pi\Notion\Traits\HandleProperties;
 use Pi\Notion\Traits\HandleSorts;

@@ -1,24 +1,11 @@
 <?php
 
-namespace Pi\Notion;
+namespace Pi\Notion\Core;
 
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Pi\Notion\Core\RequestBuilders\BaseNotionRequestBuilder;
-use Pi\Notion\Core\RequestBuilders\NotionDatabaseRequestBuilder;
-use Pi\Notion\Exceptions\ConflictErrorException;
-use Pi\Notion\Exceptions\InternalServerErrorException;
-use Pi\Notion\Exceptions\InvalidJsonException;
-use Pi\Notion\Exceptions\InvalidRequestException;
-use Pi\Notion\Exceptions\InvalidRequestUrlException;
-use Pi\Notion\Exceptions\MissingVersionException;
 use Pi\Notion\Exceptions\NotionException;
-use Pi\Notion\Exceptions\NotionValidationException;
-use Pi\Notion\Exceptions\ObjectNotFoundException;
-use Pi\Notion\Exceptions\RateLimitedException;
-use Pi\Notion\Exceptions\RestrictedResourceException;
-use Pi\Notion\Exceptions\ServiceUnavailableException;
-use Pi\Notion\Exceptions\UnauthorizedException;
 
 class NotionClient
 {

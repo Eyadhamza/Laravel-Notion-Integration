@@ -1,8 +1,9 @@
 <?php
 
-namespace Pi\Notion\Core\NotionValue;
+namespace Pi\Notion\Core\BlockContent;
 
 use Illuminate\Http\Resources\MissingValue;
+use Pi\Notion\Enums\NotionBlockContentTypeEnum;
 use Pi\Notion\Enums\NotionFormulaTypeEnum;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
@@ -15,16 +16,15 @@ class NotionFormulaValue extends NotionBlockContent
         return new static($response['plain_text']);
     }
 
-    public function toResource(): self
+    public function toArray(): array
     {
-        $this->resource =  array_merge($this->getExpressionTypeIfSet(), [
+        return array_merge($this->getExpressionTypeIfSet(), [
             'type' => NotionPropertyTypeEnum::FORMULA->value,
             'formula' => [
                 'expression' => $this->value ?? new MissingValue(),
             ]
         ]);
 
-        return $this;
     }
 
     public function expression(string $expression): NotionFormulaValue
@@ -55,5 +55,11 @@ class NotionFormulaValue extends NotionBlockContent
             'type' => $this->expressionType->value,
             $this->expressionType->value => $this->expressionValue ?? new MissingValue()
         ];
+    }
+
+    public function setContentType(): NotionBlockContent
+    {
+        $this->contentType = NotionBlockContentTypeEnum::FORMULA;
+        return $this;
     }
 }

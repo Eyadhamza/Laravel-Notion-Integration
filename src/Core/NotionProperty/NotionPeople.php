@@ -4,8 +4,8 @@ namespace Pi\Notion\Core\NotionProperty;
 
 use Illuminate\Http\Resources\MissingValue;
 use Pi\Notion\Core\Models\NotionUser;
-use Pi\Notion\Core\NotionValue\NotionArrayValue;
-use Pi\Notion\Core\NotionValue\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionArrayValue;
+use Pi\Notion\Core\BlockContent\NotionBlockContent;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionPeople extends BaseNotionProperty
@@ -15,7 +15,7 @@ class NotionPeople extends BaseNotionProperty
     protected function buildValue(): NotionBlockContent
     {
         return NotionArrayValue::make($this->people ?? new MissingValue())
-            ->setType('people');
+            ->setValueType($this->type);
     }
 
     protected function buildFromResponse(array $response): BaseNotionProperty

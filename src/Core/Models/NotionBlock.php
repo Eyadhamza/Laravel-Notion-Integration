@@ -4,33 +4,51 @@
 namespace Pi\Notion\Core\Models;
 
 
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\NotionValue\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\NotionClient;
 use Pi\Notion\Core\Query\NotionPaginator;
-use Pi\Notion\NotionClient;
+use Pi\Notion\Enums\NotionBlockTypeEnum;
 use Pi\Notion\Traits\CreateBlockTypes;
+use Pi\Notion\Traits\HasResource;
 
 class NotionBlock extends NotionObject
 {
-    use CreateBlockTypes;
+    use CreateBlockTypes, HasResource;
 
-    private string $type;
-    private ?NotionBlockContent $blockContent = null;
+    private NotionBlockTypeEnum $type;
+    private ?NotionBlockContent $blockContent;
     private string $color;
     private Collection $children;
+    public JsonResource $resource;
 
-    public function __construct($type = '', $block = null)
+    public function __construct(NotionBlockTypeEnum $type, NotionBlockContent $blockContent = null)
     {
         $this->type = $type;
-        $this->block = $block;
+        $this->blockContent = $blockContent;
         $this->children = new Collection();
-
     }
+
+    public static function make(NotionBlockTypeEnum $type, NotionBlockContent $blockContent = null): self
+    {
+        return new self($type, $blockContent);
+    }
+
+    public function fromResponse($response): self
+    {
+        parent::fromResponse($response);
+        $this->type = $response['type'] ?? null;
+
+        return $this;
+    }
+
     public static function find($id): self
     {
         return (new NotionBlock)->setId($id)->get();
     }
-    public function get():self
+
+    public function get(): self
     {
         $response = NotionClient::request('get', $this->getUrl());
 
@@ -61,7 +79,7 @@ class NotionBlock extends NotionObject
         return $this->paginator->make($response, $this);
     }
 
-    public function update():self
+    public function update(): self
     {
         $response = NotionClient::request('patch', $this->getUrl(), [
             $this->type => $this->contentBody()
@@ -98,6 +116,7 @@ class NotionBlock extends NotionObject
         return $body;
 
     }
+
     public function addChildren(array $blocks): self
     {
         collect($blocks)->each(function (NotionBlock $block) {
@@ -117,26 +136,16 @@ class NotionBlock extends NotionObject
         });
     }
 
-    public function fromResponse($response): self
-    {
-        parent::fromResponse($response);
-        $this->type = $response['type'] ?? null;
-
-        return $this;
-    }
-    public static function make(string $type, NotionBlock|string $blockContent = null): self
-    {
-        $blockContent = is_string($blockContent) ? new NotionBlock($blockContent) : $blockContent;
-        return new self($type, $blockContent);
-    }
     private function getUrl(): string
     {
         return NotionClient::BLOCK_URL . $this->id;
     }
+
     public function getId(): string
     {
         return $this->id;
     }
+
     public function setId(string $id): static
     {
         $this->id = $id;
@@ -146,5 +155,14 @@ class NotionBlock extends NotionObject
     private function childrenUrl(): string
     {
         return NotionClient::BLOCK_URL . $this->id . '/children';
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'object' => 'block',
+            'type' => $this->type->value,
+            $this->type->value => $this->blockContent->toArray(),
+        ];
     }
 }

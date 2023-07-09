@@ -2,10 +2,10 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\NotionValue\NotionArrayValue;
-use Pi\Notion\Core\NotionValue\NotionBlockContent;
-use Pi\Notion\Core\NotionValue\NotionEmptyValue;
-use Pi\Notion\Core\NotionValue\NotionRichText;
+use Pi\Notion\Core\BlockContent\NotionArrayValue;
+use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionEmptyValue;
+use Pi\Notion\Core\BlockContent\NotionRichText;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionDatabaseDescription extends BaseNotionProperty
@@ -16,11 +16,11 @@ class NotionDatabaseDescription extends BaseNotionProperty
     protected function buildValue(): NotionBlockContent
     {
         $this->content = NotionRichText::make($this->name)
-            ->setType('text')
-            ->toResource();
+            ->setValueType('text')
+            ->toArray();
 
         return NotionArrayValue::make($this->content->resource)
-            ->setType('description')
+            ->setValueType('description')
             ->isNested();
     }
 

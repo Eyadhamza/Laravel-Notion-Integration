@@ -4,9 +4,10 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 
+use Illuminate\Http\Resources\Json\JsonResource;
 use Pi\Notion\Core\Models\NotionObject;
-use Pi\Notion\Core\NotionValue\NotionBlockContent;
-use Pi\Notion\Core\NotionValue\NotionEmptyValue;
+use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionEmptyValue;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 abstract class BaseNotionProperty extends NotionObject
@@ -30,13 +31,9 @@ abstract class BaseNotionProperty extends NotionObject
     {
         return $this->setBlockContent();
     }
-    public function resource(): mixed
+    public function resource(): array
     {
-        if ($this->blockContent->getValue() instanceof NotionEmptyValue) {
-            return $this->blockContent->resource();
-        }
-
-        return $this->blockContent->resource();
+        return $this->blockContent->resource->resolve();
     }
 
     public function isPaginated(): bool
@@ -48,7 +45,6 @@ abstract class BaseNotionProperty extends NotionObject
             default => false
         };
     }
-
     abstract protected function buildValue(): NotionBlockContent;
     public function fromResponse(array $response): static
     {
@@ -61,7 +57,9 @@ abstract class BaseNotionProperty extends NotionObject
 
     public function setBlockContent(): self
     {
-        $this->blockContent = $this->buildValue();
+        $this->blockContent = $this
+            ->buildValue()
+            ->buildResource();
 
         return $this;
     }

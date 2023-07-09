@@ -2,15 +2,15 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\NotionValue\NotionBlockContent;
-use Pi\Notion\Core\NotionValue\NotionEmptyValue;
+use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionEmptyValue;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionLastEditedTime extends BaseNotionProperty
 {
     protected function buildValue(): NotionBlockContent
     {
-        return NotionEmptyValue::make()->setType('last_edited_time');
+        return NotionEmptyValue::make()->setValueType('last_edited_time');
     }
 
     protected function buildFromResponse(array $response): BaseNotionProperty
