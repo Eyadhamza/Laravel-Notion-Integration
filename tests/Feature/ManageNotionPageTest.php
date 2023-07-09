@@ -104,7 +104,7 @@ it('should add properties to the created page using the page class', function ()
                 ->build(),
         ])->create();
 
-    expect($page->getProperties())->toHaveCount(16)
+    expect($page->getProperties())->toHaveCount(17)
         ->and($page)->toHaveProperty('properties');
 });
 

@@ -9,7 +9,6 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionCheckbox extends BaseNotionProperty
 {
-    public ?bool $checked = null;
 
     public function setType(): self
     {
@@ -20,7 +19,7 @@ class NotionCheckbox extends BaseNotionProperty
 
     public function setChecked(bool $checked): self
     {
-        $this->checked = $checked;
+        $this->rawValue = $checked;
 
         return $this;
     }
@@ -29,7 +28,7 @@ class NotionCheckbox extends BaseNotionProperty
     public function mapToResource(): array
     {
         return [
-            'value' => $this->checked
+            'value' => $this->rawValue
         ];
     }
 }

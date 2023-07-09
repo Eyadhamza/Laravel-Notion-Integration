@@ -7,7 +7,6 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionSelect extends BaseNotionProperty
 {
-    public string $selected;
     private array $options;
 
     public function setType(): BaseNotionProperty
@@ -25,7 +24,7 @@ class NotionSelect extends BaseNotionProperty
 
     public function setSelected(string $option): self
     {
-        $this->selected = $option;
+        $this->rawValue = $option;
 
         return $this;
     }
@@ -34,7 +33,7 @@ class NotionSelect extends BaseNotionProperty
     {
         return [
             'options' => $this->options ?? new MissingValue(),
-            'name' => $this->selected ?? new MissingValue()
+            'name' => $this->rawValue ?? new MissingValue()
         ];
     }
 }

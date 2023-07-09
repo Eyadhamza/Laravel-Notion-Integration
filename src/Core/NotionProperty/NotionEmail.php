@@ -6,7 +6,6 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionEmail extends BaseNotionProperty
 {
-    public ?string $email = null;
 
     public function setType(): BaseNotionProperty
     {
@@ -17,7 +16,7 @@ class NotionEmail extends BaseNotionProperty
 
     public function setEmail(string $email): NotionEmail
     {
-        $this->email = $email;
+        $this->rawValue = $email;
 
         return $this;
     }
@@ -25,7 +24,7 @@ class NotionEmail extends BaseNotionProperty
     public function mapToResource(): array
     {
         return [
-            'value' => $this->email
+            'value' => $this->rawValue
         ];
     }
 }

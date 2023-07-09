@@ -18,7 +18,7 @@ class NotionUrl extends BaseNotionProperty
 
     public function setUrl(string $url): self
     {
-        $this->url = $url;
+        $this->rawValue = $url;
 
         return $this;
     }
@@ -26,7 +26,7 @@ class NotionUrl extends BaseNotionProperty
     public function mapToResource(): array
     {
         return [
-            'value' => $this->url
+            'value' => $this->rawValue
         ];
     }
 }

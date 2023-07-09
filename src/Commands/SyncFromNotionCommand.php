@@ -30,8 +30,8 @@ class SyncFromNotionCommand extends Command
         foreach ($pages as $page) {
             $pagesAsAttributes[] = $model->mapFromNotion($page);
         }
-        dd($pagesAsAttributes);
         $chunks = array_chunk($pagesAsAttributes, 50);
+
         foreach ($chunks as $chunk) {
             $model::insert($chunk);
             $this->info('Synced ' . $model->count() . ' records');

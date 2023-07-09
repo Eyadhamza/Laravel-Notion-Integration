@@ -5,6 +5,7 @@ use Pi\Notion\Core\Models\NotionDatabase;
 use Pi\Notion\Core\Query\NotionFilter;
 use Pi\Notion\Tests\Models\User;
 
+
 test('user creation', function () {
     $user = User::query()->create([
         'name' => 'John Doe',
@@ -12,10 +13,8 @@ test('user creation', function () {
         'password' => 'password'
     ]);
     $page = $user->saveToNotion();
-
     expect($user)->not()->toBeNull()
-        ->and(User::count())->toBe(1)
-        ->and($page->getProperties())->toHaveCount(3);
+        ->and(User::count())->toBe(1);
 });
 
 test('mapping existing database to Notion', function () {

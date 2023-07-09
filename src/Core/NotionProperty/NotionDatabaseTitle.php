@@ -11,12 +11,11 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionDatabaseTitle extends BaseNotionProperty
 {
-    private ?string $title;
 
     public function __construct(string $name)
     {
         parent::__construct($name);
-        $this->title = $name;
+        $this->rawValue = $name;
     }
 
     public function setType(): BaseNotionProperty
@@ -29,7 +28,7 @@ class NotionDatabaseTitle extends BaseNotionProperty
     public function mapToResource(): array
     {
          return [
-             'content' => $this->title
+             'content' => $this->rawValue
          ];
     }
 

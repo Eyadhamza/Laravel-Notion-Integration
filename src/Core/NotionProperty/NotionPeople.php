@@ -10,7 +10,6 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionPeople extends BaseNotionProperty
 {
-    public ?array $people = null;
 
     public function setType(): BaseNotionProperty
     {
@@ -21,7 +20,7 @@ class NotionPeople extends BaseNotionProperty
 
     public function setPeople(?array $people): NotionPeople
     {
-        $this->people = collect($people)
+        $this->rawValue = collect($people)
             ->map(fn (NotionUser $user) => [
                 'object' => $user->objectType ?? 'user',
                 'id' => $user->id
@@ -33,7 +32,7 @@ class NotionPeople extends BaseNotionProperty
 
     public function mapToResource(): array
     {
-        return $this->people ?? [];
+        return $this->rawValue ?? [];
     }
 }
 

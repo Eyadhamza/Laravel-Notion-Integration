@@ -6,7 +6,6 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionTitle extends BaseNotionProperty
 {
-    public ?string $title = null;
 
     public function setType(): BaseNotionProperty
     {
@@ -17,16 +16,16 @@ class NotionTitle extends BaseNotionProperty
 
     public function mapToResource(): array
     {
-        if (is_null($this->title)) return [];
+        if (is_null($this->rawValue)) return [];
 
         return [
-            'content' => $this->title
+            'content' => $this->rawValue
         ];
     }
 
     public function setTitle(string $title): NotionTitle
     {
-        $this->title = $title;
+        $this->rawValue = $title;
         return $this;
     }
 }

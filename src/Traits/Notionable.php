@@ -19,16 +19,14 @@ trait Notionable
 
         $this->validateHasNotionDatabaseId();
 
-        collect($this->getAttributes())->map(function ($value, $key) {
+        $this->notionMap = collect($this->getAttributes())->map(function ($value, $key) {
             if (array_key_exists($key, $this->notionMap)) {
                 /** @var BaseNotionProperty $property */
                 $property = $this->notionMap[$key];
-
-                $property->setRawValue($value)->build();
-
-                //                dd($property->resource());
+                dd($property);
+                return $property->setRawValue($value)->build();
             }
-        });
+        })->filter()->toArray();
 
         $page = new NotionPage();
         return $page
@@ -42,9 +40,11 @@ trait Notionable
         $attributes = [];
 
         foreach ($this->mapToNotion() as $key => $value) {
+            dd($key, $value);
             /** @var BaseNotionProperty $property */
             $property = $page->ofPropertyName($value->getName());
-            $attributes[$key] = $property->getRawValue();
+            $attributes[$key] = $property->getBlockContent()->getValue();
+            dd($attributes);
         }
         return $attributes;
     }

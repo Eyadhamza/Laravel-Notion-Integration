@@ -19,7 +19,7 @@ class NotionCreatedTime extends BaseNotionProperty
     public function mapToResource(): array
     {
         return [
-            'value' => $this->createdTime
+            'value' => $this->rawValue
         ];
     }
 }
