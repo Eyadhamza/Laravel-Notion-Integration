@@ -93,7 +93,7 @@ class NotionDatabase extends NotionObject
             ->setMethod('post')
             ->setBody($requestBody)
             ->setPageSize($pageSize)
-            ->setPaginatedObject(new NotionPage)
+            ->setPaginatedClass(new NotionPage)
             ->setStartCursor($startCursor)
             ->paginate();
 

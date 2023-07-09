@@ -3,8 +3,8 @@
 namespace Pi\Notion\Core\NotionValue;
 
 use Illuminate\Http\Resources\MissingValue;
-use Pi\Notion\Core\Enums\NotionFormulaTypeEnum;
-use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Enums\NotionFormulaTypeEnum;
+use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionFormulaValue extends NotionBlockContent
 {

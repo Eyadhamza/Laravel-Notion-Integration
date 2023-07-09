@@ -29,7 +29,7 @@ class NotionUser extends NotionObject
             ->setUrl($user->getUrl())
             ->setMethod('get')
             ->setPageSize($pageSize)
-            ->setPaginatedObject(new NotionUser)
+            ->setPaginatedClass(new NotionUser)
             ->paginate();
 
         return $user->paginator->make($response);
@@ -53,27 +53,26 @@ class NotionUser extends NotionObject
         return $user->fromResponse($response);
     }
 
-    public static function fromResponse($response): static
+    public function fromResponse($response): static
     {
-        $user = new static();
-        $user->object = $response['object'] ?? null;
-        $user->id = $response['id'] ?? null;
-        $user->name = $response['name'] ?? null;
-        $user->avatarUrl = $response['avatar_url'] ?? null;
-        $user->type = $response['type'] ?? null;
+        $this->object = $response['object'] ?? null;
+        $this->id = $response['id'] ?? null;
+        $this->name = $response['name'] ?? null;
+        $this->avatarUrl = $response['avatar_url'] ?? null;
+        $this->type = $response['type'] ?? null;
 
         if (array_key_exists('person', $response)) {
-            $user->email = $response['person']['email'] ?? null;
+            $this->email = $response['person']['email'] ?? null;
         }
 
         if (array_key_exists('bot', $response)) {
-            $user->owner = new NotionUser();
-            $user->owner->type = $response['bot']['owner']['type'] ?? null;
-            if ($user->owner->type) {
-                $user->owner->setOwner($response['bot']);
+            $this->owner = new NotionUser();
+            $this->owner->type = $response['bot']['owner']['type'] ?? null;
+            if ($this->owner->type) {
+                $this->owner->setOwner($response['bot']);
             }
         }
-        return $user;
+        return $this;
     }
 
     private function getUrl(): string

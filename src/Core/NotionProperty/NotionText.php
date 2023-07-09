@@ -2,11 +2,10 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Core\NotionValue\NotionBlockContent;
 use Pi\Notion\Core\NotionValue\NotionEmptyValue;
 use Pi\Notion\Core\NotionValue\NotionRichText;
-use stdClass;
+use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionText extends BaseNotionProperty
 {
@@ -30,6 +29,7 @@ class NotionText extends BaseNotionProperty
         if (empty($response['text'])) {
             return $this;
         }
+        // TODO: Implement buildFromResponse() method.
 
         return $this;
     }

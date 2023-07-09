@@ -2,9 +2,9 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Core\NotionValue\NotionBlockContent;
 use Pi\Notion\Core\NotionValue\NotionSimpleValue;
+use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionCheckbox extends BaseNotionProperty
 {

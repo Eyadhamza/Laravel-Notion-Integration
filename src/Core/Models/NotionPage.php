@@ -7,8 +7,10 @@ namespace Pi\Notion\Core\Models;
 use Illuminate\Support\Collection;
 use Pi\Notion\Core\Builders\CreateNotionPageRequestBuilder;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
+use Pi\Notion\Core\NotionProperty\NotionPropertyFactory;
 use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\Core\RequestBuilders\NotionDatabaseRequestBuilder;
+use Pi\Notion\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\NotionClient;
 use Pi\Notion\Traits\HandleBlocks;
 use Pi\Notion\Traits\HandleProperties;
@@ -28,50 +30,44 @@ class NotionPage extends NotionObject
         $this->properties = new Collection();
     }
 
-    public static function fromResponse($response): static
+    public function fromResponse($response): static
     {
+        parent::fromResponse($response);
+        $this->lastEditedBy = new NotionUser($response['last_edited_by']['id'] ?? '') ?? null;
+        $this->url = $response['url'] ?? null;
+        $this->icon = $response['icon'] ?? null;
+        $this->cover = $response['cover'] ?? null;
 
-        $page = parent::fromResponse($response);
-        $page->lastEditedBy = new NotionUser($response['last_edited_by']['id'] ?? '') ?? null;
-        $page->url = $response['url'] ?? null;
-        $page->icon = $response['icon'] ?? null;
-        $page->cover = $response['cover'] ?? null;
-
-        $page->properties = new Collection();
-        $page->buildProperties($response);
-        return $page;
+        $this->properties = new Collection();
+        $this->buildProperties($response);
+        return $this;
     }
 
     public function get(): self
     {
-        $response = NotionClient::request('get', $this->getUrl());
+        $response = NotionClient::make()->get($this->getUrl());
 
-        return $this->fromResponse($response);
+        return $this->fromResponse($response->json());
     }
 
-    public function getProperty(string $name, int $pageSize = 100)
+    public function getProperty(string $name, int $pageSize = 100): BaseNotionProperty|NotionPaginator
     {
-        $property = $this
-            ->properties
-            ->filter
-            ->ofName($name)
-            ->firstOrFail();
+        /** @var BaseNotionProperty $property */
+        $property = $this->properties->get($name);
+
         if ($property->isPaginated()) {
-            $this->paginator = new NotionPaginator();
-            $response = $this->paginator
+            return NotionPaginator::make(BaseNotionProperty::class)
                 ->setUrl($this->propertyUrl($property->getId()))
                 ->setMethod('get')
-                ->setPageSize($pageSize)
-                ->paginate();
-
-            return $this->paginator->make($response, new BaseNotionProperty);
-        } else {
-            $response = NotionClient::request('get', $this->propertyUrl($property->getId()));
+                ->paginate($pageSize);
         }
 
-        $property->setValues($response[$property->getType()] ?? []);
+        $response = NotionClient::make()
+            ->get($this->propertyUrl($property->getId()))
+            ->json();
 
-        return $property;
+        return NotionPropertyFactory::make(NotionPropertyTypeEnum::from($response['type']), $property['id'])
+            ->fromResponse($response);
     }
 
     public function getWithContent(): NotionPaginator
@@ -92,7 +88,7 @@ class NotionPage extends NotionObject
     public function create(): self
     {
         $requestBuilder = CreateNotionPageRequestBuilder::make()
-            ->setParent($this->getDatabaseId())
+            ->setParent($this->notionDatabaseId)
             ->setProperties($this->properties)
             ->setBlocks($this->blocks);
 
@@ -104,7 +100,6 @@ class NotionPage extends NotionObject
 
     public function update(): self
     {
-
         $requestBuilder = CreateNotionPageRequestBuilder::make()
             ->setProperties($this->properties);
 
@@ -132,15 +127,11 @@ class NotionPage extends NotionObject
         return NotionClient::PAGE_URL . $this->id;
     }
 
-    private function getDatabaseId()
-    {
-        return $this->notionDatabaseId;
-    }
-
-    private function propertyUrl($id)
+    private function propertyUrl($id): string
     {
         return $this->getUrl() . '/properties/' . $id;
     }
+
     public function ofPropertyName(string $name)
     {
         return $this->properties->filter(function (BaseNotionProperty $property) use ($name) {

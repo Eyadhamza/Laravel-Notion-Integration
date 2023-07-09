@@ -2,10 +2,9 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Core\NotionValue\NotionArrayValue;
 use Pi\Notion\Core\NotionValue\NotionBlockContent;
-use stdClass;
+use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionMultiSelect extends BaseNotionProperty
 {

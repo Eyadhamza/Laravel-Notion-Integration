@@ -3,11 +3,11 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 use Illuminate\Http\Resources\MissingValue;
-use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
-use Pi\Notion\Core\Enums\NumberFormatEnum;
 use Pi\Notion\Core\NotionValue\NotionArrayValue;
 use Pi\Notion\Core\NotionValue\NotionBlockContent;
 use Pi\Notion\Core\NotionValue\NotionSimpleValue;
+use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Enums\NumberFormatEnum;
 
 class NotionNumber extends BaseNotionProperty
 {

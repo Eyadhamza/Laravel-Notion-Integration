@@ -7,18 +7,12 @@ use Pi\Notion\Core\Models\NotionObject;
 
 class PaginatorRequestBuilder extends BaseNotionRequestBuilder
 {
-    private NotionObject $notionObject;
     private ?string $startCursor;
     private ?int $pageSize;
 
-    public function __construct(NotionObject $notionObject)
+    public static function make(): static
     {
-        $this->notionObject = $notionObject;
-    }
-
-    public static function make(NotionObject $notionObject): static
-    {
-        return new static($notionObject);
+        return new static();
     }
 
     public function toArray(): array

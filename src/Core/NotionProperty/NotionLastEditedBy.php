@@ -2,10 +2,10 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Core\Models\NotionUser;
 use Pi\Notion\Core\NotionValue\NotionBlockContent;
 use Pi\Notion\Core\NotionValue\NotionEmptyValue;
+use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionLastEditedBy extends BaseNotionProperty
 {

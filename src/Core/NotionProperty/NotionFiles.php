@@ -3,10 +3,10 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 use Illuminate\Http\Resources\MissingValue;
-use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Core\NotionValue\NotionArrayValue;
 use Pi\Notion\Core\NotionValue\NotionBlockContent;
 use Pi\Notion\Core\NotionValue\NotionFile;
+use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionFiles extends BaseNotionProperty
 {

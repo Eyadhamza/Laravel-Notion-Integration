@@ -2,17 +2,15 @@
 
 namespace Pi\Notion\Core\Builders;
 
-use Pi\Notion\Core\Enums\NotionFormulaTypeEnum;
 use Pi\Notion\Core\NotionProperty\NotionCheckbox;
 use Pi\Notion\Core\NotionProperty\NotionCreatedBy;
 use Pi\Notion\Core\NotionProperty\NotionCreatedTime;
-use Pi\Notion\Core\NotionProperty\NotionTitle;
 use Pi\Notion\Core\NotionProperty\NotionDate;
 use Pi\Notion\Core\NotionProperty\NotionEmail;
+use Pi\Notion\Core\NotionProperty\NotionFiles;
 use Pi\Notion\Core\NotionProperty\NotionFormula;
 use Pi\Notion\Core\NotionProperty\NotionLastEditedBy;
 use Pi\Notion\Core\NotionProperty\NotionLastEditedTime;
-use Pi\Notion\Core\NotionProperty\NotionFiles;
 use Pi\Notion\Core\NotionProperty\NotionNumber;
 use Pi\Notion\Core\NotionProperty\NotionPeople;
 use Pi\Notion\Core\NotionProperty\NotionPhoneNumber;

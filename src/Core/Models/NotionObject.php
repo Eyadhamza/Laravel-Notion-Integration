@@ -3,9 +3,9 @@
 namespace Pi\Notion\Core\Models;
 
 
-use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Core\NotionProperty\NotionPropertyFactory;
 use Pi\Notion\Core\Query\NotionPaginator;
+use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionObject
 {
@@ -22,27 +22,38 @@ class NotionObject
     protected ?string $cover;
     protected NotionPaginator $paginator;
 
-    public static function fromResponse(array $response): static
+    public function fromResponse(array $response): static
     {
-        $object = new static();
-        $object->id = $response['id'] ?? null;
-        $object->objectType = $response['object'];
-        $object->parentType = $response['parent']['type'];
-        $object->parentId = $response['parent'][$object->parentType];
-        $object->archived = $response['archived'] ?? null;
-        $object->createdTime = $response['created_time'];
-        $object->lastEditedTime = $response['last_edited_time'];
+        $this->id = $response['id'] ?? null;
+        $this->objectType = $response['object'];
+        $this->setParent($response['parent'] ?? []);
+        $this->archived = $response['archived'] ?? null;
+        $this->createdTime = $response['created_time'] ?? null;
+        $this->lastEditedTime = $response['last_edited_time'] ?? null;
 
-        return $object;
+        return $this;
     }
 
     protected function buildProperties($response): static
     {
-        foreach ($response['properties'] as $propertyDate) {
-            $property = NotionPropertyFactory::make(NotionPropertyTypeEnum::from($propertyDate['type']), $propertyDate);
+        foreach ($response['properties'] as $propertyName => $propertyData) {
+            $propertyData['name'] = $propertyName;
 
-            $this->properties->add($property);
+            $property = NotionPropertyFactory::make(NotionPropertyTypeEnum::from($propertyData['type']), $propertyName);
+
+            $this->properties->put($property->getName(), $property->fromResponse($propertyData));
         }
+
+        return $this;
+    }
+
+    private function setParent(array $parent = []): self
+    {
+        if (empty($parent)) {
+            return $this;
+        }
+        $this->parentType = $parent['type'];
+        $this->parentId = $parent[$this->parentType];
 
         return $this;
     }

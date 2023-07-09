@@ -5,11 +5,16 @@ namespace Pi\Notion\Core\Query;
 use Illuminate\Support\Collection;
 use Pi\Notion\Core\Models\NotionObject;
 use Pi\Notion\Core\Models\NotionPage;
+use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
+use Pi\Notion\Core\NotionProperty\NotionPropertyFactory;
 use Pi\Notion\Core\RequestBuilders\PaginatorRequestBuilder;
+use Pi\Notion\Enums\NotionPaginatedObjectTypeEnum;
+use Pi\Notion\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\NotionClient;
 
 class NotionPaginator
 {
+    public string $paginatedClass;
     private ?string $startCursor;
     private ?int $pageSize = 100;
     private bool $hasMore;
@@ -21,22 +26,23 @@ class NotionPaginator
 
     private NotionObject $notionObject;
 
-    public function make(array $response): static
+    public function __construct(string $paginatedClass)
     {
-        $this->hasMore = $response['has_more'];
-        $this->nextCursor = $response['next_cursor'];
+        $this->paginatedClass = $paginatedClass;
         $this->results = new Collection();
-        foreach ($response['results'] as $result) {
-            $this->results->add($this->notionObject::fromResponse($result));
-        }
-        return $this;
+
     }
 
-    public function paginate(): array
+    public static function make(string $paginatedClass): static
     {
-        $paginatorRequestBuilder = PaginatorRequestBuilder::make($this->notionObject)
+        return new static($paginatedClass);
+    }
+
+    public function paginate(int $pageSize = 10): self
+    {
+        $paginatorRequestBuilder = PaginatorRequestBuilder::make()
             ->setStartCursor($this->startCursor ?? null)
-            ->setPageSize($this->pageSize);
+            ->setPageSize($pageSize);
 
         $response = NotionClient::make()
             ->setRequest($paginatorRequestBuilder)
@@ -44,7 +50,17 @@ class NotionPaginator
 
         $this->updateNextCursor($response['next_cursor'], $response['has_more']);
 
-        return $response->json();
+        return $this->build($response->json());
+    }
+
+    public function build(array $response): static
+    {
+        $this->hasMore = $response['has_more'];
+        $this->nextCursor = $response['next_cursor'];
+        $this->results = collect($response['results']);
+        $this->setPaginatedResults($response);
+
+        return $this;
     }
 
     public function next(): static
@@ -107,15 +123,43 @@ class NotionPaginator
         return $this;
     }
 
-    public function setPaginatedObject(NotionObject $paginatedObject): static
+    public function setPaginatedClass(string $paginatedClass): static
     {
-        $this->notionObject = $paginatedObject;
+        $this->paginatedClass = $paginatedClass;
         return $this;
     }
 
     public function setStartCursor(?string $startCursor): static
     {
         $this->startCursor = $startCursor;
+        return $this;
+    }
+
+    private function setPaginatedResults(array $data): self
+    {
+        return match (NotionPaginatedObjectTypeEnum::from($data['type'])) {
+            NotionPaginatedObjectTypeEnum::PROPERTY_ITEM => $this->setPaginatedProperties($data),
+            default => $this->setPaginatedObjects($data),
+        };
+    }
+
+    private function setPaginatedProperties(array $data): self
+    {
+        $this->results = collect($data['results'])->mapWithKeys(fn($property) => [
+            $property['id'] => NotionPropertyFactory::make(
+                NotionPropertyTypeEnum::from($property['type']),
+                $property['id']
+            )->fromResponse($property)
+        ]);
+
+        return $this;
+    }
+
+    private function setPaginatedObjects(array $data): self
+    {
+        $this->results = collect($data['results'])
+            ->map(fn($object) => $this->paginatedClass::fromResponse($object));
+
         return $this;
     }
 }

@@ -2,35 +2,35 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Core\NotionValue\NotionFile;
+use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionPropertyFactory
 {
 
-    public static function make(NotionPropertyTypeEnum $propertyType, array $data): BaseNotionProperty
+    public static function make(NotionPropertyTypeEnum $propertyType, string $propertyName): BaseNotionProperty
     {
         return match ($propertyType){
-            NotionPropertyTypeEnum::TITLE => NotionTitle::fromResponse($data),
-            NotionPropertyTypeEnum::RICH_TEXT => NotionText::fromResponse($data),
-            NotionPropertyTypeEnum::PHONE_NUMBER => NotionPhoneNumber::fromResponse($data),
-            NotionPropertyTypeEnum::MULTISELECT => NotionMultiSelect::fromResponse($data),
-            NotionPropertyTypeEnum::SELECT => NotionSelect::fromResponse($data),
-            NotionPropertyTypeEnum::EMAIL => NotionEmail::fromResponse($data),
-            NotionPropertyTypeEnum::URL => NotionUrl::fromResponse($data),
-            NotionPropertyTypeEnum::CHECKBOX => NotionCheckbox::fromResponse($data),
-            NotionPropertyTypeEnum::NUMBER => NotionNumber::fromResponse($data),
-            NotionPropertyTypeEnum::DATE => NotionDate::fromResponse($data),
-            NotionPropertyTypeEnum::PEOPLE => NotionPeople::fromResponse($data),
-            NotionPropertyTypeEnum::FILE => NotionFile::build($data),
-            NotionPropertyTypeEnum::FORMULA => NotionFormula::fromResponse($data),
-            NotionPropertyTypeEnum::RELATION => NotionRelation::fromResponse($data),
-            NotionPropertyTypeEnum::ROLLUP => NotionRollup::fromResponse($data),
-            NotionPropertyTypeEnum::CREATED_TIME => NotionCreatedTime::fromResponse($data),
-            NotionPropertyTypeEnum::LAST_EDITED_TIME => NotionLastEditedTime::fromResponse($data),
-            NotionPropertyTypeEnum::CREATED_BY => NotionCreatedBy::fromResponse($data),
-            NotionPropertyTypeEnum::LAST_EDITED_BY => NotionLastEditedBy::fromResponse($data),
-            NotionPropertyTypeEnum::FILES => NotionFiles::fromResponse($data),
+            NotionPropertyTypeEnum::TITLE => NotionTitle::make($propertyName),
+            NotionPropertyTypeEnum::RICH_TEXT => NotionText::make($propertyName),
+            NotionPropertyTypeEnum::PHONE_NUMBER => NotionPhoneNumber::make($propertyName),
+            NotionPropertyTypeEnum::MULTISELECT => NotionMultiSelect::make($propertyName),
+            NotionPropertyTypeEnum::SELECT => NotionSelect::make($propertyName),
+            NotionPropertyTypeEnum::EMAIL => NotionEmail::make($propertyName),
+            NotionPropertyTypeEnum::URL => NotionUrl::make($propertyName),
+            NotionPropertyTypeEnum::CHECKBOX => NotionCheckbox::make($propertyName),
+            NotionPropertyTypeEnum::NUMBER => NotionNumber::make($propertyName),
+            NotionPropertyTypeEnum::DATE => NotionDate::make($propertyName),
+            NotionPropertyTypeEnum::PEOPLE => NotionPeople::make($propertyName),
+            NotionPropertyTypeEnum::FILE => NotionFile::make($propertyName),
+            NotionPropertyTypeEnum::FORMULA => NotionFormula::make($propertyName),
+            NotionPropertyTypeEnum::RELATION => NotionRelation::make($propertyName),
+            NotionPropertyTypeEnum::ROLLUP => NotionRollup::make($propertyName),
+            NotionPropertyTypeEnum::CREATED_TIME => NotionCreatedTime::make($propertyName),
+            NotionPropertyTypeEnum::LAST_EDITED_TIME => NotionLastEditedTime::make($propertyName),
+            NotionPropertyTypeEnum::CREATED_BY => NotionCreatedBy::make($propertyName),
+            NotionPropertyTypeEnum::LAST_EDITED_BY => NotionLastEditedBy::make($propertyName),
+            NotionPropertyTypeEnum::FILES => NotionFiles::make($propertyName),
 
         };
     }

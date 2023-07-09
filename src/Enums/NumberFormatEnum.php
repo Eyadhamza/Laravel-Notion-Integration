@@ -1,6 +1,6 @@
 <?php
 
-namespace Pi\Notion\Core\Enums;
+namespace Pi\Notion\Enums;
 
 enum NumberFormatEnum: string
 {

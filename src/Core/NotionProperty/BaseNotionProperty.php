@@ -4,14 +4,13 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 
-use Pi\Notion\Core\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Core\Models\NotionObject;
 use Pi\Notion\Core\NotionValue\NotionBlockContent;
 use Pi\Notion\Core\NotionValue\NotionEmptyValue;
+use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 abstract class BaseNotionProperty extends NotionObject
 {
-    protected mixed $rawValue;
     protected NotionBlockContent|NotionEmptyValue $blockContent;
     protected NotionPropertyTypeEnum $type;
     protected ?string $name;
@@ -40,14 +39,23 @@ abstract class BaseNotionProperty extends NotionObject
         return $this->blockContent->resource();
     }
 
-    abstract protected function buildValue(): NotionBlockContent;
-    public static function fromResponse(array $response): static
+    public function isPaginated(): bool
     {
-        $property = new static($response['name'] ?? '');
-        $property->id = $response['id'];
-        $property->type = NotionPropertyTypeEnum::tryFrom($response['type']);
+        return match ($this->type) {
+            NotionPropertyTypeEnum::ROLLUP,
+            NotionPropertyTypeEnum::RELATION,
+            NotionPropertyTypeEnum::RICH_TEXT => true,
+            default => false
+        };
+    }
 
-        return $property->buildFromResponse($response);
+    abstract protected function buildValue(): NotionBlockContent;
+    public function fromResponse(array $response): static
+    {
+        $this->id = $response['id'];
+        $this->type = NotionPropertyTypeEnum::tryFrom($response['type']);
+
+        return $this->buildFromResponse($response);
     }
     abstract protected function buildFromResponse(array $response): self;
 
@@ -73,17 +81,11 @@ abstract class BaseNotionProperty extends NotionObject
         return $this->type;
     }
 
-    public function ofName(string $name): bool
-    {
-        return $this->name == $name;
-    }
-
     public function getName(): string
     {
         return $this->name;
     }
 
     abstract public function setType(): BaseNotionProperty;
-
 
 }
