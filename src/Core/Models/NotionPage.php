@@ -5,11 +5,11 @@ namespace Pi\Notion\Core\Models;
 
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\Builders\CreateNotionPageRequestBuilder;
 use Pi\Notion\Core\NotionClient;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 use Pi\Notion\Core\NotionProperty\NotionPropertyFactory;
 use Pi\Notion\Core\Query\NotionPaginator;
+use Pi\Notion\Core\RequestBuilders\CreateNotionPageRequestBuilder;
 use Pi\Notion\Enums\NotionBlockTypeEnum;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Traits\HandleBlocks;

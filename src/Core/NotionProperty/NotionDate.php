@@ -9,7 +9,6 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionDate extends BaseNotionProperty
 {
-    private ?string $start;
     private ?string $timeZone;
     private ?string $end;
 
@@ -22,7 +21,7 @@ class NotionDate extends BaseNotionProperty
 
     public function setStart(?string $start): NotionDate
     {
-        $this->start = $start;
+        $this->rawValue = $start;
 
         return $this;
     }
@@ -43,7 +42,7 @@ class NotionDate extends BaseNotionProperty
     public function mapToResource(): array
     {
         return [
-            'start' => $this->start ?? new MissingValue(),
+            'start' => $this->rawValue ?? new MissingValue(),
             'end' => $this->end ?? new MissingValue(),
             'time_zone' => $this->timeZone ?? new MissingValue(),
         ];
