@@ -2,7 +2,7 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionSimpleValue;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
@@ -11,7 +11,7 @@ class NotionUrl extends BaseNotionProperty
     private ?string $link = null;
 
 
-    protected function buildValue():NotionBlockContent
+    protected function buildValue():NotionContent
     {
         return NotionSimpleValue::make($this->link)
             ->setValueType($this->type);

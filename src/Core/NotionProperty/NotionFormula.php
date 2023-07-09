@@ -2,7 +2,7 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionFormulaValue;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
@@ -12,7 +12,7 @@ class NotionFormula extends BaseNotionProperty
 
     private string $result;
 
-    protected function buildValue(): NotionBlockContent
+    protected function buildValue(): NotionContent
     {
         return NotionFormulaValue::make($this->expression)->setValueType('formula');
     }

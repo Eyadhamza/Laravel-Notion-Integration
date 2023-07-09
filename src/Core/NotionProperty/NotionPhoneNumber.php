@@ -3,7 +3,7 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 use Pi\Notion\Core\BlockContent\NotionArrayValue;
-use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionObjectValue;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
@@ -12,7 +12,7 @@ class NotionPhoneNumber extends BaseNotionProperty
     private ?string $phone = null;
 
 
-    protected function buildValue(): NotionBlockContent
+    protected function buildValue(): NotionContent
     {
         return NotionArrayValue::make($this->phone)
             ->setValueType($this->type);

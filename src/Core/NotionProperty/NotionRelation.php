@@ -4,7 +4,7 @@ namespace Pi\Notion\Core\NotionProperty;
 
 use Illuminate\Http\Resources\MissingValue;
 use Pi\Notion\Core\BlockContent\NotionArrayValue;
-use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionRelation extends BaseNotionProperty
@@ -18,7 +18,7 @@ class NotionRelation extends BaseNotionProperty
         return $this;
     }
 
-    protected function buildValue(): NotionBlockContent
+    protected function buildValue(): NotionContent
     {
         return NotionArrayValue::make(array_merge($this->getIds(),[
             'database_id' => $this->databaseId ?? new MissingValue(),

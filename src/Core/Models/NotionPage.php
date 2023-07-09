@@ -10,6 +10,7 @@ use Pi\Notion\Core\NotionClient;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 use Pi\Notion\Core\NotionProperty\NotionPropertyFactory;
 use Pi\Notion\Core\Query\NotionPaginator;
+use Pi\Notion\Enums\NotionBlockTypeEnum;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Traits\HandleBlocks;
 use Pi\Notion\Traits\HandleProperties;
@@ -110,7 +111,7 @@ class NotionPage extends NotionObject
 
     public function delete(): NotionBlock
     {
-        return (new NotionBlock)
+        return NotionBlock::make(NotionBlockTypeEnum::PAGE)
             ->setId($this->id)
             ->delete();
     }

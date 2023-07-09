@@ -4,7 +4,7 @@ namespace Pi\Notion\Core\NotionProperty;
 
 use Illuminate\Http\Resources\MissingValue;
 use Pi\Notion\Core\BlockContent\NotionArrayValue;
-use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionDate extends BaseNotionProperty
@@ -14,7 +14,7 @@ class NotionDate extends BaseNotionProperty
     private ?string $timeZone = null;
 
 
-    protected function buildValue(): NotionBlockContent
+    protected function buildValue(): NotionContent
     {
         return NotionArrayValue::make([
             'start' => $this->start ?? new MissingValue(),

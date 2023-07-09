@@ -2,7 +2,7 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionObjectValue;
 use Pi\Notion\Core\BlockContent\NotionSimpleValue;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
@@ -11,7 +11,7 @@ class NotionEmail extends BaseNotionProperty
 {
     private ?string $email = null;
 
-    protected function buildValue(): NotionBlockContent
+    protected function buildValue(): NotionContent
     {
         $this->blockContent = NotionSimpleValue::make($this->email)
             ->setValueType($this->type);

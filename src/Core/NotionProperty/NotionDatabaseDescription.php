@@ -3,7 +3,7 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 use Pi\Notion\Core\BlockContent\NotionArrayValue;
-use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionEmptyValue;
 use Pi\Notion\Core\BlockContent\NotionRichText;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
@@ -11,9 +11,9 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 class NotionDatabaseDescription extends BaseNotionProperty
 {
 
-    private NotionBlockContent|NotionEmptyValue $content;
+    private NotionContent|NotionEmptyValue $content;
 
-    protected function buildValue(): NotionBlockContent
+    protected function buildValue(): NotionContent
     {
         $this->content = NotionRichText::make($this->name)
             ->setValueType('text')

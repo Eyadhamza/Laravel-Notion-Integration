@@ -6,7 +6,7 @@ namespace Pi\Notion\Core\Models;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\NotionClient;
 use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\Enums\NotionBlockTypeEnum;
@@ -18,19 +18,19 @@ class NotionBlock extends NotionObject
     use CreateBlockTypes, HasResource;
 
     private NotionBlockTypeEnum $type;
-    private ?NotionBlockContent $blockContent;
+    private ?NotionContent $blockContent;
     private string $color;
     private Collection $children;
     public JsonResource $resource;
 
-    public function __construct(NotionBlockTypeEnum $type, NotionBlockContent $blockContent = null)
+    public function __construct(NotionBlockTypeEnum $type, NotionContent $blockContent = null)
     {
         $this->type = $type;
         $this->blockContent = $blockContent;
         $this->children = new Collection();
     }
 
-    public static function make(NotionBlockTypeEnum $type, NotionBlockContent $blockContent = null): self
+    public static function make(NotionBlockTypeEnum $type, NotionContent $blockContent = null): self
     {
         return new self($type, $blockContent);
     }
@@ -38,7 +38,7 @@ class NotionBlock extends NotionObject
     public function fromResponse($response): self
     {
         parent::fromResponse($response);
-        $this->type = $response['type'] ?? null;
+        $this->type = NotionBlockTypeEnum::tryFrom($response['type']);
 
         return $this;
     }

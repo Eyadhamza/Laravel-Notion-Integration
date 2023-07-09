@@ -9,20 +9,14 @@ use Pi\Notion\Core\NotionProperty\NotionSelect;
 use Pi\Notion\Core\BlockContent\NotionFile;
 use Pi\Notion\Core\BlockContent\NotionRichText;
 use Pi\Notion\Core\Query\NotionPaginator;
-use Pi\Notion\Core\NotionProperty\NotionRollup;
 use Pi\Notion\Core\NotionProperty\NotionPeople;
 use Pi\Notion\Core\NotionProperty\NotionFiles;
 use Pi\Notion\Core\NotionProperty\NotionEmail;
 use Pi\Notion\Core\NotionProperty\NotionNumber;
 use Pi\Notion\Core\NotionProperty\NotionPhoneNumber;
 use Pi\Notion\Core\NotionProperty\NotionUrl;
-use Pi\Notion\Core\NotionProperty\NotionCreatedTime;
-use Pi\Notion\Core\NotionProperty\NotionCreatedBy;
-use Pi\Notion\Core\NotionProperty\NotionLastEditedTime;
-use Pi\Notion\Core\NotionProperty\NotionLastEditedBy;
 use Pi\Notion\Core\NotionProperty\NotionCheckbox;
 use Pi\Notion\Core\NotionProperty\NotionDate;
-use Pi\Notion\Core\NotionProperty\NotionFormula;
 use Pi\Notion\Core\NotionProperty\NotionRelation;
 use function Pest\Laravel\withoutExceptionHandling;
 
@@ -176,9 +170,7 @@ it('can add nested content blocks to created pages', function () {
         NotionBlock::headingThree('Heading 3'),
         NotionBlock::numberedList('Numbered List'),
         NotionBlock::bulletedList('Bullet List'),
-    ]);
-
-    $page->create();
+    ])->create();
 
     expect($page->getProperties())->toHaveCount(2)
         ->and($page->getBlocks())->toHaveCount(5)

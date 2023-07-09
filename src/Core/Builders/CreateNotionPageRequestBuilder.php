@@ -6,7 +6,7 @@ namespace Pi\Notion\Core\Builders;
 use Illuminate\Support\Collection;
 use Pi\Notion\Core\Models\NotionBlock;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
-use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionContent;
 
 class CreateNotionPageRequestBuilder
 {

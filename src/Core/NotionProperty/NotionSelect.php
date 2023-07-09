@@ -3,7 +3,7 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 use Pi\Notion\Core\BlockContent\NotionArrayValue;
-use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Enums\NotionBlockTypeEnum;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
@@ -13,7 +13,7 @@ class NotionSelect extends BaseNotionProperty
 
     private string $selected;
 
-    protected function buildValue(): NotionBlockContent
+    protected function buildValue(): NotionContent
     {
         if (isset($this->selected)) {
             return NotionArrayValue::make(['name' => $this->selected])

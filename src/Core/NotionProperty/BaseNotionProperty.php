@@ -6,13 +6,13 @@ namespace Pi\Notion\Core\NotionProperty;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Pi\Notion\Core\Models\NotionObject;
-use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionEmptyValue;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 abstract class BaseNotionProperty extends NotionObject
 {
-    protected NotionBlockContent|NotionEmptyValue $blockContent;
+    protected NotionContent|NotionEmptyValue $blockContent;
     protected NotionPropertyTypeEnum $type;
     protected ?string $name;
 
@@ -45,7 +45,7 @@ abstract class BaseNotionProperty extends NotionObject
             default => false
         };
     }
-    abstract protected function buildValue(): NotionBlockContent;
+    abstract protected function buildValue(): NotionContent;
     public function fromResponse(array $response): static
     {
         $this->id = $response['id'];
@@ -64,7 +64,7 @@ abstract class BaseNotionProperty extends NotionObject
         return $this;
     }
 
-    public function getBlockContent(): NotionBlockContent
+    public function getBlockContent(): NotionContent
     {
         return $this->blockContent;
     }

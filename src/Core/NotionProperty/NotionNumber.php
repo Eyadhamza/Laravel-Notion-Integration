@@ -4,7 +4,7 @@ namespace Pi\Notion\Core\NotionProperty;
 
 use Illuminate\Http\Resources\MissingValue;
 use Pi\Notion\Core\BlockContent\NotionArrayValue;
-use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionSimpleValue;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Enums\NotionNumberFormatEnum;
@@ -14,7 +14,7 @@ class NotionNumber extends BaseNotionProperty
     private ?int $number = null;
     private ?NotionNumberFormatEnum $format = null;
 
-    protected function buildValue(): NotionBlockContent
+    protected function buildValue(): NotionContent
     {
         if (!$this->number) {
             return NotionArrayValue::make([

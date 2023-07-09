@@ -3,7 +3,7 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 use Pi\Notion\Core\BlockContent\NotionArrayValue;
-use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionMultiSelect extends BaseNotionProperty
@@ -11,7 +11,7 @@ class NotionMultiSelect extends BaseNotionProperty
     private ?array $options = null;
 
 
-    protected function buildValue(): NotionBlockContent
+    protected function buildValue(): NotionContent
     {
         return NotionArrayValue::make($this->options)->setValueType('multi_select');
     }

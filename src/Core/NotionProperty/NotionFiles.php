@@ -4,7 +4,7 @@ namespace Pi\Notion\Core\NotionProperty;
 
 use Illuminate\Http\Resources\MissingValue;
 use Pi\Notion\Core\BlockContent\NotionArrayValue;
-use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionFile;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
@@ -13,7 +13,7 @@ class NotionFiles extends BaseNotionProperty
     private ?array $files = null;
 
 
-    protected function buildValue(): NotionBlockContent
+    protected function buildValue(): NotionContent
     {
         return NotionArrayValue::make($this->files ?? new MissingValue())
             ->setValueType($this->type);

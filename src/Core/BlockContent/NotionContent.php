@@ -9,7 +9,7 @@ use Pi\Notion\Enums\NotionBlockTypeEnum;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 use Pi\Notion\Traits\HasResource;
 
-abstract class NotionBlockContent
+abstract class NotionContent
 {
     use HasResource;
 

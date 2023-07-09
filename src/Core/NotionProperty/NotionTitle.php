@@ -3,7 +3,7 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 use Pi\Notion\Core\BlockContent\NotionArrayValue;
-use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionEmptyValue;
 use Pi\Notion\Core\BlockContent\NotionRichText;
 use Pi\Notion\Core\BlockContent\NotionTextValue;
@@ -32,7 +32,7 @@ class NotionTitle extends BaseNotionProperty
         return $this;
     }
 
-    protected function buildValue(): NotionBlockContent
+    protected function buildValue(): NotionContent
     {
         return NotionArrayValue::make($this->content->resource)
             ->setValueType($this->type)
@@ -53,7 +53,7 @@ class NotionTitle extends BaseNotionProperty
             return $this;
         }
 
-        $this->content = NotionRichText::make($response['title'][0]['plain_text'])
+        $this->content = NotionTextValue::make($response['title'][0]['plain_text'])
             ->setValueType($this->type);
 
         return $this;

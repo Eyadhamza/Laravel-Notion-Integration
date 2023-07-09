@@ -4,7 +4,7 @@ namespace Pi\Notion\Core\NotionProperty;
 
 use Illuminate\Http\Resources\MissingValue;
 use Pi\Notion\Core\BlockContent\NotionArrayValue;
-use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionRollup extends BaseNotionProperty
@@ -17,7 +17,7 @@ class NotionRollup extends BaseNotionProperty
     private ?string $rollupPropertyId = null;
     private ?string $rollupFunction = null;
 
-    protected function buildValue(): NotionBlockContent
+    protected function buildValue(): NotionContent
     {
         return NotionArrayValue::make([
             'relation_property_name' => $this->relationPropertyName ?? new MissingValue(),

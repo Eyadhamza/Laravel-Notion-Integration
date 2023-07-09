@@ -4,7 +4,7 @@ namespace Pi\Notion\Core\BlockContent;
 
 use Pi\Notion\Enums\NotionBlockContentTypeEnum;
 
-class NotionSimpleValue extends NotionBlockContent
+class NotionSimpleValue extends NotionContent
 {
 
     public static function build(array $response): static
@@ -19,7 +19,7 @@ class NotionSimpleValue extends NotionBlockContent
         ];
     }
 
-    public function setContentType(): NotionBlockContent
+    public function setContentType(): NotionContent
     {
         $this->contentType = NotionBlockContentTypeEnum::SIMPLE_VALUE;
         return $this;

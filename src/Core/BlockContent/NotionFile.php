@@ -5,7 +5,7 @@ namespace Pi\Notion\Core\BlockContent;
 use Illuminate\Http\Resources\MissingValue;
 use Pi\Notion\Enums\NotionBlockContentTypeEnum;
 
-class NotionFile extends NotionBlockContent
+class NotionFile extends NotionContent
 {
     private string $fileType;
     private string $fileUrl;
@@ -55,7 +55,7 @@ class NotionFile extends NotionBlockContent
         return $this;
     }
 
-    public function setContentType(): NotionBlockContent
+    public function setContentType(): NotionContent
     {
         $this->contentType = NotionBlockContentTypeEnum::FILE;
         return $this;

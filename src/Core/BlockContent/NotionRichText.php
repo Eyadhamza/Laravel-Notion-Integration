@@ -8,7 +8,7 @@ use Pi\Notion\Enums\NotionBlockContentTypeEnum;
 use Pi\Notion\Enums\NotionBlockTypeEnum;
 use Pi\Notion\Traits\HasResource;
 
-class NotionRichText extends NotionBlockContent
+class NotionRichText extends NotionContent
 {
     private Collection $annotations;
     private ?array $link;

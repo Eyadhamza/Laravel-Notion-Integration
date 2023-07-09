@@ -7,7 +7,7 @@ use Pi\Notion\Enums\NotionBlockContentTypeEnum;
 use Pi\Notion\Enums\NotionFormulaTypeEnum;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
-class NotionFormulaValue extends NotionBlockContent
+class NotionFormulaValue extends NotionContent
 {
     private ?NotionFormulaTypeEnum $expressionType = null;
 
@@ -57,7 +57,7 @@ class NotionFormulaValue extends NotionBlockContent
         ];
     }
 
-    public function setContentType(): NotionBlockContent
+    public function setContentType(): NotionContent
     {
         $this->contentType = NotionBlockContentTypeEnum::FORMULA;
         return $this;

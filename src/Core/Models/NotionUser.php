@@ -22,6 +22,7 @@ class NotionUser extends NotionObject
     {
         return new static($id);
     }
+
     public static function index(int $pageSize = 100): NotionPaginator
     {
         $user = new static();
@@ -68,12 +69,13 @@ class NotionUser extends NotionObject
             $this->email = $response['person']['email'] ?? null;
         }
 
-        if (array_key_exists('bot', $response)) {
-            $owner = new NotionUser();
-            $owner->type = $response['bot']['owner']['type'] ?? null;
-            if ($owner->type) {
-                $owner->setOwner($response['bot']);
-            }
+        if (empty($response['bot'])) {
+            return $this;
+        }
+        $owner = NotionUser::make($response['bot']['owner']['id']);
+        $owner->type = $response['bot']['owner']['type'] ?? null;
+        if ($owner->type) {
+            $owner->setOwner($response['bot']);
         }
         return $this;
     }

@@ -2,7 +2,7 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\BlockContent\NotionBlockContent;
+use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionEmptyValue;
 use Pi\Notion\Core\BlockContent\NotionRichText;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
@@ -12,7 +12,7 @@ class NotionText extends BaseNotionProperty
     private NotionRichText $text;
 
 
-    protected function buildValue(): NotionBlockContent
+    protected function buildValue(): NotionContent
     {
         return $this->text ?? new NotionEmptyValue();
     }

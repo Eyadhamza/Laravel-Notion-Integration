@@ -4,7 +4,7 @@ namespace Pi\Notion\Core\BlockContent;
 
 use Pi\Notion\Enums\NotionBlockContentTypeEnum;
 
-class NotionArrayValue extends NotionBlockContent
+class NotionArrayValue extends NotionContent
 {
     private string $key;
 
@@ -42,7 +42,7 @@ class NotionArrayValue extends NotionBlockContent
         return $this;
     }
 
-    public function setContentType(): NotionBlockContent
+    public function setContentType(): NotionContent
     {
         $this->contentType = NotionBlockContentTypeEnum::ARRAY_VALUE;
 

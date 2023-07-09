@@ -8,7 +8,7 @@ use Pi\Notion\Enums\NotionBlockContentTypeEnum;
 use Pi\Notion\Enums\NotionBlockTypeEnum;
 use Pi\Notion\Traits\HasResource;
 
-class NotionTextValue extends NotionBlockContent
+class NotionTextValue extends NotionContent
 {
     private ?string $href;
 
