@@ -130,15 +130,19 @@ class NotionRichText extends NotionContent
 
     public function toArray(): array
     {
+        $key = $this->valueType->value ?? $this->contentType->value;
+
+        $value = is_array($this->value) ? $this->value['content'] : $this->value;
+
         return [
-            $this->contentType->value => [
+            $key => [
                 array_merge($this->getAnnotations(), [
                     'type' => 'text',
                     'text' => [
-                        'content' => $this->value,
+                        'content' => $value,
                         'link' => $this->link ?? new MissingValue(),
                     ],
-                    'plain_text' => $this->value ?? new MissingValue(),
+                    'plain_text' => $value,
                     'href' => $this->href ?? new MissingValue()
                 ])
             ]

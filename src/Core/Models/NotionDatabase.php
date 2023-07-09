@@ -106,6 +106,7 @@ class NotionDatabase extends NotionObject
         $this->url = $response['url'] ?? null;
         $this->icon = $response['icon'] ?? null;
         $this->cover = $response['cover'] ?? null;
+        $this->properties = new Collection();
         $this->buildProperties($response);
 
         return $this;

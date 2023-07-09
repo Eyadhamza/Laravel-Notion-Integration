@@ -22,23 +22,25 @@ use function Pest\Laravel\withoutExceptionHandling;
 
 beforeEach(function () {
     withoutExceptionHandling();
+    $this->databaseId = 'ae4c13cd00394938b2f7914cb00350f8';
+    $this->pageId = '0ef342c64e9f431fb5cf8a9eebea4c92';
 });
 
 it('should return page info', function () {
-    $page = new NotionPage('b4f8e429038744ca9c8d5afa93ea2edd');
+    $page = new NotionPage($this->pageId);
 
     expect($page)->toHaveProperty('objectType');
 });
 
 it('should return page info with blocks', function () {
-    $page = new NotionPage('b4f8e429038744ca9c8d5afa93ea2edd');
+    $page = new NotionPage($this->pageId);
 
     expect($page)->toHaveProperty('objectType');
 });
 
 it('can create a page object', function () {
     $page = new NotionPage();
-    $page->setDatabaseId('cd156262c1d2475c9df34b41a1d3110e');
+    $page->setDatabaseId($this->databaseId);
     $page->create();
 
     expect($page)->toHaveProperty('objectType');
@@ -52,11 +54,12 @@ it('can delete a page object', function () {
 
 it('should add properties to the created page using the page class', function () {
     $page = new NotionPage();
-    $page->setDatabaseId('cd156262c1d2475c9df34b41a1d3110e');
+    $page->setDatabaseId($this->databaseId);
 
     $page = $page
         ->setProperties([
-            NotionTitle::make('Name', 'Test')
+            NotionTitle::make('Name')
+                ->setTitle('Test')
                 ->build(),
             NotionSelect::make('Status')
                 ->setSelected('A')
@@ -100,15 +103,18 @@ it('should add properties to the created page using the page class', function ()
                 ->setUrl('https://www.google.com')
                 ->build(),
         ])->create();
-    expect($page->getProperties())->toHaveCount(17)
+
+    expect($page->getProperties())->toHaveCount(16)
         ->and($page)->toHaveProperty('properties');
 });
 
 it('can update properties of the created page using the page class', function () {
-    $page = new NotionPage('894dbb5e59ce40efac3ce60a4bb65d27');
+    $page = new NotionPage($this->pageId);
     $page = $page
         ->setProperties([
-            NotionTitle::make('Name', 'Test')->build(),
+            NotionTitle::make('Name')
+                ->setTitle('Test')
+                ->build(),
         ])->update();
 
     expect($page)->toHaveProperty('properties');
@@ -117,7 +123,7 @@ it('can update properties of the created page using the page class', function ()
 
 it('can add content blocks to the created pages', function () {
     $page = new NotionPage();
-    $page->setDatabaseId('cd156262c1d2475c9df34b41a1d3110e');
+    $page->setDatabaseId($this->databaseId);
 
     $page
         ->setProperties([
@@ -149,7 +155,7 @@ it('can add content blocks to the created pages', function () {
 
 it('can add nested content blocks to created pages', function () {
     $page = new NotionPage();
-    $page->setDatabaseId('632b5fb7e06c4404ae12065c48280e4c');
+    $page->setDatabaseId($this->databaseId);
 
     $page->setBlocks([
         NotionBlock::paragraph('Hello There im a parent of the following blocks!')
@@ -173,7 +179,7 @@ it('can add nested content blocks to created pages', function () {
 
 it('can add content blocks to created pages using the page class', function () {
     $page = new NotionPage();
-    $page->setDatabaseId('5a30faaeb526436f98b6a8e1d05f5605');
+    $page->setDatabaseId($this->databaseId);
 
     $page->setBlocks([
         NotionBlock::paragraph('Hello There im a parent of the following blocks!')

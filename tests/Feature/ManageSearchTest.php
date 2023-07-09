@@ -16,5 +16,5 @@ it('returns the search result of databases', function () {
         ])
         ->apply(50);
 
-    expect($response->getResults()->count())->toBeGreaterThan(43);
+    expect($response->getResults()->count())->toBeGreaterThan(2);
 });

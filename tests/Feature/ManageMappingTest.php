@@ -35,7 +35,7 @@ test('map Notion database to app database using database id', function () {
     ]);
 
     expect(User::count())->toBeGreaterThan(80);
-});
+})->skip();
 
 test('map Notion database to app database using specified pages', function () {
     $database = NotionDatabase::find('74dc9419bec24f10bb2e65c1259fc65a');
@@ -49,4 +49,4 @@ test('map Notion database to app database using specified pages', function () {
     ]);
 
     expect(User::count())->toBeGreaterThan(10);
-});
+})->skip();

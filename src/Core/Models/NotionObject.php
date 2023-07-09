@@ -16,10 +16,10 @@ class NotionObject
     private string $parentType;
     protected ?string $parentId = null;
     protected ?bool $archived;
-    protected ?string $createdTime;
-    protected ?string $lastEditedTime;
-    protected NotionUser $lastEditedBy;
-    protected ?string $url;
+    protected ?string $createdTime = null;
+    protected ?string $lastEditedTime = null;
+    protected ?NotionUser $lastEditedBy = null;
+    protected ?string $url = null;
     protected ?string $icon;
     protected ?string $cover;
     protected NotionPaginator $paginator;
@@ -42,8 +42,8 @@ class NotionObject
             $propertyData['name'] = $propertyName;
 
             $property = NotionPropertyFactory::make(NotionPropertyTypeEnum::from($propertyData['type']), $propertyName);
-
-            $this->properties->put($property->getName(), $property->fromResponse($propertyData));
+            $property->setRawValue($propertyData[$propertyData['type']] ?? null);
+            $this->properties->put($propertyName, $property->fromResponse($propertyData));
         }
 
         return $this;

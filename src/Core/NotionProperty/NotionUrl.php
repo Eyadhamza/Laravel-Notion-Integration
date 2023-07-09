@@ -8,14 +8,6 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionUrl extends BaseNotionProperty
 {
-    private ?string $link = null;
-
-
-    protected function buildValue():NotionContent
-    {
-        return NotionSimpleValue::make($this->link)
-            ->setValueType($this->type);
-    }
 
     public function setType(): BaseNotionProperty
     {
@@ -24,21 +16,17 @@ class NotionUrl extends BaseNotionProperty
         return $this;
     }
 
-    protected function buildFromResponse(array $response): BaseNotionProperty
+    public function setUrl(string $url): self
     {
-        if (empty($response['url'])) {
-            return $this;
-        }
-
-        $this->link = $response['url'];
+        $this->url = $url;
 
         return $this;
     }
 
-    public function setUrl(string $url): self
+    public function mapToResource(): array
     {
-        $this->link = $url;
-
-        return $this;
+        return [
+            'value' => $this->url
+        ];
     }
 }

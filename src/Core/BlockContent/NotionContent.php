@@ -17,7 +17,7 @@ abstract class NotionContent
     protected NotionBlockContentTypeEnum $contentType;
     protected mixed $value;
     protected bool $isNested = false;
-    public NotionBlockTypeEnum|NotionPropertyTypeEnum $valueType;
+    public NotionBlockTypeEnum|NotionPropertyTypeEnum|null $valueType = null;
     public function __construct(mixed $value = null)
     {
         $this->value = $value;
@@ -65,7 +65,6 @@ abstract class NotionContent
         return $this;
     }
     abstract public function setContentType(): self;
-
 
     public function isNested(): self
     {

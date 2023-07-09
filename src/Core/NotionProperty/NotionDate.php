@@ -9,19 +9,9 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionDate extends BaseNotionProperty
 {
-    private ?string $start = null;
-    private ?string $end = null;
-    private ?string $timeZone = null;
-
-
-    protected function buildValue(): NotionContent
-    {
-        return NotionArrayValue::make([
-            'start' => $this->start ?? new MissingValue(),
-            'end' => $this->end ?? new MissingValue(),
-            'time_zone' => $this->timeZone ?? new MissingValue(),
-        ])->setValueType(NotionPropertyTypeEnum::DATE);
-    }
+    private ?string $start;
+    private ?string $timeZone;
+    private ?string $end;
 
     public function setType(): BaseNotionProperty
     {
@@ -30,51 +20,32 @@ class NotionDate extends BaseNotionProperty
         return $this;
     }
 
-    protected function buildFromResponse(array $response): BaseNotionProperty
-    {
-        if (empty($response['date'])) {
-            return $this;
-        }
-
-        $this->start = $response['date']['start'];
-        $this->end = $response['date']['end'];
-        $this->timeZone = $response['date']['time_zone'];
-
-        return $this;
-    }
-
-    public function getStart(): ?string
-    {
-        return $this->start;
-    }
-
-    public function getEnd(): ?string
-    {
-        return $this->end;
-    }
-
-    public function getTimeZone(): ?string
-    {
-        return $this->timeZone;
-    }
-
     public function setStart(?string $start): NotionDate
     {
         $this->start = $start;
+
         return $this;
     }
 
     public function setEnd(?string $end): NotionDate
     {
         $this->end = $end;
+
         return $this;
     }
 
     public function setTimeZone(?string $timeZone): NotionDate
     {
         $this->timeZone = $timeZone;
+
         return $this;
     }
-
-
+    public function mapToResource(): array
+    {
+        return [
+            'start' => $this->start ?? new MissingValue(),
+            'end' => $this->end ?? new MissingValue(),
+            'time_zone' => $this->timeZone ?? new MissingValue(),
+        ];
+    }
 }

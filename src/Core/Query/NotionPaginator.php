@@ -5,6 +5,7 @@ namespace Pi\Notion\Core\Query;
 use Illuminate\Support\Collection;
 use Pi\Notion\Core\Models\NotionObject;
 use Pi\Notion\Core\NotionClient;
+use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 use Pi\Notion\Core\NotionProperty\NotionPropertyFactory;
 use Pi\Notion\Core\RequestBuilders\PaginatorRequestBuilder;
 use Pi\Notion\Enums\NotionPaginatedObjectTypeEnum;
@@ -142,12 +143,13 @@ class NotionPaginator
 
     private function setPaginatedProperties(array $data): self
     {
-        $this->results = collect($data['results'])->mapWithKeys(fn($property) => [
-            $property['id'] => NotionPropertyFactory::make(
-                NotionPropertyTypeEnum::from($property['type']),
-                $property['id']
-            )->fromResponse($property)
-        ]);
+        $this->results = collect($data['results'])->mapWithKeys(function (array $propertyData) {
+            return [
+                $propertyData['id'] => NotionPropertyFactory::make(NotionPropertyTypeEnum::from($propertyData['type']), $propertyData['id'])
+                    ->setRawValue($propertyData[$propertyData['type']])
+                    ->fromResponse($propertyData)
+            ];
+        });
 
         return $this;
     }

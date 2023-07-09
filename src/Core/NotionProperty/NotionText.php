@@ -9,15 +9,6 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionText extends BaseNotionProperty
 {
-    protected function buildValue(): NotionContent
-    {
-        if (is_string($this->value)) {
-            return NotionRichText::make($this->value)
-                ->setValueType($this->type)
-                ->buildResource();
-        }
-        return $this->value ?? new NotionEmptyValue();
-    }
 
     public function setType(): BaseNotionProperty
     {
@@ -26,19 +17,17 @@ class NotionText extends BaseNotionProperty
         return $this;
     }
 
-    protected function buildFromResponse(array $response): BaseNotionProperty
-    {
-        if (empty($response['text'])) {
-            return $this;
-        }
-        // TODO: Implement buildFromResponse() method.
 
+    public function setText($text): self
+    {
+        $this->rawValue = $text;
         return $this;
     }
 
-    public function setText(NotionRichText $text): NotionText
+    public function mapToResource(): array
     {
-        $this->value = $text;
-        return $this;
+        return [
+            'content' => $this->rawValue
+        ];
     }
 }

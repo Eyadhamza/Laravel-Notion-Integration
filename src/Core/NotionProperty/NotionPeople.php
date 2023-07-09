@@ -10,24 +10,7 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionPeople extends BaseNotionProperty
 {
-    private ?array $people = null;
-
-    protected function buildValue(): NotionContent
-    {
-        return NotionArrayValue::make($this->people)
-            ->setValueType($this->type);
-    }
-
-    protected function buildFromResponse(array $response): BaseNotionProperty
-    {
-        if (empty($response['people'])) {
-            return $this;
-        }
-
-        $this->people = $response['people'];
-
-        return $this;
-    }
+    public ?array $people = null;
 
     public function setType(): BaseNotionProperty
     {
@@ -48,5 +31,9 @@ class NotionPeople extends BaseNotionProperty
         return $this;
     }
 
+    public function mapToResource(): array
+    {
+        return $this->people ?? [];
+    }
 }
 

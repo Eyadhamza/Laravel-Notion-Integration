@@ -15,7 +15,7 @@ class NotionSimpleValue extends NotionContent
     public function toArray(): array
     {
         return [
-            $this->valueType->value => $this->value,
+            $this->valueType->value => $this->value['value'] ?? new \stdClass(),
         ];
     }
 

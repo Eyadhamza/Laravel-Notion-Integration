@@ -25,6 +25,11 @@ use Pi\Notion\Core\Query\NotionSort;
 use Pi\Notion\Exceptions\NotionValidationException;
 use function PHPUnit\Framework\assertObjectHasProperty;
 
+beforeEach(function (){
+    $this->databaseId = 'ae4c13cd00394938b2f7914cb00350f8';
+    $this->pageId = '0ef342c64e9f431fb5cf8a9eebea4c92';
+});
+
 it('returns database info', function () {
     $database = NotionDatabase::find('632b5fb7e06c4404ae12065c48280e4c');
     assertObjectHasProperty('objectType', $database);
@@ -33,10 +38,10 @@ it('returns database info', function () {
 it('can create a database object', function () {
     $database = (new NotionDatabase)
         ->setParentPageId('fa4379661ed948d7af52df923177028e')
-        ->setTitle(NotionDatabaseTitle::make('Test Database')->build())
+        ->setTitle(NotionDatabaseTitle::make('Test Database')
+            ->build())
         ->setProperties([
-            NotionTitle::make('Name')
-                ->build(),
+            NotionTitle::make('Name')->build(),
             NotionSelect::make('Status')->setOptions([
                 ['name' => 'A', 'color' => 'red'],
                 ['name' => 'B', 'color' => 'green']
@@ -47,8 +52,7 @@ it('can create a database object', function () {
                 ->setExpression('prop("Name")')
                 ->build(),
             NotionRelation::make('Relation')
-                ->setDatabaseId('9019ee1d30c8438f9ec807be1a13f7f1')
-                ->setRelationSingleProperty('Name')
+                ->setDatabaseId($this->databaseId)
                 ->build(),
             NotionRollup::make('Rollup')
                 ->setRollupPropertyName('Name')
@@ -72,7 +76,7 @@ it('can create a database object', function () {
 
 it('can update a database object', function () {
     $database = (new NotionDatabase)
-        ->setDatabaseId('d930f6b04bbe42fcbfc2bf19c39f6225')
+        ->setDatabaseId($this->databaseId)
         ->setTitle(NotionDatabaseTitle::make('Test Database')->build())
         ->setDatabaseDescription(NotionDatabaseDescription::make('Test Description')->build())
         ->setProperties([

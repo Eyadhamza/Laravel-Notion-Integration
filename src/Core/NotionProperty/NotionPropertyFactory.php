@@ -31,6 +31,7 @@ class NotionPropertyFactory
             NotionPropertyTypeEnum::CREATED_BY => NotionCreatedBy::make($propertyName),
             NotionPropertyTypeEnum::LAST_EDITED_BY => NotionLastEditedBy::make($propertyName),
             NotionPropertyTypeEnum::FILES => NotionFiles::make($propertyName),
+            NotionPropertyTypeEnum::DESCRIPTION => NotionDatabaseDescription::make($propertyName),
 
         };
     }

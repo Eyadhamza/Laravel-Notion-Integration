@@ -3,6 +3,7 @@
 namespace Pi\Notion\Traits;
 
 use LogicException;
+use Pi\Notion\Core\BlockContent\NotionBlockContentFactory;
 use Pi\Notion\Core\Models\NotionPage;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 
@@ -20,10 +21,12 @@ trait Notionable
 
         collect($this->getAttributes())->map(function ($value, $key) {
             if (array_key_exists($key, $this->notionMap)) {
-
                 /** @var BaseNotionProperty $property */
                 $property = $this->notionMap[$key];
-                $property->setValue($value);
+
+                $property->setRawValue($value)->build();
+
+                //                dd($property->resource());
             }
         });
 
@@ -41,7 +44,7 @@ trait Notionable
         foreach ($this->mapToNotion() as $key => $value) {
             /** @var BaseNotionProperty $property */
             $property = $page->ofPropertyName($value->getName());
-            $attributes[$key] = $property->getValue();
+            $attributes[$key] = $property->getRawValue();
         }
         return $attributes;
     }

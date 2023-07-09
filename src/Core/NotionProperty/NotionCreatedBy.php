@@ -9,28 +9,20 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionCreatedBy extends BaseNotionProperty
 {
-    public NotionUser $createdBy;
+    public ?NotionUser $createdBy = null;
 
-    protected function buildValue(): NotionContent
-    {
-        return NotionEmptyValue::make()->setValueType($this->type);
-    }
-
-    protected function buildFromResponse(array $response): BaseNotionProperty
-    {
-        if (empty($response['created_by'])) {
-            return $this;
-        }
-        $this->createdBy = NotionUser::make($response['created_by']['id'])
-            ->fromResponse($response['created_by']);
-
-        return $this;
-    }
 
     public function setType(): BaseNotionProperty
     {
         $this->type = NotionPropertyTypeEnum::CREATED_BY;
 
         return $this;
+    }
+
+    public function mapToResource(): array
+    {
+        return [
+            'value' => $this->createdBy
+        ];
     }
 }

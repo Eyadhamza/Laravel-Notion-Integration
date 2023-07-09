@@ -11,14 +11,13 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionDatabaseTitle extends BaseNotionProperty
 {
-    protected function buildValue(): NotionContent
-    {
-        return NotionRichText::make($this->name)
-            ->setValueType($this->type)
-            ->setContentType(NotionBlockContentTypeEnum::TITLE)
-            ->buildResource();
-    }
+    private ?string $title;
 
+    public function __construct(string $name)
+    {
+        parent::__construct($name);
+        $this->title = $name;
+    }
 
     public function setType(): BaseNotionProperty
     {
@@ -27,15 +26,11 @@ class NotionDatabaseTitle extends BaseNotionProperty
         return $this;
     }
 
-    protected function buildFromResponse(array $response): BaseNotionProperty
+    public function mapToResource(): array
     {
-        if (empty($response['title'])) {
-            return $this;
-        }
-
-        $this->content = NotionRichText::make($response['title'][0]['plain_text'])
-            ->setValueType($this->type);
-
-        return $this;
+         return [
+             'content' => $this->title
+         ];
     }
+
 }

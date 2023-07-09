@@ -2,28 +2,11 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\BlockContent\NotionContent;
-use Pi\Notion\Core\BlockContent\NotionSimpleValue;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionEmail extends BaseNotionProperty
 {
-    protected function buildValue(): NotionContent
-    {
-        $this->blockContent = NotionSimpleValue::make($this->value)
-            ->setValueType($this->type);
-
-        return $this->blockContent;
-    }
-
-    protected function buildFromResponse(array $response): BaseNotionProperty
-    {
-        if (empty($response['email'])) {
-            return $this;
-        }
-        $this->value = $response['email'];
-        return $this;
-    }
+    public ?string $email = null;
 
     public function setType(): BaseNotionProperty
     {
@@ -34,8 +17,15 @@ class NotionEmail extends BaseNotionProperty
 
     public function setEmail(string $email): NotionEmail
     {
-        $this->value = $email;
+        $this->email = $email;
+
         return $this;
     }
 
+    public function mapToResource(): array
+    {
+        return [
+            'value' => $this->email
+        ];
+    }
 }

@@ -10,28 +10,25 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionDatabaseDescription extends BaseNotionProperty
 {
+    private ?string $title = null;
 
-    protected function buildValue(): NotionContent
+    public function __construct(string $name)
     {
-        return NotionRichText::make($this->name)
-            ->setValueType($this->type)
-            ->setContentType(NotionBlockContentTypeEnum::DESCRIPTION)
-            ->buildResource();
-    }
-
-    protected function buildFromResponse(array $response): self
-    {
-        if (isset($response['description'])) {
-            $this->blockContent = $response['description'][0][0];
-        }
-
-        return $this;
+        parent::__construct($name);
+        $this->title = $name;
     }
 
     public function setType(): self
     {
-        $this->type = NotionPropertyTypeEnum::TITLE;
+        $this->type = NotionPropertyTypeEnum::DESCRIPTION;
 
         return $this;
+    }
+
+    public function mapToResource(): array
+    {
+        return [
+            'content' => $this->title,
+        ];
     }
 }

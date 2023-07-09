@@ -2,32 +2,19 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
+use Illuminate\Http\Resources\MissingValue;
 use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionFormulaValue;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionFormula extends BaseNotionProperty
 {
-    private ?string $expression;
-    private ?string $result;
-
-    protected function buildValue(): NotionContent
-    {
-        return NotionFormulaValue::make($this->expression)
-            ->setValueType($this->type);
-    }
+    public ?string $expression = null;
 
     public function setType(): BaseNotionProperty
     {
         $this->type = NotionPropertyTypeEnum::FORMULA;
 
-        return $this;
-    }
-
-    protected function buildFromResponse(array $response): BaseNotionProperty
-    {
-        $this->expression = $response['formula']['type'] ?? null;
-        $this->result = $response['formula'][$this->expression] ?? null;
         return $this;
     }
 
@@ -37,5 +24,11 @@ class NotionFormula extends BaseNotionProperty
         return $this;
     }
 
+    public function mapToResource(): array
+    {
+        return [
+            'expression' => $this->expression
+        ];
+    }
 }
 

@@ -9,10 +9,6 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionLastEditedBy extends BaseNotionProperty
 {
-    protected function buildValue(): NotionContent
-    {
-        return NotionEmptyValue::make()->setValueType($this->type);
-    }
 
     protected function buildFromResponse(array $response): BaseNotionProperty
     {
@@ -31,6 +27,13 @@ class NotionLastEditedBy extends BaseNotionProperty
         $this->type = NotionPropertyTypeEnum::LAST_EDITED_BY;
 
         return $this;
+    }
+
+    public function mapToResource(): array
+    {
+        return [
+            'value' => $this->lastEditedBy
+        ];
     }
 }
 

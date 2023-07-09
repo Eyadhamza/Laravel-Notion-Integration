@@ -14,37 +14,30 @@ class NotionNumber extends BaseNotionProperty
     private ?int $number = null;
     private ?NotionNumberFormatEnum $format = null;
 
-    protected function buildValue(): NotionContent
+    protected function buildContent(): self
     {
         if (!$this->number) {
-            return NotionArrayValue::make([
+            $this->blockContent = NotionArrayValue::make([
                 'number' => new MissingValue(),
                 'format' => new MissingValue(),
             ])
                 ->setValueType($this->type);
+
+            return $this;
         }
 
-        return NotionSimpleValue::make($this->number)
+        $this->blockContent = NotionSimpleValue::make([
+            'value' => $this->number,
+        ])
             ->setValueType($this->type);
-    }
-
-    public function setType(): BaseNotionProperty
-    {
-        $this->type = NotionPropertyTypeEnum::NUMBER;
 
         return $this;
     }
 
-    protected function buildFromResponse(array $response): BaseNotionProperty
-    {
-        if (empty($response['number'])) {
-            return $this;
-        }
-        if (is_int($response['number'])) {
-            $this->number = $response['number'];
-        }
 
-        $this->format = NotionNumberFormatEnum::tryFrom($response['number']['format'] ?? null);
+    public function setType(): BaseNotionProperty
+    {
+        $this->type = NotionPropertyTypeEnum::NUMBER;
 
         return $this;
     }
@@ -62,5 +55,12 @@ class NotionNumber extends BaseNotionProperty
     }
 
 
+    public function mapToResource(): array
+    {
+        return [
+            'number' => $this->number,
+            'format' => $this->format
+        ];
+    }
 }
 

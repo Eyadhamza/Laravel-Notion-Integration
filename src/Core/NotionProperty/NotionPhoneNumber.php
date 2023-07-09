@@ -2,21 +2,10 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\BlockContent\NotionArrayValue;
-use Pi\Notion\Core\BlockContent\NotionContent;
-use Pi\Notion\Core\BlockContent\NotionObjectValue;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionPhoneNumber extends BaseNotionProperty
 {
-    private ?string $phone = null;
-
-
-    protected function buildValue(): NotionContent
-    {
-        return NotionArrayValue::make($this->phone)
-            ->setValueType($this->type);
-    }
 
     public function setType(): BaseNotionProperty
     {
@@ -25,18 +14,16 @@ class NotionPhoneNumber extends BaseNotionProperty
         return $this;
     }
 
-    protected function buildFromResponse(array $response): BaseNotionProperty
+    public function setPhoneNumber(string $phoneNumber): self
     {
-        if (empty($response['phone_number'])) {
-            return $this;
-        }
-        $this->phone = $response['phone_number'];
+        $this->rawValue = $phoneNumber;
         return $this;
     }
 
-    public function setPhoneNumber(string $phoneNumber): self
+    public function mapToResource(): array
     {
-        $this->phone = $phoneNumber;
-        return $this;
+        return [
+            'value' => $this->rawValue
+        ];
     }
 }

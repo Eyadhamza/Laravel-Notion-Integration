@@ -7,7 +7,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 trait HasResource
 {
-    use ConditionallyLoadsAttributes;
 
     public function buildResource(): self
     {

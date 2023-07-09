@@ -9,24 +9,17 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 class NotionCreatedTime extends BaseNotionProperty
 {
 
-    protected function buildValue(): NotionContent
-    {
-        return NotionEmptyValue::make()->setValueType($this->type);
-    }
-
-    protected function buildFromResponse(array $response): BaseNotionProperty
-    {
-        if (empty($response['created_time'])) {
-            return $this;
-        }
-        $this->createdTime = $response['created_time'];
-        return $this;
-    }
-
     public function setType(): BaseNotionProperty
     {
         $this->type = NotionPropertyTypeEnum::CREATED_TIME;
 
         return $this;
+    }
+
+    public function mapToResource(): array
+    {
+        return [
+            'value' => $this->createdTime
+        ];
     }
 }

@@ -10,14 +10,8 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionFiles extends BaseNotionProperty
 {
-    private ?array $files = null;
 
-
-    protected function buildValue(): NotionContent
-    {
-        return NotionArrayValue::make($this->files)
-            ->setValueType($this->type);
-    }
+    public ?array $files = [];
 
     protected function buildFromResponse(array $response): BaseNotionProperty
     {
@@ -25,7 +19,7 @@ class NotionFiles extends BaseNotionProperty
             return $this;
         }
 
-        $this->files = $response['files'];
+        $this->rawValue = $response['files'];
 
         return $this;
     }
@@ -46,7 +40,12 @@ class NotionFiles extends BaseNotionProperty
                 ->resolve()
             )
             ->all();
+
         return $this;
     }
 
+    public function mapToResource(): array
+    {
+        return $this->files ?? [];
+    }
 }

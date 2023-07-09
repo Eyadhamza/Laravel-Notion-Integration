@@ -17,17 +17,6 @@ class NotionRollup extends BaseNotionProperty
     private ?string $rollupPropertyId = null;
     private ?string $rollupFunction = null;
 
-    protected function buildValue(): NotionContent
-    {
-        return NotionArrayValue::make([
-            'relation_property_name' => $this->relationPropertyName ?? new MissingValue(),
-            'relation_property_id' => $this->relationPropertyId ?? new MissingValue(),
-            'rollup_property_name' => $this->rollupPropertyName ?? new MissingValue(),
-            'rollup_property_id' => $this->rollupPropertyId ?? new MissingValue(),
-            'function' => $this->rollupFunction ?? new MissingValue(),
-        ])->setValueType($this->type);
-    }
-
     public function setType(): BaseNotionProperty
     {
         $this->type = NotionPropertyTypeEnum::ROLLUP;
@@ -35,17 +24,6 @@ class NotionRollup extends BaseNotionProperty
         return $this;
     }
 
-    protected function buildFromResponse(array $response): self
-    {
-        if (empty($response['rollup'])) {
-            return $this;
-        }
-        $this->rollupType = $response['rollup']['type'] ?? null;
-        $this->rollupNumber = $response['rollup']['number'] ?? null;
-        $this->rollupFunction = $response['rollup']['function'] ?? null;
-
-        return $this;
-    }
 
     public function setRelationPropertyName(?string $relationPropertyName): NotionRollup
     {
@@ -78,5 +56,15 @@ class NotionRollup extends BaseNotionProperty
     }
 
 
+    public function mapToResource(): array
+    {
+        return [
+            'rollup_property_name' => $this->rollupPropertyName,
+            'rollup_property_id' => $this->rollupPropertyId ?? new MissingValue(),
+            'relation_property_name' => $this->relationPropertyName,
+            'relation_property_id' => $this->relationPropertyId ?? new MissingValue(),
+            'function' => $this->rollupFunction,
+        ];
+    }
 }
 

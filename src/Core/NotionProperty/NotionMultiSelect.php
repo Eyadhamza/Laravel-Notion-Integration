@@ -8,13 +8,7 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionMultiSelect extends BaseNotionProperty
 {
-    private ?array $options = null;
-
-
-    protected function buildValue(): NotionContent
-    {
-        return NotionArrayValue::make($this->options)->setValueType('multi_select');
-    }
+    public ?array $options = null;
 
     public function setOptions(array $options): void
     {
@@ -28,12 +22,10 @@ class NotionMultiSelect extends BaseNotionProperty
         return $this;
     }
 
-    protected function buildFromResponse(array $response): BaseNotionProperty
+    public function mapToResource(): array
     {
-        if (empty($response['multi_select'])) {
-            return $this;
-        }
-        $this->options = $response['multi_select'];
-        return $this;
+        return [
+            'options' => $this->options,
+        ];
     }
 }

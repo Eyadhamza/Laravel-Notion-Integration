@@ -8,25 +8,19 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionLastEditedTime extends BaseNotionProperty
 {
-    protected function buildValue(): NotionContent
-    {
-        return NotionEmptyValue::make()->setValueType($this->type);
-    }
-
-    protected function buildFromResponse(array $response): BaseNotionProperty
-    {
-        if (empty($response['last_edited_time'])) {
-            return $this;
-        }
-        $this->createdTime = $response['last_edited_time'];
-        return $this;
-    }
 
     public function setType(): BaseNotionProperty
     {
         $this->type = NotionPropertyTypeEnum::LAST_EDITED_TIME;
 
         return $this;
+    }
+
+    public function mapToResource(): array
+    {
+        return [
+            'value' => $this->lastEditedTime
+        ];
     }
 }
 

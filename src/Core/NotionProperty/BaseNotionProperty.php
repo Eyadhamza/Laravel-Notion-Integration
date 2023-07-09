@@ -5,6 +5,7 @@ namespace Pi\Notion\Core\NotionProperty;
 
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Pi\Notion\Core\BlockContent\NotionBlockContentFactory;
 use Pi\Notion\Core\Models\NotionObject;
 use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionEmptyValue;
@@ -12,27 +13,35 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 abstract class BaseNotionProperty extends NotionObject
 {
-    protected mixed $value = null;
+    public JsonResource $resource;
+    protected mixed $rawValue;
     protected NotionContent|NotionEmptyValue $blockContent;
     protected NotionPropertyTypeEnum $type;
     protected ?string $name;
 
-    public function __construct(?string $name = null)
+    public function __construct(?string $name = null, ?string $rawValue = null)
     {
         $this->name = $name;
-
+        $this->rawValue = $rawValue;
         $this->setType();
     }
 
-    public static function make(?string $name = null): static
+    public static function make(?string $name = null, ?string $rawValue = null): static
     {
-        return new static($name);
+        return new static($name, $rawValue);
     }
 
     public function build(): static
     {
-        return $this->setBlockContent();
+        $this->resource = new JsonResource($this->mapToResource());
+
+        $this->buildContent();
+
+        $this->blockContent->buildResource();
+
+        return $this;
     }
+
     public function resource(): array
     {
         return $this->blockContent->resource->resolve();
@@ -48,8 +57,13 @@ abstract class BaseNotionProperty extends NotionObject
         };
     }
 
+    protected function buildContent(): self
+    {
+        $this->blockContent = NotionBlockContentFactory::make($this);
 
-    abstract protected function buildValue(): NotionContent;
+        return $this;
+    }
+
     public function fromResponse(array $response): static
     {
         $this->id = $response['id'];
@@ -57,21 +71,20 @@ abstract class BaseNotionProperty extends NotionObject
 
         return $this->buildFromResponse($response);
     }
-    abstract protected function buildFromResponse(array $response): self;
 
-    public function setBlockContent(): self
+    protected function buildFromResponse(array $response): BaseNotionProperty
     {
-        $this->blockContent = $this
-            ->buildValue()
-            ->buildResource();
+        if (empty($response[$this->type->value])) {
+            return $this;
+        }
+
+        $this->rawValue = $response[$this->type->value];
+
+        $this->build();
 
         return $this;
     }
 
-    public function getBlockContent(): NotionContent
-    {
-        return $this->blockContent;
-    }
 
     public function getId(): ?string
     {
@@ -90,16 +103,23 @@ abstract class BaseNotionProperty extends NotionObject
 
     abstract public function setType(): BaseNotionProperty;
 
-
-    public function setValue(mixed $value): self
+    public function getRawValue(): mixed
     {
-        $this->value = $value;
-        $this->setBlockContent();
+        return $this->rawValue;
+    }
+
+    public abstract function mapToResource(): array;
+
+    public function setRawValue($value): self
+    {
+        $this->rawValue = $value;
+
         return $this;
     }
 
-    public function getValue()
+    public function getBlockContent(): NotionContent|NotionEmptyValue
     {
-        return $this->value;
+        return $this->blockContent;
     }
+
 }
