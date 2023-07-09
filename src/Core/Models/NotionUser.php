@@ -13,48 +13,46 @@ class NotionUser extends NotionObject
     private string $avatarUrl;
     private ?string $type;
 
-    public function __construct(string $id)
+    public function __construct(string $id = null)
     {
         $this->id = $id;
     }
 
-    public static function make(string $id): self
+    public static function make(string $id = null): self
     {
         return new static($id);
     }
 
-    public static function index(int $pageSize = 100): NotionPaginator
+    public function index(int $pageSize = 100): NotionPaginator
     {
-        $user = new static();
-
-        $user->paginator = new NotionPaginator();
-
-        $response = $user->paginator
-            ->setUrl($user->getUrl())
+        return NotionPaginator::make(NotionUser::class)
+            ->setUrl($this->getUrl())
             ->setMethod('get')
             ->setPageSize($pageSize)
-            ->setPaginatedClass(new NotionUser)
+            ->setPaginatedClass(NotionUser::class)
             ->paginate();
 
-        return $user->paginator->make($response);
     }
 
-    public static function find($id): self
+    public function find(): self
     {
-        return (new self($id))->get();
+        return $this->get();
     }
 
     public function get(): self
     {
-        $response = NotionClient::request('get', $this->getUrl());
-        return $this->fromResponse($response);
+        $response = NotionClient::make()
+            ->get($this->getUrl());
+
+        return $this->fromResponse($response->json());
     }
 
-    public static function getBot(): self
+    public function getBot(): self
     {
-        $user = new static();
-        $response = NotionClient::request('get', $user->botUrl());
-        return $user->fromResponse($response);
+        $response = NotionClient::make()
+            ->get($this->botUrl());
+
+        return $this->fromResponse($response->json());
     }
 
     public function fromResponse($response): self
@@ -72,11 +70,10 @@ class NotionUser extends NotionObject
         if (empty($response['bot'])) {
             return $this;
         }
-        $owner = NotionUser::make($response['bot']['owner']['id']);
-        $owner->type = $response['bot']['owner']['type'] ?? null;
-        if ($owner->type) {
-            $owner->setOwner($response['bot']);
+        if (empty($response['bot']['owner'])) {
+            return $this;
         }
+        $this->setOwner($response['bot']);
         return $this;
     }
 

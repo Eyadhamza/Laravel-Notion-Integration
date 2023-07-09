@@ -108,8 +108,7 @@ it('can update properties of the created page using the page class', function ()
     $page = new NotionPage('894dbb5e59ce40efac3ce60a4bb65d27');
     $page = $page
         ->setProperties([
-            NotionTitle::make('Name', 'Test')
-                ->build(),
+            NotionTitle::make('Name', 'Test')->build(),
         ])->update();
 
     expect($page)->toHaveProperty('properties');
@@ -122,8 +121,7 @@ it('can add content blocks to the created pages', function () {
 
     $page
         ->setProperties([
-            NotionTitle::make('Name')
-                ->setTitle('Eyad Hamza')
+            NotionTitle::make('Name', 'Test')
                 ->build(),
             NotionSelect::make('Status')
                 ->setSelected('A')

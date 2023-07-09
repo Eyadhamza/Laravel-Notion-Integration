@@ -5,11 +5,22 @@ namespace Pi\Notion\Core\Models;
 use Pi\Notion\Core\BlockContent\NotionRichText;
 use Pi\Notion\Core\NotionClient;
 use Pi\Notion\Core\Query\NotionPaginator;
+use Pi\Notion\Core\RequestBuilders\CreateNotionCommentRequestBuilder;
 
 class NotionComment extends NotionObject
 {
-    private string $discussionId;
+    private ?string $discussionId = null;
     private NotionRichText $content;
+
+    public function __construct(string $id = null)
+    {
+        $this->id = $id;
+    }
+
+    public static function make(string $id = null): self
+    {
+        return new static($id);
+    }
 
     public function fromResponse($response): self
     {
@@ -21,37 +32,26 @@ class NotionComment extends NotionObject
 
     public function create(): self
     {
-        $body = [];
+        $body = CreateNotionCommentRequestBuilder::make()
+            ->setDiscussionId($this->discussionId)
+            ->setParentId($this->parentId)
+            ->setContent($this->content)
+            ->build();
 
-        isset($this->discussionId) ? $body['discussion_id'] = $this->discussionId :
-            $body['parent'] = [
-                'page_id' => $this->parentId
-            ];
-        $body['rich_text'] = $this->content->getValue();
+        $response = NotionClient::make()
+            ->post(NotionClient::COMMENTS_URL, $body);
 
-        $response = NotionClient::request(
-            'post',
-            NotionClient::COMMENTS_URL,
-            $body
-        );
-
-        return $this->fromResponse($response);
+        return $this->fromResponse($response->json());
     }
 
-    public static function findAll(string $blockId, int $pageSize = 100): NotionPaginator
+    public function findAll(int $pageSize = 50): NotionPaginator
     {
-        $comment = new static();
-        $comment->paginator = new NotionPaginator();
-
-        $response = $comment
-            ->paginator
-            ->setUrl($comment->getUrl())
+        return NotionPaginator::make(NotionComment::class)
+            ->setUrl($this->getUrl())
             ->setMethod('get')
-            ->setRequestBody(['block_id' => $blockId])
+            ->setBody(['block_id' => $this->id])
             ->setPageSize($pageSize)
             ->paginate();
-
-        return $comment->paginator->make($response, new NotionComment);
     }
 
     private function getUrl(): string
@@ -74,6 +74,7 @@ class NotionComment extends NotionObject
     public function setContent(string|NotionRichText $text): static
     {
         $this->content = is_string($text) ? NotionRichText::make($text) : $text;
+
         return $this;
     }
 }

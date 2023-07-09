@@ -90,8 +90,9 @@ class NotionDatabase extends NotionObject
             ->setUrl(NotionClient::BASE_URL . '/databases/' . $this->id . '/query')
             ->setMethod('post')
             ->setBody($requestBody)
+            ->setPageSize($pageSize)
             ->setStartCursor($startCursor)
-            ->paginate($pageSize);
+            ->paginate();
     }
 
 

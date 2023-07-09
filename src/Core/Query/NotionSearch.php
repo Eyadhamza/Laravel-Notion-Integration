@@ -13,12 +13,12 @@ class NotionSearch extends NotionObject
     use HandleSorts;
 
     private string $query;
-    private string $filterObject;
+    private string $filteredClass;
 
     public function __construct(string $query = '', string $filterObject = '')
     {
         $this->query = $query;
-        $this->filterObject = $filterObject;
+        $this->filteredClass = $filterObject;
     }
 
     public static function make($query, $filterObject): self
@@ -28,32 +28,29 @@ class NotionSearch extends NotionObject
 
     public static function inPages(string $query): self
     {
-        return new self($query, 'page');
+        return new self($query, NotionPage::class);
     }
 
     public static function inDatabases(string $query): self
     {
-        return new self($query, 'database');
+        return new self($query, NotionDatabase::class);
     }
 
     public function apply(int $pageSize = 100): NotionPaginator
     {
-        $this->paginator = new NotionPaginator();
-        $response = $this->paginator
+        return NotionPaginator::make($this->filteredClass)
             ->setUrl(NotionClient::SEARCH_PAGE_URL)
             ->setMethod('post')
-            ->setRequestBody([
+            ->setBody([
                 'query' => $this->query,
                 'filter' => [
-                    'value' => $this->filterObject,
+                    'value' => $this->getFilterObject($this->filteredClass),
                     'property' => 'object'
                 ],
                 'sort' => $this->getSortUsingTimestamp()
             ])
             ->setPageSize($pageSize)
             ->paginate();
-
-        return $this->paginator->make($response, $this->getFilterObject($this->filterObject));
 
     }
 
@@ -63,17 +60,17 @@ class NotionSearch extends NotionObject
         return $this;
     }
 
-    public function setFilterObject(string $filterObject): NotionSearch
+    public function setFilteredClass(string $filteredClass): NotionSearch
     {
-        $this->filterObject = $filterObject;
+        $this->filteredClass = $filteredClass;
         return $this;
     }
 
-    private function getFilterObject($objectName): NotionObject
+    private function getFilterObject($objectName): string
     {
         return match ($objectName) {
-            'page' => new NotionPage,
-            'database' => new NotionDatabase
+            NotionPage::class => 'page',
+            NotionDatabase::class => 'database',
         };
     }
 }

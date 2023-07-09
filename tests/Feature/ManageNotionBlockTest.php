@@ -47,6 +47,7 @@ it('appends block children', function () {
 
     $block = $block->addChildren([
         NotionBlock::headingTwo(NotionRichText::make('Eyad Hamza')
+            ->isNested()
             ->bold()
             ->setLink('https://www.google.com')
             ->color('red')),

@@ -6,19 +6,17 @@ use Pi\Notion\Core\BlockContent\NotionArrayValue;
 use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionEmptyValue;
 use Pi\Notion\Core\BlockContent\NotionRichText;
-use Pi\Notion\Core\BlockContent\NotionTextValue;
-use Pi\Notion\Enums\NotionBlockContentTypeEnum;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionDatabaseTitle extends BaseNotionProperty
 {
-    private NotionTextValue|NotionEmptyValue $content;
+    private NotionRichText|NotionEmptyValue $content;
 
     public function __construct(string $name)
     {
         parent::__construct($name);
 
-        $this->content = NotionTextValue::make($this->name)
+        $this->content = NotionRichText::make($this->name)
             ->setValueType($this->type)
             ->setContentType()
             ->buildResource();

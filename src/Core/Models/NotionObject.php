@@ -14,7 +14,7 @@ class NotionObject
     protected ?string $objectType;
     protected ?string $id;
     private string $parentType;
-    protected ?string $parentId;
+    protected ?string $parentId = null;
     protected ?bool $archived;
     protected ?string $createdTime;
     protected ?string $lastEditedTime;

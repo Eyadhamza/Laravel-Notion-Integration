@@ -7,14 +7,13 @@ use Pi\Notion\Core\BlockContent\NotionArrayValue;
 use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionEmptyValue;
 use Pi\Notion\Core\BlockContent\NotionRichText;
-use Pi\Notion\Core\BlockContent\NotionTextValue;
 use Pi\Notion\Enums\NotionBlockContentTypeEnum;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionTitle extends BaseNotionProperty
 {
     private string $value;
-    private NotionTextValue|NotionEmptyValue $content;
+    private NotionRichText|NotionEmptyValue $content;
 
     public function __construct(string $name, ?string $value = null)
     {
@@ -22,11 +21,10 @@ class NotionTitle extends BaseNotionProperty
 
         $this->setTitle($name);
 
-        $this->content = NotionTextValue::make($value)
+        $this->content = NotionRichText::make($value)
             ->setValueType($this->type)
-            ->setContentType()
+            ->setContentType(NotionBlockContentTypeEnum::TEXT)
             ->buildResource();
-
     }
     public static function make(?string $name = null, ?string $value = null): static
     {
@@ -45,7 +43,6 @@ class NotionTitle extends BaseNotionProperty
         if ($this->content instanceof NotionEmptyValue) {
             return $this->content;
         }
-
         return NotionArrayValue::make($this->content->resource)
             ->setValueType($this->type)
             ->isNested();
@@ -65,7 +62,7 @@ class NotionTitle extends BaseNotionProperty
             return $this;
         }
 
-        $this->content = NotionTextValue::make($response['title'][0]['plain_text'])
+        $this->content = NotionRichText::make($response['title'][0]['plain_text'])
             ->setValueType($this->type);
 
         return $this;

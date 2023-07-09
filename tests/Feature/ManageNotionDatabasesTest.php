@@ -149,6 +149,6 @@ it('can sort database results', function () {
     expect($paginated->getResults())->toHaveCount(50)
         ->and($paginated->hasMore())->toBeTrue();
     $paginated->next();
-    expect($paginated->getResults())->toHaveCount(10)
+    expect($paginated->getResults())->toHaveCount(50)
         ->and($paginated->getNextCursor())->toBeString();
 });

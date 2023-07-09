@@ -5,8 +5,6 @@ namespace Pi\Notion\Core\BlockContent;
 use Illuminate\Http\Resources\MissingValue;
 use Illuminate\Support\Collection;
 use Pi\Notion\Enums\NotionBlockContentTypeEnum;
-use Pi\Notion\Enums\NotionBlockTypeEnum;
-use Pi\Notion\Traits\HasResource;
 
 class NotionRichText extends NotionContent
 {
@@ -132,6 +130,14 @@ class NotionRichText extends NotionContent
 
     public function toArray(): array
     {
+        if (! $this->isNested){
+            return [
+                $this->contentType->value => [
+                    'content' => $this->value,
+                ]
+            ];
+        }
+
         return [
             $this->contentType->value => [
                 array_merge($this->getAnnotations(), [
@@ -154,9 +160,8 @@ class NotionRichText extends NotionContent
 
     public function setContentType(NotionBlockContentTypeEnum $contentType = null): self
     {
-        if (! $contentType){
-            $this->contentType = NotionBlockContentTypeEnum::RICH_TEXT;
-            return $this;
+        if (! $contentType) {
+            $contentType = NotionBlockContentTypeEnum::RICH_TEXT;
         }
 
         $this->contentType = $contentType;
