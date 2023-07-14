@@ -17,7 +17,6 @@ class NotionText extends BaseNotionProperty
         return $this;
     }
 
-
     public function setText($text): self
     {
         $this->value = $text;

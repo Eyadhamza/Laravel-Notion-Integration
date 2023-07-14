@@ -14,9 +14,7 @@ class NotionDatabaseTitle extends BaseNotionProperty
 
     public function __construct(string $name)
     {
-        parent::__construct($name);
-        $this->value = $name;
-        $this->value = $this->mapToResource();
+        parent::__construct($name, $name);
     }
 
     public function setType(): BaseNotionProperty

@@ -79,7 +79,7 @@ abstract class NotionContent
 
     public function setValue(): self
     {
-        $this->value = $this->toArrayableValue($this->value);
+        $this->value = $this->toArrayableValue();
 
         return $this;
     }

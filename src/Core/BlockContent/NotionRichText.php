@@ -134,7 +134,6 @@ class NotionRichText extends NotionContent
     public function toArrayableValue(): array
     {
         $key = $this->valueType->value ?? $this->contentType->value;
-
         $value = is_array($this->value) ? $this->value['content'] : $this->value;
 
         return [
@@ -142,7 +141,7 @@ class NotionRichText extends NotionContent
                 array_merge($this->getAnnotations(), [
                     'type' => 'text',
                     'text' => [
-                        $value,
+                        'content' => $value,
                         'link' => $this->link ?? new MissingValue(),
                     ],
                     'plain_text' => $value,
