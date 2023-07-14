@@ -10,11 +10,8 @@ use Pi\Notion\Exceptions\NotionException;
 class NotionClient
 {
     const BASE_URL= 'https://api.notion.com/v1';
-    const PAGE_URL = NotionClient::BASE_URL.'/pages/';
-    const BLOCK_URL = NotionClient::BASE_URL.'/blocks/';
     const SEARCH_PAGE_URL =  NotionClient::BASE_URL.'/search';
     const NOTION_VERSION = '2022-06-28';
-    const COMMENTS_URL =  NotionClient::BASE_URL.'/comments/';
 
     private string $token;
     private PendingRequest $client;

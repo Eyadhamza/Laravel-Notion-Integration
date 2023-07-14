@@ -17,7 +17,9 @@ class NotionBlock extends NotionObject
 {
     use CreateBlockTypes, HasResource;
 
-    private ?NotionBlockTypeEnum $type;
+
+    const BLOCK_URL = NotionClient::BASE_URL . '/blocks/';
+    private NotionBlockTypeEnum $type;
     private ?NotionContent $blockContent;
     private string $color;
     private Collection $children;
@@ -38,39 +40,31 @@ class NotionBlock extends NotionObject
     public function fromResponse(array $response): self
     {
         parent::fromResponse($response);
-        $this->type = NotionBlockTypeEnum::tryFrom($response['type']);
+        $this->type = NotionBlockTypeEnum::from($response['type']);
 
         return $this;
     }
 
-    public static function find($id): self
+    public function get(string $id): self
     {
-        return NotionBlock::make()
-            ->setId($id)
-            ->get();
-    }
-
-    public function get(): self
-    {
-        $response = NotionClient::make()
-            ->get($this->getUrl());
+        $response = NotionClient::make()->get(self::BLOCK_URL . $id);
 
         return $this->fromResponse($response->json());
     }
 
-    public function getChildren(int $pageSize = 100): NotionPaginator
+    public function getChildren(string $id, int $pageSize = 100): NotionPaginator
     {
         return NotionPaginator::make(NotionBlock::class)
-            ->setUrl($this->childrenUrl())
+            ->setUrl(self::BLOCK_URL . $id . '/children')
             ->setMethod('get')
             ->setPageSize($pageSize)
             ->paginate();
     }
 
-    public function createChildren(): NotionPaginator
+    public function createChildren(string $id): NotionPaginator
     {
         return NotionPaginator::make(NotionBlock::class)
-            ->setUrl($this->childrenUrl())
+            ->setUrl(self::BLOCK_URL . $id . '/children')
             ->setPageSize(null)
             ->setMethod('patch')
             ->setBody(['children' => $this->children
@@ -84,16 +78,16 @@ class NotionBlock extends NotionObject
     }
 
 
-    public function update(): self
+    public function update(string $id): self
     {
-        $response = NotionClient::make()->patch($this->getUrl(),$this->buildResource()->resource->resolve());
+        $response = NotionClient::make()->patch(self::BLOCK_URL . $id,$this->buildResource()->resource->resolve());
 
         return $this->fromResponse($response->json());
     }
 
-    public function delete(): static
+    public function delete(string $id): static
     {
-        $response = NotionClient::make()->delete($this->getUrl());
+        $response = NotionClient::make()->delete(self::BLOCK_URL . $id . '/children');
 
         return $this->fromResponse($response->json());
     }
@@ -107,11 +101,6 @@ class NotionBlock extends NotionObject
         return $this;
     }
 
-    private function getUrl(): string
-    {
-        return NotionClient::BLOCK_URL . $this->id;
-    }
-
     public function getId(): string
     {
         return $this->id;
@@ -121,11 +110,6 @@ class NotionBlock extends NotionObject
     {
         $this->id = $id;
         return $this;
-    }
-
-    private function childrenUrl(): string
-    {
-        return NotionClient::BLOCK_URL . $this->id . '/children';
     }
 
     public function toArray(): array

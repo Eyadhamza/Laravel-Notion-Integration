@@ -7,50 +7,34 @@ use Pi\Notion\Core\Query\NotionPaginator;
 
 class NotionUser extends NotionObject
 {
+    const USERS_URL = NotionClient::BASE_URL . '/users/';
+    const BOT_URL = NotionClient::BASE_URL . '/users/' . 'me';
     private string $object;
     private string $name;
     private ?string $email;
     private string $avatarUrl;
     private ?string $type;
 
-    public function __construct(string $id = null)
-    {
-        $this->id = $id;
-    }
-
-    public static function make(string $id = null): self
-    {
-        return new static($id);
-    }
-
     public function index(int $pageSize = 100): NotionPaginator
     {
         return NotionPaginator::make(NotionUser::class)
-            ->setUrl($this->getUrl())
+            ->setUrl(self::USERS_URL)
             ->setMethod('get')
             ->setPageSize($pageSize)
-            ->setPaginatedClass(NotionUser::class)
             ->paginate();
 
     }
 
     public function find(): self
     {
-        return $this->get();
-    }
-
-    public function get(): self
-    {
-        $response = NotionClient::make()
-            ->get($this->getUrl());
+        $response = NotionClient::make()->get(self::USERS_URL);
 
         return $this->fromResponse($response->json());
     }
 
     public function getBot(): self
     {
-        $response = NotionClient::make()
-            ->get($this->botUrl());
+        $response = NotionClient::make()->get(self::BOT_URL);
 
         return $this->fromResponse($response->json());
     }
@@ -75,16 +59,6 @@ class NotionUser extends NotionObject
         }
         $this->setOwner($response['bot']);
         return $this;
-    }
-
-    private function getUrl(): string
-    {
-        return NotionClient::BASE_URL . '/users/' . $this->id;
-    }
-
-    private function botUrl(): string
-    {
-        return NotionClient::BASE_URL . '/users/' . 'me';
     }
 
     private function setOwner($response): void

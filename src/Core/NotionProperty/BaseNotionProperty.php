@@ -122,4 +122,9 @@ abstract class BaseNotionProperty extends NotionObject
         return $this->blockContent;
     }
 
+    public function hasRawValue(): bool
+    {
+        return !empty($this->rawValue);
+    }
+
 }

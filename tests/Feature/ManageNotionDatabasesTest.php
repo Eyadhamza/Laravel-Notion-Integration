@@ -76,14 +76,13 @@ it('can create a database object', function () {
 
 it('can update a database object', function () {
     $database = (new NotionDatabase)
-        ->setDatabaseId($this->databaseId)
         ->setTitle(NotionDatabaseTitle::make('Test Database')->build())
         ->setDatabaseDescription(NotionDatabaseDescription::make('Test Description')->build())
         ->setProperties([
             NotionDate::make('Date')->build(),
             NotionCheckbox::make('Checkbox')->build(),
         ])
-        ->update();
+        ->update($this->databaseId);
 
     assertObjectHasProperty('objectType', $database);
 });
@@ -91,13 +90,13 @@ it('can update a database object', function () {
 it('throws exception when database not found', function () {
     $id = '632b5fb7e06c4404ae12asdasd065c48280e4asdc';
     $this->expectException(NotionValidationException::class);
-    (new NotionDatabase($id))->get();
+    (new NotionDatabase($id))->find();
 });
 
 it('throws exception when database not authorized', function () {
     $id = '632b5fb7e06c4404ae12065c48280e4asdc';
     $this->expectException(NotionValidationException::class);
-    (new NotionDatabase($id))->get();
+    (new NotionDatabase($id))->find();
 });
 
 it('can filter database with one filter', function () {

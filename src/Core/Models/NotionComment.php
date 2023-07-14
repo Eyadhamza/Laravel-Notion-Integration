@@ -9,18 +9,12 @@ use Pi\Notion\Core\RequestBuilders\CreateNotionCommentRequestBuilder;
 
 class NotionComment extends NotionObject
 {
+    const COMMENTS_URL =  NotionClient::BASE_URL . '/comments/';
+
     private ?string $discussionId = null;
     private NotionRichText $content;
+    private string $parentId;
 
-    public function __construct(string $id = null)
-    {
-        $this->id = $id;
-    }
-
-    public static function make(string $id = null): self
-    {
-        return new static($id);
-    }
 
     public function fromResponse($response): self
     {
@@ -37,9 +31,9 @@ class NotionComment extends NotionObject
             ->setParentId($this->parentId)
             ->setContent($this->content)
             ->build();
-//        dd($body);
+
         $response = NotionClient::make()
-            ->post(NotionClient::COMMENTS_URL, $body);
+            ->post(self::COMMENTS_URL, $body);
 
         return $this->fromResponse($response->json());
     }
@@ -47,17 +41,13 @@ class NotionComment extends NotionObject
     public function findAll(int $pageSize = 50): NotionPaginator
     {
         return NotionPaginator::make(NotionComment::class)
-            ->setUrl($this->getUrl())
+            ->setUrl(self::COMMENTS_URL)
             ->setMethod('get')
             ->setBody(['block_id' => $this->id])
             ->setPageSize($pageSize)
             ->paginate();
     }
 
-    private function getUrl(): string
-    {
-        return NotionClient::COMMENTS_URL;
-    }
 
     public function setDiscussionId(string $discussionId): self
     {

@@ -13,25 +13,24 @@ class NotionObject
 {
     protected ?string $objectType;
     protected ?string $id;
-    private string $parentType;
-    protected ?string $parentId = null;
     protected ?bool $archived;
-    protected ?string $createdTime = null;
-    protected ?string $lastEditedTime = null;
-    protected ?NotionUser $lastEditedBy = null;
+
     protected ?string $url = null;
     protected ?string $icon;
     protected ?string $cover;
     protected NotionPaginator $paginator;
+
+
+    public static function make(): static
+    {
+        return new static();
+    }
 
     public function fromResponse(array $response): self
     {
         $this->id = $response['id'] ?? null;
         $this->objectType = $response['object'];
         $this->setParent($response['parent'] ?? []);
-        $this->archived = $response['archived'] ?? null;
-        $this->createdTime = $response['created_time'] ?? null;
-        $this->lastEditedTime = $response['last_edited_time'] ?? null;
 
         return $this;
     }
@@ -54,10 +53,14 @@ class NotionObject
         if (empty($parent)) {
             return $this;
         }
-        $this->parentType = $parent['type'];
-        $this->parentId = $parent[$this->parentType];
+        $parentType = $parent['type'];
+        $this->parentId = $parent[$parentType];
 
         return $this;
     }
 
+    public function getId(): ?string
+    {
+        return $this->id;
+    }
 }

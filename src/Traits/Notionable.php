@@ -13,22 +13,24 @@ trait Notionable
 
     public abstract function mapToNotion(): array;
 
-    public function saveToNotion(): NotionPage
+    public function saveToNotion(string $pageId = null): NotionPage
     {
         $this->notionMap = $this->mapToNotion();
 
         $this->validateHasNotionDatabaseId();
 
-        $this->notionMap = collect($this->getAttributes())->map(function ($value, $key) {
-            if (array_key_exists($key, $this->notionMap)) {
-                /** @var BaseNotionProperty $property */
-                $property = $this->notionMap[$key];
-                dd($property);
-                return $property->setRawValue($value)->build();
-            }
-        })->filter()->toArray();
+        $this->notionMap = $this->buildNotionProperties();
 
-        $page = new NotionPage();
+        if ($pageId){
+            $page = new NotionPage($pageId);
+
+            return $page
+                ->setProperties($this->notionMap)
+                ->update();
+        }
+
+        $page = new NotionPage($pageId ?? null);
+
         return $page
             ->setDatabaseId($this->notionDatabaseId)
             ->setProperties($this->notionMap)
@@ -63,5 +65,21 @@ trait Notionable
         }
 
         return $this;
+    }
+
+    public function buildNotionProperties(): array
+    {
+        return collect($this->getAttributes())->map(function ($value, $key) {
+            if (array_key_exists($key, $this->notionMap)) {
+                /** @var BaseNotionProperty $property */
+                $property = $this->notionMap[$key];
+
+                if ($property->hasRawValue() && ! isset($property->resource)){
+                    return $property->build();
+                }
+
+                return $property->setRawValue($value)->build();
+            }
+        })->filter()->toArray();
     }
 }

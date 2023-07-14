@@ -19,13 +19,15 @@ class NotionPage extends NotionObject
 {
     use HandleProperties, HandleBlocks;
 
+    const PAGE_URL = NotionClient::BASE_URL.'/pages/';
+
     private string $notionDatabaseId;
     protected Collection $blocks;
     protected Collection $properties;
+    private ?NotionUser $lastEditedBy;
 
-    public function __construct($id = '')
+    public function __construct()
     {
-        $this->id = $id;
         $this->blocks = new Collection();
         $this->properties = new Collection();
     }
@@ -37,15 +39,14 @@ class NotionPage extends NotionObject
         $this->url = $response['url'] ?? null;
         $this->icon = $response['icon'] ?? null;
         $this->cover = $response['cover'] ?? null;
-
         $this->properties = new Collection();
         $this->buildProperties($response);
         return $this;
     }
 
-    public function get(): self
+    public function find(string $id): self
     {
-        $response = NotionClient::make()->get($this->getUrl());
+        $response = NotionClient::make()->get(self::PAGE_URL . $id);
 
         return $this->fromResponse($response->json());
     }
@@ -70,19 +71,9 @@ class NotionPage extends NotionObject
             ->fromResponse($response);
     }
 
-    public function getWithContent(): NotionPaginator
+    public function getWithContent(string $id): NotionPaginator
     {
-        return (new NotionBlock)->getChildren($this->id);
-    }
-
-    public static function find($id): self
-    {
-        return (new NotionPage($id))->get();
-    }
-
-    public static function findContent($id): NotionPaginator
-    {
-        return (new NotionPage($id))->getWithContent();
+        return (new NotionBlock)->getChildren($id);
     }
 
     public function create(): self
@@ -93,27 +84,25 @@ class NotionPage extends NotionObject
             ->setBlocks($this->blocks);
 
         $response = NotionClient::make()
-            ->post(NotionClient::PAGE_URL, $requestBuilder->build());
+            ->post(self::PAGE_URL, $requestBuilder->build());
 
         return $this->fromResponse($response->json());
     }
 
-    public function update(): self
+    public function update(string $id): self
     {
         $requestBuilder = CreateNotionPageRequestBuilder::make()
             ->setProperties($this->properties);
-//        dd($requestBuilder->build() );
+
         $response = NotionClient::make()
-            ->patch($this->getUrl(), $requestBuilder->build());
+            ->patch(self::PAGE_URL . $id, $requestBuilder->build());
 
         return $this->fromResponse($response->json());
     }
 
-    public function delete(): NotionBlock
+    public function delete(string $id): NotionBlock
     {
-        return NotionBlock::make(NotionBlockTypeEnum::PAGE)
-            ->setId($this->id)
-            ->delete();
+        return NotionBlock::make(NotionBlockTypeEnum::PAGE)->delete($id);
     }
 
     public function setDatabaseId(string $notionDatabaseId): self
@@ -122,21 +111,23 @@ class NotionPage extends NotionObject
         return $this;
     }
 
-    private function getUrl(): string
-    {
-        return NotionClient::PAGE_URL . $this->id;
-    }
 
-    private function propertyUrl($id): string
+    private function propertyUrl(string $pageId, string $propertyId): string
     {
-        return $this->getUrl() . '/properties/' . $id;
+        return self::PAGE_URL . $pageId . '/properties/' . $propertyId;
     }
 
     public function ofPropertyName(string $name): ?BaseNotionProperty
     {
         return $this->properties
-            ->filter(fn (BaseNotionProperty $property) => $property->getName() === $name)
+            ->filter(fn(BaseNotionProperty $property) => $property->getName() === $name)
             ->first() ?? throw new \Exception("Property of name $name not found");
+    }
+
+    public function setNotionDatabaseId(string $notionDatabaseId): NotionPage
+    {
+        $this->notionDatabaseId = $notionDatabaseId;
+        return $this;
     }
 
 }

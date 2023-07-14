@@ -8,9 +8,15 @@ trait CreateFilterTypes
     {
         return self::make('select', $propertyName);
     }
+
     public static function title(string $propertyName): self
     {
         return self::make('title', $propertyName);
+    }
+
+    public static function text(string $propertyName): self
+    {
+        return self::make('rich_text', $propertyName);
     }
     public static function multiSelect(string $propertyName): self
     {

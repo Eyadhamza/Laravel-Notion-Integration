@@ -47,7 +47,7 @@ it('can create a page object', function () {
 });
 
 it('can delete a page object', function () {
-    $page = (new NotionPage('ec9df16fa65f4eef96776ee41ee3d4d4'))->delete();
+    $page = NotionPage::make()->delete('ec9df16fa65f4eef96776ee41ee3d4d4');
 
     expect($page)->toHaveProperty('objectType');
 });
@@ -109,13 +109,11 @@ it('should add properties to the created page using the page class', function ()
 });
 
 it('can update properties of the created page using the page class', function () {
-    $page = new NotionPage($this->pageId);
-    $page = $page
-        ->setProperties([
-            NotionTitle::make('Name')
-                ->setTitle('Test')
-                ->build(),
-        ])->update();
+    $page = NotionPage::make()->setProperties([
+        NotionTitle::make('Name')
+            ->setTitle('Test')
+            ->build(),
+    ])->update($this->pageId);
 
     expect($page)->toHaveProperty('properties');
 });
@@ -202,7 +200,7 @@ it('can add content blocks to created pages using the page class', function () {
 });
 
 it('returns a property by ID', function () {
-    $page = NotionPage::find('e20014185b654e08a6285872b0b622f9');
+    $page = NotionPage::make()->find('e20014185b654e08a6285872b0b622f9');
 
     $property = $page->getProperty('Text');
     expect($property)->toBeInstanceOf(NotionPaginator::class);
