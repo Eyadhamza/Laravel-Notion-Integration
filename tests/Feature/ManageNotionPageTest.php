@@ -59,26 +59,20 @@ it('should add properties to the created page using the page class', function ()
     $page = $page
         ->setProperties([
             NotionTitle::make('Name')
-                ->setTitle('Test')
-                ->build(),
+                ->setTitle('Test'),
             NotionSelect::make('Status')
-                ->setSelected('A')
-                ->build(),
+                ->setSelected('A'),
             NotionDate::make('Date')
-                ->setStart('2021-01-01')
-                ->build(),
+                ->setStart('2021-01-01'),
             NotionCheckbox::make('Checkbox')
-                ->setChecked(true)
-                ->build(),
+                ->setChecked(true),
             NotionRelation::make('Relation')
-                ->setPageIds(['633fc9822c794e3682186491c50210e6'])
-                ->build(),
+                ->setPageIds(['633fc9822c794e3682186491c50210e6']),
 
             NotionPeople::make('People')
                 ->setPeople([
                     new NotionUser('2c4d6a4a-12fe-4ce8-a7e4-e3019cc4765f')
-                ])
-                ->build(),
+                ]),
             NotionFiles::make('Media')
                 ->setFiles([
                     NotionFile::make('Google')
@@ -88,20 +82,15 @@ it('should add properties to the created page using the page class', function ()
                         ->setFileType('file')
                         ->setFileUrl('https://s3.us-west-2.amazonaws.com/secure.notion-static.com/7b8b0713-dbd4-4962-b38b-955b6c49a573/My_test_image.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221024%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221024T205211Z&X-Amz-Expires=3600&X-Amz-Signature=208aa971577ff05e75e68354e8a9488697288ff3fb3879c2d599433a7625bf90&X-Amz-SignedHeaders=host&x-id=GetObject')
                         ->setExpiryTime('2022-10-24T22:49:22.765Z'),
-                ])
-                ->build(),
+                ]),
             NotionEmail::make('Email')
-                ->setEmail('eyadhamza0@gmail.com')
-                ->build(),
+                ->setEmail('eyadhamza0@gmail.com'),
             NotionNumber::make('Number')
-                ->setNumber(10)
-                ->build(),
+                ->setNumber(10),
             NotionPhoneNumber::make('Phone')
-                ->setPhoneNumber('+201010101010')
-                ->build(),
+                ->setPhoneNumber('+201010101010'),
             NotionUrl::make('Url')
-                ->setUrl('https://www.google.com')
-                ->build(),
+                ->setUrl('https://www.google.com'),
         ])->create();
 
     expect($page->getProperties())->toHaveCount(17)
@@ -125,11 +114,9 @@ it('can add content blocks to the created pages', function () {
 
     $page
         ->setProperties([
-            NotionTitle::make('Name', 'Test')
-                ->build(),
+            NotionTitle::make('Name', 'Test'),
             NotionSelect::make('Status')
-                ->setSelected('A')
-                ->build(),
+                ->setSelected('A'),
         ]);
 
     $page->setBlocks([

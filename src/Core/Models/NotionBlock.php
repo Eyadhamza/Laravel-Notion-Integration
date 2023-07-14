@@ -10,12 +10,11 @@ use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\NotionClient;
 use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\Enums\NotionBlockTypeEnum;
-use Pi\Notion\Traits\CreateBlockTypes;
 use Pi\Notion\Traits\HasResource;
 
 class NotionBlock extends NotionObject
 {
-    use CreateBlockTypes, HasResource;
+    use HasResource;
 
 
     const BLOCK_URL = NotionClient::BASE_URL . '/blocks/';
@@ -79,7 +78,7 @@ class NotionBlock extends NotionObject
 
     public function update(string $id): self
     {
-        $response = NotionClient::make()->patch(self::BLOCK_URL . $id,$this->buildResource()->resource->resolve());
+        $response = NotionClient::make()->patch(self::BLOCK_URL . $id, $this->buildResource()->resource->resolve());
 
         return $this->fromResponse($response->json());
     }

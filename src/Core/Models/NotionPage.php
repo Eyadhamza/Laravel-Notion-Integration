@@ -12,12 +12,11 @@ use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\Core\RequestBuilders\CreateNotionPageRequestBuilder;
 use Pi\Notion\Enums\NotionBlockTypeEnum;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
-use Pi\Notion\Traits\HandleBlocks;
 use Pi\Notion\Traits\HandleProperties;
 
 class NotionPage extends NotionObject
 {
-    use HandleProperties, HandleBlocks;
+    use HandleProperties;
 
     const PAGE_URL = NotionClient::BASE_URL . '/pages/';
 

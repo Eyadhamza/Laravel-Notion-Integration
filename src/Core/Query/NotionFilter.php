@@ -7,8 +7,6 @@ use Pi\Notion\Traits\CreateFilterTypes;
 
 class NotionFilter
 {
-    use CreateFilterTypes;
-
     private string $property;
     private string|array $query;
     private string $type;
@@ -137,4 +135,15 @@ class NotionFilter
             })->toArray()
         ];
     }
+
+    public function equals(string $query): self
+    {
+        return $this->apply('equals', $query);
+    }
+
+    public function contains(string $query): self
+    {
+        return $this->apply('contains', $query);
+    }
+
 }

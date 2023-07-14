@@ -1,5 +1,6 @@
 <?php
 
+use Pi\Notion\Core\Builders\NotionFilterBuilder;
 use Pi\Notion\Core\Models\NotionDatabase;
 use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
 use Pi\Notion\Core\NotionProperty\NotionRollup;
@@ -31,7 +32,7 @@ beforeEach(function () {
 });
 
 it('returns database info', function () {
-    $database = NotionDatabase::find('632b5fb7e06c4404ae12065c48280e4c');
+    $database = NotionDatabase::make()->find('632b5fb7e06c4404ae12065c48280e4c');
     assertObjectHasProperty('objectType', $database);
 });
 
@@ -85,65 +86,67 @@ it('can update a database object', function () {
 it('throws exception when database not found', function () {
     $id = '632b5fb7e06c4404ae12asdasd065c48280e4asdc';
     $this->expectException(NotionValidationException::class);
-    (new NotionDatabase($id))->find();
+    (new NotionDatabase())->find($id);
 });
 
 it('throws exception when database not authorized', function () {
     $id = '632b5fb7e06c4404ae12065c48280e4asdc';
     $this->expectException(NotionValidationException::class);
-    (new NotionDatabase($id))->find();
+    (new NotionDatabase())->find($id);
 });
 
 it('can filter database with one filter', function () {
-    $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
-    $paginated = $database->filter(
-        NotionFilter::title('Name')->contains('MMMM')
-    )->query();
+    $database = new NotionDatabase();
+    $paginated = $database
+        ->setFilters([
+            NotionFilterBuilder::select('Status')->equals('Reading')
+        ])
+        ->query('632b5fb7e06c4404ae12065c48280e4c');
 
-    expect($paginated->getResults())->toHaveCount(4);
+    expect($paginated->getResults())->toHaveCount(1);
 });
 
 it('can filter database with many filters', function () {
-    $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
-    $paginated = $database->filters([
+    $database = new NotionDatabase();
+    $paginated = $database->setFilters([
         NotionFilter::groupWithAnd([
-            NotionFilter::select('Status')->equals('Reading'),
-            NotionFilter::multiSelect('Status2')->contains('A'),
-            NotionFilter::title('Name')->contains('MMMM')
+            NotionFilterBuilder::select('Status')->equals('Reading'),
+            NotionFilterBuilder::multiSelect('Status2')->contains('A'),
+            NotionFilterBuilder::title('Name')->contains('MMMM')
         ])
-    ])->query();
+    ])->query('632b5fb7e06c4404ae12065c48280e4c');
     expect($paginated->getResults())->toHaveCount(1);
 
-    $paginated = $database->filters([
+    $paginated = $database->setFilters([
         NotionFilter::groupWithOr([
-            NotionFilter::select('Status')->equals('Reading'),
-            NotionFilter::multiSelect('Status2')->contains('A'),
-            NotionFilter::title('Name')->contains('MMMM')
+            NotionFilterBuilder::select('Status')->equals('Reading'),
+            NotionFilterBuilder::multiSelect('Status2')->contains('A'),
+            NotionFilterBuilder::title('Name')->contains('MMMM')
         ])
-    ])->query();
+    ])->query('632b5fb7e06c4404ae12065c48280e4c');
     expect($paginated->getResults())->toHaveCount(4);
 });
 
 it('can filter database with nested filters', function () {
-    $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
-    $paginated = $database->filters([
-        NotionFilter::select('Status')
+    $database = new NotionDatabase();
+    $paginated = $database->setFilters([
+        NotionFilterBuilder::select('Status')
             ->equals('Reading')
             ->compoundOrGroup([
-                NotionFilter::multiSelect('Status2')->contains('A'),
-                NotionFilter::title('Name')->contains('MMMM')
+                NotionFilterBuilder::multiSelect('Status2')->contains('A'),
+                NotionFilterBuilder::title('Name')->contains('MMMM')
             ], 'and')
-    ])->query();
+    ])->query('632b5fb7e06c4404ae12065c48280e4c');
     expect($paginated->getResults())->toHaveCount(2);
 });
 
 it('can sort database results', function () {
-    $database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
-    $paginated = $database->sorts([
+    $database = new NotionDatabase();
+    $paginated = $database->setSorts([
         NotionSort::property('Name')->ascending(),
-    ])->filter(
-        NotionFilter::title('Name')->contains('A'),
-    )->query(50);
+    ])->setFilters([
+        NotionFilterBuilder::title('Name')->contains('A'),
+    ])->query('632b5fb7e06c4404ae12065c48280e4c', 50);
     expect($paginated->getResults())->toHaveCount(50)
         ->and($paginated->hasMore())->toBeTrue();
     $paginated->next();

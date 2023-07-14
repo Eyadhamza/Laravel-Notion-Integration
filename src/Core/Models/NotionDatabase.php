@@ -128,10 +128,9 @@ class NotionDatabase extends NotionObject
         return $this;
     }
 
-
     public function setDatabaseDescription(NotionDatabaseDescription $description): static
     {
-        $this->description = $description;
+        $this->description = $description->buildContent();
 
         return $this;
     }

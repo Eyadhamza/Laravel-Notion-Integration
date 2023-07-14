@@ -11,7 +11,7 @@ it('returns the search result of pages', function () {
 
 it('returns the search result of databases', function () {
     $response = NotionSearch::inDatabases('test')
-        ->sorts([
+        ->setSorts([
             NotionSort::make('last_edited_time', 'descending'),
         ])
         ->apply(50);

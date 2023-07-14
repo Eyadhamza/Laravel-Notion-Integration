@@ -12,8 +12,7 @@ class NotionDatabaseDescription extends BaseNotionProperty
 {
     public function __construct(string $name)
     {
-        parent::__construct($name);
-        $this->value = $name;
+        parent::__construct($name, $name);
     }
 
     public function setType(): self

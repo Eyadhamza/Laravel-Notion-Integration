@@ -8,7 +8,7 @@ use Pi\Notion\Core\Models\NotionPage;
 use Pi\Notion\Core\NotionClient;
 use Pi\Notion\Traits\HandleSorts;
 
-class NotionSearch extends NotionObject
+class NotionSearch
 {
     use HandleSorts;
 

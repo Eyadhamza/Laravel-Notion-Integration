@@ -9,7 +9,7 @@ trait HandleSorts
 {
     protected Collection $sorts;
 
-    public function sorts(array $sorts): self
+    public function setSorts(array $sorts): self
     {
         $this->sorts = collect($sorts);
 
