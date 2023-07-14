@@ -4,9 +4,11 @@ namespace Pi\Notion\Core\NotionProperty;
 
 use Illuminate\Http\Resources\MissingValue;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Traits\Filters\HasEqualityFilters;
 
 class NotionSelect extends BaseNotionProperty
 {
+    use HasEqualityFilters;
     private array $options;
 
     public function setType(): BaseNotionProperty

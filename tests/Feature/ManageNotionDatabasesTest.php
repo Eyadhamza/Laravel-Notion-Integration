@@ -1,8 +1,8 @@
 <?php
 
-use Pi\Notion\Core\Builders\NotionFilterBuilder;
 use Pi\Notion\Core\Models\NotionDatabase;
 use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
+use Pi\Notion\Core\NotionProperty\NotionMultiSelect;
 use Pi\Notion\Core\NotionProperty\NotionRollup;
 use Pi\Notion\Core\NotionProperty\NotionPeople;
 use Pi\Notion\Core\NotionProperty\NotionFiles;
@@ -99,7 +99,7 @@ it('can filter database with one filter', function () {
     $database = new NotionDatabase();
     $paginated = $database
         ->setFilters([
-            NotionFilterBuilder::select('Status')->equals('Reading')
+            NotionSelect::make('Status')->equals('Reading')
         ])
         ->query('632b5fb7e06c4404ae12065c48280e4c');
 
@@ -110,18 +110,18 @@ it('can filter database with many filters', function () {
     $database = new NotionDatabase();
     $paginated = $database->setFilters([
         NotionFilter::groupWithAnd([
-            NotionFilterBuilder::select('Status')->equals('Reading'),
-            NotionFilterBuilder::multiSelect('Status2')->contains('A'),
-            NotionFilterBuilder::title('Name')->contains('MMMM')
+            NotionSelect::make('Status')->equals('Reading'),
+            NotionMultiSelect::make('Status2')->contains('Reading'),
+            NotionTitle::make('Name')->equals('MMMM')
         ])
     ])->query('632b5fb7e06c4404ae12065c48280e4c');
     expect($paginated->getResults())->toHaveCount(1);
 
     $paginated = $database->setFilters([
         NotionFilter::groupWithOr([
-            NotionFilterBuilder::select('Status')->equals('Reading'),
-            NotionFilterBuilder::multiSelect('Status2')->contains('A'),
-            NotionFilterBuilder::title('Name')->contains('MMMM')
+            NotionSelect::make('Status')->equals('Reading'),
+            NotionMultiSelect::make('Status2')->equals('A'),
+            NotionTitle::make('Name')->equals('MMMM')
         ])
     ])->query('632b5fb7e06c4404ae12065c48280e4c');
     expect($paginated->getResults())->toHaveCount(4);

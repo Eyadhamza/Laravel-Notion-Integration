@@ -3,147 +3,86 @@
 namespace Pi\Notion\Core\Query;
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Traits\CreateFilterTypes;
+use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 
 class NotionFilter
 {
-    private string $property;
-    private string|array $query;
-    private string $type;
-    private string $filterName;
-    private string $connective;
-    private Collection $filterGroup;
+    private BaseNotionProperty $property;
 
-    public function __construct(string $type, string $property)
+    private string|array $query;
+    private string $filterName;
+    private static Collection $filterGroup;
+
+    public function __construct(BaseNotionProperty $property)
     {
         $this->property = $property;
-        $this->type = $type;
-        $this->filterGroup = new Collection();
+        $this->filterName = $property->getFilterName();
+        $this->query = $property->getQuery();
     }
 
-    public static function make(string $type, string $property): NotionFilter
+    public static function make(BaseNotionProperty $property): NotionFilter
     {
-        return new self($type, $property);
+        return new self($property);
     }
 
-    public static function group(array $filters, $connective): NotionFilter
+    public static function group(array $filters, string $connective): Collection
     {
-        $filter = new self('group', 'group');
+        self::$filterGroup = new Collection();
 
-        $filter->setFilterGroup($filters, $connective);
+        return self::$filterGroup
+            ->put($connective, collect($filters)
+                ->map(fn(BaseNotionProperty $property) => (new self($property))->resource())
+                ->all()
+            );
 
-        return $filter;
     }
 
-    public static function groupWithOr(array $filters): NotionFilter
+    public static function groupWithOr(array $filters): Collection
     {
         return self::group($filters, 'or');
     }
 
-    public static function groupWithAnd(array $filters): NotionFilter
+    public static function groupWithAnd(array $filters): Collection
     {
         return self::group($filters, 'and');
     }
 
     public function apply(string $filter, string $query): NotionFilter
     {
-        $this->setQuery($query);
-        $this->setFilterName($filter);
-        return $this;
+        return $this
+            ->setQuery($query)
+            ->setFilterName($filter);
     }
 
 
-    public function get(): array
+    public function resource(): array
     {
         return [
-            'property' => $this->property,
-            $this->type => [
+            'property' => $this->property->getName(),
+            $this->property->getType()->value => [
                 $this->filterName => $this->query
             ]
         ];
     }
 
-    public function compoundOrGroup(array $filters, $nestedConnective): self
-    {
-        $this->filterGroup->add([
-            'or' => [
-                $this->get(),
-                $this->setNestedConnective($filters, $nestedConnective)
-            ]
-        ]);
-        return $this;
-    }
-
-    public function compoundAndGroup(array $filters, $nestedConnective): self
-    {
-        $this->filterGroup->add([
-            'and' => [
-                $this->get(),
-                $this->setNestedConnective($filters, $nestedConnective)
-            ]
-        ]);
-        return $this;
-    }
-
-
-    private function setQuery(string $query): void
+    private function setQuery(string $query): self
     {
         $this->query = $query;
+
+        return $this;
     }
 
-    private function setFilterName(string $filter): void
+    private function setFilterName(string $filter): self
     {
         $this->filterName = $filter;
+
+        return $this;
     }
 
-    private function setFilterGroup(array $filters, $connective): Collection
-    {
-        $this->filterGroup->add([
-            $connective =>
-                collect($filters)->map(function (NotionFilter $filter) {
-                    return $filter->get();
-                })
-        ]);
-        return $this->filterGroup;
-    }
-
-    public function getFilterGroup(): Collection
-    {
-        return $this->filterGroup;
-    }
-
-    public function setConnective(string $connective): void
-    {
-        $this->connective = $connective;
-    }
-
-    public function getConnective(): string
-    {
-        return $this->connective;
-    }
-
-    public function getProperty(): string
+    public function getProperty(): BaseNotionProperty
     {
         return $this->property;
     }
 
-    private function setNestedConnective(array $filters, $nestedConnective): array
-    {
-        return [
-            $nestedConnective => collect($filters)->map(function (NotionFilter $filter) {
-                return $filter->get();
-            })->toArray()
-        ];
-    }
-
-    public function equals(string $query): self
-    {
-        return $this->apply('equals', $query);
-    }
-
-    public function contains(string $query): self
-    {
-        return $this->apply('contains', $query);
-    }
 
 }

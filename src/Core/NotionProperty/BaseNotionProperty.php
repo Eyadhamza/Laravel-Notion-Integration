@@ -8,6 +8,7 @@ use Pi\Notion\Core\BlockContent\NotionBlockContentFactory;
 use Pi\Notion\Core\Models\NotionObject;
 use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionEmptyValue;
+use Pi\Notion\Core\Query\NotionFilter;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 abstract class BaseNotionProperty extends NotionObject
@@ -16,6 +17,8 @@ abstract class BaseNotionProperty extends NotionObject
     protected NotionContent|NotionEmptyValue $blockContent;
     protected NotionPropertyTypeEnum $type;
     protected ?string $name;
+    private string $query;
+    private string $filterName;
 
     public function __construct(?string $name = null, ?string $value = null)
     {
@@ -111,4 +114,20 @@ abstract class BaseNotionProperty extends NotionObject
         return !empty($this->value);
     }
 
+    public function applyFilter(string $filterName, string $query): self
+    {
+        $this->query = $query;
+        $this->filterName = $filterName;
+        return $this;
+    }
+
+    public function getFilterName(): string
+    {
+        return $this->filterName;
+    }
+
+    public function getQuery(): string
+    {
+        return $this->query;
+    }
 }

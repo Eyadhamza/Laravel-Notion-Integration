@@ -5,7 +5,6 @@ namespace Pi\Notion\Core\Models;
 
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\BlockContent\NotionRichText;
 use Pi\Notion\Core\NotionClient;
 use Pi\Notion\Core\NotionProperty\NotionDatabaseDescription;
 use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
@@ -13,13 +12,12 @@ use Pi\Notion\Core\NotionProperty\NotionTitle;
 use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\Core\RequestBuilders\NotionDatabaseRequestBuilder;
 use Pi\Notion\Core\RequestBuilders\NotionUpdateDatabaseRequestBuilder;
-use Pi\Notion\Traits\HandleFilters;
 use Pi\Notion\Traits\HandleProperties;
 use Pi\Notion\Traits\HandleSorts;
 
 class NotionDatabase extends NotionObject
 {
-    use HandleFilters, HandleProperties, HandleSorts;
+    use HandleProperties, HandleSorts;
 
     const DATABASE_URL = NotionClient::BASE_URL . '/databases/';
     private string $link;
@@ -90,9 +88,14 @@ class NotionDatabase extends NotionObject
     {
         $requestBody = [];
 
-        if (isset($this->filters) && $this->filters->isNotEmpty()) $requestBody['filter'] = $this->getFilterResults();
-        if (isset($this->sorts) && $this->sorts->isNotEmpty()) $requestBody['sorts'] = $this->getSortResults();
+        if ( $this->filters->isNotEmpty()){
+            $requestBody['filter'] = $this->filters->first();
+        }
 
+        if ($this->sorts->isNotEmpty()){
+            $requestBody['sorts'] = $this->sorts->all();
+        }
+//        dd($requestBody);
         return NotionPaginator::make(NotionPage::class)
             ->setUrl(self::DATABASE_URL . $id . '/query')
             ->setMethod('post')
@@ -131,6 +134,13 @@ class NotionDatabase extends NotionObject
     public function setDatabaseDescription(NotionDatabaseDescription $description): static
     {
         $this->description = $description->buildContent();
+
+        return $this;
+    }
+
+    public function setFilters(array $filters): self
+    {
+        $this->filters = new Collection($filters);
 
         return $this;
     }

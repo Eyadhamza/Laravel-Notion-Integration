@@ -6,9 +6,12 @@ use Illuminate\Http\Resources\MissingValue;
 use Pi\Notion\Core\BlockContent\NotionArrayValue;
 use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Traits\Filters\HasDateFilters;
 
 class NotionDate extends BaseNotionProperty
 {
+    use HasDateFilters;
+
     private ?string $timeZone;
     private ?string $end;
 

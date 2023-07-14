@@ -3,9 +3,11 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Traits\Filters\HasStringFilters;
 
 class NotionTitle extends BaseNotionProperty
 {
+    use HasStringFilters;
 
     public function setType(): BaseNotionProperty
     {
