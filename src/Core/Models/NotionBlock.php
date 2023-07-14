@@ -32,7 +32,7 @@ class NotionBlock extends NotionObject
         $this->children = new Collection();
     }
 
-    public static function make(NotionBlockTypeEnum $type = null, NotionContent $blockContent = null): self
+    public static function make(NotionBlockTypeEnum $type = null, NotionContent $blockContent = null): static
     {
         return new self($type, $blockContent);
     }
@@ -45,27 +45,26 @@ class NotionBlock extends NotionObject
         return $this;
     }
 
-    public function get(string $id): self
+    public function find(string $id): self
     {
         $response = NotionClient::make()->get(self::BLOCK_URL . $id);
 
         return $this->fromResponse($response->json());
     }
 
-    public function getChildren(string $id, int $pageSize = 100): NotionPaginator
+    public function getChildren(int $pageSize = 100): NotionPaginator
     {
         return NotionPaginator::make(NotionBlock::class)
-            ->setUrl(self::BLOCK_URL . $id . '/children')
+            ->setUrl(self::BLOCK_URL . $this->id . '/children')
             ->setMethod('get')
             ->setPageSize($pageSize)
             ->paginate();
     }
 
-    public function createChildren(string $id): NotionPaginator
+    public function createChildren(): NotionPaginator
     {
         return NotionPaginator::make(NotionBlock::class)
-            ->setUrl(self::BLOCK_URL . $id . '/children')
-            ->setPageSize(null)
+            ->setUrl(self::BLOCK_URL . $this->id . '/children')
             ->setMethod('patch')
             ->setBody(['children' => $this->children
                 ->map(fn(NotionBlock $block) => $block
@@ -120,4 +119,5 @@ class NotionBlock extends NotionObject
             $this->type->value => $this->blockContent->toArray(),
         ];
     }
+
 }

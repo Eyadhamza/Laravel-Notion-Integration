@@ -16,16 +16,16 @@ class NotionTitle extends BaseNotionProperty
 
     public function mapToResource(): array
     {
-        if (is_null($this->rawValue)) return [];
+        if (is_null($this->value)) return [];
 
         return [
-            'content' => $this->rawValue
+            'content' => $this->value
         ];
     }
 
     public function setTitle(string $title): NotionTitle
     {
-        $this->rawValue = $title;
+        $this->value = $title;
         return $this;
     }
 }

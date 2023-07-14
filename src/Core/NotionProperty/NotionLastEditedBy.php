@@ -16,7 +16,7 @@ class NotionLastEditedBy extends BaseNotionProperty
             return $this;
         }
 
-        $this->lastEditedBy = NotionUser::make($response['last_edited_by']['id'])
+        $this->value = NotionUser::make($response['last_edited_by']['id'])
             ->fromResponse($response['last_edited_by']);
 
         return $this;
@@ -32,7 +32,7 @@ class NotionLastEditedBy extends BaseNotionProperty
     public function mapToResource(): array
     {
         return [
-            'value' => $this->lastEditedBy
+            'value' => $this->value
         ];
     }
 }

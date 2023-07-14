@@ -22,13 +22,13 @@ class NotionCreatedBy extends BaseNotionProperty
     public function mapToResource(): array
     {
         return [
-            'value' => $this->rawValue
+            'value' => $this->value
         ];
     }
 
     public function setCreatedBy(?NotionUser $createdBy): NotionCreatedBy
     {
-        $this->rawValue = $createdBy;
+        $this->value = $createdBy;
         return $this;
     }
 }

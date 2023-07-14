@@ -20,14 +20,14 @@ class NotionText extends BaseNotionProperty
 
     public function setText($text): self
     {
-        $this->rawValue = $text;
+        $this->value = $text;
         return $this;
     }
 
     public function mapToResource(): array
     {
         return [
-            'content' => $this->rawValue
+            'content' => $this->value
         ];
     }
 }

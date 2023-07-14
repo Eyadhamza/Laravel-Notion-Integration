@@ -7,29 +7,32 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionBlockContentFactory
 {
+    private BaseNotionProperty $entity;
+    private NotionPropertyTypeEnum $type;
 
-    public static function make(BaseNotionProperty $entity)
+    public function __construct(BaseNotionProperty $entity)
     {
-        return self::matchFromProperty($entity);
+        $this->entity = $entity;
+        $this->type = $entity->getType();
+
     }
 
-    private static function matchFromProperty(BaseNotionProperty $entity)
+    public static function make(BaseNotionProperty $entity): NotionContent
     {
-        $type = $entity->getType();
+        return (new self($entity))->matchFromProperty();
+    }
 
-        if (self::isRichTextType($type)) {
-            return NotionRichText::make($entity->resource->resolve())->setValueType($type);
-        }
+    private function matchFromProperty(): NotionContent
+    {
+        $value = $this->entity->getValue();
 
-        if (self::isSimpleValueType($type)) {
-            return NotionSimpleValue::make($entity->resource->resolve())->setValueType($type);
-        }
+        return match (true){
+            self::isRichTextType($this->type) => NotionRichText::make($this->type, $value),
+            self::isSimpleValueType($this->type) => NotionSimpleValue::make($this->type, $value),
+            self::isArrayValueType($this->type) => NotionArrayValue::make($this->type, $value),
+            default => NotionEmptyValue::make($this->type, $value)
+        };
 
-        if (self::isArrayValueType($type)) {
-            return NotionArrayValue::make($entity->resource->resolve())->setValueType($type);
-        }
-
-        return NotionEmptyValue::make()->setValueType($type);
     }
 
     private static function isRichTextType(NotionPropertyTypeEnum $type): bool

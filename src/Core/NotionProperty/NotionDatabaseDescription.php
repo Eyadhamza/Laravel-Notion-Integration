@@ -13,7 +13,7 @@ class NotionDatabaseDescription extends BaseNotionProperty
     public function __construct(string $name)
     {
         parent::__construct($name);
-        $this->rawValue = $name;
+        $this->value = $name;
     }
 
     public function setType(): self
@@ -26,7 +26,7 @@ class NotionDatabaseDescription extends BaseNotionProperty
     public function mapToResource(): array
     {
         return [
-            'content' => $this->rawValue,
+            'content' => $this->value,
         ];
     }
 }

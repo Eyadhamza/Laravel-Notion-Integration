@@ -22,33 +22,15 @@ trait Notionable
         $this->notionMap = $this->buildNotionProperties();
 
         if ($pageId){
-            $page = new NotionPage($pageId);
-
-            return $page
+            return NotionPage::make()
                 ->setProperties($this->notionMap)
-                ->update();
+                ->update($pageId);
         }
 
-        $page = new NotionPage($pageId ?? null);
-
-        return $page
+        return NotionPage::make()
             ->setDatabaseId($this->notionDatabaseId)
             ->setProperties($this->notionMap)
             ->create();
-    }
-
-    public function mapFromNotion(NotionPage $page): array
-    {
-        $attributes = [];
-
-        foreach ($this->mapToNotion() as $key => $value) {
-            dd($key, $value);
-            /** @var BaseNotionProperty $property */
-            $property = $page->ofPropertyName($value->getName());
-            $attributes[$key] = $property->getBlockContent()->getValue();
-            dd($attributes);
-        }
-        return $attributes;
     }
 
     public function getNotionDatabaseId(): string
@@ -74,11 +56,11 @@ trait Notionable
                 /** @var BaseNotionProperty $property */
                 $property = $this->notionMap[$key];
 
-                if ($property->hasRawValue() && ! isset($property->resource)){
+                if ($property->hasValue() && ! isset($property->resource)){
                     return $property->build();
                 }
 
-                return $property->setRawValue($value)->build();
+                return $property->setValue($value)->build();
             }
         })->filter()->toArray();
     }

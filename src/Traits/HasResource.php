@@ -8,12 +8,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
 trait HasResource
 {
 
-    public function buildResource(): self
+    public function resource()
     {
-        $this->resource = JsonResource::make($this);
-
-        return $this;
+        $this->resource = JsonResource::make($this->value);
+        return $this->resource->resolve();
     }
-
-    abstract public function toArray(): array;
 }

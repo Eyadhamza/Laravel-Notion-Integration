@@ -16,7 +16,7 @@ it('returns a user', function () {
 });
 
 it('returns a bot', function () {
-    $bot = NotionUser::make()->getBot();
+    $bot = NotionUser::make()->findBot();
 
     expect($bot)->toHaveProperty('name');
 });

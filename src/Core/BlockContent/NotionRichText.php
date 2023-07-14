@@ -5,6 +5,8 @@ namespace Pi\Notion\Core\BlockContent;
 use Illuminate\Http\Resources\MissingValue;
 use Illuminate\Support\Collection;
 use Pi\Notion\Enums\NotionBlockContentTypeEnum;
+use Pi\Notion\Enums\NotionBlockTypeEnum;
+use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionRichText extends NotionContent
 {
@@ -13,13 +15,14 @@ class NotionRichText extends NotionContent
     private array $attributeValues;
     private ?string $href;
 
-    public function __construct(mixed $value = null)
+    public function __construct(NotionBlockTypeEnum|NotionPropertyTypeEnum $valueType, mixed $value = null)
     {
-        parent::__construct($value);
         $this->annotations = new Collection();
         $this->link = null;
         $this->attributeValues = [];
         $this->href = null;
+        parent::__construct($valueType, $value);
+
     }
 
     public static function build(array $response): static
@@ -128,7 +131,7 @@ class NotionRichText extends NotionContent
         return $this;
     }
 
-    public function toArray(): array
+    public function toArrayableValue(): array
     {
         $key = $this->valueType->value ?? $this->contentType->value;
 
@@ -139,7 +142,7 @@ class NotionRichText extends NotionContent
                 array_merge($this->getAnnotations(), [
                     'type' => 'text',
                     'text' => [
-                        'content' => $value,
+                        $value,
                         'link' => $this->link ?? new MissingValue(),
                     ],
                     'plain_text' => $value,
@@ -161,4 +164,5 @@ class NotionRichText extends NotionContent
 
         return $this;
     }
+
 }

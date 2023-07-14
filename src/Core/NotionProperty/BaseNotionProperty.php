@@ -4,7 +4,6 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 
-use Illuminate\Http\Resources\Json\JsonResource;
 use Pi\Notion\Core\BlockContent\NotionBlockContentFactory;
 use Pi\Notion\Core\Models\NotionObject;
 use Pi\Notion\Core\BlockContent\NotionContent;
@@ -13,38 +12,42 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 abstract class BaseNotionProperty extends NotionObject
 {
-    public JsonResource $resource;
-    protected mixed $rawValue;
+    protected mixed $value;
     protected NotionContent|NotionEmptyValue $blockContent;
     protected NotionPropertyTypeEnum $type;
     protected ?string $name;
 
-    public function __construct(?string $name = null, ?string $rawValue = null)
+    public function __construct(?string $name = null, ?string $value = null)
     {
         $this->name = $name;
-        $this->rawValue = $rawValue;
+        $this->value = $value;
         $this->setType();
     }
 
-    public static function make(?string $name = null, ?string $rawValue = null): static
+    public static function make(?string $name = null, ?string $value = null): static
     {
-        return new static($name, $rawValue);
+        return new static($name, $value);
     }
 
-    public function build(): static
+    public function fromResponse(array $response): static
     {
-        $this->resource = new JsonResource($this->mapToResource());
+        $this->id = $response['id'];
+        $this->type = NotionPropertyTypeEnum::tryFrom($response['type']);
+
+        if (empty($response[$this->type->value])) {
+            return $this;
+        }
+
+        $this->setValue($response[$this->type->value]);
 
         $this->buildContent();
-
-        $this->blockContent->buildResource();
 
         return $this;
     }
 
     public function resource(): array
     {
-        return $this->blockContent->resource->resolve();
+        return $this->blockContent->resource();
     }
 
     public function isPaginated(): bool
@@ -57,30 +60,11 @@ abstract class BaseNotionProperty extends NotionObject
         };
     }
 
-    protected function buildContent(): self
+    public function buildContent(): self
     {
+        $this->value = $this->mapToResource();
+
         $this->blockContent = NotionBlockContentFactory::make($this);
-
-        return $this;
-    }
-
-    public function fromResponse(array $response): static
-    {
-        $this->id = $response['id'];
-        $this->type = NotionPropertyTypeEnum::tryFrom($response['type']);
-
-        return $this->buildFromResponse($response);
-    }
-
-    protected function buildFromResponse(array $response): BaseNotionProperty
-    {
-        if (empty($response[$this->type->value])) {
-            return $this;
-        }
-
-        $this->rawValue = $response[$this->type->value];
-
-        $this->build();
 
         return $this;
     }
@@ -103,16 +87,16 @@ abstract class BaseNotionProperty extends NotionObject
 
     abstract public function setType(): BaseNotionProperty;
 
-    public function getRawValue(): mixed
+    public function getValue(): mixed
     {
-        return $this->rawValue;
+        return $this->value;
     }
 
     public abstract function mapToResource(): array;
 
-    public function setRawValue($value): self
+    public function setValue($value): self
     {
-        $this->rawValue = $value;
+        $this->value = $value;
 
         return $this;
     }
@@ -122,9 +106,9 @@ abstract class BaseNotionProperty extends NotionObject
         return $this->blockContent;
     }
 
-    public function hasRawValue(): bool
+    public function hasValue(): bool
     {
-        return !empty($this->rawValue);
+        return !empty($this->value);
     }
 
 }

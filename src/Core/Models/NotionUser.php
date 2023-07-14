@@ -14,31 +14,6 @@ class NotionUser extends NotionObject
     private ?string $email;
     private string $avatarUrl;
     private ?string $type;
-
-    public function index(int $pageSize = 100): NotionPaginator
-    {
-        return NotionPaginator::make(NotionUser::class)
-            ->setUrl(self::USERS_URL)
-            ->setMethod('get')
-            ->setPageSize($pageSize)
-            ->paginate();
-
-    }
-
-    public function find(): self
-    {
-        $response = NotionClient::make()->get(self::USERS_URL);
-
-        return $this->fromResponse($response->json());
-    }
-
-    public function getBot(): self
-    {
-        $response = NotionClient::make()->get(self::BOT_URL);
-
-        return $this->fromResponse($response->json());
-    }
-
     public function fromResponse($response): self
     {
         $this->object = $response['object'] ?? null;
@@ -60,6 +35,31 @@ class NotionUser extends NotionObject
         $this->setOwner($response['bot']);
         return $this;
     }
+
+    public function index(int $pageSize = 100): NotionPaginator
+    {
+        return NotionPaginator::make(NotionUser::class)
+            ->setUrl(self::USERS_URL)
+            ->setMethod('get')
+            ->setPageSize($pageSize)
+            ->paginate();
+
+    }
+
+    public function find(): self
+    {
+        $response = NotionClient::make()->get(self::USERS_URL);
+
+        return $this->fromResponse($response->json());
+    }
+
+    public function findBot(): self
+    {
+        $response = NotionClient::make()->get(self::BOT_URL);
+
+        return $this->fromResponse($response->json());
+    }
+
 
     private function setOwner($response): void
     {

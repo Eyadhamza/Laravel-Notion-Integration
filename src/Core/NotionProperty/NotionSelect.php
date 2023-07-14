@@ -24,7 +24,7 @@ class NotionSelect extends BaseNotionProperty
 
     public function setSelected(string $option): self
     {
-        $this->rawValue = $option;
+        $this->value = $option;
 
         return $this;
     }
@@ -33,7 +33,7 @@ class NotionSelect extends BaseNotionProperty
     {
         return [
             'options' => $this->options ?? new MissingValue(),
-            'name' => $this->rawValue ?? new MissingValue()
+            'name' => $this->value ?? new MissingValue()
         ];
     }
 }

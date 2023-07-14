@@ -19,7 +19,7 @@ class NotionFiles extends BaseNotionProperty
             return $this;
         }
 
-        $this->rawValue = $response['files'];
+        $this->value = $response['files'];
 
         return $this;
     }

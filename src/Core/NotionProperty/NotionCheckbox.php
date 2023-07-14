@@ -19,7 +19,7 @@ class NotionCheckbox extends BaseNotionProperty
 
     public function setChecked(bool $checked): self
     {
-        $this->rawValue = $checked;
+        $this->value = $checked;
 
         return $this;
     }
@@ -28,7 +28,7 @@ class NotionCheckbox extends BaseNotionProperty
     public function mapToResource(): array
     {
         return [
-            'value' => $this->rawValue
+            'value' => $this->value
         ];
     }
 }

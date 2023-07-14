@@ -16,14 +16,14 @@ class NotionPhoneNumber extends BaseNotionProperty
 
     public function setPhoneNumber(string $phoneNumber): self
     {
-        $this->rawValue = $phoneNumber;
+        $this->value = $phoneNumber;
         return $this;
     }
 
     public function mapToResource(): array
     {
         return [
-            'value' => $this->rawValue
+            'value' => $this->value
         ];
     }
 }

@@ -36,14 +36,13 @@ it('returns block children', function () {
 
 it('updates the block', function () {
     $block = NotionBlock::headingOne('This is a paragraph')
-        ->setId('b1cfe8df181543039b2f9e3f2c87516c')
-        ->update();
+        ->update('b1cfe8df181543039b2f9e3f2c87516c');
 
     expect($block)->toHaveProperty('objectType');
 });
 
 it('appends block children', function () {
-    $block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
+    $block = NotionBlock::make()->find('62ec21df1f9241ba9954828e0958da69');
 
     $block = $block->addChildren([
         NotionBlock::headingTwo(NotionRichText::make('Eyad Hamza')

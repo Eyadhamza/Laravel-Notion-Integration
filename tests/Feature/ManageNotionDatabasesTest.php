@@ -25,7 +25,7 @@ use Pi\Notion\Core\Query\NotionSort;
 use Pi\Notion\Exceptions\NotionValidationException;
 use function PHPUnit\Framework\assertObjectHasProperty;
 
-beforeEach(function (){
+beforeEach(function () {
     $this->databaseId = 'ae4c13cd00394938b2f7914cb00350f8';
     $this->pageId = '0ef342c64e9f431fb5cf8a9eebea4c92';
 });
@@ -38,37 +38,32 @@ it('returns database info', function () {
 it('can create a database object', function () {
     $database = (new NotionDatabase)
         ->setParentPageId('fa4379661ed948d7af52df923177028e')
-        ->setTitle(NotionDatabaseTitle::make('Test Database')
-            ->build())
+        ->setTitle(NotionDatabaseTitle::make('Test Database'))
         ->setProperties([
-            NotionTitle::make('Name')->build(),
+            NotionTitle::make('Name'),
             NotionSelect::make('Status')->setOptions([
                 ['name' => 'A', 'color' => 'red'],
                 ['name' => 'B', 'color' => 'green']
-            ])->build(),
-            NotionDate::make('Date')->build(),
-            NotionCheckbox::make('Checkbox')->build(),
-            NotionFormula::make('Formula')
-                ->setExpression('prop("Name")')
-                ->build(),
+            ]),
+            NotionDate::make('Date'),
+            NotionCheckbox::make('Checkbox'),
+            NotionFormula::make('Formula')->setExpression('prop("Name")'),
             NotionRelation::make('Relation')
-                ->setDatabaseId($this->databaseId)
-                ->build(),
+                ->setDatabaseId($this->databaseId),
             NotionRollup::make('Rollup')
                 ->setRollupPropertyName('Name')
                 ->setRelationPropertyName('Relation')
-                ->setFunction('count')
-                ->build(),
-            NotionPeople::make('People')->build(),
-            NotionFiles::make('Media')->build(),
-            NotionEmail::make('Email')->build(),
-            NotionNumber::make('Number')->build(),
-            NotionPhoneNumber::make('Phone')->build(),
-            NotionUrl::make('Url')->build(),
-            NotionCreatedTime::make('CreatedTime')->build(),
-            NotionCreatedBy::make('CreatedBy')->build(),
-            NotionLastEditedTime::make('LastEditedTime')->build(),
-            NotionLastEditedBy::make('LastEditedBy')->build(),
+                ->setFunction('count'),
+            NotionPeople::make('People'),
+            NotionFiles::make('Media'),
+            NotionEmail::make('Email'),
+            NotionNumber::make('Number'),
+            NotionPhoneNumber::make('Phone'),
+            NotionUrl::make('Url'),
+            NotionCreatedTime::make('CreatedTime'),
+            NotionCreatedBy::make('CreatedBy'),
+            NotionLastEditedTime::make('LastEditedTime'),
+            NotionLastEditedBy::make('LastEditedBy'),
         ])->create();
 
     assertObjectHasProperty('objectType', $database);
@@ -76,11 +71,11 @@ it('can create a database object', function () {
 
 it('can update a database object', function () {
     $database = (new NotionDatabase)
-        ->setTitle(NotionDatabaseTitle::make('Test Database')->build())
-        ->setDatabaseDescription(NotionDatabaseDescription::make('Test Description')->build())
+        ->setTitle(NotionDatabaseTitle::make('Test Database'))
+        ->setDatabaseDescription(NotionDatabaseDescription::make('Test Description'))
         ->setProperties([
-            NotionDate::make('Date')->build(),
-            NotionCheckbox::make('Checkbox')->build(),
+            NotionDate::make('Date'),
+            NotionCheckbox::make('Checkbox'),
         ])
         ->update($this->databaseId);
 

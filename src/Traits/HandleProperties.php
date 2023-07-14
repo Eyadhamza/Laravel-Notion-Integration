@@ -9,8 +9,8 @@ trait HandleProperties
 {
     public function setProperties(array $properties): self
     {
-        collect($properties)->map(function ($property) {
-            $this->properties->add($property);
+        collect($properties)->map(function (BaseNotionProperty $property) {
+            $this->properties->add($property->buildContent());
         });
         return $this;
     }

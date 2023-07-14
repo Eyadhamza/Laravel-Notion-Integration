@@ -146,7 +146,7 @@ class NotionPaginator
         $this->results = collect($data['results'])->mapWithKeys(function (array $propertyData) {
             return [
                 $propertyData['id'] => NotionPropertyFactory::make(NotionPropertyTypeEnum::from($propertyData['type']), $propertyData['id'])
-                    ->setRawValue($propertyData[$propertyData['type']])
+                    ->setValue($propertyData[$propertyData['type']])
                     ->fromResponse($propertyData)
             ];
         });

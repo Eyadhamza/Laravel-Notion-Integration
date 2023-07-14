@@ -14,14 +14,13 @@ class NotionNumber extends BaseNotionProperty
     private ?int $number = null;
     private ?NotionNumberFormatEnum $format = null;
 
-    protected function buildContent(): self
+    public function buildContent(): self
     {
         if (!$this->number) {
-            $this->blockContent = NotionArrayValue::make([
+            $this->blockContent = NotionArrayValue::make($this->type, [
                 'number' => new MissingValue(),
                 'format' => new MissingValue(),
-            ])
-                ->setValueType($this->type);
+            ]);
 
             return $this;
         }

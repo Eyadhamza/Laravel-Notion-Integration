@@ -30,7 +30,7 @@ class CreateNotionPageRequestBuilder
     public function setBlocks(Collection $blocks): self
     {
         $this->blocks = $blocks
-            ->map(fn(NotionBlock $block) => $block->buildResource()->resource->resolve())
+            ->map(fn(NotionBlock $block) => $block->resource())
             ->all();
 
         return $this;

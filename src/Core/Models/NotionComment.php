@@ -13,8 +13,6 @@ class NotionComment extends NotionObject
 
     private ?string $discussionId = null;
     private NotionRichText $content;
-    private string $parentId;
-
 
     public function fromResponse($response): self
     {
@@ -27,23 +25,22 @@ class NotionComment extends NotionObject
     public function create(): self
     {
         $body = CreateNotionCommentRequestBuilder::make()
-            ->setDiscussionId($this->discussionId)
-            ->setParentId($this->parentId)
+            ->setDiscussionId($this->discussionId ?? null)
+            ->setParentId($this->parentId ?? null)
             ->setContent($this->content)
             ->build();
 
-        $response = NotionClient::make()
-            ->post(self::COMMENTS_URL, $body);
+        $response = NotionClient::make()->post(self::COMMENTS_URL, $body);
 
         return $this->fromResponse($response->json());
     }
 
-    public function findAll(int $pageSize = 50): NotionPaginator
+    public function index(string $blockId, int $pageSize = 50): NotionPaginator
     {
         return NotionPaginator::make(NotionComment::class)
             ->setUrl(self::COMMENTS_URL)
             ->setMethod('get')
-            ->setBody(['block_id' => $this->id])
+            ->setBody(['block_id' => $blockId])
             ->setPageSize($pageSize)
             ->paginate();
     }
@@ -63,7 +60,7 @@ class NotionComment extends NotionObject
 
     public function setContent(string|NotionRichText $text): static
     {
-        $this->content = is_string($text) ? NotionRichText::make($text) : $text;
+        $this->content = is_string($text) ? NotionRichText::make()->text($text) : $text;
 
         return $this;
     }

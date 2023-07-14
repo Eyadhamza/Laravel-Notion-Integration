@@ -20,7 +20,7 @@ class NotionPeople extends BaseNotionProperty
 
     public function setPeople(?array $people): NotionPeople
     {
-        $this->rawValue = collect($people)
+        $this->value = collect($people)
             ->map(fn (NotionUser $user) => [
                 'object' => $user->objectType ?? 'user',
                 'id' => $user->id
@@ -30,9 +30,17 @@ class NotionPeople extends BaseNotionProperty
         return $this;
     }
 
+    public function setValue($value): BaseNotionProperty
+    {
+        $this->value = collect($value)
+            ->map(fn(array $data) => NotionUser::make()->fromResponse($data));
+
+        return $this;
+    }
+
     public function mapToResource(): array
     {
-        return $this->rawValue ?? [];
+        return $this->value ?? [];
     }
 }
 

@@ -14,7 +14,7 @@ class NotionArrayValue extends NotionContent
         return new static($response['plain_text'], $response['type']);
     }
 
-    public function toArray(): array
+    public function toArrayableValue(): array
     {
         if ($this->isNested) {
             return [

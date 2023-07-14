@@ -15,26 +15,29 @@ abstract class NotionContent
 
     public JsonResource $resource;
     protected NotionBlockContentTypeEnum $contentType;
-    protected mixed $value;
+    protected mixed $value = null;
     protected bool $isNested = false;
-    public NotionBlockTypeEnum|NotionPropertyTypeEnum|null $valueType = null;
-    public function __construct(mixed $value = null)
+    public NotionBlockTypeEnum|NotionPropertyTypeEnum $valueType;
+
+    public function __construct(NotionBlockTypeEnum|NotionPropertyTypeEnum $valueType, mixed $value = null)
     {
+        $this->valueType = $valueType;
         $this->value = $value;
-        $this->setContentType();
+
+        $this->setContentType()->setValue();
     }
 
-    public static function make(mixed $value = null): static|NotionEmptyValue
+    public static function make(NotionBlockTypeEnum|NotionPropertyTypeEnum $valueType, mixed $value = null): static|NotionEmptyValue
     {
-        if (! $value){
-            return new NotionEmptyValue();
+        if (!$value) {
+             return new NotionEmptyValue($valueType, $value);
         }
 
         if (is_array($value) && self::areAllMissingValues($value)) {
-            return new NotionEmptyValue();
+            return new NotionEmptyValue($valueType, $value);
         }
 
-        return new static($value);
+        return new static($valueType, $value);
     }
 
     abstract public static function build(array $response): static;
@@ -42,7 +45,7 @@ abstract class NotionContent
     private static function areAllMissingValues(array $value): bool
     {
         foreach ($value as $item) {
-            if (! $item instanceof MissingValue) {
+            if (!$item instanceof MissingValue) {
                 return false;
             }
         }
@@ -59,11 +62,13 @@ abstract class NotionContent
     {
         return $this->contentType;
     }
+
     public function setValueType(NotionBlockTypeEnum|NotionPropertyTypeEnum $valueType): self
     {
         $this->valueType = $valueType;
         return $this;
     }
+
     abstract public function setContentType(): self;
 
     public function isNested(): self
@@ -71,4 +76,14 @@ abstract class NotionContent
         $this->isNested = true;
         return $this;
     }
+
+    public function setValue(): self
+    {
+        $this->value = $this->toArrayableValue($this->value);
+
+        return $this;
+    }
+
+    public abstract function toArrayableValue(): array;
+
 }

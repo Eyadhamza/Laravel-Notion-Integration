@@ -21,7 +21,7 @@ class NotionDate extends BaseNotionProperty
 
     public function setStart(?string $start): NotionDate
     {
-        $this->rawValue = $start;
+        $this->value = $start;
 
         return $this;
     }
@@ -42,7 +42,7 @@ class NotionDate extends BaseNotionProperty
     public function mapToResource(): array
     {
         return [
-            'start' => $this->rawValue ?? new MissingValue(),
+            'start' => $this->value ?? new MissingValue(),
             'end' => $this->end ?? new MissingValue(),
             'time_zone' => $this->timeZone ?? new MissingValue(),
         ];

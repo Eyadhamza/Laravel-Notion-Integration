@@ -22,7 +22,6 @@ class NotionDatabase extends NotionObject
     use HandleFilters, HandleProperties, HandleSorts;
 
     const DATABASE_URL = NotionClient::BASE_URL . '/databases/';
-    private string $parentId;
     private string $link;
     protected NotionTitle|NotionDatabaseTitle $title;
     protected ?NotionDatabaseDescription $description;
@@ -37,6 +36,22 @@ class NotionDatabase extends NotionObject
         $this->pages = new Collection();
         $this->filters = new Collection();
         $this->sorts = new Collection();
+    }
+
+    public function fromResponse($response): self
+    {
+        parent::fromResponse($response);
+        $this->title = NotionTitle::make($response['title'][0]['plain_text']) ?? null;
+        if (!empty($response['description'])) {
+            $this->description = NotionDatabaseDescription::make($response['description'][0]['plain_text']) ?? null;
+        }
+        $this->url = $response['url'] ?? null;
+        $this->icon = $response['icon'] ?? null;
+        $this->cover = $response['cover'] ?? null;
+        $this->properties = new Collection();
+        $this->buildProperties($response);
+
+        return $this;
     }
 
     public function find(string $id): self
@@ -55,7 +70,6 @@ class NotionDatabase extends NotionObject
 
         return $this->fromResponse($response->json());
     }
-
 
     public function update(string $id): self
     {
@@ -88,23 +102,6 @@ class NotionDatabase extends NotionObject
             ->paginate();
     }
 
-
-    public function fromResponse($response): self
-    {
-        parent::fromResponse($response);
-        $this->title = NotionTitle::make($response['title'][0]['plain_text']) ?? null;
-        if (!empty($response['description'])) {
-            $this->description = NotionDatabaseDescription::make($response['description'][0]['plain_text']) ?? null;
-        }
-        $this->url = $response['url'] ?? null;
-        $this->icon = $response['icon'] ?? null;
-        $this->cover = $response['cover'] ?? null;
-        $this->properties = new Collection();
-        $this->buildProperties($response);
-
-        return $this;
-    }
-
     public function getParentPageId(): string
     {
         return $this->parentId;
@@ -119,7 +116,7 @@ class NotionDatabase extends NotionObject
 
     public function setTitle(NotionTitle|NotionDatabaseTitle $title): self
     {
-        $this->title = $title;
+        $this->title = $title->buildContent();
 
         return $this;
     }
