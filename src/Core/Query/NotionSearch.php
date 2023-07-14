@@ -6,11 +6,11 @@ use Pi\Notion\Core\Models\NotionDatabase;
 use Pi\Notion\Core\Models\NotionObject;
 use Pi\Notion\Core\Models\NotionPage;
 use Pi\Notion\Core\NotionClient;
-use Pi\Notion\Traits\HandleSorts;
+use Pi\Notion\Traits\Sortable;
 
 class NotionSearch
 {
-    use HandleSorts;
+    use Sortable;
 
     private string $query;
     private string $filteredClass;

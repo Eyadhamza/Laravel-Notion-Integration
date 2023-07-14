@@ -31,7 +31,13 @@ class NotionFilter
 
         return self::$filterGroup
             ->put($connective, collect($filters)
-                ->map(fn(BaseNotionProperty $property) => (new self($property))->resource())
+                ->map(function(BaseNotionProperty|Collection $property){
+                    if ($property instanceof Collection) {
+                        return $property->toArray();
+                    }
+
+                    return (new self($property))->resource();
+                })
                 ->all()
             );
 

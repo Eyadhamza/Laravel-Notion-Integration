@@ -3,23 +3,26 @@
 namespace Pi\Notion\Traits;
 
 use Illuminate\Support\Collection;
+use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 use Pi\Notion\Core\Query\NotionSort;
 
-trait HandleSorts
+trait Sortable
 {
     protected Collection $sorts;
 
     public function setSorts(array $sorts): self
     {
-        $this->sorts = collect($sorts);
+        $this->sorts = collect($sorts)
+            ->map(fn(BaseNotionProperty $property) => NotionSort::make($property)->resource());
 
         return $this;
     }
-    private function getSortResults(): array
+
+    public function setSort(BaseNotionProperty $property): self
     {
-        return $this->sorts->map(function (NotionSort $sort) {
-            return $sort->get();
-        })->toArray();
+        $this->sorts->add(NotionSort::make($property)->resource());
+
+        return $this;
     }
     private function getSortUsingTimestamp(): array
     {
@@ -33,4 +36,5 @@ trait HandleSorts
             'direction' => 'descending',
         ];
     }
+
 }

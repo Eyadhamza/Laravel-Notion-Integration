@@ -8,17 +8,19 @@ use Pi\Notion\Core\BlockContent\NotionBlockContentFactory;
 use Pi\Notion\Core\Models\NotionObject;
 use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionEmptyValue;
-use Pi\Notion\Core\Query\NotionFilter;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Traits\Sortable;
 
 abstract class BaseNotionProperty extends NotionObject
 {
+    use Sortable;
     protected mixed $value;
     protected NotionContent|NotionEmptyValue $blockContent;
     protected NotionPropertyTypeEnum $type;
     protected ?string $name;
     private string $query;
     private string $filterName;
+    private string $sortDirection;
 
     public function __construct(?string $name = null, ?string $value = null)
     {
@@ -129,5 +131,24 @@ abstract class BaseNotionProperty extends NotionObject
     public function getQuery(): string
     {
         return $this->query;
+    }
+
+
+    public function getSortDirection(): string
+    {
+        return $this->sortDirection;
+    }
+
+
+    public function descending(): self
+    {
+        $this->sortDirection = 'descending';
+        return $this;
+    }
+
+    public function ascending(): self
+    {
+        $this->sortDirection = 'ascending';
+        return $this;
     }
 }

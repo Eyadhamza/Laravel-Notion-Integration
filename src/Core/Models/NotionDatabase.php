@@ -8,16 +8,18 @@ use Illuminate\Support\Collection;
 use Pi\Notion\Core\NotionClient;
 use Pi\Notion\Core\NotionProperty\NotionDatabaseDescription;
 use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
+use Pi\Notion\Core\NotionProperty\NotionSelect;
 use Pi\Notion\Core\NotionProperty\NotionTitle;
+use Pi\Notion\Core\Query\NotionFilter;
 use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\Core\RequestBuilders\NotionDatabaseRequestBuilder;
 use Pi\Notion\Core\RequestBuilders\NotionUpdateDatabaseRequestBuilder;
 use Pi\Notion\Traits\HandleProperties;
-use Pi\Notion\Traits\HandleSorts;
+use Pi\Notion\Traits\Sortable;
 
 class NotionDatabase extends NotionObject
 {
-    use HandleProperties, HandleSorts;
+    use HandleProperties, Sortable;
 
     const DATABASE_URL = NotionClient::BASE_URL . '/databases/';
     private string $link;
@@ -141,6 +143,13 @@ class NotionDatabase extends NotionObject
     public function setFilters(array $filters): self
     {
         $this->filters = new Collection($filters);
+
+        return $this;
+    }
+
+    public function setFilter(NotionSelect $property): self
+    {
+        $this->filters->add(NotionFilter::make($property)->resource());
 
         return $this;
     }

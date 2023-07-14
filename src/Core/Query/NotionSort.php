@@ -2,62 +2,35 @@
 
 namespace Pi\Notion\Core\Query;
 
+use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
+
 class NotionSort
 {
-    private string $property;
-    private string $direction;
+    private BaseNotionProperty $property;
 
-    public function __construct(string $property, string $direction)
+    public function __construct(BaseNotionProperty $property)
     {
         $this->property = $property;
-        $this->direction = $direction;
     }
 
-    public static function make(string $property, string $direction): NotionSort
+    public static function make(BaseNotionProperty $property): NotionSort
     {
-        return new self($property, $direction);
+        return new self($property);
     }
 
-    public static function property(string $property): NotionSort
-    {
-        return self::make($property, 'ascending');
-    }
-
-    public function get(): array
+    public function resource(): array
     {
         return [
-            'property' => $this->property,
-            'direction' => $this->direction
+            'property' => $this->property->getName(),
+            'direction' => $this->property->getSortDirection()
         ];
-    }
-
-    public function descending(): self
-    {
-        $this->direction = 'descending';
-        return $this;
-    }
-
-    public function ascending(): self
-    {
-        $this->direction = 'ascending';
-        return $this;
-    }
-
-    public function getProperty(): string
-    {
-        return $this->property;
-    }
-
-    public function getDirection(): string
-    {
-        return $this->direction;
     }
 
     public function getUsingTimestamp(): array
     {
         return [
-            'timestamp' => $this->property,
-            'direction' => $this->direction
+            'timestamp' => $this->property->getName(),
+            'direction' => $this->property->getSortDirection()
         ];
     }
 }

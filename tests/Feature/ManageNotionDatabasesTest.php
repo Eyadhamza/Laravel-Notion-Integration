@@ -98,9 +98,7 @@ it('throws exception when database not authorized', function () {
 it('can filter database with one filter', function () {
     $database = new NotionDatabase();
     $paginated = $database
-        ->setFilters([
-            NotionSelect::make('Status')->equals('Reading')
-        ])
+        ->setFilter(NotionSelect::make('Status')->equals('Reading'))
         ->query('632b5fb7e06c4404ae12065c48280e4c');
 
     expect($paginated->getResults())->toHaveCount(1);
@@ -111,7 +109,6 @@ it('can filter database with many filters', function () {
     $paginated = $database->setFilters([
         NotionFilter::groupWithAnd([
             NotionSelect::make('Status')->equals('Reading'),
-            NotionMultiSelect::make('Status2')->contains('Reading'),
             NotionTitle::make('Name')->equals('MMMM')
         ])
     ])->query('632b5fb7e06c4404ae12065c48280e4c');
@@ -120,7 +117,7 @@ it('can filter database with many filters', function () {
     $paginated = $database->setFilters([
         NotionFilter::groupWithOr([
             NotionSelect::make('Status')->equals('Reading'),
-            NotionMultiSelect::make('Status2')->equals('A'),
+            NotionMultiSelect::make('Status2')->contains('A'),
             NotionTitle::make('Name')->equals('MMMM')
         ])
     ])->query('632b5fb7e06c4404ae12065c48280e4c');
@@ -130,26 +127,31 @@ it('can filter database with many filters', function () {
 it('can filter database with nested filters', function () {
     $database = new NotionDatabase();
     $paginated = $database->setFilters([
-        NotionFilterBuilder::select('Status')
-            ->equals('Reading')
-            ->compoundOrGroup([
-                NotionFilterBuilder::multiSelect('Status2')->contains('A'),
-                NotionFilterBuilder::title('Name')->contains('MMMM')
-            ], 'and')
+        NotionFilter::groupWithOr([
+            NotionSelect::make('Status')->equals('Reading'),
+            NotionFilter::groupWithAnd([
+                NotionMultiSelect::make('Status2')->contains('A'),
+                NotionTitle::make('Name')->contains('MMMM')
+            ])
+        ]),
     ])->query('632b5fb7e06c4404ae12065c48280e4c');
     expect($paginated->getResults())->toHaveCount(2);
 });
 
 it('can sort database results', function () {
     $database = new NotionDatabase();
-    $paginated = $database->setSorts([
-        NotionSort::property('Name')->ascending(),
-    ])->setFilters([
-        NotionFilterBuilder::title('Name')->contains('A'),
-    ])->query('632b5fb7e06c4404ae12065c48280e4c', 50);
+    $paginated = $database
+        ->setSorts([
+            NotionTitle::make('Name')->ascending(),
+            NotionDate::make('Date')->descending()
+        ])
+        ->query('632b5fb7e06c4404ae12065c48280e4c', 50);
+
     expect($paginated->getResults())->toHaveCount(50)
         ->and($paginated->hasMore())->toBeTrue();
+
     $paginated->next();
+
     expect($paginated->getResults())->toHaveCount(50)
         ->and($paginated->getNextCursor())->toBeString();
 });
