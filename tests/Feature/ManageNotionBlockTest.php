@@ -45,21 +45,14 @@ it('appends block children', function () {
     $block = NotionBlock::make()->find('62ec21df1f9241ba9954828e0958da69');
 
     $block = $block->addChildren([
-        NotionBlock::headingTwo(NotionRichText::make('Eyad Hamza')
-            ->isNested()
-            ->bold()
-            ->setLink('https://www.google.com')
-            ->color('red')),
-        NotionBlock::headingThree('Heading 3'),
-        NotionBlock::numberedList('Numbered List'),
-        NotionBlock::bulletedList('Bullet List'),
+
     ])->createChildren();
 
     expect($block->getResults())->toHaveCount(4);
 });
 
 it('deletes the block', function () {
-    $block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
+    $block = NotionBlock::make()->delete('62ec21df1f9241ba9954828e0958da69');
 
     expect($block)->toHaveProperty('objectType');
 });

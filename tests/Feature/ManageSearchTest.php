@@ -1,5 +1,6 @@
 <?php
 
+use Pi\Notion\Core\NotionProperty\NotionLastEditedTime;
 use Pi\Notion\Core\Query\NotionSearch;
 use Pi\Notion\Core\Query\NotionSort;
 
@@ -12,7 +13,7 @@ it('returns the search result of pages', function () {
 it('returns the search result of databases', function () {
     $response = NotionSearch::inDatabases('test')
         ->setSorts([
-            NotionSort::make('last_edited_time', 'descending'),
+            NotionLastEditedTime::make()->ascending(),
         ])
         ->apply(50);
 

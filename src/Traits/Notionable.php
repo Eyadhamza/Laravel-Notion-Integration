@@ -57,10 +57,10 @@ trait Notionable
                 $property = $this->notionMap[$key];
 
                 if ($property->hasValue() && ! isset($property->resource)){
-                    return $property->build();
+                    return $property->buildContent();
                 }
 
-                return $property->setValue($value)->build();
+                return $property->setValue($value)->buildContent();
             }
         })->filter()->toArray();
     }

@@ -18,7 +18,7 @@ class NotionBlock extends NotionObject
 
 
     const BLOCK_URL = NotionClient::BASE_URL . '/blocks/';
-    private NotionBlockTypeEnum $type;
+    private ?NotionBlockTypeEnum $type;
     private ?NotionContent $blockContent;
     private string $color;
     private Collection $children;
@@ -65,20 +65,14 @@ class NotionBlock extends NotionObject
         return NotionPaginator::make(NotionBlock::class)
             ->setUrl(self::BLOCK_URL . $this->id . '/children')
             ->setMethod('patch')
-            ->setBody(['children' => $this->children
-                ->map(fn(NotionBlock $block) => $block
-                    ->buildResource()
-                    ->resource
-                    ->resolve()
-                )->all()
-            ])
+            ->setBody(['children' => $this->children->map(fn(NotionBlock $block) => $block->resource())->all()])
             ->paginate();
     }
 
 
     public function update(string $id): self
     {
-        $response = NotionClient::make()->patch(self::BLOCK_URL . $id, $this->buildResource()->resource->resolve());
+        $response = NotionClient::make()->patch(self::BLOCK_URL . $id, $this->resource());
 
         return $this->fromResponse($response->json());
     }

@@ -9,7 +9,7 @@ use Pi\Notion\Core\RequestBuilders\CreateNotionCommentRequestBuilder;
 
 class NotionComment extends NotionObject
 {
-    const COMMENTS_URL =  NotionClient::BASE_URL . '/comments/';
+    const COMMENTS_URL = NotionClient::BASE_URL . '/comments/';
 
     private ?string $discussionId = null;
     private NotionRichText $content;
@@ -60,7 +60,7 @@ class NotionComment extends NotionObject
 
     public function setContent(string|NotionRichText $text): static
     {
-        $this->content = is_string($text) ? NotionRichText::make()->text($text) : $text;
+        $this->content = NotionRichText::getOrCreate($text);
 
         return $this;
     }

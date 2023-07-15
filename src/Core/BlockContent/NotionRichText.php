@@ -34,7 +34,7 @@ class NotionRichText extends NotionContent
 
     public static function fromResponse(array $response): static
     {
-        $richText = new static($response[0]['plain_text'], $response[0]['type']);
+        $richText = new static(NotionPropertyTypeEnum::RICH_TEXT, $response[0]['plain_text']);
         $richText->link = $response[0]['text']['link'];
         $richText->buildAnnotations($response[0]['annotations']);
         $richText->href = $response[0]['href'];

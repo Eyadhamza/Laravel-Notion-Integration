@@ -47,9 +47,9 @@ class NotionUser extends NotionObject
 
     }
 
-    public function find(): self
+    public function find(string $id): self
     {
-        $response = NotionClient::make()->get(self::USERS_URL);
+        $response = NotionClient::make()->get(self::USERS_URL . $id);
 
         return $this->fromResponse($response->json());
     }
