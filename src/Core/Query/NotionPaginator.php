@@ -156,11 +156,8 @@ class NotionPaginator
 
     private function setPaginatedObjects(array $data): self
     {
-        /** @var NotionObject $notionObject */
-        $notionObject = new $this->paginatedClass;
-
         $this->results = collect($data['results'])
-            ->map(fn($object) => $notionObject->fromResponse($object));
+            ->map(fn($object) => (new $this->paginatedClass)->fromResponse($object));
 
         return $this;
     }

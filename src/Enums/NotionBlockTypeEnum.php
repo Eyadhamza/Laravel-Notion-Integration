@@ -35,4 +35,5 @@ enum NotionBlockTypeEnum: string
     case CHILD_DATABASE = 'child_database';
     case LINK_PREVIEW = 'link_preview';
 
+    case PAGE = 'page';
 }

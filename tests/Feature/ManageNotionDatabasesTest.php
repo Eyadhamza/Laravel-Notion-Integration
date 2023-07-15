@@ -5,7 +5,7 @@ use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
 use Pi\Notion\Core\NotionProperty\NotionMultiSelect;
 use Pi\Notion\Core\NotionProperty\NotionRollup;
 use Pi\Notion\Core\NotionProperty\NotionPeople;
-use Pi\Notion\Core\NotionProperty\NotionFiles;
+use Pi\Notion\Core\NotionProperty\NotionMedia;
 use Pi\Notion\Core\NotionProperty\NotionEmail;
 use Pi\Notion\Core\NotionProperty\NotionNumber;
 use Pi\Notion\Core\NotionProperty\NotionPhoneNumber;
@@ -56,7 +56,7 @@ it('can create a database object', function () {
                 ->setRelationPropertyName('Relation')
                 ->setFunction('count'),
             NotionPeople::make('People'),
-            NotionFiles::make('Media'),
+            NotionMedia::make('Media'),
             NotionEmail::make('Email'),
             NotionNumber::make('Number'),
             NotionPhoneNumber::make('Phone'),

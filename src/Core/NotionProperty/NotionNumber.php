@@ -25,10 +25,9 @@ class NotionNumber extends BaseNotionProperty
             return $this;
         }
 
-        $this->blockContent = NotionSimpleValue::make([
+        $this->blockContent = NotionSimpleValue::make($this->type, [
             'value' => $this->number,
-        ])
-            ->setValueType($this->type);
+        ]);
 
         return $this;
     }

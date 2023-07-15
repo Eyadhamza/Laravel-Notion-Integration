@@ -28,7 +28,7 @@ class NotionBlockBuilder
     public function headingOne(string|NotionRichText $richText): self
     {
         $this->blocks[] = NotionRichText::getOrCreate($richText)
-            ->setValueType(NotionBlockTypeEnum::HEADING_1);
+            ->setBlockType(NotionBlockTypeEnum::HEADING_1);
 
         return $this;
     }
@@ -36,7 +36,7 @@ class NotionBlockBuilder
     public function headingThree(string|NotionRichText $richText): self
     {
         $this->blocks[] = NotionRichText::getOrCreate($richText)
-            ->setValueType(NotionBlockTypeEnum::HEADING_3);
+            ->setBlockType(NotionBlockTypeEnum::HEADING_3);
 
         return $this;
     }
@@ -44,7 +44,7 @@ class NotionBlockBuilder
     public function headingTwo(string|NotionRichText $richText): self
     {
         $this->blocks[] = NotionRichText::getOrCreate($richText)
-            ->setValueType(NotionBlockTypeEnum::HEADING_2);
+            ->setBlockType(NotionBlockTypeEnum::HEADING_2);
 
         return $this;
     }
@@ -52,7 +52,7 @@ class NotionBlockBuilder
     public function paragraph(string|NotionRichText $richText): self
     {
         $this->blocks[] = NotionRichText::getOrCreate($richText)
-            ->setValueType(NotionBlockTypeEnum::PARAGRAPH);
+            ->setBlockType(NotionBlockTypeEnum::PARAGRAPH);
 
         return $this;
     }
@@ -60,7 +60,7 @@ class NotionBlockBuilder
     public function toggle(string|NotionRichText $richText): self
     {
         $this->blocks[] = NotionRichText::getOrCreate($richText)
-            ->setValueType(NotionBlockTypeEnum::TOGGLE);
+            ->setBlockType(NotionBlockTypeEnum::TOGGLE);
 
         return $this;
     }
@@ -68,15 +68,15 @@ class NotionBlockBuilder
     public function callout(string|NotionRichText $richText): self
     {
         $this->blocks[] = NotionRichText::getOrCreate($richText)
-            ->setValueType(NotionBlockTypeEnum::CALLOUT);
+            ->setBlockType(NotionBlockTypeEnum::CALLOUT);
 
         return $this;
     }
 
-    public function code(string|NotionRichText $richText): self
+    public function code(NotionRichText $richText): self
     {
         $this->blocks[] = NotionRichText::getOrCreate($richText)
-            ->setValueType(NotionBlockTypeEnum::CODE);
+            ->setBlockType(NotionBlockTypeEnum::CODE);
 
         return $this;
     }
@@ -84,7 +84,7 @@ class NotionBlockBuilder
     public function quote(string|NotionRichText $richText): self
     {
         $this->blocks[] = NotionRichText::getOrCreate($richText)
-            ->setValueType(NotionBlockTypeEnum::QUOTE);
+            ->setBlockType(NotionBlockTypeEnum::QUOTE);
 
         return $this;
     }
@@ -117,16 +117,9 @@ class NotionBlockBuilder
         return $this;
     }
 
-    public function childPage(string $value): self
-    {
-        $this->blocks[] = NotionSimpleValue::make(NotionBlockTypeEnum::CHILD_PAGE, $value, 'title');
-
-        return $this;
-    }
-
     public function image(NotionFile $file): self
     {
-        $this->blocks[] = $file->setValueType(NotionBlockTypeEnum::IMAGE);
+        $this->blocks[] = $file->setBlockType(NotionBlockTypeEnum::IMAGE);
 
         return $this;
     }
@@ -138,7 +131,7 @@ class NotionBlockBuilder
 
     public function file(NotionFile $file): self
     {
-        $this->blocks[] = $file->setValueType(NotionBlockTypeEnum::FILE);
+        $this->blocks[] = $file->setBlockType(NotionBlockTypeEnum::FILE);
 
         return $this;
     }
@@ -164,13 +157,6 @@ class NotionBlockBuilder
         return $this;
     }
 
-    public function childDatabase(string $value): self
-    {
-        $this->blocks[] = NotionSimpleValue::make(NotionBlockTypeEnum::CHILD_DATABASE, $value, 'title');
-
-        return $this;
-    }
-
     public function column(): self
     {
         $this->blocks[] = NotionEmptyValue::make(NotionBlockTypeEnum::COLUMN);
@@ -185,23 +171,17 @@ class NotionBlockBuilder
         return $this;
     }
 
-    public function linkPreview(string $value): self
-    {
-        $this->blocks[] = NotionSimpleValue::make(NotionBlockTypeEnum::LINK_PREVIEW, $value, 'url');
-
-        return $this;
-    }
 
     public function pdf(NotionFile $file): self
     {
-        $this->blocks[] = $file->setValueType(NotionBlockTypeEnum::PDF);
+        $this->blocks[] = $file->setBlockType(NotionBlockTypeEnum::PDF);
 
         return $this;
     }
 
     public function video(NotionFile $file): self
     {
-        $this->blocks[] = $file->setValueType(NotionBlockTypeEnum::VIDEO);
+        $this->blocks[] = $file->setBlockType(NotionBlockTypeEnum::VIDEO);
 
         return $this;
     }

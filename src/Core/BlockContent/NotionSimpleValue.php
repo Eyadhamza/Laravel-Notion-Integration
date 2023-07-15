@@ -36,14 +36,15 @@ class NotionSimpleValue extends NotionContent
     {
         if (isset($this->key)) {
             return [
-                $this->valueType->value => [
-                    $this->key => $this->value['value'] ?? new \stdClass(),
+                'type' => $this->blockType->value,
+                $this->blockType->value => [
+                    $this->key => $this->value ?? new \stdClass(),
                 ],
             ];
         }
 
         return [
-            $this->valueType->value => $this->value['value'] ?? new \stdClass(),
+            $this->blockType->value => $this->value['value'] ?? new \stdClass(),
         ];
     }
 }

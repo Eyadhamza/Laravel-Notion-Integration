@@ -85,7 +85,7 @@ class NotionBlock extends NotionObject
 
     public function delete(string $id): static
     {
-        $response = NotionClient::make()->delete(self::BLOCK_URL . $id . '/children');
+        $response = NotionClient::make()->delete(self::BLOCK_URL . $id);
 
         return $this->fromResponse($response->json());
     }

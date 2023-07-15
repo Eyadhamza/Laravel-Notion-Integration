@@ -32,7 +32,7 @@ class CreateNotionPageRequestBuilder
     {
         $this->blocks = $blocks
             ->map(function (NotionContent|array $block) {
-                return is_array($block) ? $this->setBlocks(collect($block)) : $block->resource();
+                return is_array($block) ? collect($block)->map(fn(NotionContent $block) => $block->resource())->all()[0] : $block->resource();
             })
             ->all();
 

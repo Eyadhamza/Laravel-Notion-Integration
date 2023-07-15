@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Artisan;
 use Pi\Notion\Core\Models\NotionDatabase;
+use Pi\Notion\Core\NotionProperty\NotionTitle;
 use Pi\Notion\Core\Query\NotionFilter;
 use Pi\Notion\Tests\Models\User;
 
@@ -37,10 +38,11 @@ test('map Notion database to app database using database id', function () {
 })->skip();
 
 test('map Notion database to app database using specified pages', function () {
-    $database = NotionDatabase::find('74dc9419bec24f10bb2e65c1259fc65a');
-    $pages = $database->filters([
-        NotionFilter::title('Name')->contains('John')
-    ])->query()->getAllResults();
+    $pages = NotionDatabase::make()->setFilters([
+        NotionTitle::make('Name')->contains('John')
+    ])
+        ->query('74dc9419bec24f10bb2e65c1259fc65a')
+        ->getAllResults();
 
     Artisan::call('sync:from-notion', [
         'model' => User::class,

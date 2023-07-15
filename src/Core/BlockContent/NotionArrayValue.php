@@ -18,21 +18,21 @@ class NotionArrayValue extends NotionContent
     {
         if ($this->isNested) {
             return [
-                $this->valueType->value => [
+                $this->blockType->value => [
                     $this->value->resolve()
                 ]
             ];
         }
         if (isset($this->key)) {
             return [
-                $this->valueType->value => [
+                $this->blockType->value => [
                     $this->key => $this->value
                 ]
             ];
         }
 
         return [
-            $this->valueType->value => $this->value
+            $this->blockType->value => $this->value
         ];
     }
 

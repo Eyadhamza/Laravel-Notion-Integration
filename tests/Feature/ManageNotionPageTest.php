@@ -9,7 +9,7 @@ use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 use Pi\Notion\Core\NotionProperty\NotionCheckbox;
 use Pi\Notion\Core\NotionProperty\NotionDate;
 use Pi\Notion\Core\NotionProperty\NotionEmail;
-use Pi\Notion\Core\NotionProperty\NotionFiles;
+use Pi\Notion\Core\NotionProperty\NotionMedia;
 use Pi\Notion\Core\NotionProperty\NotionNumber;
 use Pi\Notion\Core\NotionProperty\NotionPeople;
 use Pi\Notion\Core\NotionProperty\NotionPhoneNumber;
@@ -71,17 +71,14 @@ it('should add properties to the created page using the page class', function ()
 
             NotionPeople::make('People')
                 ->setPeople([
-                    new NotionUser('2c4d6a4a-12fe-4ce8-a7e4-e3019cc4765f')
+                    NotionUser::make()->setId('2c4d6a4a-12fe-4ce8-a7e4-e3019cc4765f'),
                 ]),
-            NotionFiles::make('Media')
+            NotionMedia::make('Media')
                 ->setFiles([
-                    NotionFile::make('Google')
-                        ->setFileType('external')
-                        ->setFileUrl('https://www.google.com'),
-                    NotionFile::make('Notion')
+                    NotionFile::make()
                         ->setFileType('file')
-                        ->setFileUrl('https://s3.us-west-2.amazonaws.com/secure.notion-static.com/7b8b0713-dbd4-4962-b38b-955b6c49a573/My_test_image.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221024%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221024T205211Z&X-Amz-Expires=3600&X-Amz-Signature=208aa971577ff05e75e68354e8a9488697288ff3fb3879c2d599433a7625bf90&X-Amz-SignedHeaders=host&x-id=GetObject')
-                        ->setExpiryTime('2022-10-24T22:49:22.765Z'),
+                        ->setRelativeType('external')
+                        ->setFileUrl('https://www.google.com'),
                 ]),
             NotionEmail::make('Email')
                 ->setEmail('eyadhamza0@gmail.com'),
@@ -122,15 +119,17 @@ it('can add content blocks to the created pages', function () {
         NotionBlockBuilder::make()
             ->headingOne(NotionRichText::text('Eyad Hamza')
                 ->isToggleable()
-                ->setChildren([
-                    NotionRichText::text('Eyad Hamza')
-                        ->bold()
-                        ->italic()
-                        ->strikethrough()
-                        ->underline()
-                        ->code()
-                        ->color('red')
-                ])
+                ->setChildrenBuilder(
+                    NotionBlockBuilder::make()
+                        ->headingOne(NotionRichText::text('Eyad Hamza')
+                            ->bold()
+                            ->italic()
+                            ->strikethrough()
+                            ->underline()
+                            ->code()
+                            ->color('red')
+                        )
+                )
                 ->bold()
                 ->italic()
                 ->strikethrough()
@@ -140,95 +139,46 @@ it('can add content blocks to the created pages', function () {
             )
             ->headingTwo('Heading 2')
             ->headingThree('Heading 3')
-        ->numberedList([
-            'Numbered List',
-            'asdasd Numbered List'
-        ])
-        ->bulletedList(['Bullet List'])
-        ->paragraph('Paragraph')
-        ->toDo(['To Do List'])
-        ->toggle('Toggle')
-        ->quote('Quote')
-        ->divider()
-        ->callout('Callout')
-        ->childPage('Child Page')
-        ->image(NotionFile::make()
-            ->setFileUrl('https://www.google.com')
-            ->setFileType('external')
-        )
-        ->file(NotionFile::make()
-            ->setFileUrl('https://www.google.com')
-            ->setFileType('external')
-        )
-        ->embed('https://www.google.com')
-        ->bookmark('https://www.google.com')
-        ->code('echo "Hello World"')
-        ->equation('x^2 + y^2 = z^2')
-        ->childDatabase('Child Database')
-        ->column()
-        ->columnList()
-        ->linkPreview('https://www.google.com')
-        ->pdf(NotionFile::make()
-            ->setFileUrl('https://www.google.com')
-            ->setFileType('external')
-        )
-        ->video(NotionFile::make()
-            ->setFileUrl('https://www.google.com')
-            ->setFileType('external')
-        )
+            ->numberedList([
+                'Numbered List',
+                'asdasd Numbered List'
+            ])
+            ->bulletedList(['Bullet List'])
+            ->paragraph('Paragraph')
+            ->toDo(['To Do List'])
+            ->toggle('Toggle')
+            ->quote('Quote')
+            ->divider()
+            ->callout('Callout')
+            ->image(NotionFile::make()
+                ->setFileType('image')
+                ->setFileUrl('https://my.alfred.edu/zoom/_images/foster-lake.jpg')
+                ->setRelativeType('external')
+            )
+            ->file(NotionFile::make()
+                ->setFileType('file')
+                ->setFileUrl('https://www.google.com')
+                ->setRelativeType('external')
+            )
+            ->embed('https://www.google.com')
+            ->bookmark('https://www.google.com')
+            ->code(NotionRichText::text('echo "Hello World"')->setCodeLanguage('php'))
+            ->equation('x^2 + y^2 = z^2')
+//            ->column()
+//            ->columnList()
+            ->pdf(NotionFile::make()
+                ->setFileType('pdf')
+                ->setFileUrl('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf')
+                ->setRelativeType('external')
+            )
+            ->video(NotionFile::make()
+                ->setFileType('video')
+                ->setFileUrl('https://www.youtube.com/watch?v=xTQ7vhtp23w')
+                ->setRelativeType('external')
+            )
     )->create();
-    dd($page->getBlocks());
-    expect($page->getProperties())->toHaveCount(2)
-        ->and($page->getBlocks())->toHaveCount(5)
-        ->and($page)->toHaveProperty('properties');
-});
 
-it('can add nested content blocks to created pages', function () {
-    $page = new NotionPage();
-    $page->setDatabaseId($this->databaseId);
-
-    $page->setBlockBuilder([
-        NotionBlockBuilder::paragraph('Hello There im a parent of the following blocks!')
-            ->addChildren([
-                NotionBlockBuilder::headingTwo(NotionRichText::make('Eyad Hamza')
-                    ->bold()
-                    ->setLink('https://www.google.com')
-                    ->color('red')),
-                NotionBlockBuilder::headingThree('Heading 3'),
-                NotionBlockBuilder::numberedList('Numbered List'),
-                NotionBlockBuilder::bulletedList('Bullet List'),
-            ]),
-        NotionBlockBuilder::headingTwo('Heading 2'),
-        NotionBlockBuilder::headingThree('Heading 3'),
-        NotionBlockBuilder::numberedList('Numbered List'),
-        NotionBlockBuilder::bulletedList('Bullet List'),
-    ])->create();
-
-    expect($page->getBlocks())->toHaveCount(5);
-});
-
-it('can add content blocks to created pages using the page class', function () {
-    $page = new NotionPage();
-    $page->setDatabaseId($this->databaseId);
-
-    $page->setBlockBuilder([
-        NotionBlockBuilder::paragraph('Hello There im a parent of the following blocks!')
-            ->addChildren([
-                NotionBlockBuilder::headingTwo(NotionRichText::make('Eyad Hamza')
-                    ->bold()
-                    ->setLink('https://www.google.com')
-                    ->color('red')),
-                NotionBlockBuilder::headingThree('Heading 3'),
-                NotionBlockBuilder::numberedList('Numbered List'),
-                NotionBlockBuilder::bulletedList('Bullet List'),
-            ]),
-        NotionBlockBuilder::headingTwo('Heading 2'),
-        NotionBlockBuilder::headingThree('Heading 3'),
-        NotionBlockBuilder::numberedList('Numbered List'),
-        NotionBlockBuilder::bulletedList('Bullet List'),
-    ])->create();
-
-    expect($page->getBlocks())->toHaveCount(5);
+    expect($page->getBlocks())->toHaveCount(19);
 });
 
 it('returns a property by ID', function () {

@@ -14,16 +14,15 @@ abstract class NotionContent
     use HasResource;
 
     public JsonResource $resource;
-    protected NotionBlockContentTypeEnum $contentType;
     protected mixed $value = null;
     protected bool $isNested = false;
-    public NotionBlockTypeEnum|NotionPropertyTypeEnum $valueType;
+    protected NotionBlockTypeEnum|NotionPropertyTypeEnum $blockType;
+    protected NotionBlockContentTypeEnum $contentType;
 
     public function __construct(NotionBlockTypeEnum|NotionPropertyTypeEnum $valueType, mixed $value = null)
     {
-        $this->valueType = $valueType;
+        $this->blockType = $valueType;
         $this->value = $value;
-
         $this->setContentType();
     }
 
@@ -71,13 +70,11 @@ abstract class NotionContent
         return $this->contentType;
     }
 
-    public function setValueType(NotionBlockTypeEnum|NotionPropertyTypeEnum $valueType): self
+    public function setBlockType(NotionBlockTypeEnum|NotionPropertyTypeEnum $blockType): self
     {
-        $this->valueType = $valueType;
+        $this->blockType = $blockType;
         return $this;
     }
-
-    abstract public function setContentType(): self;
 
     public function isNested(): self
     {
@@ -86,4 +83,6 @@ abstract class NotionContent
     }
 
     public abstract function toArrayableValue(): array;
+    protected abstract function setContentType(): self;
+
 }

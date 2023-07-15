@@ -28,7 +28,7 @@ class NotionEmptyValue extends NotionContent
     public function toArrayableValue(): array
     {
         return [
-            $this->valueType->value => new \stdClass()
+            $this->blockType->value => new \stdClass()
         ];
     }
 }

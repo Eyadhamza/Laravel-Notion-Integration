@@ -14,6 +14,7 @@ class NotionUser extends NotionObject
     private ?string $email;
     private string $avatarUrl;
     private ?string $type;
+
     public function fromResponse($response): self
     {
         $this->object = $response['object'] ?? null;
@@ -92,5 +93,12 @@ class NotionUser extends NotionObject
     public function getEmail(): ?string
     {
         return $this->email;
+    }
+
+    public function setId(string $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 }

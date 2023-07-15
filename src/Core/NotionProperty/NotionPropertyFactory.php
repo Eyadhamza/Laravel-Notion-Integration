@@ -30,7 +30,7 @@ class NotionPropertyFactory
             NotionPropertyTypeEnum::LAST_EDITED_TIME => NotionLastEditedTime::make($propertyName),
             NotionPropertyTypeEnum::CREATED_BY => NotionCreatedBy::make($propertyName),
             NotionPropertyTypeEnum::LAST_EDITED_BY => NotionLastEditedBy::make($propertyName),
-            NotionPropertyTypeEnum::FILES => NotionFiles::make($propertyName),
+            NotionPropertyTypeEnum::FILES => NotionMedia::make($propertyName),
             NotionPropertyTypeEnum::DESCRIPTION => NotionDatabaseDescription::make($propertyName),
 
         };

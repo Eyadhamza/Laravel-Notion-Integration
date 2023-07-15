@@ -5,6 +5,7 @@ namespace Pi\Notion\Traits;
 use Illuminate\Http\Resources\MissingValue;
 use Illuminate\Support\Collection;
 use Pi\Notion\Core\BlockContent\NotionContent;
+use Pi\Notion\Core\Builders\NotionBlockBuilder;
 
 trait HasChildren
 {
@@ -14,9 +15,10 @@ trait HasChildren
      */
     private Collection $children;
 
-    public function setChildren(array $children): self
+    public function setChildrenBuilder(NotionBlockBuilder $childrenBuilder): self
     {
-        $this->children = collect($children);
+        $this->children = $childrenBuilder->getBlocks();
+
         return $this;
     }
 

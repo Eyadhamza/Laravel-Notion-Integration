@@ -12,6 +12,7 @@ class NotionFile extends NotionContent
     private string $fileType;
     private string $fileUrl;
     private string $expiryTime;
+    private string $relativeType;
 
     public static function fromResponse(array $response): static
     {
@@ -29,7 +30,7 @@ class NotionFile extends NotionContent
 
     public function setFileType(string $fileType): NotionFile
     {
-        $this->fileType = $fileType;
+        $this->value = $fileType;
         return $this;
     }
 
@@ -39,6 +40,11 @@ class NotionFile extends NotionContent
         return $this;
     }
 
+    public function setRelativeType(string $relativeType): NotionContent
+    {
+        $this->relativeType = $relativeType;
+        return $this;
+    }
     public function setExpiryTime(string $expiryTime): NotionFile
     {
         $this->expiryTime = $expiryTime;
@@ -59,12 +65,36 @@ class NotionFile extends NotionContent
 
     public function toArrayableValue(): array
     {
+        return match (get_class($this->blockType)){
+            NotionBlockTypeEnum::class => $this->toArrayableValueForBlock(),
+            NotionPropertyTypeEnum::class => $this->toArrayableValueForProperty(),
+        };
+        }
+
+    private function toArrayableValueForBlock(): array
+    {
+        return [
+            'type' => $this->value,
+            $this->value => [
+                $this->relativeType => [
+                    'url' => $this->fileUrl,
+                    'expiry_time' => $this->expiryTime ?? new MissingValue(),
+                ]
+            ]
+
+        ];
+    }
+
+    private function toArrayableValueForProperty(): array
+    {
         return [
             'name' => $this->value,
-            $this->fileType => [
+            $this->relativeType => [
                 'url' => $this->fileUrl,
                 'expiry_time' => $this->expiryTime ?? new MissingValue(),
             ]
         ];
     }
+
+
 }

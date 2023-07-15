@@ -4,7 +4,6 @@ namespace Pi\Notion\Core\BlockContent;
 
 use Illuminate\Http\Resources\MissingValue;
 use Illuminate\Support\Collection;
-use Monolog\Handler\IFTTTHandler;
 use Pi\Notion\Enums\NotionBlockContentTypeEnum;
 use Pi\Notion\Enums\NotionBlockTypeEnum;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
@@ -31,6 +30,7 @@ class NotionRichText extends NotionContent
         $this->children = new Collection();
         parent::__construct($valueType, $value);
     }
+
 
     public static function fromResponse(array $response): static
     {
@@ -66,7 +66,7 @@ class NotionRichText extends NotionContent
     public static function collection(array $items, NotionBlockTypeEnum $valueType): array
     {
         return collect($items)
-            ->map(fn(NotionRichText|string $item) => NotionRichText::getOrCreate($item)->setValueType($valueType))
+            ->map(fn(NotionRichText|string $item) => NotionRichText::getOrCreate($item)->setBlockType($valueType))
             ->all();
     }
 
@@ -78,40 +78,64 @@ class NotionRichText extends NotionContent
 
     public function toArrayableValue(): array
     {
-        $key = $this->valueType->value ?? $this->contentType->value;
-
-        $value = is_array($this->value) ? $this->value['content'] : $this->value;
-        return [
-            $key => [
-                array_merge(
-                    $this->getAnnotations(),
-                    $this->getSubAttributes(),
-                    [
-                        'type' => 'text',
-                        'text' => [
-                            'content' => $value,
-                            'link' => $this->link ?? new MissingValue(),
-                        ],
-                        'caption' => $this->caption ?? new MissingValue(),
-                        'color' => $this->mainColor ?? new MissingValue(),
-                        'icon' => $this->icon ?? new MissingValue(),
-                        'language' => $this->codeLanguage ?? new MissingValue(),
-                        'plain_text' => $value,
-                        'href' => $this->href ?? new MissingValue(),
-                        'is_toggleable' => $this->isToggleable ?? new MissingValue(),
-                        'children' => $this->getChildren() ?? new MissingValue(),
-                    ])
-            ]
-        ];
+        return match (get_class($this->blockType)) {
+            NotionPropertyTypeEnum::class => $this->nestedStructure(),
+            NotionBlockTypeEnum::class => $this->simpleStructure(),
+        };
 
     }
 
-
-    public function setContentType(NotionBlockContentTypeEnum $contentType = null): self
+    private function nestedStructure(): array
     {
-        $this->contentType = $contentType ?? NotionBlockContentTypeEnum::RICH_TEXT;
+        return [
+            $this->blockType->value => [
+                $this->getBody()
+            ]
+        ];
+    }
 
-        return $this;
+    private function simpleStructure(): array
+    {
+        return [
+            $this->blockType->value => [
+                $this->contentType->value => [
+                    $this->getBody()
+                ],
+                'is_toggleable' => $this->isToggleable ?? new MissingValue(),
+                'children' => $this->getChildren(),
+                'caption' => $this->caption ?? new MissingValue(),
+                'color' => $this->mainColor ?? new MissingValue(),
+                'icon' => $this->icon ?? new MissingValue(),
+                'language' => $this->codeLanguage ?? new MissingValue(),
+            ],
+        ];
+    }
+
+    public function blockTypeResource(): array
+    {
+        return [
+            $this->blockType->value => $this->getBody(),
+            'is_toggleable' => $this->isToggleable ?? new MissingValue(),
+            'children' => $this->getChildren(),
+        ];
+    }
+
+    private function getBody(): array|MissingValue
+    {
+        $value = is_array($this->value) ? $this->value['content'] : $this->value;
+
+        return array_merge(
+            $this->getAnnotations(),
+            $this->getSubAttributes(),
+            [
+                'type' => 'text',
+                'text' => [
+                    'content' => $value,
+                    'link' => $this->link ?? new MissingValue(),
+                ],
+                'plain_text' => $value,
+                'href' => $this->href ?? new MissingValue(),
+            ]);
     }
 
     public function setMainColor(?string $mainColor): NotionRichText
@@ -146,6 +170,14 @@ class NotionRichText extends NotionContent
     public function isToggleable(): self
     {
         $this->isToggleable = true;
+        return $this;
+    }
+
+
+    protected function setContentType(): self
+    {
+        $this->contentType = NotionBlockContentTypeEnum::RICH_TEXT;
+
         return $this;
     }
 

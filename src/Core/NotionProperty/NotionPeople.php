@@ -33,7 +33,8 @@ class NotionPeople extends BaseNotionProperty
     public function setValue($value): BaseNotionProperty
     {
         $this->value = collect($value)
-            ->map(fn(array $data) => NotionUser::make()->fromResponse($data));
+            ->map(fn(array $data) => NotionUser::make()->fromResponse($data))
+            ->all();
 
         return $this;
     }
