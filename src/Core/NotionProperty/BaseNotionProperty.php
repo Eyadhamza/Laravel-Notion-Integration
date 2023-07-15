@@ -4,16 +4,14 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 
-use Pi\Notion\Core\BlockContent\NotionBlockContentFactory;
+use Pi\Notion\Core\BlockContent\NotionPropertyContentFactory;
 use Pi\Notion\Core\Models\NotionObject;
 use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionEmptyValue;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
-use Pi\Notion\Traits\Sortable;
 
 abstract class BaseNotionProperty extends NotionObject
 {
-    use Sortable;
     protected mixed $value;
     protected NotionContent|NotionEmptyValue $blockContent;
     protected NotionPropertyTypeEnum $type;
@@ -50,6 +48,10 @@ abstract class BaseNotionProperty extends NotionObject
         return $this;
     }
 
+    public abstract function setType(): BaseNotionProperty;
+
+    public abstract function mapToResource(): array;
+
     public function resource(): array
     {
         return $this->blockContent->resource();
@@ -69,7 +71,7 @@ abstract class BaseNotionProperty extends NotionObject
     {
         $this->value = $this->mapToResource();
 
-        $this->blockContent = NotionBlockContentFactory::make($this);
+        $this->blockContent = NotionPropertyContentFactory::make($this);
 
         return $this;
     }
@@ -90,14 +92,11 @@ abstract class BaseNotionProperty extends NotionObject
         return $this->name;
     }
 
-    abstract public function setType(): BaseNotionProperty;
 
     public function getValue(): mixed
     {
         return $this->value;
     }
-
-    public abstract function mapToResource(): array;
 
     public function setValue($value): self
     {
@@ -138,7 +137,6 @@ abstract class BaseNotionProperty extends NotionObject
     {
         return $this->sortDirection;
     }
-
 
     public function descending(): self
     {

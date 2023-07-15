@@ -5,6 +5,7 @@ namespace Pi\Notion\Core\Models;
 
 
 use Illuminate\Support\Collection;
+use Pi\Notion\Core\Builders\NotionBlockBuilder;
 use Pi\Notion\Core\NotionClient;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 use Pi\Notion\Core\NotionProperty\NotionPropertyFactory;
@@ -119,6 +120,17 @@ class NotionPage extends NotionObject
     {
         $this->notionDatabaseId = $notionDatabaseId;
         return $this;
+    }
+
+    public function setBlockBuilder(NotionBlockBuilder $blockBuilder): self
+    {
+        $this->blocks = $blockBuilder->getBlocks();
+        return $this;
+    }
+
+    public function getBlocks(): Collection
+    {
+        return $this->blocks;
     }
 
 }

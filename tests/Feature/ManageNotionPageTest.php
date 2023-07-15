@@ -1,23 +1,23 @@
 <?php
 
-use Pi\Notion\Core\Models\NotionBlock;
+use Pi\Notion\Core\BlockContent\NotionFile;
+use Pi\Notion\Core\BlockContent\NotionRichText;
+use Pi\Notion\Core\Builders\NotionBlockBuilder;
 use Pi\Notion\Core\Models\NotionPage;
 use Pi\Notion\Core\Models\NotionUser;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
-use Pi\Notion\Core\NotionProperty\NotionTitle;
-use Pi\Notion\Core\NotionProperty\NotionSelect;
-use Pi\Notion\Core\BlockContent\NotionFile;
-use Pi\Notion\Core\BlockContent\NotionRichText;
-use Pi\Notion\Core\Query\NotionPaginator;
-use Pi\Notion\Core\NotionProperty\NotionPeople;
-use Pi\Notion\Core\NotionProperty\NotionFiles;
-use Pi\Notion\Core\NotionProperty\NotionEmail;
-use Pi\Notion\Core\NotionProperty\NotionNumber;
-use Pi\Notion\Core\NotionProperty\NotionPhoneNumber;
-use Pi\Notion\Core\NotionProperty\NotionUrl;
 use Pi\Notion\Core\NotionProperty\NotionCheckbox;
 use Pi\Notion\Core\NotionProperty\NotionDate;
+use Pi\Notion\Core\NotionProperty\NotionEmail;
+use Pi\Notion\Core\NotionProperty\NotionFiles;
+use Pi\Notion\Core\NotionProperty\NotionNumber;
+use Pi\Notion\Core\NotionProperty\NotionPeople;
+use Pi\Notion\Core\NotionProperty\NotionPhoneNumber;
 use Pi\Notion\Core\NotionProperty\NotionRelation;
+use Pi\Notion\Core\NotionProperty\NotionSelect;
+use Pi\Notion\Core\NotionProperty\NotionTitle;
+use Pi\Notion\Core\NotionProperty\NotionUrl;
+use Pi\Notion\Core\Query\NotionPaginator;
 use function Pest\Laravel\withoutExceptionHandling;
 
 beforeEach(function () {
@@ -100,8 +100,7 @@ it('should add properties to the created page using the page class', function ()
 it('can update properties of the created page using the page class', function () {
     $page = NotionPage::make()->setProperties([
         NotionTitle::make('Name')
-            ->setTitle('Test')
-            ->build(),
+            ->setTitle('Test'),
     ])->update($this->pageId);
 
     expect($page)->toHaveProperty('properties');
@@ -119,20 +118,66 @@ it('can add content blocks to the created pages', function () {
                 ->setSelected('A'),
         ]);
 
-    $page->setBlocks([
-        NotionBlock::headingOne(NotionRichText::make('Eyad Hamza')
-            ->bold()
-            ->italic()
-            ->strikethrough()
-            ->underline()
-            ->code()
-            ->color('red')),
-        NotionBlock::headingTwo('Heading 2'),
-        NotionBlock::headingThree('Heading 3'),
-        NotionBlock::numberedList('Numbered List'),
-        NotionBlock::bulletedList('Bullet List'),
-    ]);
-
+    $page->setBlockBuilder(
+        NotionBlockBuilder::make()
+            ->headingOne(NotionRichText::text('Eyad Hamza')
+                ->isToggleable()
+                ->setChildren([
+                    NotionRichText::text('Eyad Hamza')
+                        ->bold()
+                        ->italic()
+                        ->strikethrough()
+                        ->underline()
+                        ->code()
+                        ->color('red')
+                ])
+                ->bold()
+                ->italic()
+                ->strikethrough()
+                ->underline()
+                ->code()
+                ->color('red')
+            )
+            ->headingTwo('Heading 2')
+            ->headingThree('Heading 3')
+        ->numberedList([
+            'Numbered List',
+            'asdasd Numbered List'
+        ])
+        ->bulletedList(['Bullet List'])
+        ->paragraph('Paragraph')
+        ->toDo(['To Do List'])
+        ->toggle('Toggle')
+        ->quote('Quote')
+        ->divider()
+        ->callout('Callout')
+        ->childPage('Child Page')
+        ->image(NotionFile::make()
+            ->setFileUrl('https://www.google.com')
+            ->setFileType('external')
+        )
+        ->file(NotionFile::make()
+            ->setFileUrl('https://www.google.com')
+            ->setFileType('external')
+        )
+        ->embed('https://www.google.com')
+        ->bookmark('https://www.google.com')
+        ->code('echo "Hello World"')
+        ->equation('x^2 + y^2 = z^2')
+        ->childDatabase('Child Database')
+        ->column()
+        ->columnList()
+        ->linkPreview('https://www.google.com')
+        ->pdf(NotionFile::make()
+            ->setFileUrl('https://www.google.com')
+            ->setFileType('external')
+        )
+        ->video(NotionFile::make()
+            ->setFileUrl('https://www.google.com')
+            ->setFileType('external')
+        )
+    )->create();
+    dd($page->getBlocks());
     expect($page->getProperties())->toHaveCount(2)
         ->and($page->getBlocks())->toHaveCount(5)
         ->and($page)->toHaveProperty('properties');
@@ -142,21 +187,21 @@ it('can add nested content blocks to created pages', function () {
     $page = new NotionPage();
     $page->setDatabaseId($this->databaseId);
 
-    $page->setBlocks([
-        NotionBlock::paragraph('Hello There im a parent of the following blocks!')
+    $page->setBlockBuilder([
+        NotionBlockBuilder::paragraph('Hello There im a parent of the following blocks!')
             ->addChildren([
-                NotionBlock::headingTwo(NotionRichText::make('Eyad Hamza')
+                NotionBlockBuilder::headingTwo(NotionRichText::make('Eyad Hamza')
                     ->bold()
                     ->setLink('https://www.google.com')
                     ->color('red')),
-                NotionBlock::headingThree('Heading 3'),
-                NotionBlock::numberedList('Numbered List'),
-                NotionBlock::bulletedList('Bullet List'),
+                NotionBlockBuilder::headingThree('Heading 3'),
+                NotionBlockBuilder::numberedList('Numbered List'),
+                NotionBlockBuilder::bulletedList('Bullet List'),
             ]),
-        NotionBlock::headingTwo('Heading 2'),
-        NotionBlock::headingThree('Heading 3'),
-        NotionBlock::numberedList('Numbered List'),
-        NotionBlock::bulletedList('Bullet List'),
+        NotionBlockBuilder::headingTwo('Heading 2'),
+        NotionBlockBuilder::headingThree('Heading 3'),
+        NotionBlockBuilder::numberedList('Numbered List'),
+        NotionBlockBuilder::bulletedList('Bullet List'),
     ])->create();
 
     expect($page->getBlocks())->toHaveCount(5);
@@ -166,21 +211,21 @@ it('can add content blocks to created pages using the page class', function () {
     $page = new NotionPage();
     $page->setDatabaseId($this->databaseId);
 
-    $page->setBlocks([
-        NotionBlock::paragraph('Hello There im a parent of the following blocks!')
+    $page->setBlockBuilder([
+        NotionBlockBuilder::paragraph('Hello There im a parent of the following blocks!')
             ->addChildren([
-                NotionBlock::headingTwo(NotionRichText::make('Eyad Hamza')
+                NotionBlockBuilder::headingTwo(NotionRichText::make('Eyad Hamza')
                     ->bold()
                     ->setLink('https://www.google.com')
                     ->color('red')),
-                NotionBlock::headingThree('Heading 3'),
-                NotionBlock::numberedList('Numbered List'),
-                NotionBlock::bulletedList('Bullet List'),
+                NotionBlockBuilder::headingThree('Heading 3'),
+                NotionBlockBuilder::numberedList('Numbered List'),
+                NotionBlockBuilder::bulletedList('Bullet List'),
             ]),
-        NotionBlock::headingTwo('Heading 2'),
-        NotionBlock::headingThree('Heading 3'),
-        NotionBlock::numberedList('Numbered List'),
-        NotionBlock::bulletedList('Bullet List'),
+        NotionBlockBuilder::headingTwo('Heading 2'),
+        NotionBlockBuilder::headingThree('Heading 3'),
+        NotionBlockBuilder::numberedList('Numbered List'),
+        NotionBlockBuilder::bulletedList('Bullet List'),
     ])->create();
 
     expect($page->getBlocks())->toHaveCount(5);

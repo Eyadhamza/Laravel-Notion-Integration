@@ -3,7 +3,7 @@
 namespace Pi\Notion\Traits;
 
 use LogicException;
-use Pi\Notion\Core\BlockContent\NotionBlockContentFactory;
+use Pi\Notion\Core\BlockContent\NotionPropertyContentFactory;
 use Pi\Notion\Core\Models\NotionPage;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 

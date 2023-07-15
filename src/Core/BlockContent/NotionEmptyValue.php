@@ -8,7 +8,7 @@ use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionEmptyValue extends NotionContent
 {
-    public static function build(array $response): static
+    public static function fromResponse(array $response): static
     {
         return new static("");
     }

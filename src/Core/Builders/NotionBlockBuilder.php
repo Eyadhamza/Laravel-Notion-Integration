@@ -2,107 +2,209 @@
 
 namespace Pi\Notion\Core\Builders;
 
-use Pi\Notion\Core\BlockContent\NotionContent;
+
+use Illuminate\Support\Collection;
+use Pi\Notion\Core\BlockContent\NotionEmptyValue;
+use Pi\Notion\Core\BlockContent\NotionFile;
 use Pi\Notion\Core\BlockContent\NotionRichText;
+use Pi\Notion\Core\BlockContent\NotionSimpleValue;
 use Pi\Notion\Enums\NotionBlockTypeEnum;
 
 class NotionBlockBuilder
 {
 
+    private Collection $blocks;
 
-    public static function headingOne(string|NotionRichText $body): NotionContent
+    public function __construct()
     {
-
-        $body = is_string($body) ? NotionRichText::make($body)->isNested() : $body;
-
-        return NotionContent::make(NotionBlockTypeEnum::HEADING_1, $body);
+        $this->blocks = collect();
     }
 
-    public static function headingTwo(string|NotionRichText $body): NotionContent
+    public static function make(): static
     {
-        $body = is_string($body) ? NotionRichText::make($body)->isNested() : $body;
-
-        return NotionContent::make(NotionBlockTypeEnum::HEADING_2, $body);
+        return new static();
     }
 
-    public static function headingThree(string|NotionRichText $body): NotionContent
+    public function headingOne(string|NotionRichText $richText): self
     {
-        $body = is_string($body) ? NotionRichText::make($body)->isNested() : $body;
+        $this->blocks[] = NotionRichText::getOrCreate($richText)
+            ->setValueType(NotionBlockTypeEnum::HEADING_1);
 
-        return NotionContent::make(NotionBlockTypeEnum::HEADING_3, $body);
+        return $this;
     }
 
-    public static function paragraph(string|NotionRichText $body): NotionContent
+    public function headingThree(string|NotionRichText $richText): self
     {
-        $body = is_string($body) ? NotionRichText::make($body)->isNested() : $body;
+        $this->blocks[] = NotionRichText::getOrCreate($richText)
+            ->setValueType(NotionBlockTypeEnum::HEADING_3);
 
-        return NotionContent::make(NotionBlockTypeEnum::PARAGRAPH, $body);
+        return $this;
     }
 
-    public static function bulletedList(string|NotionRichText $body): NotionContent
+    public function headingTwo(string|NotionRichText $richText): self
     {
-        $body = is_string($body) ? NotionRichText::make($body)->isNested() : $body;
+        $this->blocks[] = NotionRichText::getOrCreate($richText)
+            ->setValueType(NotionBlockTypeEnum::HEADING_2);
 
-        return NotionContent::make(NotionBlockTypeEnum::BULLETED_LIST_ITEM, $body);
+        return $this;
     }
 
-    public static function numberedList(string|NotionRichText $body): NotionContent
+    public function paragraph(string|NotionRichText $richText): self
     {
-        $body = is_string($body) ? NotionRichText::make($body)->isNested() : $body;
+        $this->blocks[] = NotionRichText::getOrCreate($richText)
+            ->setValueType(NotionBlockTypeEnum::PARAGRAPH);
 
-        return NotionContent::make(NotionBlockTypeEnum::NUMBERED_LIST_ITEM, $body);
+        return $this;
     }
 
-    public static function toggle(string|NotionRichText $body): NotionContent
+    public function toggle(string|NotionRichText $richText): self
     {
-        $body = is_string($body) ? NotionRichText::make($body)->isNested() : $body;
+        $this->blocks[] = NotionRichText::getOrCreate($richText)
+            ->setValueType(NotionBlockTypeEnum::TOGGLE);
 
-        return NotionContent::make(NotionBlockTypeEnum::TOGGLE, $body);
+        return $this;
     }
 
-    public static function quote(string $body): NotionContent
+    public function callout(string|NotionRichText $richText): self
     {
-        return NotionContent::make(NotionBlockTypeEnum::QUOTE, $body);
+        $this->blocks[] = NotionRichText::getOrCreate($richText)
+            ->setValueType(NotionBlockTypeEnum::CALLOUT);
+
+        return $this;
     }
 
-    public static function callout(string $body): NotionContent
+    public function code(string|NotionRichText $richText): self
     {
-        return NotionContent::make(NotionBlockTypeEnum::CALLOUT, $body);
+        $this->blocks[] = NotionRichText::getOrCreate($richText)
+            ->setValueType(NotionBlockTypeEnum::CODE);
+
+        return $this;
     }
 
-    public static function divider(): NotionContent
+    public function quote(string|NotionRichText $richText): self
     {
-        return NotionContent::make(NotionBlockTypeEnum::DIVIDER);
+        $this->blocks[] = NotionRichText::getOrCreate($richText)
+            ->setValueType(NotionBlockTypeEnum::QUOTE);
+
+        return $this;
     }
 
-    public static function code(string $body): NotionContent
+    public function numberedList(array $items): self
     {
-        return NotionContent::make(NotionBlockTypeEnum::CODE, $body);
+        $this->blocks[] = NotionRichText::collection($items, NotionBlockTypeEnum::NUMBERED_LIST_ITEM);
+
+        return $this;
     }
 
-    public static function childPage(string $body): NotionContent
+    public function bulletedList(array $items): self
     {
-        return NotionContent::make(NotionBlockTypeEnum::CHILD_PAGE, $body);
+        $this->blocks[] = NotionRichText::collection($items, NotionBlockTypeEnum::BULLETED_LIST_ITEM);
+
+        return $this;
     }
 
-    public static function embed(string $body): NotionContent
+    public function toDo(array $items): self
     {
-        return NotionContent::make(NotionBlockTypeEnum::EMBED, $body);
+        $this->blocks[] = NotionRichText::collection($items, NotionBlockTypeEnum::TO_DO);
+
+        return $this;
     }
 
-    public static function image(string $body): NotionContent
+    public function divider(): self
     {
-        return NotionContent::make(NotionBlockTypeEnum::IMAGE, $body);
+        $this->blocks[] = NotionEmptyValue::make(NotionBlockTypeEnum::DIVIDER);
+
+        return $this;
     }
 
-    public static function video(string $body): NotionContent
+    public function childPage(string $value): self
     {
-        return NotionContent::make(NotionBlockTypeEnum::VIDEO, $body);
+        $this->blocks[] = NotionSimpleValue::make(NotionBlockTypeEnum::CHILD_PAGE, $value, 'title');
+
+        return $this;
     }
 
-    public static function file(string $body): NotionContent
+    public function image(NotionFile $file): self
     {
-        return NotionContent::make(NotionBlockTypeEnum::FILE, $body);
+        $this->blocks[] = $file->setValueType(NotionBlockTypeEnum::IMAGE);
+
+        return $this;
     }
+
+    public function getBlocks(): Collection
+    {
+        return $this->blocks;
+    }
+
+    public function file(NotionFile $file): self
+    {
+        $this->blocks[] = $file->setValueType(NotionBlockTypeEnum::FILE);
+
+        return $this;
+    }
+
+    public function embed(string $value): self
+    {
+        $this->blocks[] = NotionSimpleValue::make(NotionBlockTypeEnum::EMBED, $value, 'url');
+
+        return $this;
+    }
+
+    public function bookmark(string $value): self
+    {
+        $this->blocks[] = NotionSimpleValue::make(NotionBlockTypeEnum::BOOKMARK, $value, 'url');
+
+        return $this;
+    }
+
+    public function equation(string $value): self
+    {
+        $this->blocks[] = NotionSimpleValue::make(NotionBlockTypeEnum::EQUATION, $value, 'expression');
+
+        return $this;
+    }
+
+    public function childDatabase(string $value): self
+    {
+        $this->blocks[] = NotionSimpleValue::make(NotionBlockTypeEnum::CHILD_DATABASE, $value, 'title');
+
+        return $this;
+    }
+
+    public function column(): self
+    {
+        $this->blocks[] = NotionEmptyValue::make(NotionBlockTypeEnum::COLUMN);
+
+        return $this;
+    }
+
+    public function columnList(): self
+    {
+        $this->blocks[] = NotionEmptyValue::make(NotionBlockTypeEnum::COLUMN_LIST);
+
+        return $this;
+    }
+
+    public function linkPreview(string $value): self
+    {
+        $this->blocks[] = NotionSimpleValue::make(NotionBlockTypeEnum::LINK_PREVIEW, $value, 'url');
+
+        return $this;
+    }
+
+    public function pdf(NotionFile $file): self
+    {
+        $this->blocks[] = $file->setValueType(NotionBlockTypeEnum::PDF);
+
+        return $this;
+    }
+
+    public function video(NotionFile $file): self
+    {
+        $this->blocks[] = $file->setValueType(NotionBlockTypeEnum::VIDEO);
+
+        return $this;
+    }
+
 
 }

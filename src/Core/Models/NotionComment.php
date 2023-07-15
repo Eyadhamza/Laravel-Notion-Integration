@@ -18,7 +18,7 @@ class NotionComment extends NotionObject
     {
         parent::fromResponse($response);
         $this->discussionId = $response['discussion_id'];
-        $this->content = NotionRichText::build($response['rich_text']);
+        $this->content = NotionRichText::fromResponse($response['rich_text']);
         return $this;
     }
 

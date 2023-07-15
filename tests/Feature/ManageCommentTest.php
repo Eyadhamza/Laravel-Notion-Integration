@@ -2,7 +2,6 @@
 
 use Pi\Notion\Core\BlockContent\NotionRichText;
 use Pi\Notion\Core\Models\NotionComment;
-use Pi\Notion\Enums\NotionBlockContentTypeEnum;
 
 test('it returns all comments', function () {
     $comments = NotionComment::make()->index('0b036890391f417cbac775e8b0bba680');

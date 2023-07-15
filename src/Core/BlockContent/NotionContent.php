@@ -24,7 +24,7 @@ abstract class NotionContent
         $this->valueType = $valueType;
         $this->value = $value;
 
-        $this->setContentType()->setValue();
+        $this->setContentType();
     }
 
     public static function make(NotionBlockTypeEnum|NotionPropertyTypeEnum $valueType, mixed $value = null): static|NotionEmptyValue
@@ -40,8 +40,16 @@ abstract class NotionContent
         return new static($valueType, $value);
     }
 
-    abstract public static function build(array $response): static;
+    abstract public static function fromResponse(array $response): static;
 
+    public function resource()
+    {
+        $this->value = $this->toArrayableValue();
+
+        $this->resource = JsonResource::make($this->value);
+
+        return $this->resource->resolve();
+    }
     private static function areAllMissingValues(array $value): bool
     {
         foreach ($value as $item) {
@@ -77,13 +85,5 @@ abstract class NotionContent
         return $this;
     }
 
-    public function setValue(): self
-    {
-        $this->value = $this->toArrayableValue();
-
-        return $this;
-    }
-
     public abstract function toArrayableValue(): array;
-
 }

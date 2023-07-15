@@ -2,70 +2,30 @@
 
 namespace Pi\Notion\Core\BlockContent;
 
-use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
-use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Enums\NotionBlockTypeEnum;
 
 class NotionBlockContentFactory
 {
-    private BaseNotionProperty $entity;
-    private NotionPropertyTypeEnum $type;
+    private NotionBlockTypeEnum $type;
 
-    public function __construct(BaseNotionProperty $entity)
+    public function __construct(NotionBlockTypeEnum $type)
     {
-        $this->entity = $entity;
-        $this->type = $entity->getType();
-
+        $this->type = $type;
     }
 
-    public static function make(BaseNotionProperty $entity): NotionContent
+    public static function make(NotionBlockTypeEnum $type): NotionContent
     {
-        return (new self($entity))->matchFromProperty();
+        return (new self($type))->match();
     }
 
-    private function matchFromProperty(): NotionContent
+    private function match(): NotionContent
     {
-        $value = $this->entity->getValue();
-
         return match (true){
-            self::isRichTextType($this->type) => NotionRichText::make($this->type, $value),
-            self::isSimpleValueType($this->type) => NotionSimpleValue::make($this->type, $value),
-            self::isArrayValueType($this->type) => NotionArrayValue::make($this->type, $value),
-            default => NotionEmptyValue::make($this->type, $value)
+            NotionBlockTypeEnum::isRichText($this->type) => NotionRichText::make($this->type, $value),
+            NotionBlockTypeEnum::isSimpleValue($this->type) => NotionSimpleValue::make($this->type, $value),
+            NotionBlockTypeEnum::isEmptyValue($this->type) => NotionArrayValue::make($this->type, $value),
         };
 
-    }
-
-    private static function isRichTextType(NotionPropertyTypeEnum $type): bool
-    {
-        return in_array($type, [
-            NotionPropertyTypeEnum::RICH_TEXT,
-            NotionPropertyTypeEnum::TITLE,
-            NotionPropertyTypeEnum::DESCRIPTION
-        ]);
-    }
-
-    private static function isSimpleValueType(NotionPropertyTypeEnum $type): bool
-    {
-        return in_array($type, [
-            NotionPropertyTypeEnum::EMAIL,
-            NotionPropertyTypeEnum::CHECKBOX,
-            NotionPropertyTypeEnum::URL,
-            NotionPropertyTypeEnum::PHONE_NUMBER,
-        ]);
-    }
-
-    private static function isArrayValueType(NotionPropertyTypeEnum $type): bool
-    {
-        return in_array($type, [
-            NotionPropertyTypeEnum::MULTISELECT,
-            NotionPropertyTypeEnum::RELATION,
-            NotionPropertyTypeEnum::PEOPLE,
-            NotionPropertyTypeEnum::FILES,
-            NotionPropertyTypeEnum::SELECT,
-            NotionPropertyTypeEnum::DATE,
-            NotionPropertyTypeEnum::FORMULA,
-            NotionPropertyTypeEnum::ROLLUP,
-        ]);
     }
 
 }

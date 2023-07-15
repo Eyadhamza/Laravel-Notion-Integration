@@ -9,7 +9,7 @@ class NotionArrayValue extends NotionContent
     private string $key;
 
 
-    public static function build(array $response): static
+    public static function fromResponse(array $response): static
     {
         return new static($response['plain_text'], $response['type']);
     }

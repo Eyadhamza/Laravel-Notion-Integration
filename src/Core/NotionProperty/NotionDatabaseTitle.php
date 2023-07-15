@@ -2,11 +2,6 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\BlockContent\NotionArrayValue;
-use Pi\Notion\Core\BlockContent\NotionContent;
-use Pi\Notion\Core\BlockContent\NotionEmptyValue;
-use Pi\Notion\Core\BlockContent\NotionRichText;
-use Pi\Notion\Enums\NotionBlockContentTypeEnum;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionDatabaseTitle extends BaseNotionProperty
