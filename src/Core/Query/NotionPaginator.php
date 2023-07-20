@@ -15,7 +15,7 @@ class NotionPaginator
 {
     public string $paginatedClass;
     private ?string $startCursor;
-    private ?int $pageSize = 100;
+    private ?int $pageSize;
     private bool $hasMore;
     private ?string $nextCursor = null;
     private Collection $results;
@@ -146,7 +146,7 @@ class NotionPaginator
         $this->results = collect($data['results'])->mapWithKeys(function (array $propertyData) {
             return [
                 $propertyData['id'] => NotionPropertyFactory::make(NotionPropertyTypeEnum::from($propertyData['type']), $propertyData['id'])
-                    ->setRawValue($propertyData[$propertyData['type']])
+                    ->setValue($propertyData[$propertyData['type']])
                     ->fromResponse($propertyData)
             ];
         });
@@ -156,11 +156,8 @@ class NotionPaginator
 
     private function setPaginatedObjects(array $data): self
     {
-        /** @var NotionObject $notionObject */
-        $notionObject = new $this->paginatedClass;
-
         $this->results = collect($data['results'])
-            ->map(fn($object) => $notionObject->fromResponse($object));
+            ->map(fn($object) => (new $this->paginatedClass)->fromResponse($object));
 
         return $this;
     }

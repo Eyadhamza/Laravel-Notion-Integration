@@ -14,35 +14,45 @@ abstract class NotionContent
     use HasResource;
 
     public JsonResource $resource;
-    protected NotionBlockContentTypeEnum $contentType;
-    protected mixed $value;
+    protected mixed $value = null;
     protected bool $isNested = false;
-    public NotionBlockTypeEnum|NotionPropertyTypeEnum|null $valueType = null;
-    public function __construct(mixed $value = null)
+    protected NotionBlockTypeEnum|NotionPropertyTypeEnum $blockType;
+    protected NotionBlockContentTypeEnum $contentType;
+
+    public function __construct(NotionBlockTypeEnum|NotionPropertyTypeEnum $valueType, mixed $value = null)
     {
+        $this->blockType = $valueType;
         $this->value = $value;
         $this->setContentType();
     }
 
-    public static function make(mixed $value = null): static|NotionEmptyValue
+    public static function make(NotionBlockTypeEnum|NotionPropertyTypeEnum $valueType, mixed $value = null): static|NotionEmptyValue
     {
-        if (! $value){
-            return new NotionEmptyValue();
+        if (!$value) {
+             return new NotionEmptyValue($valueType, $value);
         }
 
         if (is_array($value) && self::areAllMissingValues($value)) {
-            return new NotionEmptyValue();
+            return new NotionEmptyValue($valueType, $value);
         }
 
-        return new static($value);
+        return new static($valueType, $value);
     }
 
-    abstract public static function build(array $response): static;
+    abstract public static function fromResponse(array $response): static;
 
+    public function resource()
+    {
+        $this->value = $this->toArrayableValue();
+
+        $this->resource = JsonResource::make($this->value);
+
+        return $this->resource->resolve();
+    }
     private static function areAllMissingValues(array $value): bool
     {
         foreach ($value as $item) {
-            if (! $item instanceof MissingValue) {
+            if (!$item instanceof MissingValue) {
                 return false;
             }
         }
@@ -59,16 +69,20 @@ abstract class NotionContent
     {
         return $this->contentType;
     }
-    public function setValueType(NotionBlockTypeEnum|NotionPropertyTypeEnum $valueType): self
+
+    public function setBlockType(NotionBlockTypeEnum|NotionPropertyTypeEnum $blockType): self
     {
-        $this->valueType = $valueType;
+        $this->blockType = $blockType;
         return $this;
     }
-    abstract public function setContentType(): self;
 
     public function isNested(): self
     {
         $this->isNested = true;
         return $this;
     }
+
+    public abstract function toArrayableValue(): array;
+    protected abstract function setContentType(): self;
+
 }

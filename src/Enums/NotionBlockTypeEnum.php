@@ -22,18 +22,18 @@ enum NotionBlockTypeEnum: string
     case CODE = 'code';
     case COLUMN_LIST = 'column_list';
     case COLUMN = 'column';
-    case FACT = 'fact';
-    case FACT_LIST = 'fact_list';
     case QUOTE = 'quote';
     case CALLOUT = 'callout';
     case TABLE_OF_CONTENTS = 'table_of_contents';
     case BREADCRUMB = 'breadcrumb';
     case DIVIDER = 'divider';
-    case PAGE = 'page';
     case HEADER = 'header';
     case SUB_HEADER = 'sub_header';
     case SUB_SUB_HEADER = 'sub_sub_header';
     case TOC_PAGE = 'toc_page';
     case EQUATION = 'equation';
-    case PROPERTY = 'property';
+    case CHILD_DATABASE = 'child_database';
+    case LINK_PREVIEW = 'link_preview';
+
+    case PAGE = 'page';
 }

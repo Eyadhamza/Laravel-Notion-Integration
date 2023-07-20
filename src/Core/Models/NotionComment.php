@@ -9,55 +9,42 @@ use Pi\Notion\Core\RequestBuilders\CreateNotionCommentRequestBuilder;
 
 class NotionComment extends NotionObject
 {
+    const COMMENTS_URL = NotionClient::BASE_URL . '/comments/';
+
     private ?string $discussionId = null;
     private NotionRichText $content;
-
-    public function __construct(string $id = null)
-    {
-        $this->id = $id;
-    }
-
-    public static function make(string $id = null): self
-    {
-        return new static($id);
-    }
 
     public function fromResponse($response): self
     {
         parent::fromResponse($response);
         $this->discussionId = $response['discussion_id'];
-        $this->content = NotionRichText::build($response['rich_text']);
+        $this->content = NotionRichText::fromResponse($response['rich_text']);
         return $this;
     }
 
     public function create(): self
     {
         $body = CreateNotionCommentRequestBuilder::make()
-            ->setDiscussionId($this->discussionId)
-            ->setParentId($this->parentId)
+            ->setDiscussionId($this->discussionId ?? null)
+            ->setParentId($this->parentId ?? null)
             ->setContent($this->content)
             ->build();
 
-        $response = NotionClient::make()
-            ->post(NotionClient::COMMENTS_URL, $body);
+        $response = NotionClient::make()->post(self::COMMENTS_URL, $body);
 
         return $this->fromResponse($response->json());
     }
 
-    public function findAll(int $pageSize = 50): NotionPaginator
+    public function index(int $pageSize = 50): NotionPaginator
     {
         return NotionPaginator::make(NotionComment::class)
-            ->setUrl($this->getUrl())
+            ->setUrl(self::COMMENTS_URL)
             ->setMethod('get')
             ->setBody(['block_id' => $this->id])
             ->setPageSize($pageSize)
             ->paginate();
     }
 
-    private function getUrl(): string
-    {
-        return NotionClient::COMMENTS_URL;
-    }
 
     public function setDiscussionId(string $discussionId): self
     {
@@ -73,7 +60,7 @@ class NotionComment extends NotionObject
 
     public function setContent(string|NotionRichText $text): static
     {
-        $this->content = is_string($text) ? NotionRichText::make($text) : $text;
+        $this->content = NotionRichText::getOrCreate($text);
 
         return $this;
     }

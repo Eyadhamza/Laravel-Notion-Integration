@@ -3,7 +3,7 @@
 namespace Pi\Notion\Traits;
 
 use LogicException;
-use Pi\Notion\Core\BlockContent\NotionBlockContentFactory;
+use Pi\Notion\Core\BlockContent\NotionPropertyContentFactory;
 use Pi\Notion\Core\Models\NotionPage;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 
@@ -13,40 +13,23 @@ trait Notionable
 
     public abstract function mapToNotion(): array;
 
-    public function saveToNotion(): NotionPage
+    public function saveToNotion(string $pageId = null): NotionPage
     {
         $this->notionMap = $this->mapToNotion();
 
         $this->validateHasNotionDatabaseId();
+        $this->notionMap = $this->buildNotionProperties();
 
-        $this->notionMap = collect($this->getAttributes())->map(function ($value, $key) {
-            if (array_key_exists($key, $this->notionMap)) {
-                /** @var BaseNotionProperty $property */
-                $property = $this->notionMap[$key];
-                dd($property);
-                return $property->setRawValue($value)->build();
-            }
-        })->filter()->toArray();
+        if ($pageId) {
+            return NotionPage::make($pageId)
+                ->setProperties($this->notionMap)
+                ->update();
+        }
 
-        $page = new NotionPage();
-        return $page
+        return NotionPage::make()
             ->setDatabaseId($this->notionDatabaseId)
             ->setProperties($this->notionMap)
             ->create();
-    }
-
-    public function mapFromNotion(NotionPage $page): array
-    {
-        $attributes = [];
-
-        foreach ($this->mapToNotion() as $key => $value) {
-            dd($key, $value);
-            /** @var BaseNotionProperty $property */
-            $property = $page->ofPropertyName($value->getName());
-            $attributes[$key] = $property->getBlockContent()->getValue();
-            dd($attributes);
-        }
-        return $attributes;
     }
 
     public function getNotionDatabaseId(): string
@@ -64,4 +47,25 @@ trait Notionable
 
         return $this;
     }
+
+    public function buildNotionProperties(): array
+    {
+        return collect($this->getAttributes())->map(function ($value, $key) {
+            if (array_key_exists($key, $this->notionMap)) {
+                /** @var BaseNotionProperty $property */
+                $property = $this->notionMap[$key];
+
+                if (!$property->hasValue()) {
+                    $property->setValue($value);
+                }
+
+                if ($property->shouldBeBuilt()) {
+                    $property->buildContent();
+                }
+
+                return $property;
+            }
+        })->filter()->toArray();
+    }
+
 }

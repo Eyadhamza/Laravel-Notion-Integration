@@ -4,47 +4,61 @@
 namespace Pi\Notion\Core\NotionProperty;
 
 
-use Illuminate\Http\Resources\Json\JsonResource;
-use Pi\Notion\Core\BlockContent\NotionBlockContentFactory;
+use Pi\Notion\Core\BlockContent\NotionPropertyContentFactory;
 use Pi\Notion\Core\Models\NotionObject;
 use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionEmptyValue;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
-abstract class BaseNotionProperty extends NotionObject
+abstract class BaseNotionProperty
 {
-    public JsonResource $resource;
-    protected mixed $rawValue;
+    protected mixed $value;
+    protected mixed $id;
     protected NotionContent|NotionEmptyValue $blockContent;
     protected NotionPropertyTypeEnum $type;
     protected ?string $name;
+    private string $query;
+    private string $filterName;
+    private string $sortDirection;
 
-    public function __construct(?string $name = null, ?string $rawValue = null)
+    public function __construct(?string $name = null, ?string $value = null)
     {
         $this->name = $name;
-        $this->rawValue = $rawValue;
+        $this->value = $value;
         $this->setType();
     }
 
-    public static function make(?string $name = null, ?string $rawValue = null): static
+    public static function make(?string $name = null, ?string $value = null): static
     {
-        return new static($name, $rawValue);
+        return new static($name, $value);
     }
 
-    public function build(): static
+    public function fromResponse(array $response): static
     {
-        $this->resource = new JsonResource($this->mapToResource());
+        $this->id = $response['id'];
+        $this->type = NotionPropertyTypeEnum::tryFrom($response['type']);
+
+        if (empty($response[$this->type->value])) {
+            return $this;
+        }
+
+        $this->setValue($response[$this->type->value]);
 
         $this->buildContent();
-
-        $this->blockContent->buildResource();
 
         return $this;
     }
 
+    public abstract function setType(): BaseNotionProperty;
+
+    public function mapToResource(): mixed
+    {
+        return $this->value;
+    }
+
     public function resource(): array
     {
-        return $this->blockContent->resource->resolve();
+        return $this->blockContent->resource();
     }
 
     public function isPaginated(): bool
@@ -57,30 +71,11 @@ abstract class BaseNotionProperty extends NotionObject
         };
     }
 
-    protected function buildContent(): self
+    public function buildContent(): self
     {
-        $this->blockContent = NotionBlockContentFactory::make($this);
+        $this->value = $this->mapToResource();
 
-        return $this;
-    }
-
-    public function fromResponse(array $response): static
-    {
-        $this->id = $response['id'];
-        $this->type = NotionPropertyTypeEnum::tryFrom($response['type']);
-
-        return $this->buildFromResponse($response);
-    }
-
-    protected function buildFromResponse(array $response): BaseNotionProperty
-    {
-        if (empty($response[$this->type->value])) {
-            return $this;
-        }
-
-        $this->rawValue = $response[$this->type->value];
-
-        $this->build();
+        $this->blockContent = NotionPropertyContentFactory::make($this);
 
         return $this;
     }
@@ -101,18 +96,15 @@ abstract class BaseNotionProperty extends NotionObject
         return $this->name;
     }
 
-    abstract public function setType(): BaseNotionProperty;
 
-    public function getRawValue(): mixed
+    public function getValue(): mixed
     {
-        return $this->rawValue;
+        return $this->value;
     }
 
-    public abstract function mapToResource(): array;
-
-    public function setRawValue($value): self
+    public function setValue($value): self
     {
-        $this->rawValue = $value;
+        $this->value = $value;
 
         return $this;
     }
@@ -122,4 +114,48 @@ abstract class BaseNotionProperty extends NotionObject
         return $this->blockContent;
     }
 
+    public function hasValue(): bool
+    {
+        return ! is_null($this->value);
+    }
+
+    public function applyFilter(string $filterName, string $query): self
+    {
+        $this->query = $query;
+        $this->filterName = $filterName;
+        return $this;
+    }
+
+    public function getFilterName(): string
+    {
+        return $this->filterName;
+    }
+
+    public function getQuery(): string
+    {
+        return $this->query;
+    }
+
+
+    public function getSortDirection(): string
+    {
+        return $this->sortDirection;
+    }
+
+    public function descending(): self
+    {
+        $this->sortDirection = 'descending';
+        return $this;
+    }
+
+    public function ascending(): self
+    {
+        $this->sortDirection = 'ascending';
+        return $this;
+    }
+
+    public function shouldBeBuilt(): bool
+    {
+        return ! isset($property->resource);
+    }
 }

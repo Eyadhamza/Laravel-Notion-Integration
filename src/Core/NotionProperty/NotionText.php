@@ -2,13 +2,12 @@
 
 namespace Pi\Notion\Core\NotionProperty;
 
-use Pi\Notion\Core\BlockContent\NotionContent;
-use Pi\Notion\Core\BlockContent\NotionEmptyValue;
-use Pi\Notion\Core\BlockContent\NotionRichText;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Traits\Filters\HasStringFilters;
 
 class NotionText extends BaseNotionProperty
 {
+    use HasStringFilters;
 
     public function setType(): BaseNotionProperty
     {
@@ -17,17 +16,10 @@ class NotionText extends BaseNotionProperty
         return $this;
     }
 
-
     public function setText($text): self
     {
-        $this->rawValue = $text;
+        $this->value = $text;
         return $this;
     }
 
-    public function mapToResource(): array
-    {
-        return [
-            'content' => $this->rawValue
-        ];
-    }
 }

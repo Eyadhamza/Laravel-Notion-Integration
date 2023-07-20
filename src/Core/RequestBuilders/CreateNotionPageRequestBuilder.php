@@ -4,6 +4,7 @@ namespace Pi\Notion\Core\RequestBuilders;
 
 
 use Illuminate\Support\Collection;
+use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\Models\NotionBlock;
 use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 
@@ -30,7 +31,9 @@ class CreateNotionPageRequestBuilder
     public function setBlocks(Collection $blocks): self
     {
         $this->blocks = $blocks
-            ->map(fn(NotionBlock $block) => $block->buildResource()->resource->resolve())
+            ->map(function (NotionContent|array $block) {
+                return is_array($block) ? collect($block)->map(fn(NotionContent $block) => $block->resource())->all()[0] : $block->resource();
+            })
             ->all();
 
         return $this;

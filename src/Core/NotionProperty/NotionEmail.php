@@ -16,15 +16,9 @@ class NotionEmail extends BaseNotionProperty
 
     public function setEmail(string $email): NotionEmail
     {
-        $this->rawValue = $email;
+        $this->value = $email;
 
         return $this;
     }
 
-    public function mapToResource(): array
-    {
-        return [
-            'value' => $this->rawValue
-        ];
-    }
 }

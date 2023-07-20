@@ -7,53 +7,13 @@ use Pi\Notion\Core\Query\NotionPaginator;
 
 class NotionUser extends NotionObject
 {
+    const USERS_URL = NotionClient::BASE_URL . '/users/';
+    const BOT_URL = NotionClient::BASE_URL . '/users/' . 'me';
     private string $object;
     private string $name;
     private ?string $email;
     private string $avatarUrl;
     private ?string $type;
-
-    public function __construct(string $id = null)
-    {
-        $this->id = $id;
-    }
-
-    public static function make(string $id = null): self
-    {
-        return new static($id);
-    }
-
-    public function index(int $pageSize = 100): NotionPaginator
-    {
-        return NotionPaginator::make(NotionUser::class)
-            ->setUrl($this->getUrl())
-            ->setMethod('get')
-            ->setPageSize($pageSize)
-            ->setPaginatedClass(NotionUser::class)
-            ->paginate();
-
-    }
-
-    public function find(): self
-    {
-        return $this->get();
-    }
-
-    public function get(): self
-    {
-        $response = NotionClient::make()
-            ->get($this->getUrl());
-
-        return $this->fromResponse($response->json());
-    }
-
-    public function getBot(): self
-    {
-        $response = NotionClient::make()
-            ->get($this->botUrl());
-
-        return $this->fromResponse($response->json());
-    }
 
     public function fromResponse($response): self
     {
@@ -77,15 +37,30 @@ class NotionUser extends NotionObject
         return $this;
     }
 
-    private function getUrl(): string
+    public function index(int $pageSize = 100): NotionPaginator
     {
-        return NotionClient::BASE_URL . '/users/' . $this->id;
+        return NotionPaginator::make(NotionUser::class)
+            ->setUrl(self::USERS_URL)
+            ->setMethod('get')
+            ->setPageSize($pageSize)
+            ->paginate();
+
     }
 
-    private function botUrl(): string
+    public function find(): self
     {
-        return NotionClient::BASE_URL . '/users/' . 'me';
+        $response = NotionClient::make()->get(self::USERS_URL . $this->id);
+
+        return $this->fromResponse($response->json());
     }
+
+    public function findBot(): self
+    {
+        $response = NotionClient::make()->get(self::BOT_URL);
+
+        return $this->fromResponse($response->json());
+    }
+
 
     private function setOwner($response): void
     {
@@ -100,9 +75,9 @@ class NotionUser extends NotionObject
         return $this->avatarUrl;
     }
 
-    public function getObject(): string
+    public function getObjectType(): string
     {
-        return $this->object;
+        return $this->objectType;
     }
 
     public function getType(): string
@@ -118,5 +93,12 @@ class NotionUser extends NotionObject
     public function getEmail(): ?string
     {
         return $this->email;
+    }
+
+    public function setId(string $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 }

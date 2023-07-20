@@ -4,9 +4,11 @@ namespace Pi\Notion\Core\NotionProperty;
 
 use Illuminate\Http\Resources\MissingValue;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Traits\Filters\HasEqualityFilters;
 
 class NotionSelect extends BaseNotionProperty
 {
+    use HasEqualityFilters;
     private array $options;
 
     public function setType(): BaseNotionProperty
@@ -24,7 +26,7 @@ class NotionSelect extends BaseNotionProperty
 
     public function setSelected(string $option): self
     {
-        $this->rawValue = $option;
+        $this->value = $option;
 
         return $this;
     }
@@ -33,7 +35,7 @@ class NotionSelect extends BaseNotionProperty
     {
         return [
             'options' => $this->options ?? new MissingValue(),
-            'name' => $this->rawValue ?? new MissingValue()
+            'name' => $this->value ?? new MissingValue()
         ];
     }
 }

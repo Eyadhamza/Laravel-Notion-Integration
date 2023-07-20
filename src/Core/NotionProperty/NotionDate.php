@@ -6,9 +6,12 @@ use Illuminate\Http\Resources\MissingValue;
 use Pi\Notion\Core\BlockContent\NotionArrayValue;
 use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use Pi\Notion\Traits\Filters\HasDateFilters;
 
 class NotionDate extends BaseNotionProperty
 {
+    use HasDateFilters;
+
     private ?string $timeZone;
     private ?string $end;
 
@@ -21,7 +24,7 @@ class NotionDate extends BaseNotionProperty
 
     public function setStart(?string $start): NotionDate
     {
-        $this->rawValue = $start;
+        $this->value = $start;
 
         return $this;
     }
@@ -42,7 +45,7 @@ class NotionDate extends BaseNotionProperty
     public function mapToResource(): array
     {
         return [
-            'start' => $this->rawValue ?? new MissingValue(),
+            'start' => $this->value ?? new MissingValue(),
             'end' => $this->end ?? new MissingValue(),
             'time_zone' => $this->timeZone ?? new MissingValue(),
         ];

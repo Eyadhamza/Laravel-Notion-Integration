@@ -19,16 +19,9 @@ class NotionCheckbox extends BaseNotionProperty
 
     public function setChecked(bool $checked): self
     {
-        $this->rawValue = $checked;
+        $this->value = $checked;
 
         return $this;
     }
 
-
-    public function mapToResource(): array
-    {
-        return [
-            'value' => $this->rawValue
-        ];
-    }
 }

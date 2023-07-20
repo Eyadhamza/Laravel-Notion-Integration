@@ -16,11 +16,5 @@ class NotionLastEditedTime extends BaseNotionProperty
         return $this;
     }
 
-    public function mapToResource(): array
-    {
-        return [
-            'value' => $this->lastEditedTime
-        ];
-    }
 }
 

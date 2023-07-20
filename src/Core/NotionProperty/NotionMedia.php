@@ -8,7 +8,7 @@ use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionFile;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
-class NotionFiles extends BaseNotionProperty
+class NotionMedia extends BaseNotionProperty
 {
 
     public ?array $files = [];
@@ -19,7 +19,7 @@ class NotionFiles extends BaseNotionProperty
             return $this;
         }
 
-        $this->rawValue = $response['files'];
+        $this->value = $response['files'];
 
         return $this;
     }
@@ -31,14 +31,10 @@ class NotionFiles extends BaseNotionProperty
         return $this;
     }
 
-    public function setFiles(?array $files): NotionFiles
+    public function setFiles(?array $files): NotionMedia
     {
         $this->files = collect($files)
-            ->map(fn(NotionFile $file) => $file
-                ->buildResource()
-                ->resource
-                ->resolve()
-            )
+            ->map(fn(NotionFile $file) => $file->setBlockType(NotionPropertyTypeEnum::FILE)->resource())
             ->all();
 
         return $this;

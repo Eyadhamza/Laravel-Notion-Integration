@@ -4,7 +4,6 @@ namespace Pi\Notion\Tests;
 
 use Dotenv\Dotenv;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Orchestra\Testbench\Concerns\CreatesApplication;
 use Pi\Notion\NotionServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 

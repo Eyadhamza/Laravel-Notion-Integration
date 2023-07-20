@@ -9,30 +9,30 @@ class NotionArrayValue extends NotionContent
     private string $key;
 
 
-    public static function build(array $response): static
+    public static function fromResponse(array $response): static
     {
         return new static($response['plain_text'], $response['type']);
     }
 
-    public function toArray(): array
+    public function toArrayableValue(): array
     {
         if ($this->isNested) {
             return [
-                $this->valueType->value => [
+                $this->blockType->value => [
                     $this->value->resolve()
                 ]
             ];
         }
         if (isset($this->key)) {
             return [
-                $this->valueType->value => [
+                $this->blockType->value => [
                     $this->key => $this->value
                 ]
             ];
         }
 
         return [
-            $this->valueType->value => $this->value
+            $this->blockType->value => $this->value
         ];
     }
 

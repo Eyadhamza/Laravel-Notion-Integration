@@ -6,11 +6,11 @@ use Pi\Notion\Core\Models\NotionDatabase;
 use Pi\Notion\Core\Models\NotionObject;
 use Pi\Notion\Core\Models\NotionPage;
 use Pi\Notion\Core\NotionClient;
-use Pi\Notion\Traits\HandleSorts;
+use Pi\Notion\Traits\Sortable;
 
-class NotionSearch extends NotionObject
+class NotionSearch
 {
-    use HandleSorts;
+    use Sortable;
 
     private string $query;
     private string $filteredClass;
@@ -47,7 +47,7 @@ class NotionSearch extends NotionObject
                     'value' => $this->getFilterObject($this->filteredClass),
                     'property' => 'object'
                 ],
-                'sort' => $this->getSortUsingTimestamp()
+                'sort' => $this->sortUsingTimestamp(),
             ])
             ->setPageSize($pageSize)
             ->paginate();

@@ -2,19 +2,18 @@
 
 use Pi\Notion\Core\BlockContent\NotionRichText;
 use Pi\Notion\Core\Models\NotionComment;
-use Pi\Notion\Enums\NotionBlockContentTypeEnum;
 
 test('it returns all comments', function () {
-    $comments = NotionComment::make('0b036890391f417cbac775e8b0bba680')->findAll();
+    $comments = NotionComment::make('0b036890391f417cbac775e8b0bba680')->index();
 
     expect($comments->getResults())->toHaveCount(3);
 });
 
 test('it can create a comment', function () {
 
-    $comment = NotionComment::make()
+    NotionComment::make()
         ->setDiscussionId('ac803deb7b064cca83067c67914b02b4')
-        ->setContent(NotionRichText::make('This is a comment')
+        ->setContent(NotionRichText::text('This is a comment')
             ->color('red')
             ->bold()
             ->italic()
