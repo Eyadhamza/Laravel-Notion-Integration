@@ -4,9 +4,9 @@ namespace Pi\Notion\Core\RequestBuilders;
 
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\BlockContent\NotionContent;
+use Pi\Notion\Core\Content\NotionContent;
 use Pi\Notion\Core\Models\NotionBlock;
-use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
+use Pi\Notion\Core\Properties\BaseNotionProperty;
 
 class CreateNotionPageRequestBuilder
 {

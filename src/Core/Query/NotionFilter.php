@@ -3,7 +3,7 @@
 namespace Pi\Notion\Core\Query;
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
+use Pi\Notion\Core\Properties\BaseNotionProperty;
 
 class NotionFilter
 {

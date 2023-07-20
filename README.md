@@ -7,9 +7,9 @@
 
 ## About
 
-This package is a Laravel wrapper for the REST API provided by Notion.so. It provides a clean and easy-to-use API for interacting with your Notion workspace, saving you time and effort.
+The Laravel Notion Integration package is a wrapper for the REST API provided by Notion.so. It allows for easy interaction with your Notion workspace, saving you time and effort.
 
-The package offers an easy and fluent interface for manipulating pages, databases, users, blocks, and more.
+This package provides an easy and fluent interface for manipulating pages, databases, users, blocks, and more.
 
 ## Installation
 
@@ -41,7 +41,7 @@ To fetch a Notion database by ID, use the `find` method of the `NotionDatabase` 
 ```php
 use Pi\Notion\Core\Models\NotionDatabase;
 
-$database = NotionDatabase::find('632b5fb7e06c4404ae12065c48280e4c');
+$database = NotionDatabase::make('632b5fb7e06c4404ae12065c48280e4c')->find();
 ```
 
 #### Creating a Notion Database
@@ -49,38 +49,36 @@ $database = NotionDatabase::find('632b5fb7e06c4404ae12065c48280e4c');
 To create a Notion database, use the `NotionDatabase` class and set the required parameters such as parent page ID and properties schema.
 
 ```php
-$database = (new NotionDatabase)
+use Pi\Notion\Core\Models\NotionDatabase;
+
+$database = NotionDatabase::make()
     ->setParentPageId('fa4379661ed948d7af52df923177028e')
     ->setTitle('Test Database2')
-    ->setProperties([
-         NotionTitle::make('Name')->build(),
+    ->buildProperties([
+            NotionTitle::make('Name'),
             NotionSelect::make('Status')->setOptions([
                 ['name' => 'A', 'color' => 'red'],
                 ['name' => 'B', 'color' => 'green']
-            ])->build(),
-            NotionDate::make('Date')->build(),
-            NotionCheckbox::make('Checkbox')->build(),
-            NotionFormula::make('Formula')
-                ->setExpression('prop("Name")')
-                ->build(),
+            ]),
+            NotionDate::make('Date'),
+            NotionCheckbox::make('Checkbox'),
+            NotionFormula::make('Formula')->setExpression('prop("Name")'),
             NotionRelation::make('Relation')
-                ->setDatabaseId($this->databaseId)
-                ->build(),
+                ->setDatabaseId($this->databaseId),
             NotionRollup::make('Rollup')
                 ->setRollupPropertyName('Name')
                 ->setRelationPropertyName('Relation')
-                ->setFunction('count')
-                ->build(),
-            NotionPeople::make('People')->build(),
-            NotionFiles::make('Media')->build(),
-            NotionEmail::make('Email')->build(),
-            NotionNumber::make('Number')->build(),
-            NotionPhoneNumber::make('Phone')->build(),
-            NotionUrl::make('Url')->build(),
-            NotionCreatedTime::make('CreatedTime')->build(),
-            NotionCreatedBy::make('CreatedBy')->build(),
-            NotionLastEditedTime::make('LastEditedTime')->build(),
-            NotionLastEditedBy::make('LastEditedBy')->build(),
+                ->setFunction('count'),
+            NotionPeople::make('People'),
+            NotionMedia::make('Media'),
+            NotionEmail::make('Email'),
+            NotionNumber::make('Number'),
+            NotionPhoneNumber::make('Phone'),
+            NotionUrl::make('Url'),
+            NotionCreatedTime::make('CreatedTime'),
+            NotionCreatedBy::make('CreatedBy'),
+            NotionLastEditedTime::make('LastEditedTime'),
+            NotionLastEditedBy::make('LastEditedBy'),
     ])
     ->create();
 ```
@@ -90,9 +88,8 @@ $database = (new NotionDatabase)
 To update an existing Notion database, use the `NotionDatabase` class and specify the database ID and updated properties.
 
 ```php
-$database = (new NotionDatabase)
-    ->setDatabaseId('a5f8af6484334c09b69d5dd5f54b378f')
-    ->setProperties([
+$database = NotionDatabase::make('a5f8af6484334c09b69d5dd5f54b378f')
+    ->buildProperties([
         // Specify the updated properties
     ])
     ->update();
@@ -102,73 +99,58 @@ $database = (new NotionDatabase)
 
 To query a Notion database and get a list of pages contained within the database, you can apply filters and sorting criteria using the `query` method.
 
-##### Using One Filter
-
 ```php
-$database = new NotionDatabase('632b5fb7e06c4404ae12065c48280e4c');
+// Using one filter
+$paginated = NotionDatabase::make('632b5fb7e06c4404ae12065c48280e4c')
+        ->setFilter(NotionSelect::make('Status')->equals('In Progress'))
+        ->query();
 
-$pages = $database->filter(NotionFilter::title('Name')->contains('MMMM'))
-    ->query();
-```
-
-##### Using Multiple Filters with AND Operator
-
-```php
-$pages = $database->filters([
+// Using multiple filters with AND operator
+$pages = $database->setFilters([
     NotionFilter::groupWithAnd([
-        NotionFilter::select('Status')->equals('Reading'),
-        NotionFilter::title('Name')->contains('MMMM')
-    ])
+            NotionSelect::make('Status')->equals('Reading'),
+            NotionTitle::make('Name')->equals('MMMM')
+        ])
 ])->query();
-```
 
-##### Using Multiple Filters with OR Operator
-
-```php
-$pages = $database->filters([
+// Using multiple filters with OR operator
+$pages = $database->setFilters([
     NotionFilter::groupWithOr([
-        NotionFilter::select('Status')->equals('Reading'),
-        NotionFilter::title('Name')->contains('MMMM')
-    ])
+            NotionSelect::make('Status')->equals('Reading'),
+            NotionTitle::make('Name')->equals('MMMM')
+        ])
 ])->query();
-```
 
-##### Using Notion Compound Filters
-
-```php
-$response = $database->filters([
-    NotionFilter::select('Status')
-        ->equals('Reading')
-        ->compoundOrGroup([
-            NotionFilter::multiSelect('Publisher')->contains('A'),
-            NotionFilter::title('Name')->contains('MMMM')
-        ], 'and')
+// Using Notion Compound Filters
+$response = $database->setFilters([
+    NotionFilter::groupWithOr([
+            NotionSelect::make('Status')->equals('Reading'),
+            NotionFilter::groupWithAnd([
+                NotionTitle::make('Name')->contains('MMMM'),
+                NotionTitle::make('Name')->contains('EEEE')
+            ])
+        ]),
 ])->query();
-```
 
-##### Sorting Database Results
-
-```php
+// Sorting database results
 $pages = $database->sorts(NotionSort::property('Name')->ascending())
     ->query();
 
 // Sort with multiple properties
-$pages = $database->sorts([
-    NotionSort::property('Name')->ascending(),
-    NotionSort::property('Status')->descending()
-])->query();
+$pages = $database->setSorts([
+            NotionTitle::make('Name')->ascending(),
+            NotionDate::make('Date')->descending()
+        ])->query();
 
 // Apply sorts and filters together
-$pages = $database->sorts([
-    NotionSort::property('Name')->ascending(),
-    NotionSort::property('Status')->descending()
-])->filters([
-    NotionFilter::select('Status')
-        ->equals('Reading')
-        ->compoundOrGroup([
-            NotionFilter::multiSelect('Publisher')->contains('A'),
-            NotionFilter::title('Name')->contains('MMMM')
-        ], 'and')
+$pages = $database->setSorts([
+            NotionTitle::make('Name')->ascending(),
+            NotionDate::make('Date')->descending()
+        ])->setFilters([
+    NotionFilter::groupWithOr([
+            NotionSelect::make('Status')->equals('Reading'),
+            NotionTitle::make('Name')->equals('MMMM')
+        ])
 ])->query();
 ```
 
@@ -177,13 +159,13 @@ $pages = $database->sorts([
 #### Fetching a Page by ID (without the page contents)
 
 ```php
-$page = \Pi\Notion\Core\Models\NotionPage::find('b4f8e429038744ca9c8d5afa93ea2edd');
+$page = NotionPage::make('b4f8e429038744ca9c8d5afa93ea2edd')->find();
 ```
 
 #### Fetching a Page by ID (with the page contents)
 
 ```php
-$page = \Pi\Notion\Core\Models\NotionPage::findContent('b4f8e429038744ca9c8d5afa93ea2edd');
+$page = NotionPage::make('b4f8e429038744ca9c8d5afa93ea2edd')->findWithContent();
 ```
 
 #### Creating a New Notion Page / Notion Database Item
@@ -191,60 +173,112 @@ $page = \Pi\Notion\Core\Models\NotionPage::findContent('b4f8e429038744ca9c8d5afa
 To create a new Notion page or a new item in a Notion database, you can use the `NotionPage` class and set the required properties and their values.
 
 ```php
-$page = new NotionPage();
-$page->setDatabaseId($this->notionDatabaseId);
-$page->setProperties([
-     $page = new NotionPage();
-    $page->setDatabaseId($this->databaseId);
-
-    $page = $page
-        ->setProperties([
+$page = NotionPage::make()
+     ->setDatabaseId('a5f8af6484334c09b69d5dd5f54b378f')
+        ->buildProperties([
             NotionTitle::make('Name')
-                ->setTitle('Test')
-                ->build(),
+                ->setTitle('Test'),
             NotionSelect::make('Status')
-                ->setSelected('A')
-                ->build(),
+                ->setSelected('A'),
             NotionDate::make('Date')
-                ->setStart('2021-01-01')
-                ->build(),
+                ->setStart('2021-01-01'),
             NotionCheckbox::make('Checkbox')
-                ->setChecked(true)
-                ->build(),
+                ->setChecked(true),
             NotionRelation::make('Relation')
-                ->setPageIds(['633fc9822c794e3682186491c50210e6'])
-                ->build(),
-
+                ->setPageIds(['633fc9822c794e3682186491c50210e6']),
+            NotionText::make('Password')
+                ->setText('Text'),
             NotionPeople::make('People')
                 ->setPeople([
-                    new NotionUser('2c4d6a4a-12fe-4ce8-a7e4-e3019cc4765f')
-                ])
-                ->build(),
-            NotionFiles::make('Media')
+                    NotionUser::make('2c4d6a4a-12fe-4ce8-a7e4-e3019cc4765f'),
+                ]),
+            NotionMedia::make('Media')
                 ->setFiles([
-                    NotionFile::make('Google')
-                        ->setFileType('external')
-                        ->setFileUrl('https://www.google.com'),
-                    NotionFile::make('Notion')
+                    NotionFile::make()
                         ->setFileType('file')
-                        ->setFileUrl('https://s3.us-west-2.amazonaws.com/secure.notion-static.com/7b8b0713-dbd4-4962-b38b-955b6c49a573/My_test_image.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221024%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221024T205211Z&X-Amz-Expires=3600&X-Amz-Signature=208aa971577ff05e75e68354e8a9488697288ff3fb3879c2d599433a7625bf90&X-Amz-SignedHeaders=host&x-id=GetObject')
-                        ->setExpiryTime('2022-10-24T22:49:22.765Z'),
-                ])
-                ->build(),
+                        ->setRelativeType('external')
+                        ->setFileUrl('https://www.google.com'),
+                ]),
             NotionEmail::make('Email')
-                ->setEmail('eyadhamza0@gmail.com')
-                ->build(),
+                ->setEmail('eyadhamza0@gmail.com'),
             NotionNumber::make('Number')
-                ->setNumber(10)
-                ->build(),
+                ->setNumber(10),
             NotionPhoneNumber::make('Phone')
-                ->setPhoneNumber('+201010101010')
-                ->build(),
+                ->setPhoneNumber('+201010101010'),
             NotionUrl::make('Url')
-                ->setUrl('https://www.google.com')
-                ->build(),
+                ->setUrl('https://www.google.com'),
         ])
     ->create();
+```
+
+#### Creating a New Notion Page / Notion Database Item with Content
+```php
+ $page = NotionPage::make()
+        ->setDatabaseId($this->databaseId)
+        ->buildProperties([
+            NotionTitle::make('Name', 'Test'),
+            NotionSelect::make('Status')
+                ->setSelected('A'),
+        ])->setBlockBuilder(
+        NotionBlockBuilder::make()
+            ->headingOne(NotionRichText::text('Eyad Hamza')
+                ->isToggleable()
+                ->setChildrenBuilder(
+                    NotionBlockBuilder::make()
+                        ->headingOne(NotionRichText::text('Eyad Hamza')
+                            ->bold()
+                            ->italic()
+                            ->strikethrough()
+                            ->underline()
+                            ->code()
+                            ->color('red')
+                        )
+                )
+                ->bold()
+                ->italic()
+                ->strikethrough()
+                ->underline()
+                ->code()
+                ->color('red')
+            )
+            ->headingTwo('Heading 2')
+            ->headingThree('Heading 3')
+            ->numberedList([
+                'Numbered List',
+                'asdasd Numbered List'
+            ])
+            ->bulletedList(['Bullet List'])
+            ->paragraph('Paragraph')
+            ->toDo(['To Do List'])
+            ->toggle('Toggle')
+            ->quote('Quote')
+            ->divider()
+            ->callout('Callout')
+            ->image(NotionFile::make()
+                ->setFileType('image')
+                ->setFileUrl('https://my.alfred.edu/zoom/_images/foster-lake.jpg')
+                ->setRelativeType('external')
+            )
+            ->file(NotionFile::make()
+                ->setFileType('file')
+                ->setFileUrl('https://www.google.com')
+                ->setRelativeType('external')
+            )
+            ->embed('https://www.google.com')
+            ->bookmark('https://www.google.com')
+            ->code(NotionRichText::text('echo "Hello World"')->setCodeLanguage('php'))
+            ->equation('x^2 + y^2 = z^2')
+            ->pdf(NotionFile::make()
+                ->setFileType('pdf')
+                ->setFileUrl('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf')
+                ->setRelativeType('external')
+            )
+            ->video(NotionFile::make()
+                ->setFileType('video')
+                ->setFileUrl('https://www.youtube.com/watch?v=xTQ7vhtp23w')
+                ->setRelativeType('external')
+            )
+    )->create();
 ```
 
 #### Updating a Page Properties
@@ -252,8 +286,8 @@ $page->setProperties([
 To update the properties of an existing page, create a `NotionPage` object with the page ID, set the updated properties, and call the `update()` method.
 
 ```php
-$page = new NotionPage('b4f8e429038744ca9c8d5afa93ea2edd');
-$page->setProperties([
+$page = NotionPage::make('b4f8e429038744ca9c8d5afa93ea2edd')
+    ->buildProperties([
     // Specify the updated properties
 ])->update();
 ```
@@ -263,29 +297,28 @@ $page->setProperties([
 To delete a page, create a `NotionPage` object with the page ID and call the `delete()` method.
 
 ```php
-$page = new NotionPage('b4f8e429038744ca9c8d5afa93ea2edd');
-$page->delete();
+$page = NotionPage::make('b4f8
+
+e429038744ca9c8d5afa93ea2edd')->delete();
 ```
 
 ### Handling Notion Blocks
 
 #### Fetching a Block by ID
 
-To
-
-fetch a Notion block by ID, use the `find` method of the `NotionBlock` class.
+To fetch a Notion block by ID, use the `find` method of the `NotionBlock` class.
 
 ```php
-$block = NotionBlock::find('b4f8e429038744ca9c8d5afa93ea2edd');
+$block = NotionBlock::make('b4f8e429038744ca9c8d5afa93ea2edd')->find();
 ```
 
 #### Fetching Block Children
 
-To fetch the children blocks of a Notion block, use the `getChildren` method.
+To fetch the children blocks of a Notion block, use the `fetchChildren` method.
 
 ```php
-$block = NotionBlock::find('b4f8e429038744ca9c8d5afa93ea2edd');
-$children = $block->getChildren();
+$blockChildren = NotionBlock::make('b4f8e429038744ca9c8d5afa93ea2edd')
+        ->fetchChildren();
 ```
 
 #### Updating a Block
@@ -293,24 +326,28 @@ $children = $block->getChildren();
 To update a Notion block, create a new instance of the `NotionBlock` class, set the updated content, and call the `update()` method.
 
 ```php
-$block = NotionBlock::headingOne('This is a paragraph')
-    ->setId($this->notionBlockId)
-    ->update();
+$block = NotionBlock::make('62ec21df1f9241ba9954828e0958da69')
+        ->setType(NotionBlockTypeEnum::HEADING_1)
+        ->setBlockContent(NotionRichText::text('Eyad Hamza'))
+        ->update();
 ```
 
 #### Appending Block Children
 
-To append children blocks to a Notion block, use the `addChildren` method.
+To append children blocks to a Notion block, use the `createChildren` method.
 
 ```php
-$block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
-
-$block = $block->addChildren([
-    NotionBlock::headingTwo('Eyad Hamza'),
-    NotionBlock::headingThree('Heading 3'),
-    NotionBlock::numberedList('Numbered List'),
-    NotionBlock::bulletedList('Bullet List'),
-])->create();
+$block = NotionBlock::make('62ec21df1f9241ba9954828e0958da69')
+     ->setChildrenBuilder(
+        NotionBlockBuilder::make()
+            ->headingTwo(NotionRichText::text('Eyad Hamza')
+                ->bold()
+                ->setLink('https://www.google.com')
+                ->color('red'))
+            ->headingThree('Heading 3')
+            ->numberedList(['Numbered List'])
+            ->bulletedList(['Bullet List'])
+    )->createChildren();
 ```
 
 #### Deleting a Block
@@ -318,8 +355,7 @@ $block = $block->addChildren([
 To delete a Notion block, use the `delete` method.
 
 ```php
-$block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
-$block->delete();
+$block = NotionBlock::make('62ec21df1f9241ba9954828e0958da69')->delete();
 ```
 
 ### Searching
@@ -333,7 +369,7 @@ To search for a specific query in Notion pages, use the `inPages` method of the 
 ```php
 $response = NotionSearch::inPages('Eyad')
     ->sorts([
-        NotionSort::make('last_edited_time', 'descending')
+            NotionLastEditedTime::make()->ascending(),
     ])
     ->apply(50);
 ```
@@ -376,10 +412,10 @@ $bot = NotionUser::make()->getBot();
 
 #### Retrieving All Comments by Page ID / Discussion ID
 
-To retrieve all comments associated with a page or discussion, use the `findAll` method of the `NotionComment` class.
+To retrieve all comments associated with a page or discussion, use the `index` method of the `NotionComment` class.
 
 ```php
-$comments = NotionComment::make('0b036890391f417cbac775e8b0bba680')->findAll();
+$comments = NotionComment::make('0b036890391f417cbac775e8b0bba680')->index();
 ```
 
 #### Creating a New Comment
@@ -387,10 +423,21 @@ $comments = NotionComment::make('0b036890391f417cbac775e8b0bba680')->findAll();
 To create a new comment on a page or discussion, use the `NotionComment` class and set the parent ID and content.
 
 ```php
-$comment = new NotionComment();
-$comment->setParentId('a270ab4fa945449f9284b180234b00c3')
-    ->setContent('This is a comment')
-    ->create();
+// You can pass a rich text object if you want to format the comment
+NotionComment::make()
+        ->setDiscussionId('ac803deb7b064cca83067c67914b02b4')
+        ->setContent(NotionRichText::make('This is a comment')
+            ->color('red')
+            ->bold()
+            ->italic()
+        )
+        ->create();
+
+// Or you can pass a string
+NotionComment::make()
+        ->setParentId('a270ab4fa945449f9284b180234b00c3')
+        ->setContent('This is a comment')
+        ->create();
 ```
 
 ### Pagination
@@ -466,7 +513,9 @@ Please see the [CHANGELOG](CHANGELOG.md) for more information on what has change
 
 ## Contributing
 
-Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
+Please
+
+see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 
 ## Security Vulnerabilities
 

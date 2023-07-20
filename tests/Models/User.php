@@ -4,10 +4,10 @@ namespace Pi\Notion\Tests\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
-use Pi\Notion\Core\NotionProperty\NotionEmail;
-use Pi\Notion\Core\NotionProperty\NotionText;
-use Pi\Notion\Core\NotionProperty\NotionTitle;
+use Pi\Notion\Core\Properties\BaseNotionProperty;
+use Pi\Notion\Core\Properties\NotionEmail;
+use Pi\Notion\Core\Properties\NotionText;
+use Pi\Notion\Core\Properties\NotionTitle;
 use Pi\Notion\Traits\Notionable;
 
 class User extends Model

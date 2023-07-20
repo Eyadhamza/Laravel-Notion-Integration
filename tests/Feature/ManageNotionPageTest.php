@@ -1,23 +1,23 @@
 <?php
 
-use Pi\Notion\Core\BlockContent\NotionFile;
-use Pi\Notion\Core\BlockContent\NotionRichText;
+use Pi\Notion\Core\Content\NotionFile;
+use Pi\Notion\Core\Content\NotionRichText;
 use Pi\Notion\Core\Builders\NotionBlockBuilder;
 use Pi\Notion\Core\Models\NotionPage;
 use Pi\Notion\Core\Models\NotionUser;
-use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
-use Pi\Notion\Core\NotionProperty\NotionCheckbox;
-use Pi\Notion\Core\NotionProperty\NotionDate;
-use Pi\Notion\Core\NotionProperty\NotionEmail;
-use Pi\Notion\Core\NotionProperty\NotionMedia;
-use Pi\Notion\Core\NotionProperty\NotionNumber;
-use Pi\Notion\Core\NotionProperty\NotionPeople;
-use Pi\Notion\Core\NotionProperty\NotionPhoneNumber;
-use Pi\Notion\Core\NotionProperty\NotionRelation;
-use Pi\Notion\Core\NotionProperty\NotionSelect;
-use Pi\Notion\Core\NotionProperty\NotionText;
-use Pi\Notion\Core\NotionProperty\NotionTitle;
-use Pi\Notion\Core\NotionProperty\NotionUrl;
+use Pi\Notion\Core\Properties\BaseNotionProperty;
+use Pi\Notion\Core\Properties\NotionCheckbox;
+use Pi\Notion\Core\Properties\NotionDate;
+use Pi\Notion\Core\Properties\NotionEmail;
+use Pi\Notion\Core\Properties\NotionMedia;
+use Pi\Notion\Core\Properties\NotionNumber;
+use Pi\Notion\Core\Properties\NotionPeople;
+use Pi\Notion\Core\Properties\NotionPhoneNumber;
+use Pi\Notion\Core\Properties\NotionRelation;
+use Pi\Notion\Core\Properties\NotionSelect;
+use Pi\Notion\Core\Properties\NotionText;
+use Pi\Notion\Core\Properties\NotionTitle;
+use Pi\Notion\Core\Properties\NotionUrl;
 use Pi\Notion\Core\Query\NotionPaginator;
 use function Pest\Laravel\withoutExceptionHandling;
 

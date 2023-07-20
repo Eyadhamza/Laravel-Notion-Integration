@@ -3,7 +3,7 @@
 namespace Pi\Notion\Core\RequestBuilders;
 
 use Illuminate\Http\Resources\MissingValue;
-use Pi\Notion\Core\BlockContent\NotionRichText;
+use Pi\Notion\Core\Content\NotionRichText;
 
 class CreateNotionCommentRequestBuilder extends BaseNotionRequestBuilder
 {

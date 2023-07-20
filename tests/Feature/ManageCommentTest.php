@@ -1,6 +1,6 @@
 <?php
 
-use Pi\Notion\Core\BlockContent\NotionRichText;
+use Pi\Notion\Core\Content\NotionRichText;
 use Pi\Notion\Core\Models\NotionComment;
 
 test('it returns all comments', function () {

@@ -4,10 +4,10 @@ namespace Pi\Notion\Core\Builders;
 
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\BlockContent\NotionEmptyValue;
-use Pi\Notion\Core\BlockContent\NotionFile;
-use Pi\Notion\Core\BlockContent\NotionRichText;
-use Pi\Notion\Core\BlockContent\NotionSimpleValue;
+use Pi\Notion\Core\Content\NotionEmptyValue;
+use Pi\Notion\Core\Content\NotionFile;
+use Pi\Notion\Core\Content\NotionRichText;
+use Pi\Notion\Core\Content\NotionSimpleValue;
 use Pi\Notion\Enums\NotionBlockTypeEnum;
 
 class NotionBlockBuilder

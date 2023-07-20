@@ -1,6 +1,6 @@
 <?php
 
-use Pi\Notion\Core\BlockContent\NotionRichText;
+use Pi\Notion\Core\Content\NotionRichText;
 use Pi\Notion\Core\Builders\NotionBlockBuilder;
 use Pi\Notion\Core\Models\NotionBlock;
 use Pi\Notion\Enums\NotionBlockTypeEnum;
@@ -10,7 +10,7 @@ beforeEach(function (){
 });
 
 it('appends block children', function () {
-    $block = NotionBlock::make($this->blockId)->find();
+    $block = NotionBlock::make($this->blockId);
 
     $paginatedObject = $block->setChildrenBuilder(
         NotionBlockBuilder::make()

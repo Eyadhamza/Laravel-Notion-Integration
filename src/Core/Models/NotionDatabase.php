@@ -6,11 +6,11 @@ namespace Pi\Notion\Core\Models;
 
 use Illuminate\Support\Collection;
 use Pi\Notion\Core\NotionClient;
-use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
-use Pi\Notion\Core\NotionProperty\NotionDatabaseDescription;
-use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
-use Pi\Notion\Core\NotionProperty\NotionSelect;
-use Pi\Notion\Core\NotionProperty\NotionTitle;
+use Pi\Notion\Core\Properties\BaseNotionProperty;
+use Pi\Notion\Core\Properties\NotionDatabaseDescription;
+use Pi\Notion\Core\Properties\NotionDatabaseTitle;
+use Pi\Notion\Core\Properties\NotionSelect;
+use Pi\Notion\Core\Properties\NotionTitle;
 use Pi\Notion\Core\Query\NotionFilter;
 use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\Core\RequestBuilders\NotionDatabaseRequestBuilder;

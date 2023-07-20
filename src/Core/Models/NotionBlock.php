@@ -6,7 +6,7 @@ namespace Pi\Notion\Core\Models;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\BlockContent\NotionContent;
+use Pi\Notion\Core\Content\NotionContent;
 use Pi\Notion\Core\NotionClient;
 use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\Enums\NotionBlockTypeEnum;

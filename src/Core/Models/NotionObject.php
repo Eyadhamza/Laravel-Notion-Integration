@@ -3,7 +3,7 @@
 namespace Pi\Notion\Core\Models;
 
 
-use Pi\Notion\Core\NotionProperty\NotionPropertyFactory;
+use Pi\Notion\Core\Properties\NotionPropertyFactory;
 use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
