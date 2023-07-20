@@ -297,9 +297,7 @@ $page = NotionPage::make('b4f8e429038744ca9c8d5afa93ea2edd')
 To delete a page, create a `NotionPage` object with the page ID and call the `delete()` method.
 
 ```php
-$page = NotionPage::make('b4f8
-
-e429038744ca9c8d5afa93ea2edd')->delete();
+$page = NotionPage::make('b4f8e429038744ca9c8d5afa93ea2edd')->delete();
 ```
 
 ### Handling Notion Blocks
