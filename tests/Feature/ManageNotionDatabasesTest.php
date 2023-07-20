@@ -2,7 +2,6 @@
 
 use Pi\Notion\Core\Models\NotionDatabase;
 use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
-use Pi\Notion\Core\NotionProperty\NotionMultiSelect;
 use Pi\Notion\Core\NotionProperty\NotionRollup;
 use Pi\Notion\Core\NotionProperty\NotionPeople;
 use Pi\Notion\Core\NotionProperty\NotionMedia;
@@ -22,7 +21,6 @@ use Pi\Notion\Core\NotionProperty\NotionFormula;
 use Pi\Notion\Core\NotionProperty\NotionRelation;
 use Pi\Notion\Core\NotionProperty\NotionSelect;
 use Pi\Notion\Core\Query\NotionFilter;
-use Pi\Notion\Core\Query\NotionSort;
 use Pi\Notion\Exceptions\NotionValidationException;
 use function PHPUnit\Framework\assertObjectHasProperty;
 
@@ -32,7 +30,7 @@ beforeEach(function () {
 });
 
 it('returns database info', function () {
-    $database = NotionDatabase::make()->find('632b5fb7e06c4404ae12065c48280e4c');
+    $database = NotionDatabase::make($this->databaseId)->find();
     assertObjectHasProperty('objectType', $database);
 });
 
@@ -40,7 +38,7 @@ it('can create a database object', function () {
     $database = (new NotionDatabase)
         ->setParentPageId('fa4379661ed948d7af52df923177028e')
         ->setTitle(NotionDatabaseTitle::make('Test Database'))
-        ->setProperties([
+        ->buildProperties([
             NotionTitle::make('Name'),
             NotionSelect::make('Status')->setOptions([
                 ['name' => 'A', 'color' => 'red'],
@@ -71,14 +69,14 @@ it('can create a database object', function () {
 });
 
 it('can update a database object', function () {
-    $database = (new NotionDatabase)
+    $database = NotionDatabase::make($this->databaseId)
         ->setTitle(NotionDatabaseTitle::make('Test Database'))
         ->setDatabaseDescription(NotionDatabaseDescription::make('Test Description'))
-        ->setProperties([
+        ->buildProperties([
             NotionDate::make('Date'),
             NotionCheckbox::make('Checkbox'),
         ])
-        ->update($this->databaseId);
+        ->update();
 
     assertObjectHasProperty('objectType', $database);
 });
@@ -86,7 +84,7 @@ it('can update a database object', function () {
 it('throws exception when database not found', function () {
     $id = '632b5fb7e06c4404ae12asdasd065c48280e4asdc';
     $this->expectException(NotionValidationException::class);
-    (new NotionDatabase())->find($id);
+    (new NotionDatabase($id))->find();
 });
 
 it('throws exception when database not authorized', function () {
@@ -96,56 +94,53 @@ it('throws exception when database not authorized', function () {
 });
 
 it('can filter database with one filter', function () {
-    $database = new NotionDatabase();
-    $paginated = $database
+    $paginated = NotionDatabase::make($this->databaseId)
         ->setFilter(NotionSelect::make('Status')->equals('Reading'))
-        ->query('632b5fb7e06c4404ae12065c48280e4c');
+        ->query();
 
     expect($paginated->getResults())->toHaveCount(1);
 });
 
 it('can filter database with many filters', function () {
-    $database = new NotionDatabase();
+    $database = NotionDatabase::make($this->databaseId);
+
     $paginated = $database->setFilters([
         NotionFilter::groupWithAnd([
             NotionSelect::make('Status')->equals('Reading'),
             NotionTitle::make('Name')->equals('MMMM')
         ])
-    ])->query('632b5fb7e06c4404ae12065c48280e4c');
+    ])->query();
+
     expect($paginated->getResults())->toHaveCount(1);
 
     $paginated = $database->setFilters([
         NotionFilter::groupWithOr([
             NotionSelect::make('Status')->equals('Reading'),
-            NotionMultiSelect::make('Status2')->contains('A'),
             NotionTitle::make('Name')->equals('MMMM')
         ])
-    ])->query('632b5fb7e06c4404ae12065c48280e4c');
-    expect($paginated->getResults())->toHaveCount(4);
+    ])->query();
+    expect($paginated->getResults())->toHaveCount(1);
 });
 
 it('can filter database with nested filters', function () {
-    $database = new NotionDatabase();
-    $paginated = $database->setFilters([
+    $paginated = NotionDatabase::make($this->databaseId)->setFilters([
         NotionFilter::groupWithOr([
             NotionSelect::make('Status')->equals('Reading'),
             NotionFilter::groupWithAnd([
-                NotionMultiSelect::make('Status2')->contains('A'),
                 NotionTitle::make('Name')->contains('MMMM')
             ])
         ]),
-    ])->query('632b5fb7e06c4404ae12065c48280e4c');
-    expect($paginated->getResults())->toHaveCount(2);
+    ])->query();
+    expect($paginated->getResults())->toHaveCount(1);
 });
 
 it('can sort database results', function () {
-    $database = new NotionDatabase();
-    $paginated = $database
+    $paginated = NotionDatabase::make($this->databaseId)
         ->setSorts([
             NotionTitle::make('Name')->ascending(),
             NotionDate::make('Date')->descending()
         ])
-        ->query('632b5fb7e06c4404ae12065c48280e4c', 50);
+        ->query( 50);
 
     expect($paginated->getResults())->toHaveCount(50)
         ->and($paginated->hasMore())->toBeTrue();

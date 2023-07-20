@@ -15,7 +15,7 @@ class NotionPaginator
 {
     public string $paginatedClass;
     private ?string $startCursor;
-    private ?int $pageSize = 100;
+    private ?int $pageSize;
     private bool $hasMore;
     private ?string $nextCursor = null;
     private Collection $results;

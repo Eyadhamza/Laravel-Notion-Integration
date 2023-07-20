@@ -18,13 +18,12 @@ trait Notionable
         $this->notionMap = $this->mapToNotion();
 
         $this->validateHasNotionDatabaseId();
-
         $this->notionMap = $this->buildNotionProperties();
 
-        if ($pageId){
-            return NotionPage::make()
+        if ($pageId) {
+            return NotionPage::make($pageId)
                 ->setProperties($this->notionMap)
-                ->update($pageId);
+                ->update();
         }
 
         return NotionPage::make()
@@ -56,12 +55,17 @@ trait Notionable
                 /** @var BaseNotionProperty $property */
                 $property = $this->notionMap[$key];
 
-                if ($property->hasValue() && ! isset($property->resource)){
-                    return $property->buildContent();
+                if (!$property->hasValue()) {
+                    $property->setValue($value);
                 }
 
-                return $property->setValue($value)->buildContent();
+                if ($property->shouldBeBuilt()) {
+                    $property->buildContent();
+                }
+
+                return $property;
             }
         })->filter()->toArray();
     }
+
 }

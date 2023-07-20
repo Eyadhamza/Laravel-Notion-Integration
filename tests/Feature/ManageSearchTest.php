@@ -2,7 +2,6 @@
 
 use Pi\Notion\Core\NotionProperty\NotionLastEditedTime;
 use Pi\Notion\Core\Query\NotionSearch;
-use Pi\Notion\Core\Query\NotionSort;
 
 it('returns the search result of pages', function () {
     $response = NotionSearch::inPages('Eyad')->apply(50);

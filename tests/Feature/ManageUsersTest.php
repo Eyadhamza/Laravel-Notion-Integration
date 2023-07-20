@@ -9,7 +9,7 @@ it('returns all users', function () {
 });
 
 it('returns a user', function () {
-    $user = NotionUser::make()->find('2c4d6a4a-12fe-4ce8-a7e4-e3019cc4765f');
+    $user = NotionUser::make('2c4d6a4a-12fe-4ce8-a7e4-e3019cc4765f')->find();
 
     expect($user)->toHaveProperty('id');
 });

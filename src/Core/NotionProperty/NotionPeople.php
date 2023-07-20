@@ -22,8 +22,8 @@ class NotionPeople extends BaseNotionProperty
     {
         $this->value = collect($people)
             ->map(fn (NotionUser $user) => [
-                'object' => $user->objectType ?? 'user',
-                'id' => $user->id
+                'object' => 'user',
+                'id' => $user->getId()
             ])
             ->all();
 
@@ -39,9 +39,5 @@ class NotionPeople extends BaseNotionProperty
         return $this;
     }
 
-    public function mapToResource(): array
-    {
-        return $this->value ?? [];
-    }
 }
 

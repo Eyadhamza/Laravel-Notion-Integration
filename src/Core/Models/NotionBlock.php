@@ -10,30 +10,22 @@ use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\NotionClient;
 use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\Enums\NotionBlockTypeEnum;
+use Pi\Notion\Traits\HasChildren;
 use Pi\Notion\Traits\HasResource;
 
 class NotionBlock extends NotionObject
 {
-    use HasResource;
-
-
+    use HasChildren;
     const BLOCK_URL = NotionClient::BASE_URL . '/blocks/';
     private ?NotionBlockTypeEnum $type;
-    private ?NotionContent $blockContent;
+    private ?NotionContent $value;
     private string $color;
     private Collection $children;
-    public JsonResource $resource;
 
-    public function __construct(NotionBlockTypeEnum $type = null, NotionContent $blockContent = null)
+    public function __construct(string $id = null)
     {
-        $this->type = $type;
-        $this->blockContent = $blockContent;
+        parent::__construct($id);
         $this->children = new Collection();
-    }
-
-    public static function make(NotionBlockTypeEnum $type = null, NotionContent $blockContent = null): static
-    {
-        return new self($type, $blockContent);
     }
 
     public function fromResponse(array $response): self
@@ -44,14 +36,14 @@ class NotionBlock extends NotionObject
         return $this;
     }
 
-    public function find(string $id): self
+    public function find(): self
     {
-        $response = NotionClient::make()->get(self::BLOCK_URL . $id);
+        $response = NotionClient::make()->get(self::BLOCK_URL . $this->id);
 
         return $this->fromResponse($response->json());
     }
 
-    public function getChildren(int $pageSize = 100): NotionPaginator
+    public function fetchChildren(int $pageSize = 100): NotionPaginator
     {
         return NotionPaginator::make(NotionBlock::class)
             ->setUrl(self::BLOCK_URL . $this->id . '/children')
@@ -65,32 +57,23 @@ class NotionBlock extends NotionObject
         return NotionPaginator::make(NotionBlock::class)
             ->setUrl(self::BLOCK_URL . $this->id . '/children')
             ->setMethod('patch')
-            ->setBody(['children' => $this->children->map(fn(NotionBlock $block) => $block->resource())->all()])
+            ->setBody(['children' => $this->getChildren()])
             ->paginate();
     }
 
 
-    public function update(string $id): self
+    public function update(): self
     {
-        $response = NotionClient::make()->patch(self::BLOCK_URL . $id, $this->resource());
+        $response = NotionClient::make()->patch(self::BLOCK_URL . $this->id, $this->value->resource());
 
         return $this->fromResponse($response->json());
     }
 
-    public function delete(string $id): static
+    public function delete(): static
     {
-        $response = NotionClient::make()->delete(self::BLOCK_URL . $id);
+        $response = NotionClient::make()->delete(self::BLOCK_URL . $this->id);
 
         return $this->fromResponse($response->json());
-    }
-
-
-    public function addChildren(array $blocks): self
-    {
-        collect($blocks)->each(function (NotionBlock $block) {
-            $this->children->add($block);
-        });
-        return $this;
     }
 
     public function getId(): string
@@ -104,13 +87,18 @@ class NotionBlock extends NotionObject
         return $this;
     }
 
-    public function toArray(): array
+
+    public function setType(?NotionBlockTypeEnum $type): NotionBlock
     {
-        return [
-            'object' => 'block',
-            'type' => $this->type->value,
-            $this->type->value => $this->blockContent->toArray(),
-        ];
+        $this->type = $type;
+        return $this;
+    }
+
+    public function setBlockContent(?NotionContent $blockContent): NotionBlock
+    {
+        $this->value = $blockContent->setBlockType($this->type);
+
+        return $this;
     }
 
 }

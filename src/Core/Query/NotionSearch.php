@@ -47,7 +47,7 @@ class NotionSearch
                     'value' => $this->getFilterObject($this->filteredClass),
                     'property' => 'object'
                 ],
-                'sort' => $this->getSortUsingTimestamp()
+                'sort' => $this->sortUsingTimestamp(),
             ])
             ->setPageSize($pageSize)
             ->paginate();

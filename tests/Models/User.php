@@ -14,8 +14,9 @@ class User extends Model
 {
     use HasFactory;
     use Notionable;
-    protected string $notionDatabaseId = 'ae4c13cd00394938b2f7914cb00350f8';
     protected $guarded = [];
+
+    private string $notionDatabaseId = 'ae4c13cd00394938b2f7914cb00350f8';
 
     public function mapToNotion(): array
     {

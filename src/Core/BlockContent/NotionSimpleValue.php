@@ -44,7 +44,7 @@ class NotionSimpleValue extends NotionContent
         }
 
         return [
-            $this->blockType->value => $this->value['value'] ?? new \stdClass(),
+            $this->blockType->value => $this->value ?? new \stdClass(),
         ];
     }
 }

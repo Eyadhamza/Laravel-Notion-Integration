@@ -30,6 +30,7 @@ trait HasChildren
 
         return $this
             ->children
+            ->flatten()
             ->map(fn(NotionContent $child) => $child->resource())
             ->all();
     }

@@ -4,7 +4,7 @@ use Pi\Notion\Core\BlockContent\NotionRichText;
 use Pi\Notion\Core\Models\NotionComment;
 
 test('it returns all comments', function () {
-    $comments = NotionComment::make()->index('0b036890391f417cbac775e8b0bba680');
+    $comments = NotionComment::make('0b036890391f417cbac775e8b0bba680')->index();
 
     expect($comments->getResults())->toHaveCount(3);
 });

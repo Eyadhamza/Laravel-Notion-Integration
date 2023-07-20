@@ -24,13 +24,8 @@ trait Sortable
 
         return $this;
     }
-    private function getSortUsingTimestamp(): array
+    private function sortUsingTimestamp(): array
     {
-        if (isset($this->sorts)) {
-            return $this->sorts->map(function (NotionSort $sort) {
-                return $sort->getUsingTimestamp();
-            })->toArray()[0];
-        }
         return [
             'timestamp' => 'last_edited_time',
             'direction' => 'descending',

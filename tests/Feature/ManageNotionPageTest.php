@@ -15,6 +15,7 @@ use Pi\Notion\Core\NotionProperty\NotionPeople;
 use Pi\Notion\Core\NotionProperty\NotionPhoneNumber;
 use Pi\Notion\Core\NotionProperty\NotionRelation;
 use Pi\Notion\Core\NotionProperty\NotionSelect;
+use Pi\Notion\Core\NotionProperty\NotionText;
 use Pi\Notion\Core\NotionProperty\NotionTitle;
 use Pi\Notion\Core\NotionProperty\NotionUrl;
 use Pi\Notion\Core\Query\NotionPaginator;
@@ -47,7 +48,8 @@ it('can create a page object', function () {
 });
 
 it('can delete a page object', function () {
-    $page = NotionPage::make()->delete('ec9df16fa65f4eef96776ee41ee3d4d4');
+    $page = NotionPage::make('ec9df16fa65f4eef96776ee41ee3d4d4')
+        ->delete();
 
     expect($page)->toHaveProperty('objectType');
 });
@@ -57,7 +59,7 @@ it('should add properties to the created page using the page class', function ()
     $page->setDatabaseId($this->databaseId);
 
     $page = $page
-        ->setProperties([
+        ->buildProperties([
             NotionTitle::make('Name')
                 ->setTitle('Test'),
             NotionSelect::make('Status')
@@ -68,10 +70,11 @@ it('should add properties to the created page using the page class', function ()
                 ->setChecked(true),
             NotionRelation::make('Relation')
                 ->setPageIds(['633fc9822c794e3682186491c50210e6']),
-
+            NotionText::make('Password')
+                ->setText('Text'),
             NotionPeople::make('People')
                 ->setPeople([
-                    NotionUser::make()->setId('2c4d6a4a-12fe-4ce8-a7e4-e3019cc4765f'),
+                    NotionUser::make('2c4d6a4a-12fe-4ce8-a7e4-e3019cc4765f'),
                 ]),
             NotionMedia::make('Media')
                 ->setFiles([
@@ -95,10 +98,11 @@ it('should add properties to the created page using the page class', function ()
 });
 
 it('can update properties of the created page using the page class', function () {
-    $page = NotionPage::make()->setProperties([
-        NotionTitle::make('Name')
-            ->setTitle('Test'),
-    ])->update($this->pageId);
+    $page = NotionPage::make($this->pageId)
+        ->buildProperties([
+            NotionTitle::make('Name')
+                ->setTitle('Test'),
+        ])->update();
 
     expect($page)->toHaveProperty('properties');
 });
@@ -109,7 +113,7 @@ it('can add content blocks to the created pages', function () {
     $page->setDatabaseId($this->databaseId);
 
     $page
-        ->setProperties([
+        ->buildProperties([
             NotionTitle::make('Name', 'Test'),
             NotionSelect::make('Status')
                 ->setSelected('A'),
@@ -182,7 +186,7 @@ it('can add content blocks to the created pages', function () {
 });
 
 it('returns a property by ID', function () {
-    $page = NotionPage::make()->find('e20014185b654e08a6285872b0b622f9');
+    $page = NotionPage::make('e20014185b654e08a6285872b0b622f9')->find();
 
     $property = $page->getProperty('Text');
     expect($property)->toBeInstanceOf(NotionPaginator::class);

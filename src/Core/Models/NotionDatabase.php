@@ -6,6 +6,7 @@ namespace Pi\Notion\Core\Models;
 
 use Illuminate\Support\Collection;
 use Pi\Notion\Core\NotionClient;
+use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
 use Pi\Notion\Core\NotionProperty\NotionDatabaseDescription;
 use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
 use Pi\Notion\Core\NotionProperty\NotionSelect;
@@ -25,18 +26,19 @@ class NotionDatabase extends NotionObject
     private string $link;
     protected NotionTitle|NotionDatabaseTitle $title;
     protected ?NotionDatabaseDescription $description;
-
     protected Collection $properties;
     protected Collection $pages;
     protected Collection $filters;
 
-    public function __construct()
+    public function __construct(string $id = null)
     {
+        parent::__construct($id);
         $this->properties = new Collection();
         $this->pages = new Collection();
         $this->filters = new Collection();
         $this->sorts = new Collection();
     }
+
 
     public function fromResponse($response): self
     {
@@ -49,14 +51,14 @@ class NotionDatabase extends NotionObject
         $this->icon = $response['icon'] ?? null;
         $this->cover = $response['cover'] ?? null;
         $this->properties = new Collection();
-        $this->buildProperties($response);
+        $this->buildPropertiesFromResponse($response);
 
         return $this;
     }
 
-    public function find(string $id): self
+    public function find(): self
     {
-        $response = NotionClient::make()->get(self::DATABASE_URL, $id);
+        $response = NotionClient::make()->get(self::DATABASE_URL, $this->id);
 
         return $this->fromResponse($response->json());
     }
@@ -71,7 +73,7 @@ class NotionDatabase extends NotionObject
         return $this->fromResponse($response->json());
     }
 
-    public function update(string $id): self
+    public function update(): self
     {
         $requestBuilder = NotionUpdateDatabaseRequestBuilder::make(
             $this->title,
@@ -80,26 +82,26 @@ class NotionDatabase extends NotionObject
         );
 
         $response = NotionClient::make()
-            ->patch(self::DATABASE_URL . $id, $requestBuilder->build());
+            ->patch(self::DATABASE_URL . $this->id, $requestBuilder->build());
 
         return $this->fromResponse($response->json());
 
     }
 
-    public function query(string $id, int $pageSize = 100, string $startCursor = null): NotionPaginator
+    public function query(int $pageSize = 100, string $startCursor = null): NotionPaginator
     {
         $requestBody = [];
 
-        if ( $this->filters->isNotEmpty()){
+        if ($this->filters->isNotEmpty()) {
             $requestBody['filter'] = $this->filters->first();
         }
 
-        if ($this->sorts->isNotEmpty()){
+        if ($this->sorts->isNotEmpty()) {
             $requestBody['sorts'] = $this->sorts->all();
         }
 //        dd($requestBody);
         return NotionPaginator::make(NotionPage::class)
-            ->setUrl(self::DATABASE_URL . $id . '/query')
+            ->setUrl(self::DATABASE_URL . $this->id . '/query')
             ->setMethod('post')
             ->setBody($requestBody)
             ->setPageSize($pageSize)
@@ -142,12 +144,12 @@ class NotionDatabase extends NotionObject
 
     public function setFilters(array $filters): self
     {
-        $this->filters = new Collection($filters);
+        $this->filters = collect($filters);
 
         return $this;
     }
 
-    public function setFilter(NotionSelect $property): self
+    public function setFilter(BaseNotionProperty $property): self
     {
         $this->filters->add(NotionFilter::make($property)->resource());
 

@@ -35,12 +35,12 @@ class NotionComment extends NotionObject
         return $this->fromResponse($response->json());
     }
 
-    public function index(string $blockId, int $pageSize = 50): NotionPaginator
+    public function index(int $pageSize = 50): NotionPaginator
     {
         return NotionPaginator::make(NotionComment::class)
             ->setUrl(self::COMMENTS_URL)
             ->setMethod('get')
-            ->setBody(['block_id' => $blockId])
+            ->setBody(['block_id' => $this->id])
             ->setPageSize($pageSize)
             ->paginate();
     }

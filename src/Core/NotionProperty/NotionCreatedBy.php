@@ -19,13 +19,6 @@ class NotionCreatedBy extends BaseNotionProperty
         return $this;
     }
 
-    public function mapToResource(): array
-    {
-        return [
-            'value' => $this->value
-        ];
-    }
-
     public function setCreatedBy(?NotionUser $createdBy): NotionCreatedBy
     {
         $this->value = $createdBy;

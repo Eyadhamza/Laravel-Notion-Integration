@@ -47,9 +47,9 @@ class NotionUser extends NotionObject
 
     }
 
-    public function find(string $id): self
+    public function find(): self
     {
-        $response = NotionClient::make()->get(self::USERS_URL . $id);
+        $response = NotionClient::make()->get(self::USERS_URL . $this->id);
 
         return $this->fromResponse($response->json());
     }
@@ -75,9 +75,9 @@ class NotionUser extends NotionObject
         return $this->avatarUrl;
     }
 
-    public function getObject(): string
+    public function getObjectType(): string
     {
-        return $this->object;
+        return $this->objectType;
     }
 
     public function getType(): string

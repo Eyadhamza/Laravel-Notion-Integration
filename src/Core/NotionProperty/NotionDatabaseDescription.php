@@ -18,10 +18,4 @@ class NotionDatabaseDescription extends BaseNotionProperty
         return $this;
     }
 
-    public function mapToResource(): array
-    {
-        return [
-            'content' => $this->value,
-        ];
-    }
 }

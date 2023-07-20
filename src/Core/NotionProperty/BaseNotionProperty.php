@@ -10,9 +10,10 @@ use Pi\Notion\Core\BlockContent\NotionContent;
 use Pi\Notion\Core\BlockContent\NotionEmptyValue;
 use Pi\Notion\Enums\NotionPropertyTypeEnum;
 
-abstract class BaseNotionProperty extends NotionObject
+abstract class BaseNotionProperty
 {
     protected mixed $value;
+    protected mixed $id;
     protected NotionContent|NotionEmptyValue $blockContent;
     protected NotionPropertyTypeEnum $type;
     protected ?string $name;
@@ -50,7 +51,10 @@ abstract class BaseNotionProperty extends NotionObject
 
     public abstract function setType(): BaseNotionProperty;
 
-    public abstract function mapToResource(): array;
+    public function mapToResource(): mixed
+    {
+        return $this->value;
+    }
 
     public function resource(): array
     {
@@ -112,7 +116,7 @@ abstract class BaseNotionProperty extends NotionObject
 
     public function hasValue(): bool
     {
-        return !empty($this->value);
+        return ! is_null($this->value);
     }
 
     public function applyFilter(string $filterName, string $query): self
@@ -148,5 +152,10 @@ abstract class BaseNotionProperty extends NotionObject
     {
         $this->sortDirection = 'ascending';
         return $this;
+    }
+
+    public function shouldBeBuilt(): bool
+    {
+        return ! isset($property->resource);
     }
 }

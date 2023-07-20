@@ -24,11 +24,4 @@ class NotionCheckbox extends BaseNotionProperty
         return $this;
     }
 
-
-    public function mapToResource(): array
-    {
-        return [
-            'value' => $this->value
-        ];
-    }
 }

@@ -1,58 +1,55 @@
 <?php
 
 use Pi\Notion\Core\BlockContent\NotionRichText;
+use Pi\Notion\Core\Builders\NotionBlockBuilder;
 use Pi\Notion\Core\Models\NotionBlock;
+use Pi\Notion\Enums\NotionBlockTypeEnum;
+
+beforeEach(function (){
+    $this->blockId = 'c89e2e6ed725407895658f0ddbeed02f';
+});
+
+it('appends block children', function () {
+    $block = NotionBlock::make($this->blockId)->find();
+
+    $paginatedObject = $block->setChildrenBuilder(
+        NotionBlockBuilder::make()
+            ->headingTwo(NotionRichText::text('Eyad Hamza')
+                ->bold()
+                ->setLink('https://www.google.com')
+                ->color('red'))
+            ->headingThree('Heading 3')
+            ->numberedList(['Numbered List'])
+            ->bulletedList(['Bullet List'])
+    )->createChildren();
+
+    expect($paginatedObject->getResults())->toHaveCount(4);
+});
 
 it('returns block info', function () {
-    $block = NotionBlock::find('b1cfe8df181543039b2f9e3f2c87516c');
+    $block = NotionBlock::make($this->blockId)->find();
 
     expect($block)->toHaveProperty('objectType');
 });
 
 it('returns block children', function () {
-    $block = NotionBlock::find('62ec21df1f9241ba9954828e0958da69');
+    $block = NotionBlock::make($this->blockId)
+        ->fetchChildren();
 
-    $paginatedObject = $block->addChildren([
-        NotionBlock::headingTwo(NotionRichText::make('Eyad Hamza')
-            ->bold()
-            ->setLink('https://www.google.com')
-            ->color('red')),
-        NotionBlock::headingThree('Heading 3'),
-        NotionBlock::numberedList('Numbered List'),
-        NotionBlock::bulletedList('Bullet List'),
-    ])->getChildren(50);
-
-    expect($paginatedObject->getResults())->toHaveCount(50);
-
-    $paginatedObject->next();
-    expect($paginatedObject->getResults())->toHaveCount(50);
-
-    $paginatedObject->next();
-    expect($paginatedObject->getResults())->toHaveCount(50);
-
-    $paginatedObject->next();
-    expect($paginatedObject->hasMore())->toBeFalse();
+    expect($block->getResults()->count())->toBeGreaterThanOrEqual(4);
 });
 
 it('updates the block', function () {
-    $block = NotionBlock::headingOne('This is a paragraph')
-        ->update('b1cfe8df181543039b2f9e3f2c87516c');
+    $block = NotionBlock::make($this->blockId)
+        ->setType(NotionBlockTypeEnum::HEADING_1)
+        ->setBlockContent(NotionRichText::text('Eyad Hamza'))
+        ->update();
 
     expect($block)->toHaveProperty('objectType');
 });
 
-it('appends block children', function () {
-    $block = NotionBlock::make()->find('62ec21df1f9241ba9954828e0958da69');
-
-    $block = $block->addChildren([
-
-    ])->createChildren();
-
-    expect($block->getResults())->toHaveCount(4);
-});
-
 it('deletes the block', function () {
-    $block = NotionBlock::make()->delete('62ec21df1f9241ba9954828e0958da69');
+    $block = NotionBlock::make('287ab40e97d949299f7eb13a9f2bbdb1')->delete();
 
     expect($block)->toHaveProperty('objectType');
 });

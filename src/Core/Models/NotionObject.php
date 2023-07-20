@@ -16,9 +16,15 @@ class NotionObject
     protected ?string $icon;
     protected ?string $cover;
     protected NotionPaginator $paginator;
-    public static function make(): static
+
+    public function __construct(string $id = null)
     {
-        return new static();
+        $this->id = $id;
+    }
+
+    public static function make(string $id = null): static
+    {
+        return new static($id);
     }
 
     public function fromResponse(array $response): self
@@ -30,7 +36,7 @@ class NotionObject
         return $this;
     }
 
-    protected function buildProperties($response): static
+    protected function buildPropertiesFromResponse($response): static
     {
         foreach ($response['properties'] as $propertyName => $propertyData) {
             $propertyData['name'] = $propertyName;
