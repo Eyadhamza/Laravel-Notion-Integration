@@ -2,7 +2,7 @@
 
 namespace Pi\Notion\Core\Models;
 
-use Pi\Notion\Core\BlockContent\NotionRichText;
+use Pi\Notion\Core\Content\NotionRichText;
 use Pi\Notion\Core\NotionClient;
 use Pi\Notion\Core\Query\NotionPaginator;
 use Pi\Notion\Core\RequestBuilders\CreateNotionCommentRequestBuilder;

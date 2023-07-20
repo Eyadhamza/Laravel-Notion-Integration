@@ -4,7 +4,7 @@ namespace Pi\Notion\Traits;
 
 use Illuminate\Http\Resources\MissingValue;
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\BlockContent\NotionContent;
+use Pi\Notion\Core\Content\NotionContent;
 use Pi\Notion\Core\Builders\NotionBlockBuilder;
 
 trait HasChildren

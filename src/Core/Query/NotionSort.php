@@ -2,7 +2,7 @@
 
 namespace Pi\Notion\Core\Query;
 
-use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
+use Pi\Notion\Core\Properties\BaseNotionProperty;
 
 class NotionSort
 {

@@ -3,10 +3,10 @@
 namespace Pi\Notion\Core\RequestBuilders;
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\NotionProperty\BaseNotionProperty;
-use Pi\Notion\Core\NotionProperty\NotionDatabaseDescription;
-use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
-use Pi\Notion\Core\NotionProperty\NotionTitle;
+use Pi\Notion\Core\Properties\BaseNotionProperty;
+use Pi\Notion\Core\Properties\NotionDatabaseDescription;
+use Pi\Notion\Core\Properties\NotionDatabaseTitle;
+use Pi\Notion\Core\Properties\NotionTitle;
 
 class NotionUpdateDatabaseRequestBuilder extends BaseNotionRequestBuilder
 {

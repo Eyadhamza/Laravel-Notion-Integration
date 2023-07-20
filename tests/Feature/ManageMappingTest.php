@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Artisan;
 use Pi\Notion\Core\Models\NotionDatabase;
-use Pi\Notion\Core\NotionProperty\NotionTitle;
+use Pi\Notion\Core\Properties\NotionTitle;
 use Pi\Notion\Core\Query\NotionFilter;
 use Pi\Notion\Tests\Models\User;
 

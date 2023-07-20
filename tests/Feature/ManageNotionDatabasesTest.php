@@ -1,25 +1,25 @@
 <?php
 
 use Pi\Notion\Core\Models\NotionDatabase;
-use Pi\Notion\Core\NotionProperty\NotionDatabaseTitle;
-use Pi\Notion\Core\NotionProperty\NotionRollup;
-use Pi\Notion\Core\NotionProperty\NotionPeople;
-use Pi\Notion\Core\NotionProperty\NotionMedia;
-use Pi\Notion\Core\NotionProperty\NotionEmail;
-use Pi\Notion\Core\NotionProperty\NotionNumber;
-use Pi\Notion\Core\NotionProperty\NotionPhoneNumber;
-use Pi\Notion\Core\NotionProperty\NotionUrl;
-use Pi\Notion\Core\NotionProperty\NotionCreatedTime;
-use Pi\Notion\Core\NotionProperty\NotionCreatedBy;
-use Pi\Notion\Core\NotionProperty\NotionLastEditedTime;
-use Pi\Notion\Core\NotionProperty\NotionLastEditedBy;
-use Pi\Notion\Core\NotionProperty\NotionCheckbox;
-use Pi\Notion\Core\NotionProperty\NotionDatabaseDescription;
-use Pi\Notion\Core\NotionProperty\NotionTitle;
-use Pi\Notion\Core\NotionProperty\NotionDate;
-use Pi\Notion\Core\NotionProperty\NotionFormula;
-use Pi\Notion\Core\NotionProperty\NotionRelation;
-use Pi\Notion\Core\NotionProperty\NotionSelect;
+use Pi\Notion\Core\Properties\NotionDatabaseTitle;
+use Pi\Notion\Core\Properties\NotionRollup;
+use Pi\Notion\Core\Properties\NotionPeople;
+use Pi\Notion\Core\Properties\NotionMedia;
+use Pi\Notion\Core\Properties\NotionEmail;
+use Pi\Notion\Core\Properties\NotionNumber;
+use Pi\Notion\Core\Properties\NotionPhoneNumber;
+use Pi\Notion\Core\Properties\NotionUrl;
+use Pi\Notion\Core\Properties\NotionCreatedTime;
+use Pi\Notion\Core\Properties\NotionCreatedBy;
+use Pi\Notion\Core\Properties\NotionLastEditedTime;
+use Pi\Notion\Core\Properties\NotionLastEditedBy;
+use Pi\Notion\Core\Properties\NotionCheckbox;
+use Pi\Notion\Core\Properties\NotionDatabaseDescription;
+use Pi\Notion\Core\Properties\NotionTitle;
+use Pi\Notion\Core\Properties\NotionDate;
+use Pi\Notion\Core\Properties\NotionFormula;
+use Pi\Notion\Core\Properties\NotionRelation;
+use Pi\Notion\Core\Properties\NotionSelect;
 use Pi\Notion\Core\Query\NotionFilter;
 use Pi\Notion\Exceptions\NotionValidationException;
 use function PHPUnit\Framework\assertObjectHasProperty;
@@ -90,7 +90,7 @@ it('throws exception when database not found', function () {
 it('throws exception when database not authorized', function () {
     $id = '632b5fb7e06c4404ae12065c48280e4asdc';
     $this->expectException(NotionValidationException::class);
-    (new NotionDatabase())->find($id);
+    (new NotionDatabase($id))->find();
 });
 
 it('can filter database with one filter', function () {
