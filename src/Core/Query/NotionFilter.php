@@ -31,7 +31,7 @@ class NotionFilter
 
         return self::$filterGroup
             ->put($connective, collect($filters)
-                ->map(function(BaseNotionProperty|Collection $property){
+                ->map(function (BaseNotionProperty|Collection $property) {
                     if ($property instanceof Collection) {
                         return $property->toArray();
                     }
@@ -63,6 +63,14 @@ class NotionFilter
 
     public function resource(): array
     {
+        if (!$this->property->getName()) {
+            return [
+                'timestamp' => $this->property->getType()->value,
+                $this->property->getType()->value => [
+                    $this->filterName => $this->query
+                ]
+            ];
+        }
         return [
             'property' => $this->property->getName(),
             $this->property->getType()->value => [

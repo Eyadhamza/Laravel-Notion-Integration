@@ -101,4 +101,9 @@ class NotionBlock extends NotionObject
         return $this;
     }
 
+    public function getValue(): ?NotionContent
+    {
+        return $this->value;
+    }
+
 }

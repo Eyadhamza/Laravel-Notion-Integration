@@ -15,7 +15,7 @@ trait HasChildren
      */
     private Collection $children;
 
-    public function setChildrenBuilder(NotionBlockBuilder $childrenBuilder): self
+    public function setBlockBuilder(NotionBlockBuilder $childrenBuilder): self
     {
         $this->children = $childrenBuilder->getBlocks();
 

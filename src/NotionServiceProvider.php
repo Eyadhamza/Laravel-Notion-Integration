@@ -3,6 +3,7 @@
 namespace Pi\Notion;
 
 use Illuminate\Support\Collection;
+use Pi\Notion\Commands\NotionDatabaseWatcher;
 use Pi\Notion\Commands\SyncFromNotionCommand;
 use Pi\Notion\Commands\SyncToNotionCommand;
 use Spatie\LaravelPackageTools\Package;
@@ -19,7 +20,8 @@ class NotionServiceProvider extends PackageServiceProvider
             ->hasMigration('create_notion-api-wrapper_table')
             ->hasCommands([
                 SyncFromNotionCommand::class,
-                SyncToNotionCommand::class
+                SyncToNotionCommand::class,
+                NotionDatabaseWatcher::class
             ]);
     }
 

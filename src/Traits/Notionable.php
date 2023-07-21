@@ -3,24 +3,37 @@
 namespace Pi\Notion\Traits;
 
 use LogicException;
+use Pi\Notion\Core\Builders\NotionBlockBuilder;
 use Pi\Notion\Core\Content\NotionPropertyContentFactory;
+use Pi\Notion\Core\Models\NotionBlock;
 use Pi\Notion\Core\Models\NotionPage;
 use Pi\Notion\Core\Properties\BaseNotionProperty;
 
 trait Notionable
 {
-    public array $notionMap = [];
+    protected array $notionMap = [];
+    protected ?NotionBlockBuilder $blockBuilder = null;
 
     public abstract function mapToNotion(): array;
 
     public function saveToNotion(string $pageId = null): NotionPage
     {
+        $this->blockBuilder = NotionBlockBuilder::make();
+
         $this->notionMap = $this->mapToNotion();
 
+        $this->setBlockBuilder();
+
         $this->validateHasNotionDatabaseId();
+
         $this->notionMap = $this->buildNotionProperties();
 
         if ($pageId) {
+            if ($this->blockBuilder->getBlocks()->isNotEmpty()){
+                NotionBlock::make($pageId)
+                    ->setBlockBuilder($this->blockBuilder)
+                    ->createChildren();
+            }
             return NotionPage::make($pageId)
                 ->setProperties($this->notionMap)
                 ->update();
@@ -29,6 +42,7 @@ trait Notionable
         return NotionPage::make()
             ->setDatabaseId($this->notionDatabaseId)
             ->setProperties($this->notionMap)
+            ->setBlockBuilder($this->blockBuilder)
             ->create();
     }
 
@@ -68,4 +82,15 @@ trait Notionable
         })->filter()->toArray();
     }
 
+    protected function setBlockBuilder(): void
+    {
+
+    }
+
+    public function deleteFromNotion(string $id): self
+    {
+        NotionPage::make($id)->delete();
+
+        return $this;
+    }
 }

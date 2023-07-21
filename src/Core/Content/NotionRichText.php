@@ -46,10 +46,8 @@ class NotionRichText extends NotionContent
     {
         $richText = new self(NotionPropertyTypeEnum::RICH_TEXT, $text);
 
-        $richText->value = [
-            'content' => $text,
-            'link' => $link ?? new MissingValue(),
-        ];
+        $richText->value = $text;
+        $richText->link = $link;
 
         return $richText;
     }
@@ -122,18 +120,16 @@ class NotionRichText extends NotionContent
 
     private function getBody(): array|MissingValue
     {
-        $value = is_array($this->value) ? $this->value['content'] : $this->value;
-
         return array_merge(
             $this->getAnnotations(),
             $this->getSubAttributes(),
             [
                 'type' => 'text',
                 'text' => [
-                    'content' => $value,
+                    'content' => $this->value,
                     'link' => $this->link ?? new MissingValue(),
                 ],
-                'plain_text' => $value,
+                'plain_text' => $this->value,
                 'href' => $this->href ?? new MissingValue(),
             ]);
     }

@@ -123,7 +123,7 @@ it('can add content blocks to the created pages', function () {
         NotionBlockBuilder::make()
             ->headingOne(NotionRichText::text('Eyad Hamza')
                 ->isToggleable()
-                ->setChildrenBuilder(
+                ->setBlockBuilder(
                     NotionBlockBuilder::make()
                         ->headingOne(NotionRichText::text('Eyad Hamza')
                             ->bold()

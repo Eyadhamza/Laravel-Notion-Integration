@@ -12,7 +12,7 @@ beforeEach(function (){
 it('appends block children', function () {
     $block = NotionBlock::make($this->blockId);
 
-    $paginatedObject = $block->setChildrenBuilder(
+    $paginatedObject = $block->setBlockBuilder(
         NotionBlockBuilder::make()
             ->headingTwo(NotionRichText::text('Eyad Hamza')
                 ->bold()
