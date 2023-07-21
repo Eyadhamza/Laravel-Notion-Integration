@@ -7,7 +7,8 @@
 
 ## About
 
-The Laravel Notion Integration package is a wrapper for the REST API provided by Notion.so. It allows for easy interaction with your Notion workspace, saving you time and effort.
+The Laravel Notion Integration package is a wrapper for the REST API provided by Notion.so. It allows for easy
+interaction with your Notion workspace, saving you time and effort.
 
 This package provides an easy and fluent interface for manipulating pages, databases, users, blocks, and more.
 
@@ -29,14 +30,16 @@ In your `.env` file, add your Notion token:
 NOTION_TOKEN=secret_{token}
 ```
 
-> To create your first integration, please visit: [Notion Create an integration](https://developers.notion.com/docs/create-a-notion-integration)
+> To create your first integration, please
+> visit: [Notion Create an integration](https://developers.notion.com/docs/create-a-notion-integration)
 > To obtain your secret token, visit [Notion API](https://developers.notion.com/docs/authorization)
 
 ### Handling Notion Databases
 
 #### Fetching Notion Database by ID
 
-To fetch a Notion database by ID, use the `find` method of the `NotionDatabase` class. It will return a `NotionDatabase` object containing information such as title, description, and all the database properties.
+To fetch a Notion database by ID, use the `find` method of the `NotionDatabase` class. It will return a `NotionDatabase`
+object containing information such as title, description, and all the database properties.
 
 ```php
 use Pi\Notion\Core\Models\NotionDatabase;
@@ -46,7 +49,8 @@ $database = NotionDatabase::make('632b5fb7e06c4404ae12065c48280e4c')->find();
 
 #### Creating a Notion Database
 
-To create a Notion database, use the `NotionDatabase` class and set the required parameters such as parent page ID and properties schema.
+To create a Notion database, use the `NotionDatabase` class and set the required parameters such as parent page ID and
+properties schema.
 
 ```php
 use Pi\Notion\Core\Models\NotionDatabase;
@@ -85,7 +89,8 @@ $database = NotionDatabase::make()
 
 #### Updating a Notion Database
 
-To update an existing Notion database, use the `NotionDatabase` class and specify the database ID and updated properties.
+To update an existing Notion database, use the `NotionDatabase` class and specify the database ID and updated
+properties.
 
 ```php
 $database = NotionDatabase::make('a5f8af6484334c09b69d5dd5f54b378f')
@@ -97,7 +102,8 @@ $database = NotionDatabase::make('a5f8af6484334c09b69d5dd5f54b378f')
 
 #### Querying a Database
 
-To query a Notion database and get a list of pages contained within the database, you can apply filters and sorting criteria using the `query` method.
+To query a Notion database and get a list of pages contained within the database, you can apply filters and sorting
+criteria using the `query` method.
 
 ```php
 // Using one filter
@@ -170,7 +176,8 @@ $page = NotionPage::make('b4f8e429038744ca9c8d5afa93ea2edd')->findWithContent();
 
 #### Creating a New Notion Page / Notion Database Item
 
-To create a new Notion page or a new item in a Notion database, you can use the `NotionPage` class and set the required properties and their values.
+To create a new Notion page or a new item in a Notion database, you can use the `NotionPage` class and set the required
+properties and their values.
 
 ```php
 $page = NotionPage::make()
@@ -212,6 +219,7 @@ $page = NotionPage::make()
 ```
 
 #### Creating a New Notion Page / Notion Database Item with Content
+
 ```php
  $page = NotionPage::make()
         ->setDatabaseId($this->databaseId)
@@ -223,7 +231,7 @@ $page = NotionPage::make()
         NotionBlockBuilder::make()
             ->headingOne(NotionRichText::text('Eyad Hamza')
                 ->isToggleable()
-                ->setChildrenBuilder(
+                ->setBlockBuilder(
                     NotionBlockBuilder::make()
                         ->headingOne(NotionRichText::text('Eyad Hamza')
                             ->bold()
@@ -283,7 +291,8 @@ $page = NotionPage::make()
 
 #### Updating a Page Properties
 
-To update the properties of an existing page, create a `NotionPage` object with the page ID, set the updated properties, and call the `update()` method.
+To update the properties of an existing page, create a `NotionPage` object with the page ID, set the updated properties,
+and call the `update()` method.
 
 ```php
 $page = NotionPage::make('b4f8e429038744ca9c8d5afa93ea2edd')
@@ -321,7 +330,8 @@ $blockChildren = NotionBlock::make('b4f8e429038744ca9c8d5afa93ea2edd')
 
 #### Updating a Block
 
-To update a Notion block, create a new instance of the `NotionBlock` class, set the updated content, and call the `update()` method.
+To update a Notion block, create a new instance of the `NotionBlock` class, set the updated content, and call
+the `update()` method.
 
 ```php
 $block = NotionBlock::make('62ec21df1f9241ba9954828e0958da69')
@@ -336,7 +346,7 @@ To append children blocks to a Notion block, use the `createChildren` method.
 
 ```php
 $block = NotionBlock::make('62ec21df1f9241ba9954828e0958da69')
-     ->setChildrenBuilder(
+     ->setBlockBuilder(
         NotionBlockBuilder::make()
             ->headingTwo(NotionRichText::text('Eyad Hamza')
                 ->bold()
@@ -362,7 +372,8 @@ You can perform searches in Notion pages or databases using the `NotionSearch` c
 
 #### Searching in Pages
 
-To search for a specific query in Notion pages, use the `inPages` method of the `NotionSearch` class. You can apply sorting criteria using the `sorts` method.
+To search for a specific query in Notion pages, use the `inPages` method of the `NotionSearch` class. You can apply
+sorting criteria using the `sorts` method.
 
 ```php
 $response = NotionSearch::inPages('Eyad')
@@ -455,7 +466,8 @@ $response->getResultsType() // Get the type of the results (Block/Database/Page)
 
 ### Mapping Eloquent Models to Notion Database Items
 
-To map your Laravel Eloquent models to Notion database items, you can use the `Notionable` trait and implement the `mapToNotion` method in your model.
+To map your Laravel Eloquent models to Notion database items, you can use the `Notionable` trait and implement
+the `mapToNotion` method in your model.
 
 ```php
 class User extends Model
@@ -493,9 +505,37 @@ You can sync data between Notion and Eloquent models using the `sync:to-notion` 
 php artisan sync:to-notion User
 ```
 
+### Watching a Notion Database
+
+Currently, Notion API does not support webhooks. However, you can use the 'notion:watch' artisan command to watch a
+Notion database for changes.
+The command will run every specified interval and check for changes in the notion database. If there are any changes, it
+will send a post request to your route, so you can handle it accordingly.
+You can change the interval and the route in the config file.
+
+This is how you can run the command:
+
+```bash
+php artisan notion:watch '02758e48d12244f99552dd4f766a0077'
+```
+
+Surely, you can use the command in a cron job to run it every specified interval.
+
+```php
+// in app/Console/Kernel.php
+
+protected function schedule(Schedule $schedule): void
+{
+    $schedule->command(NotionDatabaseWatcher::class, ['02758e48d12244f99552dd4f766a0077'])->everyMinute();
+}
+
+```
+
 ### Handling Errors
 
-In case of an error, an exception will be thrown with the error message. You can check the exceptions folder or the `NotionException` class for more information about the exceptions. Please refer to the Notion API documentation for detailed information about the errors.
+In case of an error, an exception will be thrown with the error message. You can check the exceptions folder or
+the `NotionException` class for more information about the exceptions. Please refer to the Notion API documentation for
+detailed information about the errors.
 
 ## Testing
 

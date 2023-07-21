@@ -11,23 +11,21 @@ use Pi\Notion\Core\Resources\NotionPageResource;
 
 class NotionDatabaseWatcher extends Command
 {
-    public $signature = 'notion:watch';
+    public $signature = 'notion:watch {database_id}';
 
     public $description = 'watch notion database for changes';
-    private string $databaseId;
     private int $pollingInterval;
     private string $route;
     public function __construct()
     {
         parent::__construct();
-        $this->databaseId = config('notion-api-wrapper.watcher.target_database_id');
         $this->pollingInterval = config('notion-api-wrapper.watcher.polling_interval_in_minutes');
         $this->route = config('notion-api-wrapper.watcher.webhook_route_name');
     }
 
     public function handle(): void
     {
-        $results = NotionDatabase::make($this->databaseId)
+        $results = NotionDatabase::make($this->argument('database_id'))
             ->setFilter(NotionCreatedTime::make()->onOrAfter(now()->subMinutes($this->pollingInterval)))
             ->query()
             ->getResults();
