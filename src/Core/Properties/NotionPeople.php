@@ -38,6 +38,6 @@ class NotionPeople extends BaseNotionProperty
 
         return $this;
     }
-
+    
 }
 

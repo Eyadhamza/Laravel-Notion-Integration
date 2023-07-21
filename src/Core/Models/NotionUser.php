@@ -9,10 +9,10 @@ class NotionUser extends NotionObject
 {
     const USERS_URL = NotionClient::BASE_URL . '/users/';
     const BOT_URL = NotionClient::BASE_URL . '/users/' . 'me';
-    private string $object;
-    private string $name;
+    private ?string $object;
+    private ?string $name;
     private ?string $email;
-    private string $avatarUrl;
+    private ?string $avatarUrl;
     private ?string $type;
 
     public function fromResponse($response): self
