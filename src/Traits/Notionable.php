@@ -1,13 +1,13 @@
 <?php
 
-namespace Pi\Notion\Traits;
+namespace PISpace\Notion\Traits;
 
 use LogicException;
-use Pi\Notion\Core\Builders\NotionBlockBuilder;
-use Pi\Notion\Core\Content\NotionPropertyContentFactory;
-use Pi\Notion\Core\Models\NotionBlock;
-use Pi\Notion\Core\Models\NotionPage;
-use Pi\Notion\Core\Properties\BaseNotionProperty;
+use PISpace\Notion\Core\Builders\NotionBlockBuilder;
+use PISpace\Notion\Core\Content\NotionPropertyContentFactory;
+use PISpace\Notion\Core\Models\NotionBlock;
+use PISpace\Notion\Core\Models\NotionPage;
+use PISpace\Notion\Core\Properties\BaseNotionProperty;
 
 trait Notionable
 {

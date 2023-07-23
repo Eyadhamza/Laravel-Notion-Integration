@@ -1,7 +1,7 @@
 <?php
 
-use Pi\Notion\Core\Properties\NotionLastEditedTime;
-use Pi\Notion\Core\Query\NotionSearch;
+use PISpace\Notion\Core\Properties\NotionLastEditedTime;
+use PISpace\Notion\Core\Query\NotionSearch;
 
 it('returns the search result of pages', function () {
     $response = NotionSearch::inPages('Eyad')->apply(50);

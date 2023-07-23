@@ -1,11 +1,11 @@
 <?php
 
-namespace Pi\Notion\Core\Models;
+namespace PISpace\Notion\Core\Models;
 
 
-use Pi\Notion\Core\Properties\NotionPropertyFactory;
-use Pi\Notion\Core\Query\NotionPaginator;
-use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use PISpace\Notion\Core\Properties\NotionPropertyFactory;
+use PISpace\Notion\Core\Query\NotionPaginator;
+use PISpace\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionObject
 {

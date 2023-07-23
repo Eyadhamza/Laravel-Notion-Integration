@@ -1,9 +1,9 @@
 <?php
 
-use Pi\Notion\Core\Content\NotionRichText;
-use Pi\Notion\Core\Builders\NotionBlockBuilder;
-use Pi\Notion\Core\Models\NotionBlock;
-use Pi\Notion\Enums\NotionBlockTypeEnum;
+use PISpace\Notion\Core\Content\NotionRichText;
+use PISpace\Notion\Core\Builders\NotionBlockBuilder;
+use PISpace\Notion\Core\Models\NotionBlock;
+use PISpace\Notion\Enums\NotionBlockTypeEnum;
 
 beforeEach(function (){
     $this->blockId = 'c89e2e6ed725407895658f0ddbeed02f';

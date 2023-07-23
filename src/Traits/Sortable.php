@@ -1,10 +1,10 @@
 <?php
 
-namespace Pi\Notion\Traits;
+namespace PISpace\Notion\Traits;
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\Properties\BaseNotionProperty;
-use Pi\Notion\Core\Query\NotionSort;
+use PISpace\Notion\Core\Properties\BaseNotionProperty;
+use PISpace\Notion\Core\Query\NotionSort;
 
 trait Sortable
 {

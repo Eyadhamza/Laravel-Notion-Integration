@@ -1,6 +1,6 @@
 <?php
 
-namespace Pi\Notion\Traits\Filters;
+namespace PISpace\Notion\Traits\Filters;
 
 trait HasStringFilters
 {

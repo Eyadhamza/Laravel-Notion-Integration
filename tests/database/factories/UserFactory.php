@@ -1,8 +1,8 @@
 <?php
-namespace Pi\Notion\Tests\database\factories;
+namespace PISpace\Notion\Tests\database\factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Pi\Notion\Tests\Models\User;
+use PISpace\Notion\Tests\Models\User;
 
 class UserFactory extends Factory
 {

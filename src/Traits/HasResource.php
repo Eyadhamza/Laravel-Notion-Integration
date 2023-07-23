@@ -1,6 +1,6 @@
 <?php
 
-namespace Pi\Notion\Traits;
+namespace PISpace\Notion\Traits;
 
 use Illuminate\Http\Resources\ConditionallyLoadsAttributes;
 use Illuminate\Http\Resources\Json\JsonResource;

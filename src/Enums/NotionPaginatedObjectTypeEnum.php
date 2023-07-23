@@ -1,6 +1,6 @@
 <?php
 
-namespace Pi\Notion\Enums;
+namespace PISpace\Notion\Enums;
 
 enum NotionPaginatedObjectTypeEnum: string
 {

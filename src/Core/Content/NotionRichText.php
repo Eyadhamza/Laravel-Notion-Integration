@@ -1,14 +1,14 @@
 <?php
 
-namespace Pi\Notion\Core\Content;
+namespace PISpace\Notion\Core\Content;
 
 use Illuminate\Http\Resources\MissingValue;
 use Illuminate\Support\Collection;
-use Pi\Notion\Enums\NotionBlockContentTypeEnum;
-use Pi\Notion\Enums\NotionBlockTypeEnum;
-use Pi\Notion\Enums\NotionPropertyTypeEnum;
-use Pi\Notion\Traits\HasAnnotations;
-use Pi\Notion\Traits\HasChildren;
+use PISpace\Notion\Enums\NotionBlockContentTypeEnum;
+use PISpace\Notion\Enums\NotionBlockTypeEnum;
+use PISpace\Notion\Enums\NotionPropertyTypeEnum;
+use PISpace\Notion\Traits\HasAnnotations;
+use PISpace\Notion\Traits\HasChildren;
 
 class NotionRichText extends NotionContent
 {

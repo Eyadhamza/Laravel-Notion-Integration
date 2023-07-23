@@ -1,6 +1,6 @@
 <?php
 
-namespace Pi\Notion\Exceptions;
+namespace PISpace\Notion\Exceptions;
 
 use Exception;
 

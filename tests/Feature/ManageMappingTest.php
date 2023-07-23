@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Artisan;
-use Pi\Notion\Core\Models\NotionDatabase;
-use Pi\Notion\Core\Properties\NotionTitle;
-use Pi\Notion\Core\Query\NotionFilter;
-use Pi\Notion\Tests\Models\User;
+use PISpace\Notion\Core\Models\NotionDatabase;
+use PISpace\Notion\Core\Properties\NotionTitle;
+use PISpace\Notion\Core\Query\NotionFilter;
+use PISpace\Notion\Tests\Models\User;
 
 
 test('user creation', function () {

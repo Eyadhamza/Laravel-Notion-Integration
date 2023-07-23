@@ -1,11 +1,11 @@
 <?php
 
-namespace Pi\Notion\Core\Models;
+namespace PISpace\Notion\Core\Models;
 
-use Pi\Notion\Core\Content\NotionRichText;
-use Pi\Notion\Core\NotionClient;
-use Pi\Notion\Core\Query\NotionPaginator;
-use Pi\Notion\Core\RequestBuilders\CreateNotionCommentRequestBuilder;
+use PISpace\Notion\Core\Content\NotionRichText;
+use PISpace\Notion\Core\NotionClient;
+use PISpace\Notion\Core\Query\NotionPaginator;
+use PISpace\Notion\Core\RequestBuilders\CreateNotionCommentRequestBuilder;
 
 class NotionComment extends NotionObject
 {

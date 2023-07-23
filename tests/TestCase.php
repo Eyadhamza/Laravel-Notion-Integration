@@ -1,10 +1,10 @@
 <?php
 
-namespace Pi\Notion\Tests;
+namespace PISpace\Notion\Tests;
 
 use Dotenv\Dotenv;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Pi\Notion\NotionServiceProvider;
+use PISpace\Notion\NotionServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
@@ -23,7 +23,7 @@ class TestCase extends Orchestra
             ->run();
 
         Factory::guessFactoryNamesUsing(
-            fn(string $modelName) => 'Pi\\Notion\\Tests\\database\\factories\\' . class_basename($modelName) . 'Factory'
+            fn(string $modelName) => 'PISpace\\Notion\\Tests\\database\\factories\\' . class_basename($modelName) . 'Factory'
         );
     }
 

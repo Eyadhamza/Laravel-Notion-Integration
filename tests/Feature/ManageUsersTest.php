@@ -1,6 +1,6 @@
 <?php
 
-use Pi\Notion\Core\Models\NotionUser;
+use PISpace\Notion\Core\Models\NotionUser;
 
 it('returns all users', function () {
     $users = NotionUser::make()->index();

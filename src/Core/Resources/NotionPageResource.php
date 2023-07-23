@@ -1,12 +1,12 @@
 <?php
 
-namespace Pi\Notion\Core\Resources;
+namespace PISpace\Notion\Core\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Pi\Notion\Core\Content\NotionContent;
-use Pi\Notion\Core\Models\NotionBlock;
-use Pi\Notion\Core\Models\NotionPage;
-use Pi\Notion\Core\Properties\BaseNotionProperty;
+use PISpace\Notion\Core\Content\NotionContent;
+use PISpace\Notion\Core\Models\NotionBlock;
+use PISpace\Notion\Core\Models\NotionPage;
+use PISpace\Notion\Core\Properties\BaseNotionProperty;
 
 /* @mixin NotionPage */
 class NotionPageResource extends JsonResource

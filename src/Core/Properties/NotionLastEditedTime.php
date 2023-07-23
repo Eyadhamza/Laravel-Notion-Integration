@@ -1,10 +1,10 @@
 <?php
 
-namespace Pi\Notion\Core\Properties;
+namespace PISpace\Notion\Core\Properties;
 
-use Pi\Notion\Core\Content\NotionContent;
-use Pi\Notion\Core\Content\NotionEmptyValue;
-use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use PISpace\Notion\Core\Content\NotionContent;
+use PISpace\Notion\Core\Content\NotionEmptyValue;
+use PISpace\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionLastEditedTime extends BaseNotionProperty
 {

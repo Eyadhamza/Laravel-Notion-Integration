@@ -1,11 +1,11 @@
 <?php
 
-namespace Pi\Notion\Core\Content;
+namespace PISpace\Notion\Core\Content;
 
 use Illuminate\Http\Resources\MissingValue;
-use Pi\Notion\Enums\NotionBlockContentTypeEnum;
-use Pi\Notion\Enums\NotionBlockTypeEnum;
-use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use PISpace\Notion\Enums\NotionBlockContentTypeEnum;
+use PISpace\Notion\Enums\NotionBlockTypeEnum;
+use PISpace\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionFile extends NotionContent
 {

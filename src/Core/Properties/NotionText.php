@@ -1,9 +1,9 @@
 <?php
 
-namespace Pi\Notion\Core\Properties;
+namespace PISpace\Notion\Core\Properties;
 
-use Pi\Notion\Enums\NotionPropertyTypeEnum;
-use Pi\Notion\Traits\Filters\HasStringFilters;
+use PISpace\Notion\Enums\NotionPropertyTypeEnum;
+use PISpace\Notion\Traits\Filters\HasStringFilters;
 
 class NotionText extends BaseNotionProperty
 {

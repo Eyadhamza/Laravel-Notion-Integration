@@ -1,13 +1,13 @@
 <?php
 
-namespace Pi\Notion\Commands;
+namespace PISpace\Notion\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
-use Pi\Notion\Core\Models\NotionDatabase;
-use Pi\Notion\Core\Models\NotionPage;
-use Pi\Notion\Core\Properties\NotionCreatedTime;
-use Pi\Notion\Core\Resources\NotionPageResource;
+use PISpace\Notion\Core\Models\NotionDatabase;
+use PISpace\Notion\Core\Models\NotionPage;
+use PISpace\Notion\Core\Properties\NotionCreatedTime;
+use PISpace\Notion\Core\Resources\NotionPageResource;
 
 class NotionDatabaseWatcher extends Command
 {

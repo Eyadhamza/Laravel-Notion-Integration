@@ -1,13 +1,13 @@
 <?php
 
-namespace Pi\Notion\Core\Properties;
+namespace PISpace\Notion\Core\Properties;
 
 use Illuminate\Http\Resources\MissingValue;
-use Pi\Notion\Core\Content\NotionArrayValue;
-use Pi\Notion\Core\Content\NotionContent;
-use Pi\Notion\Core\Content\NotionSimpleValue;
-use Pi\Notion\Enums\NotionPropertyTypeEnum;
-use Pi\Notion\Enums\NotionNumberFormatEnum;
+use PISpace\Notion\Core\Content\NotionArrayValue;
+use PISpace\Notion\Core\Content\NotionContent;
+use PISpace\Notion\Core\Content\NotionSimpleValue;
+use PISpace\Notion\Enums\NotionPropertyTypeEnum;
+use PISpace\Notion\Enums\NotionNumberFormatEnum;
 
 class NotionNumber extends BaseNotionProperty
 {

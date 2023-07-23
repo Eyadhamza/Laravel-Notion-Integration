@@ -1,9 +1,9 @@
 <?php
 
-namespace Pi\Notion\Core\Properties;
+namespace PISpace\Notion\Core\Properties;
 
-use Pi\Notion\Core\Content\NotionFile;
-use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use PISpace\Notion\Core\Content\NotionFile;
+use PISpace\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionPropertyFactory
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Pi\Notion\Commands;
+namespace PISpace\Notion\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Pi\Notion\Core\Models\NotionDatabase;
+use PISpace\Notion\Core\Models\NotionDatabase;
 
 class SyncFromNotionCommand extends Command
 {

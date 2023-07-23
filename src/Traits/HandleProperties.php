@@ -1,9 +1,9 @@
 <?php
 
-namespace Pi\Notion\Traits;
+namespace PISpace\Notion\Traits;
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\Properties\BaseNotionProperty;
+use PISpace\Notion\Core\Properties\BaseNotionProperty;
 
 trait HandleProperties
 {

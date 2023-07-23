@@ -1,6 +1,6 @@
 <?php
 
-namespace Pi\Notion\Core\RequestBuilders;
+namespace PISpace\Notion\Core\RequestBuilders;
 
 use Illuminate\Http\Resources\ConditionallyLoadsAttributes;
 

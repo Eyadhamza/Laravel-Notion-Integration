@@ -1,14 +1,14 @@
 <?php
 
-namespace Pi\Notion\Tests\Models;
+namespace PISpace\Notion\Tests\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Pi\Notion\Core\Properties\BaseNotionProperty;
-use Pi\Notion\Core\Properties\NotionEmail;
-use Pi\Notion\Core\Properties\NotionText;
-use Pi\Notion\Core\Properties\NotionTitle;
-use Pi\Notion\Traits\Notionable;
+use PISpace\Notion\Core\Properties\BaseNotionProperty;
+use PISpace\Notion\Core\Properties\NotionEmail;
+use PISpace\Notion\Core\Properties\NotionText;
+use PISpace\Notion\Core\Properties\NotionTitle;
+use PISpace\Notion\Traits\Notionable;
 
 class User extends Model
 {

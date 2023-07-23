@@ -1,11 +1,11 @@
 <?php
 
-namespace Pi\Notion\Traits;
+namespace PISpace\Notion\Traits;
 
 use Illuminate\Http\Resources\MissingValue;
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\Content\NotionContent;
-use Pi\Notion\Core\Builders\NotionBlockBuilder;
+use PISpace\Notion\Core\Content\NotionContent;
+use PISpace\Notion\Core\Builders\NotionBlockBuilder;
 
 trait HasChildren
 {
