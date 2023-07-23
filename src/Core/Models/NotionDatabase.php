@@ -1,22 +1,20 @@
 <?php
 
 
-namespace Pi\Notion\Core\Models;
+namespace PISpace\Notion\Core\Models;
 
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\NotionClient;
-use Pi\Notion\Core\Properties\BaseNotionProperty;
-use Pi\Notion\Core\Properties\NotionDatabaseDescription;
-use Pi\Notion\Core\Properties\NotionDatabaseTitle;
-use Pi\Notion\Core\Properties\NotionSelect;
-use Pi\Notion\Core\Properties\NotionTitle;
-use Pi\Notion\Core\Query\NotionFilter;
-use Pi\Notion\Core\Query\NotionPaginator;
-use Pi\Notion\Core\RequestBuilders\NotionDatabaseRequestBuilder;
-use Pi\Notion\Core\RequestBuilders\NotionUpdateDatabaseRequestBuilder;
-use Pi\Notion\Traits\HandleProperties;
-use Pi\Notion\Traits\Sortable;
+use PISpace\Notion\Core\NotionClient;
+use PISpace\Notion\Core\Properties\BaseNotionProperty;
+use PISpace\Notion\Core\Properties\NotionDatabaseDescription;
+use PISpace\Notion\Core\Properties\NotionDatabaseTitle;
+use PISpace\Notion\Core\Query\NotionFilter;
+use PISpace\Notion\Core\Query\NotionPaginator;
+use PISpace\Notion\Core\RequestBuilders\NotionDatabaseRequestBuilder;
+use PISpace\Notion\Core\RequestBuilders\NotionUpdateDatabaseRequestBuilder;
+use PISpace\Notion\Traits\HandleProperties;
+use PISpace\Notion\Traits\Sortable;
 
 class NotionDatabase extends NotionObject
 {
@@ -24,7 +22,7 @@ class NotionDatabase extends NotionObject
 
     const DATABASE_URL = NotionClient::BASE_URL . '/databases/';
     private string $link;
-    protected NotionTitle|NotionDatabaseTitle $title;
+    protected NotionDatabaseTitle $title;
     protected ?NotionDatabaseDescription $description;
     protected Collection $properties;
     protected Collection $pages;
@@ -43,7 +41,7 @@ class NotionDatabase extends NotionObject
     public function fromResponse($response): self
     {
         parent::fromResponse($response);
-        $this->title = NotionTitle::make($response['title'][0]['plain_text']) ?? null;
+        $this->title = NotionDatabaseTitle::make($response['title'][0]['plain_text']) ?? null;
         if (!empty($response['description'])) {
             $this->description = NotionDatabaseDescription::make($response['description'][0]['plain_text']) ?? null;
         }
@@ -121,7 +119,7 @@ class NotionDatabase extends NotionObject
         return $this;
     }
 
-    public function setTitle(NotionTitle|NotionDatabaseTitle $title): self
+    public function setTitle(NotionDatabaseTitle $title): self
     {
         $this->title = $title->buildContent();
 

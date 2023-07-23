@@ -1,9 +1,9 @@
 <?php
 
-namespace Pi\Notion\Core\RequestBuilders;
+namespace PISpace\Notion\Core\RequestBuilders;
 
 use Illuminate\Http\Resources\MissingValue;
-use Pi\Notion\Core\Content\NotionRichText;
+use PISpace\Notion\Core\Content\NotionRichText;
 
 class CreateNotionCommentRequestBuilder extends BaseNotionRequestBuilder
 {

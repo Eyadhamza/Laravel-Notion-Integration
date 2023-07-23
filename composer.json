@@ -1,5 +1,5 @@
 {
-    "name": "eyadhamza/notion-api-integration",
+    "name": "pi-space/notion-api-integration",
     "description": "Easy to use and simple Integration to Notion API.",
     "keywords": [
         "laravel",
@@ -36,13 +36,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Pi\\Notion\\": "src"
+            "PISpace\\Notion\\": "src"
 
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Pi\\Notion\\Tests\\": "tests"
+            "PISpace\\Notion\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -59,7 +59,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Pi\\Notion\\NotionServiceProvider"
+                "PISpace\\Notion\\NotionServiceProvider"
             ]
         }
     },

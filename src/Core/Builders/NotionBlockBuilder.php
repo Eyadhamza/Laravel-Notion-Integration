@@ -1,14 +1,14 @@
 <?php
 
-namespace Pi\Notion\Core\Builders;
+namespace PISpace\Notion\Core\Builders;
 
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\Content\NotionEmptyValue;
-use Pi\Notion\Core\Content\NotionFile;
-use Pi\Notion\Core\Content\NotionRichText;
-use Pi\Notion\Core\Content\NotionSimpleValue;
-use Pi\Notion\Enums\NotionBlockTypeEnum;
+use PISpace\Notion\Core\Content\NotionEmptyValue;
+use PISpace\Notion\Core\Content\NotionFile;
+use PISpace\Notion\Core\Content\NotionRichText;
+use PISpace\Notion\Core\Content\NotionSimpleValue;
+use PISpace\Notion\Enums\NotionBlockTypeEnum;
 
 class NotionBlockBuilder
 {

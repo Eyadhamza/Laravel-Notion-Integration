@@ -1,12 +1,12 @@
 <?php
 
-namespace Pi\Notion\Core\Query;
+namespace PISpace\Notion\Core\Query;
 
-use Pi\Notion\Core\Models\NotionDatabase;
-use Pi\Notion\Core\Models\NotionObject;
-use Pi\Notion\Core\Models\NotionPage;
-use Pi\Notion\Core\NotionClient;
-use Pi\Notion\Traits\Sortable;
+use PISpace\Notion\Core\Models\NotionDatabase;
+use PISpace\Notion\Core\Models\NotionObject;
+use PISpace\Notion\Core\Models\NotionPage;
+use PISpace\Notion\Core\NotionClient;
+use PISpace\Notion\Traits\Sortable;
 
 class NotionSearch
 {

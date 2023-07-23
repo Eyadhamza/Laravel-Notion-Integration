@@ -1,9 +1,9 @@
 <?php
 
-namespace Pi\Notion\Core\Models;
+namespace PISpace\Notion\Core\Models;
 
-use Pi\Notion\Core\NotionClient;
-use Pi\Notion\Core\Query\NotionPaginator;
+use PISpace\Notion\Core\NotionClient;
+use PISpace\Notion\Core\Query\NotionPaginator;
 
 class NotionUser extends NotionObject
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Pi\Notion\Commands;
+namespace PISpace\Notion\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection;

@@ -1,19 +1,19 @@
 <?php
 
 
-namespace Pi\Notion\Core\Models;
+namespace PISpace\Notion\Core\Models;
 
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\Builders\NotionBlockBuilder;
-use Pi\Notion\Core\NotionClient;
-use Pi\Notion\Core\Properties\BaseNotionProperty;
-use Pi\Notion\Core\Properties\NotionPropertyFactory;
-use Pi\Notion\Core\Query\NotionPaginator;
-use Pi\Notion\Core\RequestBuilders\CreateNotionPageRequestBuilder;
-use Pi\Notion\Enums\NotionBlockTypeEnum;
-use Pi\Notion\Enums\NotionPropertyTypeEnum;
-use Pi\Notion\Traits\HandleProperties;
+use PISpace\Notion\Core\Builders\NotionBlockBuilder;
+use PISpace\Notion\Core\NotionClient;
+use PISpace\Notion\Core\Properties\BaseNotionProperty;
+use PISpace\Notion\Core\Properties\NotionPropertyFactory;
+use PISpace\Notion\Core\Query\NotionPaginator;
+use PISpace\Notion\Core\RequestBuilders\CreateNotionPageRequestBuilder;
+use PISpace\Notion\Enums\NotionBlockTypeEnum;
+use PISpace\Notion\Enums\NotionPropertyTypeEnum;
+use PISpace\Notion\Traits\HandleProperties;
 
 class NotionPage extends NotionObject
 {

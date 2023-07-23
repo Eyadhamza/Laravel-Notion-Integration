@@ -11,7 +11,7 @@
 |
 */
 
-use Pi\Notion\Tests\TestCase;
+use PISpace\Notion\Tests\TestCase;
 
 uses(TestCase::class)->in('Feature');
 

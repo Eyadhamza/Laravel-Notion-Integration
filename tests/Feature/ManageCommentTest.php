@@ -1,7 +1,7 @@
 <?php
 
-use Pi\Notion\Core\Content\NotionRichText;
-use Pi\Notion\Core\Models\NotionComment;
+use PISpace\Notion\Core\Content\NotionRichText;
+use PISpace\Notion\Core\Models\NotionComment;
 
 test('it returns all comments', function () {
     $comments = NotionComment::make('0b036890391f417cbac775e8b0bba680')->index();

@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Pi\Notion\Core\Properties;
+namespace PISpace\Notion\Core\Properties;
 
 
-use Pi\Notion\Core\Content\NotionPropertyContentFactory;
-use Pi\Notion\Core\Models\NotionObject;
-use Pi\Notion\Core\Content\NotionContent;
-use Pi\Notion\Core\Content\NotionEmptyValue;
-use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use PISpace\Notion\Core\Content\NotionPropertyContentFactory;
+use PISpace\Notion\Core\Models\NotionObject;
+use PISpace\Notion\Core\Content\NotionContent;
+use PISpace\Notion\Core\Content\NotionEmptyValue;
+use PISpace\Notion\Enums\NotionPropertyTypeEnum;
 
 abstract class BaseNotionProperty
 {

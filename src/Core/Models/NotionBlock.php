@@ -1,17 +1,17 @@
 <?php
 
 
-namespace Pi\Notion\Core\Models;
+namespace PISpace\Notion\Core\Models;
 
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\Content\NotionContent;
-use Pi\Notion\Core\NotionClient;
-use Pi\Notion\Core\Query\NotionPaginator;
-use Pi\Notion\Enums\NotionBlockTypeEnum;
-use Pi\Notion\Traits\HasChildren;
-use Pi\Notion\Traits\HasResource;
+use PISpace\Notion\Core\Content\NotionContent;
+use PISpace\Notion\Core\NotionClient;
+use PISpace\Notion\Core\Query\NotionPaginator;
+use PISpace\Notion\Enums\NotionBlockTypeEnum;
+use PISpace\Notion\Traits\HasChildren;
+use PISpace\Notion\Traits\HasResource;
 
 class NotionBlock extends NotionObject
 {

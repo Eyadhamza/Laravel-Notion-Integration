@@ -1,15 +1,15 @@
 <?php
 
-namespace Pi\Notion\Core\Query;
+namespace PISpace\Notion\Core\Query;
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\Models\NotionObject;
-use Pi\Notion\Core\NotionClient;
-use Pi\Notion\Core\Properties\BaseNotionProperty;
-use Pi\Notion\Core\Properties\NotionPropertyFactory;
-use Pi\Notion\Core\RequestBuilders\PaginatorRequestBuilder;
-use Pi\Notion\Enums\NotionPaginatedObjectTypeEnum;
-use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use PISpace\Notion\Core\Models\NotionObject;
+use PISpace\Notion\Core\NotionClient;
+use PISpace\Notion\Core\Properties\BaseNotionProperty;
+use PISpace\Notion\Core\Properties\NotionPropertyFactory;
+use PISpace\Notion\Core\RequestBuilders\PaginatorRequestBuilder;
+use PISpace\Notion\Enums\NotionPaginatedObjectTypeEnum;
+use PISpace\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionPaginator
 {

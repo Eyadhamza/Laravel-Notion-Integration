@@ -1,14 +1,11 @@
 <?php
 
-namespace Pi\Notion\Core\Properties;
+namespace PISpace\Notion\Core\Properties;
 
 use Illuminate\Http\Resources\MissingValue;
-use Pi\Notion\Core\Content\NotionArrayValue;
-use Pi\Notion\Core\Content\NotionContent;
-use Pi\Notion\Enums\NotionPropertyTypeEnum;
-use Pi\Notion\Traits\Filters\HasContainmentFilters;
-use Pi\Notion\Traits\Filters\HasEqualityFilters;
-use Pi\Notion\Traits\Filters\HasExistenceFilters;
+use PISpace\Notion\Enums\NotionPropertyTypeEnum;
+use PISpace\Notion\Traits\Filters\HasContainmentFilters;
+use PISpace\Notion\Traits\Filters\HasExistenceFilters;
 
 class NotionMultiSelect extends BaseNotionProperty
 {

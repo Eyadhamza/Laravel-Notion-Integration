@@ -42,7 +42,7 @@ To fetch a Notion database by ID, use the `find` method of the `NotionDatabase` 
 object containing information such as title, description, and all the database properties.
 
 ```php
-use Pi\Notion\Core\Models\NotionDatabase;
+use PISpace\Notion\Core\Models\NotionDatabase;
 
 $database = NotionDatabase::make('632b5fb7e06c4404ae12065c48280e4c')->find();
 ```
@@ -53,7 +53,7 @@ To create a Notion database, use the `NotionDatabase` class and set the required
 properties schema.
 
 ```php
-use Pi\Notion\Core\Models\NotionDatabase;
+use PISpace\Notion\Core\Models\NotionDatabase;
 
 $database = NotionDatabase::make()
     ->setParentPageId('fa4379661ed948d7af52df923177028e')

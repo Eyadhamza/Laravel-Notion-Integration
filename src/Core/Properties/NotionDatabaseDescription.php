@@ -1,8 +1,8 @@
 <?php
 
-namespace Pi\Notion\Core\Properties;
+namespace PISpace\Notion\Core\Properties;
 
-use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use PISpace\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionDatabaseDescription extends BaseNotionProperty
 {

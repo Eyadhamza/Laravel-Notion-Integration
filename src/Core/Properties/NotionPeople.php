@@ -1,12 +1,12 @@
 <?php
 
-namespace Pi\Notion\Core\Properties;
+namespace PISpace\Notion\Core\Properties;
 
 use Illuminate\Http\Resources\MissingValue;
-use Pi\Notion\Core\Models\NotionUser;
-use Pi\Notion\Core\Content\NotionArrayValue;
-use Pi\Notion\Core\Content\NotionContent;
-use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use PISpace\Notion\Core\Models\NotionUser;
+use PISpace\Notion\Core\Content\NotionArrayValue;
+use PISpace\Notion\Core\Content\NotionContent;
+use PISpace\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionPeople extends BaseNotionProperty
 {
@@ -33,11 +33,20 @@ class NotionPeople extends BaseNotionProperty
     public function setValue($value): BaseNotionProperty
     {
         $this->value = collect($value)
-            ->map(fn(array $data) => NotionUser::make()->fromResponse($data))
+            ->map(function (NotionUser|array $item) {
+                if ($item instanceof NotionUser) {
+                    return [
+                        'object' => 'user',
+                        'id' => $item->getId()
+                    ];
+                }
+
+                return NotionUser::make()->fromResponse($item);
+            })
             ->all();
 
         return $this;
     }
-    
+
 }
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace Pi\Notion\Core\RequestBuilders;
+namespace PISpace\Notion\Core\RequestBuilders;
 
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\Content\NotionContent;
-use Pi\Notion\Core\Models\NotionBlock;
-use Pi\Notion\Core\Properties\BaseNotionProperty;
+use PISpace\Notion\Core\Content\NotionContent;
+use PISpace\Notion\Core\Models\NotionBlock;
+use PISpace\Notion\Core\Properties\BaseNotionProperty;
 
 class CreateNotionPageRequestBuilder
 {

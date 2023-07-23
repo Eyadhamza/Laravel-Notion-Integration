@@ -1,11 +1,11 @@
 <?php
 
-namespace Pi\Notion;
+namespace PISpace\Notion;
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Commands\NotionDatabaseWatcher;
-use Pi\Notion\Commands\SyncFromNotionCommand;
-use Pi\Notion\Commands\SyncToNotionCommand;
+use PISpace\Notion\Commands\NotionDatabaseWatcher;
+use PISpace\Notion\Commands\SyncFromNotionCommand;
+use PISpace\Notion\Commands\SyncToNotionCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 

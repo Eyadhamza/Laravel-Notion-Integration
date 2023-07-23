@@ -1,11 +1,11 @@
 <?php
 
-namespace Pi\Notion\Core\RequestBuilders;
+namespace PISpace\Notion\Core\RequestBuilders;
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\Properties\BaseNotionProperty;
-use Pi\Notion\Core\Properties\NotionDatabaseTitle;
-use Pi\Notion\Core\Properties\NotionTitle;
+use PISpace\Notion\Core\Properties\BaseNotionProperty;
+use PISpace\Notion\Core\Properties\NotionDatabaseTitle;
+use PISpace\Notion\Core\Properties\NotionTitle;
 
 class NotionDatabaseRequestBuilder extends BaseNotionRequestBuilder
 {

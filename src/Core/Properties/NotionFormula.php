@@ -1,11 +1,11 @@
 <?php
 
-namespace Pi\Notion\Core\Properties;
+namespace PISpace\Notion\Core\Properties;
 
 use Illuminate\Http\Resources\MissingValue;
-use Pi\Notion\Core\Content\NotionContent;
-use Pi\Notion\Core\Content\NotionFormulaValue;
-use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use PISpace\Notion\Core\Content\NotionContent;
+use PISpace\Notion\Core\Content\NotionFormulaValue;
+use PISpace\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionFormula extends BaseNotionProperty
 {

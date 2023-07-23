@@ -1,8 +1,8 @@
 <?php
 
-namespace Pi\Notion\Core\Content;
+namespace PISpace\Notion\Core\Content;
 
-use Pi\Notion\Enums\NotionBlockContentTypeEnum;
+use PISpace\Notion\Enums\NotionBlockContentTypeEnum;
 
 class NotionArrayValue extends NotionContent
 {

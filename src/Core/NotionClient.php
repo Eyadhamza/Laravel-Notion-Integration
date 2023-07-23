@@ -1,11 +1,11 @@
 <?php
 
-namespace Pi\Notion\Core;
+namespace PISpace\Notion\Core;
 
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
-use Pi\Notion\Core\RequestBuilders\BaseNotionRequestBuilder;
-use Pi\Notion\Exceptions\NotionException;
+use PISpace\Notion\Core\RequestBuilders\BaseNotionRequestBuilder;
+use PISpace\Notion\Exceptions\NotionException;
 
 class NotionClient
 {

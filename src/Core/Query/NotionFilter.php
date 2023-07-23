@@ -1,9 +1,9 @@
 <?php
 
-namespace Pi\Notion\Core\Query;
+namespace PISpace\Notion\Core\Query;
 
 use Illuminate\Support\Collection;
-use Pi\Notion\Core\Properties\BaseNotionProperty;
+use PISpace\Notion\Core\Properties\BaseNotionProperty;
 
 class NotionFilter
 {

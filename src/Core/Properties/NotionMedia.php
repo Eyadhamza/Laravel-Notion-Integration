@@ -1,12 +1,12 @@
 <?php
 
-namespace Pi\Notion\Core\Properties;
+namespace PISpace\Notion\Core\Properties;
 
 use Illuminate\Http\Resources\MissingValue;
-use Pi\Notion\Core\Content\NotionArrayValue;
-use Pi\Notion\Core\Content\NotionContent;
-use Pi\Notion\Core\Content\NotionFile;
-use Pi\Notion\Enums\NotionPropertyTypeEnum;
+use PISpace\Notion\Core\Content\NotionArrayValue;
+use PISpace\Notion\Core\Content\NotionContent;
+use PISpace\Notion\Core\Content\NotionFile;
+use PISpace\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionMedia extends BaseNotionProperty
 {
