@@ -17,7 +17,7 @@ This package provides an easy and fluent interface for manipulating pages, datab
 You can install the package via composer:
 
 ```bash
-composer require eyadhamza/notion-api-wrapper
+composer require eyadhamza/notion-api-integration
 ```
 
 ## Usage
