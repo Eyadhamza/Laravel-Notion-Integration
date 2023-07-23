@@ -29,7 +29,7 @@ trait Notionable
         $this->notionMap = $this->buildNotionProperties();
 
         if ($pageId) {
-            if ($this->blockBuilder->getBlocks()->isNotEmpty()){
+            if ($this->blockBuilder->getBlocks()->isNotEmpty()) {
                 NotionBlock::make($pageId)
                     ->setBlockBuilder($this->blockBuilder)
                     ->createChildren();
@@ -51,7 +51,10 @@ trait Notionable
         return $this->notionDatabaseId;
     }
 
-    abstract public function getAttributes();
+    public function getAttributes()
+    {
+        return [];
+    }
 
     public function validateHasNotionDatabaseId(): self
     {

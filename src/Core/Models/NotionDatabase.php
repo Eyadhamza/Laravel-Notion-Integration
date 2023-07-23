@@ -24,7 +24,7 @@ class NotionDatabase extends NotionObject
 
     const DATABASE_URL = NotionClient::BASE_URL . '/databases/';
     private string $link;
-    protected NotionTitle|NotionDatabaseTitle $title;
+    protected NotionDatabaseTitle $title;
     protected ?NotionDatabaseDescription $description;
     protected Collection $properties;
     protected Collection $pages;
@@ -43,7 +43,7 @@ class NotionDatabase extends NotionObject
     public function fromResponse($response): self
     {
         parent::fromResponse($response);
-        $this->title = NotionTitle::make($response['title'][0]['plain_text']) ?? null;
+        $this->title = NotionDatabaseTitle::make($response['title'][0]['plain_text']) ?? null;
         if (!empty($response['description'])) {
             $this->description = NotionDatabaseDescription::make($response['description'][0]['plain_text']) ?? null;
         }
@@ -109,7 +109,7 @@ class NotionDatabase extends NotionObject
             ->paginate();
     }
 
-    public function getParentPageId(): string
+    public function getParentPageId(): ?string
     {
         return $this->parentId;
     }
@@ -121,7 +121,7 @@ class NotionDatabase extends NotionObject
         return $this;
     }
 
-    public function setTitle(NotionTitle|NotionDatabaseTitle $title): self
+    public function setTitle(NotionDatabaseTitle $title): self
     {
         $this->title = $title->buildContent();
 

@@ -33,7 +33,16 @@ class NotionPeople extends BaseNotionProperty
     public function setValue($value): BaseNotionProperty
     {
         $this->value = collect($value)
-            ->map(fn(array $data) => NotionUser::make()->fromResponse($data))
+            ->map(function (NotionUser|array $item) {
+                if ($item instanceof NotionUser) {
+                    return [
+                        'object' => 'user',
+                        'id' => $item->getId()
+                    ];
+                }
+
+                return NotionUser::make()->fromResponse($item);
+            })
             ->all();
 
         return $this;
