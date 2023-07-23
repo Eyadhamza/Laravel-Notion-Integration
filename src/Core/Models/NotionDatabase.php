@@ -107,7 +107,7 @@ class NotionDatabase extends NotionObject
             ->paginate();
     }
 
-    public function getParentPageId(): string
+    public function getParentPageId(): ?string
     {
         return $this->parentId;
     }

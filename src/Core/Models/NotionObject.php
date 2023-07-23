@@ -9,7 +9,7 @@ use PISpace\Notion\Enums\NotionPropertyTypeEnum;
 
 class NotionObject
 {
-    protected ?string $parentId;
+    protected ?string $parentId = null;
     protected ?string $objectType;
     protected ?string $id;
     protected ?string $url = null;
