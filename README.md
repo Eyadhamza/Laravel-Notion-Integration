@@ -1,7 +1,5 @@
 # Laravel Notion Integration
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/eyadhamza/notion-api-wrapper.svg?style=flat-square)](https://packagist.org/packages/eyadhamza/notion-api-wrapper)
-[![Total Downloads](https://img.shields.io/packagist/dt/eyadhamza/notion-api-wrapper.svg?style=flat-square)](https://packagist.org/packages/eyadhamza/notion-api-wrapper)
 
 ---
 
@@ -17,7 +15,7 @@ This package provides an easy and fluent interface for manipulating pages, datab
 You can install the package via composer:
 
 ```bash
-composer require eyadhamza/notion-api-integration
+composer require pi-space/notion-api-integration
 ```
 
 ## Usage
